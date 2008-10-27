@@ -126,10 +126,30 @@ local borderOptions = {
 		name = L["Enter the full path to a texture to use. It's recommended that you use something like |cffff6600TexBrowser|r to find textures to use."],
 		order = 51
 	},
+	openTexBrowser = {
+		type = "execute",
+		name = function()
+			if GetAddOnInfo("TexBrowser") ~= nil then
+				return L["Open TexBrowser"]
+			else
+				return L["TexBrowser Not Installed"]
+			end
+		end,
+		order = 52,
+		func = function()
+			if not IsAddOnLoaded("TexBrowser") then
+				LoadAddOn("TexBrowser")
+			end
+			TexBrowser:OnEnable()
+		end,
+		disabled = function()
+			return GetAddOnInfo("TexBrowser") == nil
+		end
+	},
 	texture = {
 		type = "input",
 		name = L["Texture path"],
-		order = 52,
+		order = 53,
 		width = "full",
 		get = function(info)
 			local tex, settings = getTextureAndDB(info)

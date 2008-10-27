@@ -36,6 +36,7 @@ local options = {
 			max = 3.0,
 			step = 0.01,
 			bigStep = 0.01,
+			order = 104,
 			width = "full",
 			get = function(info)
 				return db.scale or 1
@@ -44,7 +45,24 @@ local options = {
 				db.scale = v
 				mod:Update()
 			end
-		},		
+		},
+		alpha = {
+			type = "range",
+			name = L["Opacity"],
+			min = 0,
+			max = 1.0,
+			step = 0.01,
+			bigStep = 0.01,
+			order = 105,
+			width = "full",
+			get = function(info)
+				return db.alpha or 1
+			end,
+			set = function(info, v)
+				db.alpha = v
+				mod:Update()
+			end
+		},			
 	}
 }
 
@@ -148,6 +166,7 @@ do
 	
 	function mod:Update()
 		MinimapCluster:SetScale(db.scale or 1)
+		MinimapCluster:SetAlpha(db.alpha or 1)
 	end
 
 	function mod:SetLock(v)

@@ -21,6 +21,8 @@ L["Name"] = true
 L["Delete"] = true
 L["Texture path"] = true
 L["Enter the full path to a texture to use. It's recommended that you use something like |cffff6600TexBrowser|r to find textures to use."] = true
+L["Open TexBrowser"] = true
+L["TexBrowser Not Installed"] = true
 L["Texture options"] = true
 L["Scale"] = true
 L["Rotation Speed"] = true
@@ -45,6 +47,7 @@ L["On hover"] = true
 -- ./Movers.lua
 L["Lock minimap"] = true
 L["Show movers"] = true
+L["Opacity"] = true
 
 -- ./oldBorders.lua
 -- no localization
