@@ -170,7 +170,7 @@ local defaults = {
 		hideBlizzard = true,
 		borders = {},
 		userPresets = {},
-		defaultPreset = "Blue Runes"
+		applyPreset = "Blue Runes"
 	}
 }
 
@@ -192,9 +192,9 @@ function mod:OnInitialize()
 	db = self.db.profile
 	parent:RegisterModuleOptions(modName, options, modName)
 
-	if db.defaultPreset then
-		self:ApplyPreset(db.defaultPreset)
-		db.defaultPreset = nil
+	if db.applyPreset then
+		self:ApplyPreset(db.applyPreset)
+		db.applyPreset = false
 	else
 		for _, v in ipairs(db.borders) do
 			self:CreateBorderFromParams(v)
