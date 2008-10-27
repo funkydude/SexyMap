@@ -8,6 +8,20 @@ local texturePool = {}
 local rotateTextures = {}
 local defaultSize = 180
 local rotFrame = CreateFrame("Frame")
+local layers = {
+	BACKGROUND = L["1. Background"],
+	BORDER = L["2. Border"],
+	ARTWORK = L["3. Artwork"],
+	OVERLAY = L["4. Overlay"],
+	HIGHLIGHT = L["5. Highlight"],
+}
+local blendModes = {
+	BLEND = L["Blend (normal)"],
+	DISABLE = L["Disable (opaque)"],
+	ALPHAKEY = L["Alpha Key (1-bit alpha)"],
+	MOD = L["Mod Blend (modulative)"],
+	ADD = L["Add Blend (additive)"],
+}
 
 local presets = {}
 for k, v in pairs(parent.borderPresets) do
@@ -24,6 +38,19 @@ local function deepCopyHash(t)
 		end
 	end
 	return nt
+end
+
+local function RotateTexture(self, inc, set)
+	self.hAngle = (set and 0 or self.hAngle or 0) - inc;
+	local s = sin(self.hAngle);
+	local c = cos(self.hAngle);
+	
+	self:SetTexCoord(
+		0.5 - s, 0.5 + c,
+		0.5 + c, 0.5 + s,
+		0.5 - c, 0.5 - s,
+		0.5 + s, 0.5 - c
+	)
 end
 
 local selectedPreset
@@ -76,11 +103,9 @@ local options = {
 	}
 }
 
-local deleteOffset = 0
-
 local function getTextureAndDB(info)
-	local index = info.options.args[info[1]].args[info[2]].args[info[3]].arg
-	return textures[index], db.borders[index - deleteOffset]
+	local key = info.options.args[info[1]].args[info[2]].args[info[3]].arg
+	return textures[key]
 end
 
 local borderOptions = {
@@ -98,22 +123,29 @@ local borderOptions = {
 		end,
 		set = function(info, name)
 			info.options.args[info[1]].args[info[2]].args[info[3]].name = name
-			local tex, settings = getTextureAndDB(info)
-			settings.name = name
+			local tex = getTextureAndDB(info)
+			tex.settings.name = name
 		end
 	},
 	delete = {
 		type = "execute",
 		name = L["Delete"],
 		confirm = true,
+		confirmText = L["Really delete this border?"],
 		order = 3,
 		func = function(info)
 			local index = info.options.args[info[1]].args[info[2]].args[info[3]].arg
-			tremove(db.borders, index)
-			deleteOffset = deleteOffset + 1
-			info.options.args[info[1]].args[info[2]].args["border" .. index] = nil
+			for k, v in ipairs(db.borders) do
+				if v == textures[index].settings then
+					tremove(db.borders, k)
+					break
+				end
+			end
+			info.options.args[info[1]].args[info[2]].args[index] = nil
 			rotateTextures[textures[index]] = nil
+			tinsert(texturePool, textures[index])
 			textures[index]:Hide()
+			textures[index] = nil
 		end
 	},
 	header2 = {
@@ -138,6 +170,7 @@ local borderOptions = {
 		order = 52,
 		func = function()
 			if not IsAddOnLoaded("TexBrowser") then
+				EnableAddOn("TexBrowser")
 				LoadAddOn("TexBrowser")
 			end
 			TexBrowser:OnEnable()
@@ -152,12 +185,12 @@ local borderOptions = {
 		order = 53,
 		width = "full",
 		get = function(info)
-			local tex, settings = getTextureAndDB(info)
-			return settings.texture
+			local tex = getTextureAndDB(info)
+			return tex.settings.texture
 		end,
 		set = function(info, v)
-			local tex, settings = getTextureAndDB(info)
-			settings.texture = v
+			local tex = getTextureAndDB(info)
+			tex.settings.texture = v
 			tex:SetTexture(v)
 		end
 	},
@@ -175,12 +208,12 @@ local borderOptions = {
 		bigStep = 0.1,
 		width = "full",
 		get = function(info)
-			local tex, settings = getTextureAndDB(info)
-			return settings.scale or 1
+			local tex = getTextureAndDB(info)
+			return tex.settings.scale or 1
 		end,
 		set = function(info, v)
-			local tex, settings = getTextureAndDB(info)
-			settings.scale = v
+			local tex = getTextureAndDB(info)
+			tex.settings.scale = v
 			tex:SetWidth(defaultSize * v)
 			tex:SetHeight(defaultSize * v)
 		end
@@ -195,29 +228,117 @@ local borderOptions = {
 		bigStep = 1,
 		width = "full",
 		get = function(info)
-			local tex, settings = getTextureAndDB(info)
-			return settings.rotSpeed or 0
+			local tex = getTextureAndDB(info)
+			return tex.settings.rotSpeed or 0
 		end,
 		set = function(info, v)
-			local tex, settings = getTextureAndDB(info)
-			settings.rotSpeed = v
+			local tex = getTextureAndDB(info)
+			tex.settings.rotSpeed = v
 			tex.rotSpeed = v
 			rotateTextures[tex] = v ~= 0 and v or nil
 		end
 	},
+	staticRotation = {
+		type = "range",
+		name = L["Static Rotation"],
+		desc = L["A static amount to rotate the texture by."],
+		min = 0,
+		max = 360,
+		step = 1,
+		bigStep = 1,
+		width = "full",
+		get = function(info)
+			local tex = getTextureAndDB(info)
+			return tex.settings.rotation or 0
+		end,
+		set = function(info, v)
+			local tex = getTextureAndDB(info)
+			tex.settings.rotation = v
+			RotateTexture(tex, v, true)
+			tex.rotSpeed = 0
+			tex.settings.rotSpeed = 0
+			rotateTextures[tex] = nil
+		end
+	},	
 	color = {
 		type = "color",
 		name = L["Texture tint"],
 		hasAlpha = true,
 		get = function(info)
-			local tex, settings = getTextureAndDB(info)
-			return settings.r or 1, settings.g or 1, settings.b or 1, settings.a or 1
+			local tex = getTextureAndDB(info)
+			return tex.settings.r or 1, tex.settings.g or 1, tex.settings.b or 1, tex.settings.a or 1
 		end,
 		set = function(info, r, g, b, a)
-			local tex, settings = getTextureAndDB(info)
-			settings.r, settings.g, settings.b, settings. a = r, g, b, a
+			local tex = getTextureAndDB(info)
+			tex.settings.r, tex.settings.g, tex.settings.b, tex.settings. a = r, g, b, a
 			tex:SetVertexColor(r,g,b,a)
 		end
+	},
+	hNudge = {
+		type = "range",
+		name = L["Horizontal nudge"],
+		min = -15,
+		max = 15,
+		step = 1,
+		bigStep = 1,
+		order = 149,
+		get = function(info)
+			local tex = getTextureAndDB(info)
+			return tex.settings.hNudge or 0
+		end,
+		set = function(info, v)
+			local tex = getTextureAndDB(info)
+			tex:ClearAllPoints()
+			tex.settings.hNudge = v
+			tex:SetPoint("CENTER", Minimap, "CENTER", tex.settings.hNudge, tex.settings.vNudge)
+		end
+	},
+	vNudge = {
+		type = "range",
+		name = L["Vertical nudge"],
+		min = -15,
+		max = 15,
+		step = 1,
+		bigStep = 1,
+		order = 150,
+		get = function(info)
+			local tex = getTextureAndDB(info)
+			return tex.settings.vNudge or 0
+		end,
+		set = function(info, v)
+			local tex = getTextureAndDB(info)
+			tex:ClearAllPoints()
+			tex.settings.vNudge = v
+			tex:SetPoint("CENTER", Minimap, "CENTER", tex.settings.hNudge, tex.settings.vNudge)
+		end
+	},
+	layer = {
+		type = "select",
+		name = L["Layer"],
+		values = layers,
+		get = function(info)
+			local tex = getTextureAndDB(info)
+			return tex:GetDrawLayer()
+		end,
+		set = function(info, v)
+			local tex = getTextureAndDB(info)
+			tex.settings.drawLayer = v
+			tex:SetDrawLayer(v)
+		end
+	},
+	blend = {
+		type = "select",
+		name = L["Blend Mode"],
+		values = blendModes,
+		get = function(info)
+			local tex = getTextureAndDB(info)
+			return tex:GetBlendMode()
+		end,
+		set = function(info, v)
+			local tex = getTextureAndDB(info)
+			tex.settings.blendMode = v
+			tex:SetBlendMode(v)
+		end	
 	}
 }
 
@@ -229,19 +350,6 @@ local defaults = {
 		applyPreset = "Blue Runes"
 	}
 }
-
-local function RotateTexture(self, inc)
-	self.hAngle = (self.hAngle or 0) - inc;
-	local s = sin(self.hAngle);
-	local c = cos(self.hAngle);
-	
-	self:SetTexCoord(
-		0.5 - s, 0.5 + c,
-		0.5 + c, 0.5 + s,
-		0.5 - c, 0.5 - s,
-		0.5 + s, 0.5 - c
-	)
-end
 
 function mod:OnInitialize()
 	self.db = parent.db:RegisterNamespace(modName, defaults)
@@ -271,12 +379,16 @@ end
 
 function mod:ApplyPreset(preset)
 	local preset = parent.borderPresets[preset]
-	db.borders = deepCopyHash(preset)
-	options.args.borders.args = {}		-- leaky
-	for i = 1, #textures do
-		tinsert(texturePool, tremove(textures))
+	db.borders = deepCopyHash(preset.borders)
+	if preset.shape then
+		parent:GetModule("General"):ApplyShape(preset.shape)
 	end
-	deleteOffset = 0
+	options.args.borders.args = {}		-- leaky
+	for k, v in pairs(textures) do
+		tinsert(texturePool, v)
+		v:Hide()
+		textures[k] = nil
+	end
 	for k, v in pairs(rotateTextures) do
 		rotateTextures[k] = nil
 	end
@@ -287,35 +399,39 @@ function mod:ApplyPreset(preset)
 end
 
 function mod:NewBorder(name)
-	parent:Print("New border:", name)
 	local t = {name = name}
 	tinsert(db.borders, t)	
 	self:CreateBorderFromParams(t)
 end
 
+local inc = 0
 function mod:CreateBorderFromParams(t)
+	inc = inc + 1
 	local tex = tremove(texturePool) or Minimap:CreateTexture()
 	tex:SetWidth(t.width or defaultSize)
 	tex:SetHeight(t.height or defaultSize)
 	tex:SetTexture(t.texture)
-	tex:SetBlendMode(t.mode or "ADD")
+	tex:SetBlendMode(t.blendMode or "ADD")
 	tex:SetVertexColor(t.r or 1, t.g or 1, t.b or 1, t.a or 1)
-	tex:SetPoint("CENTER", Minimap, "CENTER", 0, -2)
+	tex:SetPoint("CENTER", Minimap, "CENTER", t.hNudge or 0, t.vNudge or 0)
 	tex:SetWidth(defaultSize * (t.scale or 1))
 	tex:SetHeight(defaultSize * (t.scale or 1))
+	tex:SetDrawLayer(t.drawLayer or "ARTWORK")
+	
 	tex.rotSpeed = t.rotSpeed or 0
+	tex.settings = t
+	tex:Show()
 	rotateTextures[tex] = t.rotSpeed ~= 0 and t.rotSpeed or nil
-	RotateTexture(tex, 0)
+	RotateTexture(tex, t.rotation or 0, true)
 	
 	local r,g,b,a = t.r or 1, t.g or 1, t.b or 1, t.a or 1
 	tex:SetVertexColor(r,g,b,a)
+	textures["tex" .. inc] = tex
 	
-	tinsert(textures, tex)
-	
-	options.args.borders.args["border" .. #textures] = {
+	options.args.borders.args["tex" .. inc] = {
 		type = "group",
-		name = t.name or ("Border #" .. #textures),
-		arg = #textures,
+		name = t.name or ("Border #" .. inc),
+		arg = "tex" .. inc,
 		args = borderOptions
 	}
 	return tex

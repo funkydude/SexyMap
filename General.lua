@@ -1,11 +1,21 @@
 local parent = SexyMap
-local mod = SexyMap:NewModule("Movers", "AceTimer-3.0", "AceEvent-3.0", "AceHook-3.0")
+local mod = SexyMap:NewModule("General", "AceTimer-3.0", "AceEvent-3.0", "AceHook-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
 
 local db
+
+local shapeList = {
+	["Textures\\MinimapMask"] = "Circle",
+	["SPELLS\\White-Circle"] = "Faded Circle",
+	["ENVIRONMENTS\\STARS\\Deathsky_Mask"] = "Faded Circle (Small)",
+	["Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy"] = "Faded Square",
+	["Interface\\AddOns\\SexyMap\\shapes\\diamond"] = "Diamond",
+	["Interface\\BUTTONS\\WHITE8X8"] = "Square",
+}
+
 local options = {
 	type = "group",
-	name = "Movers",
+	name = "General",
 	args = {
 		lock = {
 			name = L["Lock minimap"],
@@ -62,7 +72,18 @@ local options = {
 				db.alpha = v
 				mod:Update()
 			end
-		},			
+		},
+		shape = {
+			type = "select",
+			name = L["Minimap shape"],
+			values = shapeList,
+			get = function()
+				return db.shape or "Textures\\MinimapMask"
+			end,
+			set = function(info, v)
+				mod:ApplyShape(v)
+			end
+		}
 	}
 }
 
@@ -91,6 +112,13 @@ function mod:OnInitialize()
 	self:SecureHook("updateContainerFrameAnchors", "CreateMoversAndSetMovables")
 end
 	
+function mod:ApplyShape(shape)
+	if shape or db.shape then
+		db.shape = shape
+		Minimap:SetMaskTexture(shape or db.shape)
+	end
+end
+
 do
 	local function start(self)
 		local f = self:GetParent()

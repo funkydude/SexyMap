@@ -8,6 +8,16 @@ if not L then return end
 -- no localization
 
 -- ./Borders.lua
+L["1. Background"] = true
+L["2. Border"] = true
+L["3. Artwork"] = true
+L["4. Overlay"] = true
+L["5. Highlight"] = true
+L["Blend (normal)"] = true
+L["Disable (opaque)"] = true
+L["Alpha Key (1-bit alpha)"] = true
+L["Mod Blend (modulative)"] = true
+L["Add Blend (additive)"] = true
 L["Enter a name to create a new border. The name can be anything you like to help you identify that border."] = true
 L["Create new border"] = true
 L["Preset"] = true
@@ -19,6 +29,7 @@ L["Borders"] = true
 L["Entry options"] = true
 L["Name"] = true
 L["Delete"] = true
+L["Really delete this border?"] = true
 L["Texture path"] = true
 L["Enter the full path to a texture to use. It's recommended that you use something like |cffff6600TexBrowser|r to find textures to use."] = true
 L["Open TexBrowser"] = true
@@ -27,7 +38,13 @@ L["Texture options"] = true
 L["Scale"] = true
 L["Rotation Speed"] = true
 L["Speed to rotate the texture at. A setting of 0 turns off rotation."] = true
+L["Static Rotation"] = true
+L["A static amount to rotate the texture by."] = true
 L["Texture tint"] = true
+L["Horizontal nudge"] = true
+L["Vertical nudge"] = true
+L["Layer"] = true
+L["Blend Mode"] = true
 
 -- ./Buttons.lua
 L["Calendar"] = true
@@ -41,13 +58,14 @@ L["Always"] = true
 L["Never"] = true
 L["On hover"] = true
 
--- ./moduleTemplate.lua
--- no localization
-
--- ./Movers.lua
+-- ./General.lua
 L["Lock minimap"] = true
 L["Show movers"] = true
 L["Opacity"] = true
+L["Minimap shape"] = true
+
+-- ./moduleTemplate.lua
+-- no localization
 
 -- ./oldBorders.lua
 -- no localization

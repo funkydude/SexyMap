@@ -15,7 +15,7 @@ localization\enUS.lua
 SexyMap.lua
 
 # Comes first, has default option set
-Movers.lua
+General.lua
 
 # Other modules
 Buttons.lua
