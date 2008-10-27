@@ -93,5 +93,38 @@ SexyMap.borderPresets = {
 			}, -- [3]		
 		},
 		shape = "Textures\\MinimapMask"
-	}
+	},
+	["Midnight Moon"] = {
+		borders = {
+			{
+				["a"] = 0.6400000154972076,
+				["rotSpeed"] = 0,
+				["b"] = 1,
+				["scale"] = 1.47,
+				["g"] = 0.1137254901960784,
+				["rotation"] = 0,
+				["name"] = "Shadow",
+				["drawLayer"] = "BORDER",
+				["blendMode"] = "BLEND",
+				["r"] = 0,
+				["texture"] = "SPELLS\\T_VFX_Moon_Black.blp",
+			}, -- [1]
+			{
+				["a"] = 1,
+				["hNudge"] = 1,
+				["rotSpeed"] = 0,
+				["b"] = 0.8156862745098039,
+				["scale"] = 2.3,
+				["g"] = 0.7058823529411764,
+				["vNudge"] = 3,
+				["drawLayer"] = "OVERLAY",
+				["name"] = "Glow",
+				["rotation"] = 198,
+				["r"] = 0.6509803921568628,
+				["blendMode"] = "ADD",
+				["texture"] = "SPELLS\\MoonCrescentGlow2.blp",
+			}, -- [2]	
+		},
+		shape = "Textures\\MinimapMask"
+	}	
 }
