@@ -21,4 +21,5 @@ Movers.lua
 Buttons.lua
 Borders.lua
 BorderPresets.lua
+Ping.lua
 ZoneText.lua

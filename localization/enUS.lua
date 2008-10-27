@@ -8,8 +8,12 @@ if not L then return end
 -- no localization
 
 -- ./Borders.lua
-L["Borders"] = true
 L["Create new border"] = true
+L["Hide default border"] = true
+L["Borders"] = true
+L["Scale"] = true
+L["Rotation Speed"] = true
+L["Color"] = true
 
 -- ./Buttons.lua
 L["Calendar"] = true
@@ -33,6 +37,9 @@ L["Show movers"] = true
 -- ./oldBorders.lua
 -- no localization
 
+-- ./Ping.lua
+L["Show who pinged"] = true
+
 -- ./SexyMap.lua
 L["Profiles"] = true
 
@@ -42,6 +49,9 @@ L["Vertical position"] = true
 L["Width"] = true
 L["Background color"] = true
 L["Border color"] = true
+L["Font"] = true
+L["Font Size"] = true
+L["Font color"] = true
 
 -- ./localization/enUS.lua
 -- no localization
