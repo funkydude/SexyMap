@@ -25,6 +25,7 @@ do
 		mapclock 	= L["Clock"],
 		close 		= L["Close button"],
 		direction	= L["Compass labels"],
+		mail		= L["New mail indicator"]
 	}
 	
 	buttons = {
@@ -34,7 +35,8 @@ do
 		zoom		= {"MinimapZoomIn", "MinimapZoomOut"},
 		mapclock	= {"TimeManagerClockButton"},
 		close	 	= {"MinimapToggleButton"},
-		direction	= {"MinimapNorthTag"}
+		direction	= {"MinimapNorthTag"},
+		mail		= {"MiniMapMailFrame"}
 	}
 
 	local hideValues = {

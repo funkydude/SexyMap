@@ -129,7 +129,7 @@ do
 			frameName = frame:GetName()
 		end
 		if not frame then
-			self:Print("Unable to register", frameName, ", does not exit")
+			-- self:Print("Unable to register", frameName, ", does not exit")
 			return
 		end
 		frame:SetAlpha(0)

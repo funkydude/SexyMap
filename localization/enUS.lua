@@ -54,6 +54,7 @@ L["Zoom Buttons"] = true
 L["Clock"] = true
 L["Close button"] = true
 L["Compass labels"] = true
+L["New mail indicator"] = true
 L["Always"] = true
 L["Never"] = true
 L["On hover"] = true
