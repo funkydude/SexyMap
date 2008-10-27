@@ -4,6 +4,10 @@ local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
 local L = AceLocale:NewLocale("SexyMap", "enUS", true) 
 if not L then return end 
  
+-- ./AutoZoom.lua
+L["Autozoom out after..."] = true
+L["Number of seconds to autozoom out after. Set to 0 to turn off Autozoom."] = true
+
 -- ./BorderPresets.lua
 -- no localization
 

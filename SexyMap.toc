@@ -18,6 +18,7 @@ SexyMap.lua
 General.lua
 
 # Other modules
+AutoZoom.lua
 Buttons.lua
 BorderPresets.lua
 Borders.lua

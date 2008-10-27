@@ -43,6 +43,10 @@ function mod:OnEnable()
 		-- self:EnableModule(k)
 	-- end
 	
+	if _G.simpleMinimap then
+		self:Print("|cffff0000Warning!|r simpleMinimap is enabled. SexyMap may not work correctly.")
+	end
+	
 	if not self.profilesRegistered then
 		self:RegisterModuleOptions("Profiles", LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db), L["Profiles"])
 		self.profilesRegistered = true
