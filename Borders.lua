@@ -4,10 +4,29 @@ local mod = SexyMap:NewModule(modName)
 local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
 local db
 local textures = {}
+local texturePool = {}
 local rotateTextures = {}
 local defaultSize = 180
 local rotFrame = CreateFrame("Frame")
 
+local presets = {}
+for k, v in pairs(parent.borderPresets) do
+	presets[k] = k
+end
+
+local function deepCopyHash(t)
+	local nt = {}
+	for k, v in pairs(t) do
+		if type(v) == "table" then
+			nt[k] = deepCopyHash(v)
+		else
+			nt[k] = v
+		end
+	end
+	return nt
+end
+
+local selectedPreset
 local options = {
 	type = "group",
 	name = "Borders",
@@ -17,6 +36,20 @@ local options = {
 			name = L["Create new border"],
 			set = function(info, v)
 				mod:NewBorder(v)
+			end
+		},
+		preset = {
+			type = "select",
+			name = "Preset",
+			confirm = true,
+			confirmText = "This will wipe out any current settings!",
+			values = presets,
+			get = function()
+				return selectedPreset
+			end,
+			set = function(info, v)
+				selectedPreset = v
+				mod:ApplyPreset(v)
 			end
 		},
 		hideBlizzard = {
@@ -135,7 +168,9 @@ local borderOptions = {
 local defaults = {
 	profile = {
 		hideBlizzard = true,
-		borders = {}
+		borders = {},
+		userPresets = {},
+		defaultPreset = "Blue Runes"
 	}
 }
 
@@ -157,8 +192,13 @@ function mod:OnInitialize()
 	db = self.db.profile
 	parent:RegisterModuleOptions(modName, options, modName)
 
-	for _, v in ipairs(db.borders) do
-		self:CreateBorderFromParams(v)
+	if db.defaultPreset then
+		self:ApplyPreset(db.defaultPreset)
+		db.defaultPreset = nil
+	else
+		for _, v in ipairs(db.borders) do
+			self:CreateBorderFromParams(v)
+		end
 	end
 end
 
@@ -173,6 +213,23 @@ function mod:OnEnable()
 	rotFrame:SetScript("OnUpdate", updateRotations)
 end
 
+function mod:ApplyPreset(preset)
+	local preset = parent.borderPresets[preset]
+	db.borders = deepCopyHash(preset)
+	options.args.borders.args = {}		-- leaky
+	for i = 1, #textures do
+		tinsert(texturePool, tremove(textures))
+	end
+	deleteOffset = 0
+	for k, v in pairs(rotateTextures) do
+		rotateTextures[k] = nil
+	end
+	
+	for _, v in ipairs(db.borders) do
+		self:CreateBorderFromParams(v)
+	end
+end
+
 function mod:NewBorder(name)
 	parent:Print("New border:", name)
 	local t = {name = name}
@@ -181,7 +238,7 @@ function mod:NewBorder(name)
 end
 
 function mod:CreateBorderFromParams(t)
-	local tex = Minimap:CreateTexture()
+	local tex = tremove(texturePool) or Minimap:CreateTexture()
 	tex:SetWidth(t.width or defaultSize)
 	tex:SetHeight(t.height or defaultSize)
 	tex:SetTexture(t.texture)

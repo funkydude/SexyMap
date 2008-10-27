@@ -19,7 +19,7 @@ Movers.lua
 
 # Other modules
 Buttons.lua
-Borders.lua
 BorderPresets.lua
+Borders.lua
 Ping.lua
 ZoneText.lua
