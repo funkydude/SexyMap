@@ -28,7 +28,23 @@ local options = {
 				db.movers = v
 				mod:SetMovers()
 			end
-		}
+		},
+		scale = {
+			type = "range",
+			name = L["Scale"],
+			min = 0.2,
+			max = 3.0,
+			step = 0.01,
+			bigStep = 0.01,
+			width = "full",
+			get = function(info)
+				return db.scale or 1
+			end,
+			set = function(info, v)
+				db.scale = v
+				mod:Update()
+			end
+		},		
 	}
 }
 
@@ -128,6 +144,10 @@ do
 
 	local function stop(self)
 		MinimapCluster:StopMovingOrSizing()
+	end
+	
+	function mod:Update()
+		MinimapCluster:SetScale(db.scale or 1)
 	end
 
 	function mod:SetLock(v)
