@@ -31,18 +31,26 @@ local options = {
 	type = "group",
 	name = "Borders",
 	args = {
+		newDesc = {
+			type = "description",
+			name = L["Enter a name to create a new border. The name can be anything you like to help you identify that border."],
+			order = 1
+		},
 		new = {
 			type = "input",
 			name = L["Create new border"],
+			order = 2,
+			width = "full",
 			set = function(info, v)
 				mod:NewBorder(v)
 			end
 		},
 		preset = {
 			type = "select",
-			name = "Preset",
+			name = L["Preset"],
+			desc = L["Select a preset to load settings from. This will erase any of your current borders."],
 			confirm = true,
-			confirmText = "This will wipe out any current settings!",
+			confirmText = L["This will wipe out any current settings!"],
 			values = presets,
 			get = function()
 				return selectedPreset
@@ -55,6 +63,7 @@ local options = {
 		hideBlizzard = {
 			type = "toggle",
 			name = L["Hide default border"],
+			desc = L["Hide the default border on the minimap."],
 			get = function() return db.hideBlizzard end,
 			set = function(info, v) db.hideBlizzard = v; mod:Update() end,
 		},
@@ -75,22 +84,15 @@ local function getTextureAndDB(info)
 end
 
 local borderOptions = {
-	texture = {
-		type = "input",
-		name = "Texture path",
-		get = function(info)
-			local tex, settings = getTextureAndDB(info)
-			return settings.texture
-		end,
-		set = function(info, v)
-			local tex, settings = getTextureAndDB(info)
-			settings.texture = v
-			tex:SetTexture(v)
-		end
+	header1 = {
+		type = "header",
+		name = L["Entry options"],
+		order = 1
 	},
 	name = {
 		type = "input",
-		name = "Name",
+		name = L["Name"],
+		order = 2,
 		get = function(info)
 			return info.options.args[info[1]].args[info[2]].args[info[3]].name
 		end,
@@ -102,8 +104,9 @@ local borderOptions = {
 	},
 	delete = {
 		type = "execute",
-		name = "Delete",
+		name = L["Delete"],
 		confirm = true,
+		order = 3,
 		func = function(info)
 			local index = info.options.args[info[1]].args[info[2]].args[info[3]].arg
 			tremove(db.borders, index)
@@ -113,6 +116,36 @@ local borderOptions = {
 			textures[index]:Hide()
 		end
 	},
+	header2 = {
+		type = "header",
+		name = L["Texture path"],
+		order = 50
+	},
+	textureText = {
+		type = "description",
+		name = L["Enter the full path to a texture to use. It's recommended that you use something like |cffff6600TexBrowser|r to find textures to use."],
+		order = 51
+	},
+	texture = {
+		type = "input",
+		name = L["Texture path"],
+		order = 52,
+		width = "full",
+		get = function(info)
+			local tex, settings = getTextureAndDB(info)
+			return settings.texture
+		end,
+		set = function(info, v)
+			local tex, settings = getTextureAndDB(info)
+			settings.texture = v
+			tex:SetTexture(v)
+		end
+	},
+	header3 = {
+		type = "header",
+		name = L["Texture options"],
+		order = 99
+	},	
 	scale = {
 		type = "range",
 		name = L["Scale"],
@@ -120,6 +153,7 @@ local borderOptions = {
 		max = 3.0,
 		step = 0.1,
 		bigStep = 0.1,
+		width = "full",
 		get = function(info)
 			local tex, settings = getTextureAndDB(info)
 			return settings.scale or 1
@@ -134,10 +168,12 @@ local borderOptions = {
 	rotation = {
 		type = "range",
 		name = L["Rotation Speed"],
+		desc = L["Speed to rotate the texture at. A setting of 0 turns off rotation."],
 		min = -120,
 		max = 120,
 		step = 1,
-		bigStep = 2,
+		bigStep = 1,
+		width = "full",
 		get = function(info)
 			local tex, settings = getTextureAndDB(info)
 			return settings.rotSpeed or 0
@@ -151,7 +187,7 @@ local borderOptions = {
 	},
 	color = {
 		type = "color",
-		name = L["Color"],
+		name = L["Texture tint"],
 		hasAlpha = true,
 		get = function(info)
 			local tex, settings = getTextureAndDB(info)
@@ -244,7 +280,7 @@ function mod:CreateBorderFromParams(t)
 	tex:SetTexture(t.texture)
 	tex:SetBlendMode(t.mode or "ADD")
 	tex:SetVertexColor(t.r or 1, t.g or 1, t.b or 1, t.a or 1)
-	tex:SetPoint("CENTER", Minimap, "CENTER")
+	tex:SetPoint("CENTER", Minimap, "CENTER", 0, -2)
 	tex:SetWidth(defaultSize * (t.scale or 1))
 	tex:SetHeight(defaultSize * (t.scale or 1))
 	tex.rotSpeed = t.rotSpeed or 0
