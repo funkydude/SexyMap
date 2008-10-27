@@ -49,7 +49,6 @@ local options = {
 			type = "multiselect",
 			name = ("Show %s..."):format("zone text"),
 			values = hideValues,
-			arg = key,
 			order = 1,
 			get = function(info, v)
 				return db.show == v

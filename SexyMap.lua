@@ -2,6 +2,13 @@ SexyMap = LibStub("AceAddon-3.0"):NewAddon("SexyMap", "AceEvent-3.0", "AceConsol
 local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
 local mod = SexyMap
 
+local _G = getfenv(0)
+local pairs, ipairs, type, select = _G.pairs, _G.ipairs, _G.type, _G.select
+
+local min = _G.math.min
+local MinimapCluster = _G.MinimapCluster
+local GetMouseFocus = _G.GetMouseFocus
+
 local options = {
 	type = "group",
 	args = {}
@@ -84,7 +91,7 @@ do
 	
 	local function fade(self, t)
 		totalTime = totalTime + t
-		local pct = math.min(1, totalTime / fadeTime)
+		local pct = min(1, totalTime / fadeTime)
 		local total = 0
 		for k, v in pairs(fading) do
 			local alpha = v + ((fadeTarget - v) * pct)

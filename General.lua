@@ -98,6 +98,8 @@ local defaults = {
 local movables = {"QuestWatchFrame", "DurabilityFrame", "QuestTimerFrame", "AchievementWatchFrame"}
 local movers = {}
 
+mod.options = options
+
 function mod:OnInitialize()
 	self.db = parent.db:RegisterNamespace("Movers", defaults)
 	db = self.db.profile

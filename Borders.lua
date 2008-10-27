@@ -23,6 +23,12 @@ local blendModes = {
 	ADD = L["Add Blend (additive)"],
 }
 
+local _G = getfenv(0)
+local tinsert, tremove, pairs, ipairs, type, select = _G.tinsert, _G.tremove, _G.pairs, _G.ipairs, _G.type, _G.select
+local sin, cos = _G.sin, _G.cos
+
+local Minimap, MinimapCluster, MinimapBorder = _G.Minimap, _G.MinimapCluster, _G.MinimapBorder
+
 local presets = {}
 for k, v in pairs(parent.borderPresets) do
 	presets[k] = k
@@ -355,6 +361,7 @@ function mod:OnInitialize()
 	self.db = parent.db:RegisterNamespace(modName, defaults)
 	db = self.db.profile
 	parent:RegisterModuleOptions(modName, options, modName)
+	parent:GetModule("General").options.args.preset = options.args.preset
 
 	if db.applyPreset then
 		self:ApplyPreset(db.applyPreset)
