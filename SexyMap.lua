@@ -125,7 +125,7 @@ do
 	end	
 	
 	local hoverButtons = {}
-	function mod:RegisterHoverButton(frame)
+	function mod:RegisterHoverButton(frame, showFunc)
 		local frameName = frame
 		if type(frame) == "string" then
 			frame = _G[frame]
@@ -138,7 +138,7 @@ do
 		end
 		frame:SetAlpha(0)
 		frame:Hide()
-		hoverButtons[frame] = true
+		hoverButtons[frame] = showFunc or true
 	end
 
 	function mod:UnregisterHoverButton(frame)
@@ -146,7 +146,10 @@ do
 			frame = _G[frame]
 		end
 		if not frame then return end
-		frame:Show()
+		if hoverButtons[frame] == true or type(hoverButtons[frame]) == "function" and hoverButtons[frame](frame) then
+			frame:SetAlpha(1)
+			frame:Show()
+		end
 		hoverButtons[frame] = nil
 	end
 
@@ -155,8 +158,10 @@ do
 		self.checkExit = self:ScheduleRepeatingTimer("CheckExited", 0.1)
 		fadeTarget = 1
 		for k, v in pairs(hoverButtons) do
-			fading[k] = k:GetAlpha()
-			startFade()
+			if v == true or type(v) == "function" and v(k) then
+				fading[k] = k:GetAlpha()
+				startFade()
+			end
 		end
 	end
 

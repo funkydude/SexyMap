@@ -12,6 +12,7 @@ local options = {
 			name = L["Autozoom out after..."],
 			desc = L["Number of seconds to autozoom out after. Set to 0 to turn off Autozoom."],
 			min = 0,
+			width = "double",
 			max = 60,
 			step = 1,
 			bigStep = 1,

@@ -3,6 +3,20 @@ local modName = "Buttons"
 local mod = SexyMap:NewModule(modName, "AceTimer-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
 
+local buttons
+local function iterateChildren(...)
+	local gotLast = false
+	for val = 1, select("#", ...) do
+		local child = select(val, ...)
+		if gotLast and not buttons[child:GetName()] then
+			buttons[child:GetName() or ("Button #" .. val)] = {child}
+		end
+		if child == MiniMapVoiceChatFrame then
+			gotLast = true
+		end
+	end
+end
+
 local options = {
 	type = "group",
 	name = modName,
@@ -15,7 +29,6 @@ local defaults = {
 	}
 }
 
-local buttons
 do
 	local translations = {
 		calendar 	= L["Calendar"],
@@ -25,7 +38,9 @@ do
 		mapclock 	= L["Clock"],
 		close 		= L["Close button"],
 		direction	= L["Compass labels"],
-		mail		= L["New mail indicator"]
+		mail		= L["New mail indicator"],
+		voice		= L["Voice chat"],
+		pvp			= L["Battlegrounds icon"],
 	}
 	
 	buttons = {
@@ -36,7 +51,13 @@ do
 		mapclock	= {"TimeManagerClockButton"},
 		close	 	= {"MinimapToggleButton"},
 		direction	= {"MinimapNorthTag"},
-		mail		= {"MiniMapMailFrame"}
+		mail		= {"MiniMapMailFrame"},
+		voice 		= {"MiniMapVoiceChatFrame", show = function(f)
+						return IsVoiceChatEnabled() and GetNumVoiceSessions()
+					end},
+		pvp 		= {"MiniMapBattlefieldFrame", show = function(f)
+						return not ( BattlefieldFrame.numQueues == 0 and (not CanHearthAndResurrectFromArea()) )
+					end}
 	}
 
 	local hideValues = {
@@ -46,26 +67,24 @@ do
 	}
 
 	local function hideGet(info, v)		
-		return db[info.arg].hide == v
+		return v == (db[info[#info]] and db[info[#info]].hide or "hover")
 	end
 	
 	local function hideSet(info, v)
-		db[info.arg].hide = v
+		db[info[#info]] = db[info[#info]] or {}
+		db[info[#info]].hide = v
 		mod:Update()
 	end
 
-	for k, v in pairs(buttons) do
-		defaults.profile[k] = { hide = "hover" }
-		local t = {
+	function mod:addButtonOptions(k, v)
+		options.args[k] = options.args[k] or {
 			type = "multiselect",
-			name = ("Show %s..."):format(translations[k]),
+			name = ("Show %s..."):format(translations[k] or k),
 			values = hideValues,
-			arg = k,
 			get = hideGet,
 			set = hideSet
 		}
-		options.args[k] = t
-	end
+	end	
 end
 
 function mod:OnInitialize()
@@ -76,6 +95,8 @@ function mod:OnInitialize()
 end
 
 function mod:OnEnable()
+	local gotLast = false
+
 	self.findClock = self:ScheduleRepeatingTimer("FindClock", 0.5)
 	self:Update()
 end
@@ -84,29 +105,38 @@ function mod:FindClock()
 	if _G.TimeManagerClockButton then
 		self:CancelTimer(self.findClock, true)
 		self.findClock = nil
+
+		iterateChildren(Minimap:GetChildren())
+		for k, v in pairs(buttons) do
+			mod:addButtonOptions(k)
+		end
+
 		self:Update()
 	end
 end
 
 function mod:Update()
 	for k, v in pairs(buttons) do
-		if db[k].hide ~= "hover" then
+		local hide = db[k] and db[k].hide or "hover"
+		if hide ~= "hover" then
 			for _, f in ipairs(v) do
 				parent:UnregisterHoverButton(f)
 			end
 		end
-		if db[k].hide == "hover" then
+		if hide == "hover" then
 			for _, f in ipairs(v) do
-				parent:RegisterHoverButton(f)
+				parent:RegisterHoverButton(f, v.show)
 			end
-		elseif db[k].hide == "never" then
+		elseif hide == "never" then
 			for _, f in ipairs(v) do
-				_G[f]:Hide()
+				f = type(f) == "string" and _G[f] or f
+				f:Hide()
 			end
 		else
 			for _, f in ipairs(v) do
-				_G[f]:SetAlpha(1)
-				_G[f]:Show()
+				f = type(f) == "string" and _G[f] or f
+				f:SetAlpha(1)
+				f:Show()
 			end
 		end				
 	end
