@@ -8,7 +8,7 @@ local function iterateChildren(...)
 	local gotLast = false
 	for val = 1, select("#", ...) do
 		local child = select(val, ...)
-		if gotLast and not buttons[child:GetName()] and child ~= TimeManagerClockButton then
+		if gotLast and not buttons[child:GetName()] and child ~= TimeManagerClockButton and child.SetAlpha then
 			buttons[child:GetName() or ("Button #" .. val)] = {child, custom = true}
 		end
 		if child == MiniMapVoiceChatFrame then
@@ -188,7 +188,7 @@ function mod:Update()
 		else
 			for _, f in ipairs(v) do
 				f = type(f) == "string" and _G[f] or f
-				if (v.custom and f:IsVisible() or not v.custom) then
+				if (v.custom and f:IsVisible() or not v.custom) and type(f) == "table" then
 					if type(v.show) == "function" and v.show(f) or type(v.show) ~= "function" then
 						f:SetAlpha(1)
 						f:Show()
