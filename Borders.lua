@@ -46,17 +46,53 @@ local function deepCopyHash(t)
 	return nt
 end
 
+local GetPlayerBearing
+function GetPlayerBearing()
+	local obj; -- Remains an upvalue
+	do
+		for i = 1, Minimap:GetNumChildren() do
+			local v = select(i, Minimap:GetChildren())
+			if v:IsObjectType("Model") and not v:GetName() then
+				local model = v:GetModel():lower()
+				if model:match("interface\\minimap\\minimaparrow") then 
+					obj = v; break;
+				end
+			end
+		end
+	end
+	if not obj then return; end
+
+	-- If we've found what we were looking for, rewrite function to skip the search next time.
+	GetPlayerBearing = function() 
+		if GetCVar("rotateMinimap") ~= "0" then
+			return (MiniMapCompassRing:GetFacing() * -1)
+		else
+			return obj:GetFacing(); 
+		end
+	end
+	return GetPlayerBearing();
+end
+		
 local function RotateTexture(self, inc, set)
-	self.hAngle = (set and 0 or self.hAngle or 0) - inc;
-	local s = sin(self.hAngle);
-	local c = cos(self.hAngle);
-	
-	self:SetTexCoord(
-		0.5 - s, 0.5 + c,
-		0.5 + c, 0.5 + s,
-		0.5 - c, 0.5 - s,
-		0.5 + s, 0.5 - c
-	)
+	if type(inc) == "string" then
+		local bearing = GetPlayerBearing()
+		if inc ~= "normal" then
+			bearing = bearing * -1
+		end
+		bearing = bearing * 57.2957795
+		RotateTexture(self, bearing, true)
+	else
+		self.hAngle = (set and 0 or self.hAngle or 0) - inc;
+		local s = sin(self.hAngle);
+		local c = cos(self.hAngle);
+		
+		self:SetTexCoord(
+			0.5 - s, 0.5 + c,
+			0.5 + c, 0.5 + s,
+			0.5 - c, 0.5 - s,
+			0.5 + s, 0.5 - c
+		)
+	end
 end
 
 local selectedPreset
@@ -81,6 +117,7 @@ local options = {
 		preset = {
 			type = "select",
 			name = L["Preset"],
+			width = "double",
 			desc = L["Select a preset to load settings from. This will erase any of your current borders."],
 			confirm = true,
 			confirmText = L["This will wipe out any current settings!"],
@@ -234,7 +271,7 @@ local borderOptions = {
 		bigStep = 1,
 		disabled = function(info)
 			local tex = getTextureAndDB(info)
-			return tex.settings.disableRotation
+			return tex.settings.disableRotation or type(rotateTextures[tex]) == "string"
 		end,
 		width = "full",
 		get = function(info)
@@ -256,7 +293,7 @@ local borderOptions = {
 		max = 360,
 		disabled = function(info)
 			local tex = getTextureAndDB(info)
-			return tex.settings.disableRotation
+			return tex.settings.disableRotation or type(rotateTextures[tex]) == "string"
 		end,
 		step = 1,
 		bigStep = 1,
@@ -273,7 +310,29 @@ local borderOptions = {
 			tex.settings.rotSpeed = 0
 			rotateTextures[tex] = nil
 		end
-	},	
+	},
+	playerRotation = {
+		type = "multiselect",
+		name = L["Match player rotation"],
+		values = {
+			normal = L["Normal rotation"],
+			reverse = L["Reverse rotation"],
+			none = L["Do not match player rotation"],
+		},
+		get = function(info, v)
+			local tex = getTextureAndDB(info)
+			return rotateTextures[tex] == v or (not rotateTextures[tex] and v == "none")
+		end,
+		set = function(info, v)
+			local tex = getTextureAndDB(info)
+			if v ~= "none" then
+				rotateTextures[tex] = v
+			else
+				rotateTextures[tex] = nil
+			end
+			tex.settings.playerRotation = v
+		end
+	},
 	color = {
 		type = "color",
 		name = L["Texture tint"],
@@ -412,7 +471,11 @@ end
 
 local function updateRotations(self, t)
 	for k, v in pairs(rotateTextures) do
-		RotateTexture(k, v * t)
+		if type(v) == "number" then
+			RotateTexture(k, v * t)
+		else
+			RotateTexture(k, v)
+		end
 	end
 end
 
@@ -468,7 +531,11 @@ function mod:CreateBorderFromParams(t)
 	if t.disableRotation then
 		tex:SetTexCoord(0, 1, 0, 1)
 	else
-		rotateTextures[tex] = t.rotSpeed ~= 0 and t.rotSpeed or nil
+		if t.playerRotation and t.playerRotation ~= "none" then
+			rotateTextures[tex] = t.playerRotation
+		else
+			rotateTextures[tex] = t.rotSpeed ~= 0 and t.rotSpeed or nil
+		end
 		RotateTexture(tex, t.rotation or 0, true)
 	end
 	
