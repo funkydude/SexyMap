@@ -95,6 +95,17 @@ local options = {
 			set = function(info, v)
 				mod:ApplyShape(v)
 			end
+		},
+		rightClickToConfig = {
+			type = "toggle",
+			name = L["Right click map to configure"],
+			width = "double",
+			get = function()
+				return db.rightClickToConfig
+			end,
+			set = function(info, v)
+				db.rightClickToConfig = v
+			end
 		}
 	}
 }
@@ -104,6 +115,7 @@ local defaults = {
 		lock = true,
 		clamp = true,
 		movers = false,
+		rightClickToConfig = true,
 		framePositions = {}
 	}
 }

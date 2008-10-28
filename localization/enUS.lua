@@ -78,6 +78,7 @@ L["Show movers"] = true
 L["Clamp to screen"] = true
 L["Opacity"] = true
 L["Minimap shape"] = true
+L["Right click map to configure"] = true
 
 -- ./moduleTemplate.lua
 -- no localization

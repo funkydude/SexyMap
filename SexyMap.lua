@@ -69,7 +69,9 @@ function mod:HookAll(frame, script, ...)
 end
 
 function mod:OpenConfig(name)
-	InterfaceOptionsFrame_OpenToCategory(optionFrames[name] or optionFrames.default)
+	if self:GetModule("General").db.profile.rightClickToConfig then
+		InterfaceOptionsFrame_OpenToCategory(optionFrames[name] or optionFrames.default)
+	end
 end
 
 function mod:Minimap_OnClick(frame, button)
