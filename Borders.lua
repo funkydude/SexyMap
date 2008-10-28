@@ -29,12 +29,10 @@ local sin, cos = _G.sin, _G.cos
 
 local Minimap, MinimapCluster, MinimapBorder = _G.Minimap, _G.MinimapCluster, _G.MinimapBorder
 
-local presets = {}
-for k, v in pairs(parent.borderPresets) do
-	presets[k] = k
-end
+local presets, userPresets = {}, {}
 
 local function deepCopyHash(t)
+	if t == nil then return nil end
 	local nt = {}
 	for k, v in pairs(t) do
 		if type(v) == "table" then
@@ -99,55 +97,111 @@ local selectedPreset
 local options = {
 	type = "group",
 	name = "Borders",
+	childGroups = "tab",
 	args = {
-		newDesc = {
-			type = "description",
-			name = L["Enter a name to create a new border. The name can be anything you like to help you identify that border."],
-			order = 1
-		},
-		new = {
-			type = "input",
-			name = L["Create new border"],
-			order = 2,
-			width = "full",
-			set = function(info, v)
-				mod:NewBorder(v)
-			end
-		},
-		preset = {
-			type = "select",
-			name = L["Preset"],
-			width = "double",
-			desc = L["Select a preset to load settings from. This will erase any of your current borders."],
-			confirm = true,
-			confirmText = L["This will wipe out any current settings!"],
-			values = presets,
-			get = function()
-				return selectedPreset
-			end,
-			set = function(info, v)
-				selectedPreset = v
-				mod:ApplyPreset(v)
-			end
-		},
 		hideBlizzard = {
 			type = "toggle",
 			name = L["Hide default border"],
 			desc = L["Hide the default border on the minimap."],
 			get = function() return db.hideBlizzard end,
 			set = function(info, v) db.hideBlizzard = v; mod:Update() end,
-		},
-		borders = {
-			name = L["Borders"],
+		},	
+		currentGroup = {
 			type = "group",
+			name = L["Current Borders"],
 			args = {
+				shape = parent:GetModule("General").options.args.shape,
+				newDesc = {
+					type = "description",
+					name = L["Enter a name to create a new border. The name can be anything you like to help you identify that border."],
+					order = 1
+				},
+				new = {
+					type = "input",
+					name = L["Create new border"],
+					order = 2,
+					width = "double",
+					set = function(info, v)
+						mod:NewBorder(v)
+					end
+				},
+				clear = {
+					name = L["Clear & start over"],
+					desc = L["Clear the current borders and start fresh"],
+					order = 3,
+					type = "execute",
+					func = function()
+						mod:Clear()
+					end
+				},		
+				borders = {
+					name = L["Borders"],
+					type = "group",
+					args = {
+					}
+				}
 			}
-		}
+		},
+		presets = {
+			type = "group",
+			name = L["Preset"],
+			args = {
+				preset = {
+					type = "select",
+					name = L["Select preset to load"],
+					width = "double",
+					desc = L["Select a preset to load settings from. This will erase any of your current borders."],
+					confirm = true,
+					confirmText = L["This will wipe out any current settings!"],
+					values = presets,
+					get = function()
+						return selectedPreset
+					end,
+					set = function(info, v)
+						selectedPreset = v
+						mod:ApplyPreset(v)
+					end
+				},
+				delete = {
+					name = L["Delete"],
+					type = "select",
+					confirm = true,
+					order = 110,
+					disabled = function()
+						for k, v in pairs(userPresets) do
+							return false
+						end
+						return true
+					end,
+					confirmText = L["Really delete this preset? This can't be undone."],
+					values = userPresets,
+					get = function(info, v)
+						return nil
+					end,
+					set = function(info, v)
+						mod.db.global.userPresets[v] = nil
+					end
+				},
+				saveas = {
+					name = L["Save current settings as preset..."],
+					type = "input",
+					width = "double",
+					get = function() return "" end,
+					set = function(info, v)
+						mod:SavePresetAs(v)
+					end
+				},
+			}
+		}	
 	}
 }
 
+local function getLeaf(info)
+	return info.options.args[info[1]].args[info[2]].args[info[3]].args[info[4]]
+end
+
 local function getTextureAndDB(info)
-	local key = info.options.args[info[1]].args[info[2]].args[info[3]].arg
+	local key = getLeaf(info).arg
 	return textures[key]
 end
 
@@ -162,10 +216,10 @@ local borderOptions = {
 		name = L["Name"],
 		order = 2,
 		get = function(info)
-			return info.options.args[info[1]].args[info[2]].args[info[3]].name
+			return getLeaf(info).name
 		end,
 		set = function(info, name)
-			info.options.args[info[1]].args[info[2]].args[info[3]].name = name
+			getLeaf(info).name = name
 			local tex = getTextureAndDB(info)
 			tex.settings.name = name
 		end
@@ -177,14 +231,14 @@ local borderOptions = {
 		confirmText = L["Really delete this border?"],
 		order = 3,
 		func = function(info)
-			local index = info.options.args[info[1]].args[info[2]].args[info[3]].arg
+			local index = getLeaf(info).arg
 			for k, v in ipairs(db.borders) do
 				if v == textures[index].settings then
 					tremove(db.borders, k)
 					break
 				end
 			end
-			info.options.args[info[1]].args[info[2]].args[index] = nil
+			info.options.args[info[1]].args[info[2]].args[info[3]].args[index] = nil
 			rotateTextures[textures[index]] = nil
 			tinsert(texturePool, textures[index])
 			textures[index]:Hide()
@@ -436,10 +490,12 @@ local borderOptions = {
 }
 
 local defaults = {
+	global = {
+		userPresets = {},
+	},
 	profile = {
 		hideBlizzard = true,
 		borders = {},
-		userPresets = {},
 		applyPreset = "Blue Rune Circles"
 	}
 }
@@ -451,22 +507,6 @@ function mod:OnInitialize()
 	local args = parent:GetModule("General").options.args
 	args.preset = deepCopyHash(options.args.preset)
 	args.preset.order = 2
-	-- args.presetDesc = {
-		-- type = "description",
-		-- name = [[
-			-- A preset is a set of borders and behaviors for your minimap.
-		-- ]],
-		-- order = 1
-	-- }
-
-	if db.applyPreset then
-		self:ApplyPreset(db.applyPreset)
-		db.applyPreset = false
-	else
-		for _, v in ipairs(db.borders) do
-			self:CreateBorderFromParams(v)
-		end
-	end
 end
 
 local updateTime = 1/60
@@ -488,17 +528,34 @@ local function updateRotations(self, t)
 end
 
 function mod:OnEnable()
+	db = self.db.profile
 	self:Update()
 	rotFrame:SetScript("OnUpdate", updateRotations)
+	
+	self:Clear()
+	if db.applyPreset then
+		self:ApplyPreset(db.applyPreset)
+		db.applyPreset = false
+	else
+		for _, v in ipairs(db.borders) do
+			self:CreateBorderFromParams(v)
+		end
+	end	
+	self:RebuildPresets()
 end
 
-function mod:ApplyPreset(preset)
-	local preset = parent.borderPresets[preset]
-	db.borders = deepCopyHash(preset.borders)
-	if preset.shape then
-		parent:GetModule("General"):ApplyShape(preset.shape)
+function mod:RebuildPresets()
+	for k, v in pairs(self.db.global.userPresets) do
+		userPresets[k] = k
+		presets[k] = k
 	end
-	options.args.borders.args = {}		-- leaky
+	for k, v in pairs(parent.borderPresets) do
+		presets[k] = k
+	end	
+end
+
+function mod:Clear()
+	options.args.currentGroup.args.borders.args = {}		-- leaky
 	for k, v in pairs(textures) do
 		tinsert(texturePool, v)
 		v:Hide()
@@ -507,6 +564,15 @@ function mod:ApplyPreset(preset)
 	for k, v in pairs(rotateTextures) do
 		rotateTextures[k] = nil
 	end
+end
+
+function mod:ApplyPreset(preset)
+	local preset = parent.borderPresets[preset] or self.db.global.userPresets[preset]
+	db.borders = deepCopyHash(preset.borders)
+	if preset.shape then
+		parent:GetModule("General"):ApplyShape(preset.shape)
+	end
+	self:Clear()
 	
 	for _, v in ipairs(db.borders) do
 		self:CreateBorderFromParams(v)
@@ -517,6 +583,14 @@ function mod:NewBorder(name)
 	local t = {name = name}
 	tinsert(db.borders, t)	
 	self:CreateBorderFromParams(t)
+end
+
+function mod:SavePresetAs(name)
+	self.db.global.userPresets[name] = {
+		borders = deepCopyHash(db.borders),
+		shape = parent:GetModule("General").db.profile.shape
+	}
+	self:RebuildPresets()
 end
 
 local inc = 0
@@ -551,7 +625,7 @@ function mod:CreateBorderFromParams(t)
 	tex:SetVertexColor(r,g,b,a)
 	textures["tex" .. inc] = tex
 	
-	options.args.borders.args["tex" .. inc] = {
+	options.args.currentGroup.args.borders.args["tex" .. inc] = {
 		type = "group",
 		name = t.name or ("Border #" .. inc),
 		arg = "tex" .. inc,

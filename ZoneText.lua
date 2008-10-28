@@ -134,7 +134,6 @@ local defaults = {
 }
 function mod:OnInitialize()
 	self.db = parent.db:RegisterNamespace(modName, defaults)
-	db = self.db.profile
 	parent:RegisterModuleOptions(modName, options, "Zone Button")
 	MinimapToggleButton:ClearAllPoints()
 	MinimapToggleButton:SetParent(MinimapZoneTextButton)
@@ -144,7 +143,10 @@ function mod:OnInitialize()
 	MinimapZoneText:SetPoint("CENTER")
 	MinimapZoneTextButton:SetHeight(26)
 	MinimapZoneTextButton:SetBackdrop(parent.backdrop)
-	
+end
+
+function mod:OnEnable()
+	db = self.db.profile
 	self:Update()
 	self:SetOnHover()
 end

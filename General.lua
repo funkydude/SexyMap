@@ -133,12 +133,15 @@ function mod:OnInitialize()
 	MinimapBorderTop:Hide()
 	Minimap:RegisterForDrag("LeftButton")
 	MinimapZoneTextButton:RegisterForDrag("LeftButton")
-	MinimapCluster:SetClampedToScreen(db.clamp)
-	self:SetLock(db.lock)
 	
 	self:SecureHook("updateContainerFrameAnchors", "CreateMoversAndSetMovables")
+end
+
+function mod:OnEnable()
+	db = self.db.profile
+	MinimapCluster:SetClampedToScreen(db.clamp)
+	self:SetLock(db.lock)
 	self:Update()
-	
 	self:ApplyShape()
 end
 	

@@ -137,6 +137,7 @@ function mod:OnInitialize()
 end
 
 function mod:OnEnable()
+	db = self.db.profile
 	local gotLast = false
 
 	self.findClock = self:ScheduleRepeatingTimer("FindClock", 0.5)
@@ -273,9 +274,11 @@ do
 	
 	function mod:UpdateDraggables()
 		for f, v in pairs(movables) do
-			local angle = db.dragPositions[f:GetName()] or 0
-			local x, y = f:GetCenter()
-			setPosition(f, x, y, angle)
+			local angle = db.dragPositions[f:GetName()]
+			if angle then
+				local x, y = f:GetCenter()
+				setPosition(f, x, y, angle)
+			end
 		end
 	end
 	

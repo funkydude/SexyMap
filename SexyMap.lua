@@ -70,6 +70,7 @@ end
 
 function mod:OpenConfig(name)
 	if self:GetModule("General").db.profile.rightClickToConfig then
+		InterfaceOptionsFrame_OpenToCategory("Profiles")
 		InterfaceOptionsFrame_OpenToCategory(optionFrames[name] or optionFrames.default)
 	end
 end

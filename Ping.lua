@@ -33,6 +33,7 @@ function mod:OnInitialize()
 end
 
 function mod:OnEnable()
+	db = self.db.profile
 	self:RegisterEvent("MINIMAP_PING")
 end
 

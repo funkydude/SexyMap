@@ -37,6 +37,7 @@ function mod:OnInitialize()
 end
 
 function mod:OnEnable()
+	db = self.db.profile
 	self:SecureHook(Minimap, "SetZoom")
 end
 
