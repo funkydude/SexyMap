@@ -77,6 +77,7 @@ local options = {
 			type = "select",
 			name = L["Minimap shape"],
 			values = shapeList,
+			order = 3,
 			get = function()
 				return db.shape or "Textures\\MinimapMask"
 			end,

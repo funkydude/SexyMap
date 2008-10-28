@@ -361,7 +361,16 @@ function mod:OnInitialize()
 	self.db = parent.db:RegisterNamespace(modName, defaults)
 	db = self.db.profile
 	parent:RegisterModuleOptions(modName, options, modName)
-	parent:GetModule("General").options.args.preset = options.args.preset
+	local args = parent:GetModule("General").options.args
+	args.preset = deepCopyHash(options.args.preset)
+	args.preset.order = 2
+	-- args.presetDesc = {
+		-- type = "description",
+		-- name = [[
+			-- A preset is a set of borders and behaviors for your minimap.
+		-- ]],
+		-- order = 1
+	-- }
 
 	if db.applyPreset then
 		self:ApplyPreset(db.applyPreset)

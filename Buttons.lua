@@ -20,17 +20,19 @@ end
 local options = {
 	type = "group",
 	name = modName,
-	grouptype = "tab",
+	childGroups = "tab",
 	args = {
 		custom = {
 			type = "group",
 			name = "Addon Buttons",
-			args = {}
+			args = {},
+			order = 2
 		},
 		stock = {
 			type = "group",
 			name = "Standard Buttons",
-			args = {}
+			args = {},
+			order = 1
 		}
 	}
 }
