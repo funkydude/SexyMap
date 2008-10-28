@@ -64,33 +64,33 @@ SexyMap.borderPresets = {
 		borders = {
 			{
 				["a"] = 1,
-				["r"] = 1,
-				["name"] = "Main",
 				["b"] = 0.04313725490196078,
-				["scale"] = 1.57,
+				["name"] = "Main",
+				["r"] = 1,
+				["scale"] = 1.82,
 				["rotSpeed"] = 21,
 				["g"] = 0.2901960784313725,
 				["texture"] = "PARTICLES\\GENERICGLOW5.BLP",
 			}, -- [1]
 			{
 				["a"] = 1,
-				["r"] = 1,
-				["name"] = "Second",
 				["b"] = 0.3529411764705882,
-				["scale"] = 1.68,
-				["rotSpeed"] = -11,
+				["name"] = "Second",
+				["r"] = 1,
+				["scale"] = 1.62,
+				["rotSpeed"] = -18,
 				["g"] = 0.8705882352941177,
 				["texture"] = "PARTICLES\\GENERICGLOW5.BLP",
 			}, -- [2]
 			{
-				["a"] = 1,
+				["a"] = 0.449999988079071,
 				["name"] = "Tint",
 				["b"] = 0.3254901960784314,
 				["scale"] = 1.35,
 				["r"] = 1,
 				["g"] = 0.6705882352941176,
 				["texture"] = "SPELLS\\T_VFX_HERO_CIRCLE.BLP",
-			}, -- [3]		
+			}, -- [3]	
 		},
 		shape = "Textures\\MinimapMask"
 	},
