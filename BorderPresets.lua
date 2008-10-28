@@ -33,42 +33,6 @@ SexyMap.borderPresets = {
 		},
 		shape = "Textures\\MinimapMask"
 	},
-	["Blue Rune Circles (Track Heading)"] = {
-		borders = {
-			{
-				["a"] = 1,
-				["rotSpeed"] = -16,
-				["b"] = 1,
-				["scale"] = 1.4,
-				["g"] = 0.4784313725490196,
-				["name"] = "Rune 1",
-				["playerRotation"] = "normal",
-				["r"] = 0.3098039215686275,
-				["texture"] = "SPELLS\\AURARUNE256.BLP",
-			}, -- [1]
-			{
-				["a"] = 0.3799999952316284,
-				["rotSpeed"] = 4,
-				["b"] = 1,
-				["scale"] = 2.1,
-				["g"] = 0.2901960784313725,
-				["name"] = "Rune 2",
-				["playerRotation"] = "reverse",
-				["r"] = 0.196078431372549,
-				["texture"] = "SPELLS\\AuraRune_A.blp",
-			}, -- [2]
-			{
-				["a"] = 0.3,
-				["name"] = "Fade",
-				["b"] = 1,
-				["scale"] = 1.6,
-				["r"] = 0,
-				["g"] = 0.2235294117647059,
-				["texture"] = "SPELLS\\T_VFX_HERO_CIRCLE.BLP",
-			}, -- [3]		
-		},
-		shape = "Textures\\MinimapMask"
-	},
 	["Blue Rune Diamond"] = {
 		borders = {
 			{
@@ -274,5 +238,52 @@ SexyMap.borderPresets = {
 			}, -- [3]		
 		},
 		shape = "Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy"
+	},
+	["Stargate"] = {
+		["shape"] = "Textures\\MinimapMask",
+		["borders"] = {
+			{
+				["a"] = 1,
+				["rotSpeed"] = -16,
+				["b"] = 1,
+				["scale"] = 1.4,
+				["g"] = 0.6862745098039216,
+				["name"] = "Rune 1",
+				["playerRotation"] = "normal",
+				["r"] = 0.5764705882352941,
+				["texture"] = "SPELLS\\AURARUNE256.BLP",
+			}, -- [1]
+			{
+				["a"] = 0.3799999952316284,
+				["rotSpeed"] = 0,
+				["b"] = 1,
+				["playerRotation"] = "none",
+				["g"] = 0.6588235294117647,
+				["rotation"] = 105,
+				["name"] = "Rune 2",
+				["scale"] = 2.05,
+				["r"] = 0.2823529411764706,
+				["texture"] = "SPELLS\\AuraRune_A.blp",
+			}, -- [2]
+			{
+				["a"] = 0.3,
+				["name"] = "Fade",
+				["b"] = 1,
+				["scale"] = 1.6,
+				["r"] = 0,
+				["g"] = 0.2235294117647059,
+				["texture"] = "SPELLS\\T_VFX_HERO_CIRCLE.BLP",
+			}, -- [3]
+			{
+				["a"] = 1,
+				["rotSpeed"] = -6,
+				["name"] = "Rune 3",
+				["b"] = 0.3529411764705882,
+				["scale"] = 1.65,
+				["r"] = 0.1137254901960784,
+				["g"] = 0.1686274509803922,
+				["texture"] = "SPELLS\\AuraRune_B.blp",
+			}, -- [4]
+		},
 	}
 }
