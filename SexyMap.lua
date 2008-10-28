@@ -47,7 +47,7 @@ function mod:OnEnable()
 		self.profilesRegistered = true
 	end
 	
-	self:SecureHook("Minimap_OnClick")
+	Minimap:SetScript("OnMouseUp", mod.Minimap_OnClick)
 	self:HookAll(MinimapCluster, "OnEnter", MinimapCluster:GetChildren())
 	
 	self.db.RegisterCallback(self, "OnProfileChanged", "ReloadAddon")
@@ -69,15 +69,15 @@ function mod:HookAll(frame, script, ...)
 end
 
 function mod:OpenConfig(name)
-	if self:GetModule("General").db.profile.rightClickToConfig then
-		InterfaceOptionsFrame_OpenToCategory("Profiles")
-		InterfaceOptionsFrame_OpenToCategory(optionFrames[name] or optionFrames.default)
-	end
+	InterfaceOptionsFrame_OpenToCategory("Profiles")
+	InterfaceOptionsFrame_OpenToCategory(optionFrames[name] or optionFrames.default)
 end
 
-function mod:Minimap_OnClick(frame, button)
-	if button == "RightButton" then
+function mod.Minimap_OnClick(frame, button)
+	if button == "RightButton" and mod:GetModule("General").db.profile.rightClickToConfig then
 		mod:OpenConfig()
+	else
+		Minimap_OnClick(frame)
 	end
 end
 
