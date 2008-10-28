@@ -49,6 +49,8 @@ L["Horizontal nudge"] = true
 L["Vertical nudge"] = true
 L["Layer"] = true
 L["Blend Mode"] = true
+L["Disable Rotation"] = true
+L["Force a square texture. Fixed distortion on square textures."] = true
 
 -- ./Buttons.lua
 L["Drag Radius"] = true
