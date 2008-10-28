@@ -284,7 +284,6 @@ do
 		for i = 1, childCount do
 			local child = select(i, Minimap:GetChildren())
 			if child and not movables[child] and child:GetName() then
-				parent:Print("Making", child:GetName(), "movable")
 				self:MakeMovable(child)
 			end
 		end

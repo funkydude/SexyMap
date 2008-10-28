@@ -38,11 +38,6 @@ function mod:OnInitialize()
 end
 
 function mod:OnEnable()
-	-- for k, v in pairs(self.modules) do
-		-- self:Print(k, v)
-		-- self:EnableModule(k)
-	-- end
-	
 	if _G.simpleMinimap then
 		self:Print("|cffff0000Warning!|r simpleMinimap is enabled. SexyMap may not work correctly.")
 	end
