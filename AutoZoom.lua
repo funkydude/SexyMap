@@ -2,6 +2,7 @@ local parent = SexyMap
 local modName = "AutoZoom"
 local mod = SexyMap:NewModule(modName, "AceTimer-3.0", "AceHook-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
+local db
 
 local options = {
 	type = "group",

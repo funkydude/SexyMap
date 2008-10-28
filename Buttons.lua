@@ -8,8 +8,8 @@ local function iterateChildren(...)
 	local gotLast = false
 	for val = 1, select("#", ...) do
 		local child = select(val, ...)
-		if gotLast and not buttons[child:GetName()] then
-			buttons[child:GetName() or ("Button #" .. val)] = {child}
+		if gotLast and not buttons[child:GetName()] and child ~= TimeManagerClockButton then
+			buttons[child:GetName() or ("Button #" .. val)] = {child, custom = true}
 		end
 		if child == MiniMapVoiceChatFrame then
 			gotLast = true
@@ -20,7 +20,19 @@ end
 local options = {
 	type = "group",
 	name = modName,
-	args = {}
+	grouptype = "tab",
+	args = {
+		custom = {
+			type = "group",
+			name = "Addon Buttons",
+			args = {}
+		},
+		stock = {
+			type = "group",
+			name = "Standard Buttons",
+			args = {}
+		}
+	}
 }
 
 local defaults = {
@@ -69,17 +81,25 @@ do
 	}
 
 	local function hideGet(info, v)		
-		return v == (db[info[#info]] and db[info[#info]].hide or "hover")
+		local key = info[#info]:gsub(" ", "_")
+		return v == (db[key] and db[key].hide or "hover")
 	end
 	
 	local function hideSet(info, v)
-		db[info[#info]] = db[info[#info]] or {}
-		db[info[#info]].hide = v
+		local key = info[#info]:gsub(" ", "_")
+		db[key] = db[key] or {}
+		db[key].hide = v
 		mod:Update()
 	end
 
 	function mod:addButtonOptions(k, v)
-		options.args[k] = options.args[k] or {
+		local p
+		if v and v.custom then
+			p = options.args.custom.args
+		else
+			p = options.args.stock.args
+		end
+		p[k] = p[k] or {
 			type = "multiselect",
 			name = ("Show %s..."):format(translations[k] or k),
 			values = hideValues,
@@ -110,7 +130,7 @@ function mod:FindClock()
 
 		iterateChildren(Minimap:GetChildren())
 		for k, v in pairs(buttons) do
-			mod:addButtonOptions(k)
+			mod:addButtonOptions(k, v)
 		end
 
 		self:Update()
@@ -127,7 +147,9 @@ function mod:Update()
 		end
 		if hide == "hover" then
 			for _, f in ipairs(v) do
-				parent:RegisterHoverButton(f, v.show)
+				if v.custom and f:IsVisible() or not v.custom then
+					parent:RegisterHoverButton(f, v.show)
+				end
 			end
 		elseif hide == "never" then
 			for _, f in ipairs(v) do
@@ -137,8 +159,10 @@ function mod:Update()
 		else
 			for _, f in ipairs(v) do
 				f = type(f) == "string" and _G[f] or f
-				f:SetAlpha(1)
-				f:Show()
+				if v.custom and f:IsVisible() or not v.custom then
+					f:SetAlpha(1)
+					f:Show()
+				end
 			end
 		end				
 	end
