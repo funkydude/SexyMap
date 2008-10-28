@@ -200,5 +200,43 @@ SexyMap.borderPresets = {
 			}, -- [2]
 		},
 		shape = "Interface\\BUTTONS\\WHITE8X8"
+	},
+	Parchment = {
+		borders = {
+			{
+				["a"] = 1,
+				["b"] = 1,
+				["scale"] = 0.8200000000000001,
+				["g"] = 1,
+				["disableRotation"] = true,
+				["blendMode"] = "DISABLE",
+				["r"] = 1,
+				["drawLayer"] = "BACKGROUND",
+				["name"] = "Parchment",
+				["texture"] = "Interface\\AchievementFrame\\UI-Achievement-Parchment.blp",
+			}, -- [1]
+			{
+				["a"] = 0.3799999952316284,
+				["r"] = 0.2,
+				["scale"] = 0.9000000000000001,
+				["g"] = 0.09803921568627451,
+				["drawLayer"] = "BACKGROUND",
+				["name"] = "Tint",
+				["blendMode"] = "BLEND",
+				["b"] = 0,
+				["texture"] = "Interface\\BUTTONS\\WHITE8X8.BLP",
+			}, -- [2]
+			{
+				["disableRotation"] = true,
+				["r"] = 0.6313725490196078,
+				["name"] = "Parchment 2",
+				["b"] = 0.6313725490196078,
+				["scale"] = 0.8200000000000001,
+				["a"] = 1,
+				["g"] = 0.6313725490196078,
+				["texture"] = "Interface\\AchievementFrame\\UI-Achievement-Parchment-Horizontal.blp",
+			}, -- [3]		
+		},
+		shape = "Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy"
 	}
 }
