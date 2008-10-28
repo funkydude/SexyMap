@@ -22,7 +22,7 @@ SexyMap.borderPresets = {
 				["texture"] = "SPELLS\\AuraRune_A.blp",
 			}, -- [2]
 			{
-				["a"] = 1,
+				["a"] = 0.3,
 				["name"] = "Fade",
 				["b"] = 1,
 				["scale"] = 1.6,

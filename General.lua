@@ -125,7 +125,7 @@ function mod:OnInitialize()
 	self:SetLock(db.lock)
 	
 	self:SecureHook("updateContainerFrameAnchors", "CreateMoversAndSetMovables")
-	
+	self:Update()
 end
 	
 function mod:ApplyShape(shape)
