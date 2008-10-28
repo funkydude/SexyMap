@@ -49,6 +49,15 @@ function mod:OnEnable()
 	
 	self:SecureHook("Minimap_OnClick")
 	self:HookAll(MinimapCluster, "OnEnter", MinimapCluster:GetChildren())
+	
+	self.db.RegisterCallback(self, "OnProfileChanged", "ReloadAddon")
+	self.db.RegisterCallback(self, "OnProfileCopied", "ReloadAddon")
+	self.db.RegisterCallback(self, "OnProfileReset", "ReloadAddon")
+end
+
+function mod:ReloadAddon()
+	self:Disable()
+	self:Enable()
 end
 
 function mod:HookAll(frame, script, ...)

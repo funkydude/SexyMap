@@ -1,5 +1,5 @@
 SexyMap.borderPresets = {				
-	["Blue Runes"] = {
+	["Blue Rune Circles"] = {
 		borders = {
 			{
 				["a"] = 1,
@@ -33,28 +33,32 @@ SexyMap.borderPresets = {
 		},
 		shape = "Textures\\MinimapMask"
 	},
-	["Purple Rune Square"] = {
+	["Blue Rune Diamond"] = {
 		borders = {
 			{
-				["a"] = 0.5,
-				["hNudge"] = 0,
+				["a"] = 1,
+				["hNudge"] = -1,
 				["rotSpeed"] = 0,
 				["b"] = 1,
-				["scale"] = 1.6,
-				["g"] = 0.2666666666666667,
+				["scale"] = 1.62,
+				["g"] = 0.3450980392156863,
 				["vNudge"] = 0,
 				["rotation"] = 0,
 				["name"] = "Rune",
-				["r"] = 0.6705882352941176,
+				["drawLayer"] = "BACKGROUND",
+				["r"] = 0,
 				["texture"] = "SPELLS\\AuraRune256b.blp",
 			}, -- [1]
 			{
-				["a"] = 0.1899999976158142,
+				["a"] = 0.06999999284744263,
+				["r"] = 0.3294117647058824,
+				["scale"] = 2.1,
+				["g"] = 0.5333333333333333,
+				["vNudge"] = 0,
+				["drawLayer"] = "ARTWORK",
 				["name"] = "Inner Circle",
+				["disableRotation"] = true,
 				["b"] = 1,
-				["scale"] = 3,
-				["r"] = 0.4705882352941176,
-				["g"] = 0,
 				["texture"] = "Interface\\GLUES\\MODELS\\UI_Tauren\\gradientCircle.blp",
 			}, -- [2]
 		},
@@ -110,21 +114,91 @@ SexyMap.borderPresets = {
 				["texture"] = "SPELLS\\T_VFX_Moon_Black.blp",
 			}, -- [1]
 			{
-				["a"] = 1,
-				["hNudge"] = 1,
+				["a"] = 0.4900000095367432,
+				["hNudge"] = 0,
 				["rotSpeed"] = 0,
-				["b"] = 0.8156862745098039,
-				["scale"] = 2.3,
-				["g"] = 0.7058823529411764,
-				["vNudge"] = 3,
+				["b"] = 1,
+				["scale"] = 1.58,
+				["g"] = 0.5882352941176471,
+				["vNudge"] = 0,
 				["drawLayer"] = "OVERLAY",
 				["name"] = "Glow",
-				["rotation"] = 198,
-				["r"] = 0.6509803921568628,
+				["disableRotation"] = true,
+				["rotation"] = 191,
+				["r"] = 0.3372549019607843,
 				["blendMode"] = "ADD",
 				["texture"] = "SPELLS\\MoonCrescentGlow2.blp",
-			}, -- [2]	
+			}, -- [2]
 		},
 		shape = "Textures\\MinimapMask"
-	}	
+	},
+	["Jewels"] = {
+		borders = {
+			{
+				["a"] = 1,
+				["b"] = 0.7058823529411764,
+				["scale"] = 0.8800000000000001,
+				["g"] = 0.6392156862745098,
+				["disableRotation"] = true,
+				["name"] = "Square",
+				["blendMode"] = "DISABLE",
+				["drawLayer"] = "BACKGROUND",
+				["r"] = 0.615686274509804,
+				["texture"] = "TILESET\\EXPANSION01\\EVERSONG\\SwathSmallStones.blp",
+			}, -- [1]
+			{
+				["a"] = 1,
+				["hNudge"] = 0,
+				["rotSpeed"] = 118,
+				["r"] = 0.6823529411764706,
+				["scale"] = 0.8800000000000001,
+				["g"] = 0.8666666666666667,
+				["vNudge"] = 0,
+				["disableRotation"] = true,
+				["name"] = "Square Glow",
+				["blendMode"] = "ADD",
+				["rotation"] = 66,
+				["drawLayer"] = "BORDER",
+				["b"] = 1,
+				["texture"] = "Interface\\Minimap\\Ping\\ping5.blp",
+			}, -- [2]
+		},
+		shape = "Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy"
+	},
+	["Blue Square Glow"] = {
+		borders = {
+			{
+				["a"] = 1,
+				["hNudge"] = 0,
+				["rotSpeed"] = 10,
+				["r"] = 0.3411764705882353,
+				["scale"] = 0.73,
+				["g"] = 0.4705882352941176,
+				["vNudge"] = 0,
+				["disableRotation"] = true,
+				["name"] = "Square Overlay",
+				["blendMode"] = "ADD",
+				["b"] = 1,
+				["drawLayer"] = "ARTWORK",
+				["rotation"] = 66,
+				["texture"] = "World\\GENERIC\\ACTIVEDOODADS\\WORLDTREEPORTALS\\TWISTEDNETHER8.BLP",
+			}, -- [1]
+			{
+				["a"] = 1,
+				["hNudge"] = 0,
+				["rotSpeed"] = -14,
+				["b"] = 1,
+				["scale"] = 1.9,
+				["g"] = 0.7215686274509804,
+				["vNudge"] = 5,
+				["disableRotation"] = true,
+				["name"] = "Circle 2",
+				["drawLayer"] = "BACKGROUND",
+				["r"] = 0.3607843137254902,
+				["blendMode"] = "ADD",
+				["texture"] = "World\\GENERIC\\ACTIVEDOODADS\\INSTANCEPORTAL\\GENERICGLOW2.BLP",
+			}, -- [2]
+		},
+		shape = "Interface\\BUTTONS\\WHITE8X8"
+	}
 }

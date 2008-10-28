@@ -232,6 +232,10 @@ local borderOptions = {
 		max = 120,
 		step = 1,
 		bigStep = 1,
+		disabled = function(info)
+			local tex = getTextureAndDB(info)
+			return tex.settings.disableRotation
+		end,
 		width = "full",
 		get = function(info)
 			local tex = getTextureAndDB(info)
@@ -250,6 +254,10 @@ local borderOptions = {
 		desc = L["A static amount to rotate the texture by."],
 		min = 0,
 		max = 360,
+		disabled = function(info)
+			local tex = getTextureAndDB(info)
+			return tex.settings.disableRotation
+		end,
 		step = 1,
 		bigStep = 1,
 		width = "full",
@@ -345,6 +353,26 @@ local borderOptions = {
 			tex.settings.blendMode = v
 			tex:SetBlendMode(v)
 		end	
+	},
+	disableRotation = {
+		type = "toggle",
+		name = L["Disable Rotation"],
+		desc = L["Force a square texture. Fixed distortion on square textures."],
+		get = function(info)
+			local tex = getTextureAndDB(info)
+			return tex.settings.disableRotation
+		end,
+		set = function(info, v)
+			local tex = getTextureAndDB(info)
+			tex.settings.disableRotation = v
+			if v then
+				tex:SetTexCoord(0, 1, 0, 1)
+				rotateTextures[tex] = nil
+			else
+				rotateTextures[tex] = tex.settings.rotSpeed
+				RotateTexture(tex, tex.settings.rotation or 0, true)
+			end
+		end
 	}
 }
 
@@ -353,7 +381,7 @@ local defaults = {
 		hideBlizzard = true,
 		borders = {},
 		userPresets = {},
-		applyPreset = "Blue Runes"
+		applyPreset = "Blue Rune Circles"
 	}
 }
 
@@ -437,8 +465,12 @@ function mod:CreateBorderFromParams(t)
 	tex.rotSpeed = t.rotSpeed or 0
 	tex.settings = t
 	tex:Show()
-	rotateTextures[tex] = t.rotSpeed ~= 0 and t.rotSpeed or nil
-	RotateTexture(tex, t.rotation or 0, true)
+	if t.disableRotation then
+		tex:SetTexCoord(0, 1, 0, 1)
+	else
+		rotateTextures[tex] = t.rotSpeed ~= 0 and t.rotSpeed or nil
+		RotateTexture(tex, t.rotation or 0, true)
+	end
 	
 	local r,g,b,a = t.r or 1, t.g or 1, t.b or 1, t.a or 1
 	tex:SetVertexColor(r,g,b,a)
