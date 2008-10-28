@@ -51,6 +51,7 @@ L["Layer"] = true
 L["Blend Mode"] = true
 
 -- ./Buttons.lua
+L["Drag Radius"] = true
 L["Calendar"] = true
 L["Map Button"] = true
 L["Tracking Button"] = true
@@ -68,6 +69,7 @@ L["On hover"] = true
 -- ./General.lua
 L["Lock minimap"] = true
 L["Show movers"] = true
+L["Clamp to screen"] = true
 L["Opacity"] = true
 L["Minimap shape"] = true
 

@@ -177,6 +177,7 @@ do
 	end
 
 	function mod:CheckExited()
+		if self.fadeDisabled then return end
 		local f = GetMouseFocus()
 		local p = f:GetParent()
 		while(p and p ~= UIParent) do
@@ -184,5 +185,13 @@ do
 			p = p:GetParent()
 		end
 		self:OnExit()
+	end
+	
+	function mod:EnableFade()
+		self.fadeDisabled = false
+	end
+
+	function mod:DisableFade()
+		self.fadeDisabled = true
 	end
 end

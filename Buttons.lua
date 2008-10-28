@@ -33,13 +33,29 @@ local options = {
 			name = "Standard Buttons",
 			args = {},
 			order = 1
+		},
+		dragRadius = {
+			type = "range",
+			name = L["Drag Radius"],
+			min = -30,
+			max = 100,
+			step = 1,
+			bigStep = 1,
+			get = function()
+				return db.radius
+			end,
+			set = function(info, v)
+				db.radius = v
+				mod:UpdateDraggables()
+			end
 		}
 	}
 }
 
 local defaults = {
 	profile = {
-		closeButton = false
+		radius = 0,
+		dragPositions = {}
 	}
 }
 
@@ -124,6 +140,16 @@ function mod:OnEnable()
 
 	self.findClock = self:ScheduleRepeatingTimer("FindClock", 0.5)
 	self:Update()
+
+	self.movableTimer = self:ScheduleRepeatingTimer("MakeMovables", 2)
+	MiniMapWorldMapButton:SetParent(Minimap)
+	MiniMapTracking:SetParent(Minimap)
+	self:MakeMovable(MiniMapTracking, MiniMapTrackingButton)
+	self:MakeMovables()
+end
+
+function mod:OnDisable()
+	self:CancelTimer(self.movableTimer, true)
 end
 
 function mod:FindClock()
@@ -162,9 +188,11 @@ function mod:Update()
 		else
 			for _, f in ipairs(v) do
 				f = type(f) == "string" and _G[f] or f
-				if v.custom and f:IsVisible() or not v.custom then
-					f:SetAlpha(1)
-					f:Show()
+				if (v.custom and f:IsVisible() or not v.custom) then
+					if type(v.show) == "function" and v.show(f) or type(v.show) ~= "function" then
+						f:SetAlpha(1)
+						f:Show()
+					end
 				end
 			end
 		end				
@@ -183,5 +211,83 @@ do
 	function mod:AddMouseWheelZoom()
 		Minimap:EnableMouseWheel()
 		Minimap:SetScript("OnMouseWheel", wheel)
+	end
+end
+
+do
+	local moving
+	local movables = {}
+	local dragFrames = {}
+	local dragFrame = CreateFrame("Frame")
+	local GetCursorPosition = _G.GetCursorPosition
+	
+	local function setPosition(frame, mx, my, angle)
+		if not angle then
+			local x, y = Minimap:GetCenter()
+			local dx, dy = mx - x, my - y
+			angle = atan(dy / dx)
+			if dx < 0 then angle = angle + 180 end
+			db.dragPositions[frame:GetName()] = angle
+		end		
+
+		local radius = (Minimap:GetWidth() / 2) + db.radius
+		local bx = cos(angle) * radius
+		local by = sin(angle) * radius
+		
+		frame:ClearAllPoints()
+		frame:SetPoint("CENTER", Minimap, "CENTER", bx, by)
+	end
+	
+	local function updatePosition()
+		local mx, my =  GetCursorPosition()
+		mx, my = mx / UIParent:GetEffectiveScale(), my / UIParent:GetEffectiveScale()		
+		setPosition(moving, mx, my)
+	end
+	
+	local function start(frame)
+		dragFrame:SetScript("OnUpdate", updatePosition)
+		parent:DisableFade()
+		moving = dragFrames[frame] or frame
+	end
+	
+	local function finish(frame)
+		moving = nil
+		parent:EnableFade()
+		dragFrame:SetScript("OnUpdate", nil)
+	end
+	
+	function mod:MakeMovable(frame, toDrag)
+		if not frame then return end
+		movables[frame] = true
+		if toDrag then
+			dragFrames[toDrag] = frame
+		end
+		toDrag = toDrag or frame
+		toDrag:RegisterForDrag("LeftButton")
+		toDrag:SetScript("OnDragStart", start)
+		toDrag:SetScript("OnDragStop", finish)
+	end
+	
+	function mod:UpdateDraggables()
+		for f, v in pairs(movables) do
+			local angle = db.dragPositions[f:GetName()]
+			local x, y = f:GetCenter()
+			setPosition(f, x, y, angle)
+		end
+	end
+	
+	local lastChildCount = 0
+	function mod:MakeMovables()
+		local childCount = Minimap:GetNumChildren()
+		if childCount == lastChildCount then return end
+		lastChildCount = childCount
+		for i = 1, childCount do
+			local child = select(i, Minimap:GetChildren())
+			if child and not movables[child] and child:GetName() then
+				parent:Print("Making", child:GetName(), "movable")
+				self:MakeMovable(child)
+			end
+		end
+		self:UpdateDraggables()
 	end
 end

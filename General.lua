@@ -39,6 +39,17 @@ local options = {
 				mod:SetMovers()
 			end
 		},
+		clamp = {
+			type = "toggle",
+			name = L["Clamp to screen"],
+			get = function()
+				return db.clamp
+			end,
+			set = function(info, v)
+				db.clamp = v
+				MinimapCluster:SetClampedToScreen(v)
+			end
+		},
 		scale = {
 			type = "range",
 			name = L["Scale"],
@@ -91,6 +102,7 @@ local options = {
 local defaults = {
 	profile = {
 		lock = true,
+		clamp = true,
 		movers = false,
 		framePositions = {}
 	}
@@ -109,10 +121,11 @@ function mod:OnInitialize()
 	MinimapBorderTop:Hide()
 	Minimap:RegisterForDrag("LeftButton")
 	MinimapZoneTextButton:RegisterForDrag("LeftButton")
-	MinimapCluster:SetClampedToScreen(true)
+	MinimapCluster:SetClampedToScreen(db.clamp)
 	self:SetLock(db.lock)
 	
 	self:SecureHook("updateContainerFrameAnchors", "CreateMoversAndSetMovables")
+	
 end
 	
 function mod:ApplyShape(shape)
@@ -211,8 +224,8 @@ do
 			Minimap:SetScript("OnDragStop", stop)
 			MinimapZoneTextButton:SetScript("OnDragStart", start)
 			MinimapZoneTextButton:SetScript("OnDragStop", stop)
-			MinimapCluster:SetMovable(true)
 		end
+		MinimapCluster:SetMovable(true)
 	end
 	
 	function mod:SetMovers()
