@@ -51,7 +51,9 @@ do
 		mapclock	= {"TimeManagerClockButton"},
 		close	 	= {"MinimapToggleButton"},
 		direction	= {"MinimapNorthTag"},
-		mail		= {"MiniMapMailFrame"},
+		mail		= {"MiniMapMailFrame", show = function(f)
+						return HasNewMail()
+					end},
 		voice 		= {"MiniMapVoiceChatFrame", show = function(f)
 						return IsVoiceChatEnabled() and GetNumVoiceSessions()
 					end},
