@@ -126,12 +126,14 @@ function mod:OnInitialize()
 	
 	self:SecureHook("updateContainerFrameAnchors", "CreateMoversAndSetMovables")
 	self:Update()
+	
+	self:ApplyShape()
 end
 	
 function mod:ApplyShape(shape)
 	if shape or db.shape then
-		db.shape = shape
-		Minimap:SetMaskTexture(shape or db.shape)
+		db.shape = shape or db.shape or "Textures\\MinimapMask"
+		Minimap:SetMaskTexture(db.shape)
 	end
 end
 

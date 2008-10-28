@@ -469,12 +469,20 @@ function mod:OnInitialize()
 	end
 end
 
+local updateTime = 1/60
+local totalTime = 0
 local function updateRotations(self, t)
-	for k, v in pairs(rotateTextures) do
-		if type(v) == "number" then
-			RotateTexture(k, v * t)
-		else
-			RotateTexture(k, v)
+	totalTime = totalTime + t
+	if totalTime >= updateTime then
+		for k, v in pairs(rotateTextures) do
+			if type(v) == "number" then
+				RotateTexture(k, v * totalTime)
+			else
+				RotateTexture(k, v)
+			end
+		end
+		while totalTime > updateTime do
+			totalTime = totalTime - updateTime
 		end
 	end
 end

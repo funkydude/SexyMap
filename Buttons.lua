@@ -8,7 +8,8 @@ local function iterateChildren(...)
 	local gotLast = false
 	for val = 1, select("#", ...) do
 		local child = select(val, ...)
-		if gotLast and not buttons[child:GetName()] and child ~= TimeManagerClockButton and child.SetAlpha then
+		local sizeOk = child.GetWidth and child:GetWidth() < 100 and child.GetHeight and child:GetHeight() < 100
+		if sizeOk and gotLast and not buttons[child:GetName()] and child ~= TimeManagerClockButton and child.SetAlpha then
 			buttons[child:GetName() or ("Button #" .. val)] = {child, custom = true}
 		end
 		if child == MiniMapVoiceChatFrame then
@@ -218,12 +219,15 @@ do
 	local moving
 	local movables = {}
 	local dragFrames = {}
-	local dragFrame = CreateFrame("Frame")
+	local dragFrame = CreateFrame("Frame", nil, UIParent)
+	
 	local GetCursorPosition = _G.GetCursorPosition
 	
 	local function setPosition(frame, mx, my, angle)
 		if not angle then
 			local x, y = Minimap:GetCenter()
+			x, y = x * Minimap:GetEffectiveScale(), y * Minimap:GetEffectiveScale()
+			
 			local dx, dy = mx - x, my - y
 			angle = atan(dy / dx)
 			if dx < 0 then angle = angle + 180 end
@@ -240,7 +244,6 @@ do
 	
 	local function updatePosition()
 		local mx, my =  GetCursorPosition()
-		mx, my = mx / UIParent:GetEffectiveScale(), my / UIParent:GetEffectiveScale()		
 		setPosition(moving, mx, my)
 	end
 	
@@ -270,7 +273,7 @@ do
 	
 	function mod:UpdateDraggables()
 		for f, v in pairs(movables) do
-			local angle = db.dragPositions[f:GetName()]
+			local angle = db.dragPositions[f:GetName()] or 0
 			local x, y = f:GetCenter()
 			setPosition(f, x, y, angle)
 		end
@@ -283,7 +286,8 @@ do
 		lastChildCount = childCount
 		for i = 1, childCount do
 			local child = select(i, Minimap:GetChildren())
-			if child and not movables[child] and child:GetName() then
+			local sizeOk = child and child.GetWidth and child:GetWidth() < 100 and child.GetHeight and child:GetHeight() < 100
+			if sizeOk and not movables[child] and child:GetName() then
 				self:MakeMovable(child)
 			end
 		end
