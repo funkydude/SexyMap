@@ -95,13 +95,14 @@ do
 	end
 
 	function mod:addButtonOptions(k, v)
+		local key = k:gsub(" ", "_")
 		local p
 		if v and v.custom then
 			p = options.args.custom.args
 		else
 			p = options.args.stock.args
 		end
-		p[k] = p[k] or {
+		p[key] = p[key] or {
 			type = "multiselect",
 			name = ("Show %s..."):format(translations[k] or k),
 			values = hideValues,
