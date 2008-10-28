@@ -133,6 +133,7 @@ function mod:OnInitialize()
 	MinimapBorderTop:Hide()
 	Minimap:RegisterForDrag("LeftButton")
 	MinimapZoneTextButton:RegisterForDrag("LeftButton")
+	self:SetLock(db.lock)
 	
 	self:SecureHook("updateContainerFrameAnchors", "CreateMoversAndSetMovables")
 end

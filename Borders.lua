@@ -506,7 +506,9 @@ function mod:OnInitialize()
 	parent:RegisterModuleOptions(modName, options, modName)
 	local args = parent:GetModule("General").options.args
 	args.preset = deepCopyHash(options.args.preset)
-	args.preset.order = 2
+	if args.preset then
+		args.preset.order = 2
+	end
 end
 
 local updateTime = 1/60
