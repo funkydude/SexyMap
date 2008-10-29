@@ -63,6 +63,7 @@ L["Disable Rotation"] = true
 L["Force a square texture. Fixed distortion on square textures."] = true
 
 -- ./Buttons.lua
+L["Capture New Buttons"] = true
 L["Drag Radius"] = true
 L["Calendar"] = true
 L["Map Button"] = true
