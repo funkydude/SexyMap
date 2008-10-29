@@ -74,7 +74,7 @@ end
 local function RotateTexture(self, inc, set)
 	if type(inc) == "string" then
 		local bearing = GetPlayerBearing()
-		if inc ~= "normal" then
+		if inc == "normal" then
 			bearing = bearing * -1
 		end
 		bearing = bearing * 57.2957795
@@ -304,6 +304,7 @@ local borderOptions = {
 		step = 0.01,
 		bigStep = 0.01,
 		width = "full",
+		order = 116,
 		get = function(info)
 			local tex = getTextureAndDB(info)
 			return tex.settings.scale or 1
@@ -323,6 +324,7 @@ local borderOptions = {
 		max = 120,
 		step = 1,
 		bigStep = 1,
+		order = 114,
 		disabled = function(info)
 			local tex = getTextureAndDB(info)
 			return tex.settings.disableRotation or type(rotateTextures[tex]) == "string"
@@ -345,6 +347,7 @@ local borderOptions = {
 		desc = L["A static amount to rotate the texture by."],
 		min = 0,
 		max = 360,
+		order = 115,
 		disabled = function(info)
 			local tex = getTextureAndDB(info)
 			return tex.settings.disableRotation or type(rotateTextures[tex]) == "string"
@@ -373,6 +376,7 @@ local borderOptions = {
 			reverse = L["Reverse rotation"],
 			none = L["Do not match player rotation"],
 		},
+		order = 113,
 		get = function(info, v)
 			local tex = getTextureAndDB(info)
 			return rotateTextures[tex] == v or (not rotateTextures[tex] and v == "none")
@@ -390,6 +394,8 @@ local borderOptions = {
 	color = {
 		type = "color",
 		name = L["Texture tint"],
+		order = 109,
+		width = "full",
 		hasAlpha = true,
 		get = function(info)
 			local tex = getTextureAndDB(info)
@@ -443,6 +449,7 @@ local borderOptions = {
 		type = "select",
 		name = L["Layer"],
 		values = layers,
+		order = 110,
 		get = function(info)
 			local tex = getTextureAndDB(info)
 			return tex:GetDrawLayer()
@@ -457,6 +464,7 @@ local borderOptions = {
 		type = "select",
 		name = L["Blend Mode"],
 		values = blendModes,
+		order = 111,
 		get = function(info)
 			local tex = getTextureAndDB(info)
 			return tex:GetBlendMode()
@@ -475,6 +483,8 @@ local borderOptions = {
 			local tex = getTextureAndDB(info)
 			return tex.settings.disableRotation
 		end,
+		width = "full",
+		order = 112,
 		set = function(info, v)
 			local tex = getTextureAndDB(info)
 			tex.settings.disableRotation = v
