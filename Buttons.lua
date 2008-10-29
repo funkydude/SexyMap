@@ -35,6 +35,11 @@ local options = {
 			args = {},
 			order = 1
 		},
+		capture = {
+			type = "execute",
+			func = mod.CaptureButtons,
+			name = L["Capture New Buttons"]
+		},
 		dragRadius = {
 			type = "range",
 			name = L["Drag Radius"],
@@ -154,17 +159,19 @@ function mod:OnDisable()
 	self:CancelTimer(self.movableTimer, true)
 end
 
+function mod:CaptureButtons()
+	iterateChildren(Minimap:GetChildren())
+	for k, v in pairs(buttons) do
+		mod:addButtonOptions(k, v)
+	end
+	self:Update()
+end
+
 function mod:FindClock()
 	if _G.TimeManagerClockButton then
 		self:CancelTimer(self.findClock, true)
 		self.findClock = nil
-
-		iterateChildren(Minimap:GetChildren())
-		for k, v in pairs(buttons) do
-			mod:addButtonOptions(k, v)
-		end
-
-		self:Update()
+		self:CaptureButtons()
 	end
 end
 

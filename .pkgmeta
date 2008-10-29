@@ -1,3 +1,4 @@
+package-as: SexyMap
 externals:
   Libs/CallbackHandler-1.0: svn://svn.wowace.com/wow/callbackhandler/mainline/tags/1.0.3/CallbackHandler-1.0
   Libs/AceAddon-3.0: svn://svn.wowace.com/wow/ace3/mainline/trunk/AceAddon-3.0
@@ -12,3 +13,4 @@ externals:
   Libs/AceTimer-3.0: svn://svn.wowace.com/wow/ace3/mainline/trunk/AceTimer-3.0  
   Libs/LibSharedMedia-3.0: svn://svn.wowace.com/wow/libsharedmedia-3-0/mainline/trunk/LibSharedMedia-3.0
   Libs/AceGUI-3.0-SharedMediaWidgets: svn://svn.wowace.com/wow/ace-gui-3-0-shared-media-widgets/mainline/trunk
+  Libs/LibBetterBlizzOptions-1.0: svn://antiarc@svn.wowace.com/wow/libbetterblizzoptions-1-0/mainline/trunk/LibBetterBlizzOptions-1.0
