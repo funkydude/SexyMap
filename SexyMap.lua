@@ -186,12 +186,14 @@ do
 	function mod:CheckExited()
 		if self.fadeDisabled then return end
 		local f = GetMouseFocus()
-		local p = f:GetParent()
-		while(p and p ~= UIParent) do
-			if p == MinimapCluster then return true end
-			p = p:GetParent()
+		if f then
+			local p = f:GetParent()
+			while(p and p ~= UIParent) do
+				if p == MinimapCluster then return true end
+				p = p:GetParent()
+			end
+			self:OnExit()
 		end
-		self:OnExit()
 	end
 	
 	function mod:EnableFade()
