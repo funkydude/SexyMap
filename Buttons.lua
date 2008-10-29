@@ -192,15 +192,19 @@ function mod:Update()
 		elseif hide == "never" then
 			for _, f in ipairs(v) do
 				f = type(f) == "string" and _G[f] or f
-				f:Hide()
+				if f.Hide then
+					f:Hide()
+				end
 			end
 		else
 			for _, f in ipairs(v) do
 				f = type(f) == "string" and _G[f] or f
 				if (v.custom and f:IsVisible() or not v.custom) and type(f) == "table" then
 					if type(v.show) == "function" and v.show(f) or type(v.show) ~= "function" then
-						f:SetAlpha(1)
-						f:Show()
+						if f.SetAlpha and f.Hide then
+							f:SetAlpha(1)
+							f:Show()
+						end
 					end
 				end
 			end

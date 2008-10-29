@@ -69,7 +69,7 @@ function mod:HookAll(frame, script, ...)
 end
 
 function mod:OpenConfig(name)
-	InterfaceOptionsFrame_OpenToCategory("Profiles")
+	InterfaceOptionsFrame_OpenToCategory(optionFrames.Profiles)
 	InterfaceOptionsFrame_OpenToCategory(optionFrames[name] or optionFrames.default)
 end
 
