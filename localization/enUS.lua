@@ -102,6 +102,9 @@ L["Right click map to configure"] = true
 
 -- ./Ping.lua
 L["Show who pinged"] = true
+L["Show..."] = true
+L["On minimap"] = true
+L["In chat"] = true
 
 -- ./SexyMap.lua
 L["Profiles"] = true
