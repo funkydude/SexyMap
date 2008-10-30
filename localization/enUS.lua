@@ -63,7 +63,14 @@ L["Disable Rotation"] = true
 L["Force a square texture. Fixed distortion on square textures."] = true
 
 -- ./Buttons.lua
+L["Addon Buttons"] = true
+L["Standard Buttons"] = true
 L["Capture New Buttons"] = true
+L["Let SexyMap handle button dragging"] = true
+L["Allow SexyMap to assume drag ownership for buttons attached to the minimap. Turn this off if you have another mod that you want to use to position your minimap buttons."] = true
+L["Lock Button Dragging"] = true
+L["Let SexyMap control button visibility"] = true
+L["Turn this off if you want another mod to handle which buttons are visible on the minimap."] = true
 L["Drag Radius"] = true
 L["Calendar"] = true
 L["Map Button"] = true

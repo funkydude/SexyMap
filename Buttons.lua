@@ -1,20 +1,42 @@
 local parent = SexyMap
 local modName = "Buttons"
-local mod = SexyMap:NewModule(modName, "AceTimer-3.0")
+local mod = SexyMap:NewModule(modName, "AceTimer-3.0", "AceHook-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
 
 local buttons
-local function iterateChildren(...)
-	local gotLast = false
-	for val = 1, select("#", ...) do
-		local child = select(val, ...)
-		local sizeOk = child.GetWidth and child:GetWidth() < 100 and child.GetHeight and child:GetHeight() < 100
-		if sizeOk and gotLast and not buttons[child:GetName()] and child ~= TimeManagerClockButton and child.SetAlpha then
-			buttons[child:GetName() or ("Button #" .. val)] = {child, custom = true}
+
+local RAD_TO_DEG = 57.2957795
+
+local captureNewChildren
+do
+	local childCount, lastChild, stockIndex
+	-- Buttons to ignore if they show up in iteration. Usually due to manually parenting them to the minimap.
+	local ignoreButtons = {
+		MiniMapTrackingButton = true,
+		MiniMapWorldMapButton = true,
+		TimeManagerClockButton = true,
+		MinimapZoomIn = true,
+		MinimapZoomOut = true,
+		MiniMapVoiceChatFrame = true,
+	}	
+	function captureNewChildren()
+		local num = Minimap:GetNumChildren()
+		if num == childCount and lastChild == select(num, Minimap:GetChildren()) then return end
+		
+		local count = 0
+		for i = (stockIndex or 1), num do
+			local child = select(i, Minimap:GetChildren())
+			local w, h = child.GetWidth and child:GetWidth() or 0, child.GetHeight and child:GetHeight() or 0
+			local sizeOk = w > 16 and w < 100 and h > 16 and h < 100
+			if sizeOk and stockIndex and not buttons[child:GetName()] and child.SetAlpha and not ignoreButtons[child:GetName()] then
+				buttons[child:GetName() or ("Button #" .. i)] = {child, custom = true}
+				count = count + 1
+			end
+			if child == MiniMapVoiceChatFrame then
+				stockIndex = i
+			end
 		end
-		if child == MiniMapVoiceChatFrame then
-			gotLast = true
-		end
+		return count
 	end
 end
 
@@ -25,21 +47,82 @@ local options = {
 	args = {
 		custom = {
 			type = "group",
-			name = "Addon Buttons",
+			name = L["Addon Buttons"],
+			disabled = function()
+				return not db.controlVisibility
+			end,
 			args = {},
 			order = 2
 		},
 		stock = {
 			type = "group",
-			name = "Standard Buttons",
+			disabled = function()
+				return not db.controlVisibility
+			end,
+			name = L["Standard Buttons"],
 			args = {},
 			order = 1
 		},
-		capture = {
-			type = "execute",
-			func = mod.CaptureButtons,
-			name = L["Capture New Buttons"]
+		-- capture = {
+			-- type = "execute",
+			-- func = mod.CaptureButtons,
+			-- name = L["Capture New Buttons"]
+		-- },
+		enableDragging = {
+			type = "toggle",
+			name = L["Let SexyMap handle button dragging"],
+			desc = L["Allow SexyMap to assume drag ownership for buttons attached to the minimap. Turn this off if you have another mod that you want to use to position your minimap buttons."],
+			width = "full",
+			order = 101,
+			get = function()
+				return db.allowDragging
+			end,
+			set = function(info, v)
+				db.allowDragging = v
+				if v then
+					mod:MakeMovables()
+				else
+					mod:ReleaseMovables()
+				end
+			end
 		},
+		lockDragging = {
+			type = "toggle",
+			name = L["Lock Button Dragging"],
+			width = "full",
+			order = 101,
+			disabled = function()
+				return not db.allowDragging
+			end,
+			get = function()
+				return db.lockDragging
+			end,
+			set = function(info, v)
+				db.lockDragging = v
+			end		
+		},
+		controlVisibility = {
+			type = "toggle",
+			name = L["Let SexyMap control button visibility"],
+			desc = L["Turn this off if you want another mod to handle which buttons are visible on the minimap."],
+			width = "full",
+			order = 101,
+			get = function()
+				return db.controlVisibility
+			end,
+			set = function(info, v)
+				db.controlVisibility = v
+				if not v then
+					for k, v in pairs(buttons) do
+						for _, f in ipairs(v) do
+							parent:UnregisterHoverButton(f)
+						end
+					end
+				else
+					mod:Update()
+				end
+			end		
+		},		
 		dragRadius = {
 			type = "range",
 			name = L["Drag Radius"],
@@ -47,11 +130,16 @@ local options = {
 			max = 100,
 			step = 1,
 			bigStep = 1,
+			order = 100,
+			disabled = function()
+				return not db.allowDragging
+			end,
 			get = function()
 				return db.radius
 			end,
 			set = function(info, v)
 				db.radius = v
+				parent:DisableFade(1.5)
 				mod:UpdateDraggables()
 			end
 		}
@@ -60,8 +148,10 @@ local options = {
 
 local defaults = {
 	profile = {
-		radius = 0,
-		dragPositions = {}
+		radius = 2,
+		dragPositions = {},
+		allowDragging = true,
+		controlVisibility = true
 	}
 }
 
@@ -82,7 +172,7 @@ do
 	buttons = {
 		calendar	= {"GameTimeFrame"},
 		worldmap 	= {"MiniMapWorldMapButton"},
-		tracking	= {"MiniMapTracking"},
+		tracking	= {"MiniMapTrackingButton"},
 		zoom		= {"MinimapZoomIn", "MinimapZoomOut"},
 		mapclock	= {"TimeManagerClockButton"},
 		close	 	= {"MinimapToggleButton"},
@@ -148,10 +238,14 @@ function mod:OnEnable()
 	self.findClock = self:ScheduleRepeatingTimer("FindClock", 0.5)
 	self:Update()
 
-	self.movableTimer = self:ScheduleRepeatingTimer("MakeMovables", 2)
 	MiniMapWorldMapButton:SetParent(Minimap)
-	MiniMapTracking:SetParent(Minimap)
-	self:MakeMovable(MiniMapTracking, MiniMapTrackingButton)
+	MinimapZoomIn:SetParent(Minimap)
+	MinimapZoomOut:SetParent(Minimap)
+
+	self:FixTrackingAnchoring()
+	
+	-- Try to capture new buttons periodically
+	self:ScheduleRepeatingTimer("MakeMovables", 1)
 	self:MakeMovables()
 end
 
@@ -159,23 +253,41 @@ function mod:OnDisable()
 	self:CancelTimer(self.movableTimer, true)
 end
 
+function mod:FixTrackingAnchoring()
+	local x, y = MiniMapTracking:GetCenter()
+	local mx, my = Minimap:GetCenter()
+	local dx, dy = x - mx, y - my
+	
+	MiniMapTracking:SetParent(UIParent)
+	MiniMapTrackingButton:SetParent(Minimap)
+	MiniMapTrackingButton:ClearAllPoints()
+	MiniMapTrackingButton:SetPoint("CENTER", Minimap, "CENTER", dx, dy)
+	MiniMapTrackingButton:SetFrameStrata("LOW")
+	MiniMapTracking:SetParent(MiniMapTrackingButton)
+	MiniMapTracking:SetFrameStrata("BACKGROUND")
+	MiniMapTracking:ClearAllPoints()
+	MiniMapTracking:SetPoint("CENTER")
+end
+
 function mod:CaptureButtons()
-	iterateChildren(Minimap:GetChildren())
-	for k, v in pairs(buttons) do
-		mod:addButtonOptions(k, v)
+	local count = captureNewChildren()
+	if count > 0 then
+		for k, v in pairs(buttons) do
+			mod:addButtonOptions(k, v)
+		end
+		self:Update()
 	end
-	self:Update()
 end
 
 function mod:FindClock()
 	if _G.TimeManagerClockButton then
 		self:CancelTimer(self.findClock, true)
 		self.findClock = nil
-		self:CaptureButtons()
 	end
 end
 
 function mod:Update()
+	if not db.controlVisibility then return end 
 	for k, v in pairs(buttons) do
 		local hide = db[k] and db[k].hide or "hover"
 		if hide ~= "hover" then
@@ -230,7 +342,6 @@ end
 do
 	local moving
 	local movables = {}
-	local dragFrames = {}
 	local dragFrame = CreateFrame("Frame", nil, UIParent)
 	
 	local GetCursorPosition = _G.GetCursorPosition
@@ -244,8 +355,8 @@ do
 			angle = atan(dy / dx)
 			if dx < 0 then angle = angle + 180 end
 			db.dragPositions[frame:GetName()] = angle
-		end		
-
+		end
+		
 		local radius = (Minimap:GetWidth() / 2) + db.radius
 		local bx = cos(angle) * radius
 		local by = sin(angle) * radius
@@ -260,9 +371,11 @@ do
 	end
 	
 	local function start(frame)
+		if db.lockDragging then return end
+		
 		dragFrame:SetScript("OnUpdate", updatePosition)
 		parent:DisableFade()
-		moving = dragFrames[frame] or frame
+		moving = frame
 	end
 	
 	local function finish(frame)
@@ -271,21 +384,34 @@ do
 		dragFrame:SetScript("OnUpdate", nil)
 	end
 	
-	function mod:MakeMovable(frame, toDrag)
+	function mod:MakeMovable(frame)
 		if not frame then return end
+		if movables[frame] then return end
 		movables[frame] = true
-		if toDrag then
-			dragFrames[toDrag] = frame
+		
+		frame:RegisterForDrag("LeftButton")
+		self:RawHookScript(frame, "OnDragStart", start)
+		self:RawHookScript(frame, "OnDragStop", finish)
+		frame.sexyMapMovable = true
+	end
+	
+	local function getCurrentAngle(f)
+		local mx, my = Minimap:GetCenter()
+		local bx, by = f:GetCenter()
+		local h, w = (by - my), (bx - mx)
+		angle = atan(h / w)
+		if w < 0 then
+			angle = angle + 180
 		end
-		toDrag = toDrag or frame
-		toDrag:RegisterForDrag("LeftButton")
-		toDrag:SetScript("OnDragStart", start)
-		toDrag:SetScript("OnDragStop", finish)
+		return angle
 	end
 	
 	function mod:UpdateDraggables()
+		if not db.allowDragging then return end
+		
 		for f, v in pairs(movables) do
 			local angle = db.dragPositions[f:GetName()]
+			angle = angle or getCurrentAngle(f)
 			if angle then
 				local x, y = f:GetCenter()
 				setPosition(f, x, y, angle)
@@ -295,16 +421,29 @@ do
 	
 	local lastChildCount = 0
 	function mod:MakeMovables()
+		self:CaptureButtons()
+		
+		if not db.allowDragging then return end
+		
 		local childCount = Minimap:GetNumChildren()
 		if childCount == lastChildCount then return end
 		lastChildCount = childCount
 		for i = 1, childCount do
 			local child = select(i, Minimap:GetChildren())
-			local sizeOk = child and child.GetWidth and child:GetWidth() < 100 and child.GetHeight and child:GetHeight() < 100
-			if sizeOk and not movables[child] and child:GetName() then
+			local w, h = child.GetWidth and child:GetWidth() or 0, child.GetHeight and child:GetHeight() or 0
+			local sizeOk = w > 16 and w < 100 and h > 16 and h < 100
+			if sizeOk and not child.sexyMapMovable and child:GetName() then
 				self:MakeMovable(child)
 			end
 		end
 		self:UpdateDraggables()
+	end
+	
+	function mod:ReleaseMovables()
+		for frame, on in pairs(movables) do
+			self:UnhookAll(frame)
+			frame.sexyMapMovable = nil
+			movables[frame] = nil
+		end
 	end
 end

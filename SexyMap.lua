@@ -110,6 +110,7 @@ do
 			if not k.SetAlpha then
 				mod:Print("No SetAlpha for", k:GetName())
 			end
+			
 			k:SetAlpha(alpha)
 			k:Show()
 			if alpha == fadeTarget then
@@ -120,6 +121,7 @@ do
 				end
 			end
 		end
+		
 		if total == 0 then
 			faderFrame:SetScript("OnUpdate", nil)
 		end
@@ -200,7 +202,12 @@ do
 		self.fadeDisabled = false
 	end
 
-	function mod:DisableFade()
+	function mod:DisableFade(forHowLong)
 		self.fadeDisabled = true
+		self:OnEnter()
+		if forHowLong and forHowLong > 0 then
+			self:CancelTimer(self.enableFadeAfter, true)
+			self.enableFadeAfter = self:ScheduleTimer("EnableFade", forHowLong)
+		end
 	end
 end
