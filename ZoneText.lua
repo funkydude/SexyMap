@@ -1,7 +1,7 @@
 local parent = SexyMap
 local modName = "ZoneText"
 local media = LibStub("LibSharedMedia-3.0")
-local mod = SexyMap:NewModule(modName)
+local mod = SexyMap:NewModule(modName, "AceEvent-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
 local db
 
@@ -140,7 +140,7 @@ function mod:OnInitialize()
 	MinimapToggleButton:SetPoint("LEFT", MinimapZoneTextButton, "RIGHT", -3, 0)
 	
 	MinimapZoneText:ClearAllPoints()
-	MinimapZoneText:SetPoint("CENTER")
+	MinimapZoneText:SetAllPoints()
 	MinimapZoneTextButton:SetHeight(26)
 	MinimapZoneTextButton:SetBackdrop(parent.backdrop)
 end
@@ -149,6 +149,9 @@ function mod:OnEnable()
 	db = self.db.profile
 	self:Update()
 	self:SetOnHover()
+	self:RegisterEvent("ZONE_CHANGED")
+	self:RegisterEvent("ZONE_CHANGED_INDOORS", "ZONE_CHANGED")
+	self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "ZONE_CHANGED")
 end
 
 function mod:SetOnHover()
@@ -165,9 +168,8 @@ end
 function mod:Update()
 	MinimapZoneTextButton:ClearAllPoints()
 	MinimapZoneTextButton:SetPoint("BOTTOM", Minimap, "TOP", db.xOffset, db.yOffset)
-	MinimapZoneTextButton:SetWidth(db.width or MinimapZoneTextButton:GetWidth())
 	if db.fontsize then
-		MinimapZoneTextButton:SetHeight(db.fontsize * 1.5 + 6)
+		MinimapZoneTextButton:SetHeight(MinimapZoneText:GetStringHeight() + 10)
 	end
 	MinimapZoneTextButton:SetBackdropColor(db.bgColor.r, db.bgColor.g, db.bgColor.b, db.bgColor.a)
 	MinimapZoneTextButton:SetBackdropBorderColor(db.borderColor.r, db.borderColor.g, db.borderColor.b, db.borderColor.a)
@@ -176,4 +178,10 @@ function mod:Update()
 	if db.fontColor.r then
 		MinimapZoneText:SetTextColor(db.fontColor.r, db.fontColor.g, db.fontColor.b, db.fontColor.a)
 	end
+	self:ZONE_CHANGED()
+end
+
+function mod:ZONE_CHANGED()
+	local width = max(MinimapZoneText:GetStringWidth() * 1.3, db.width)
+	MinimapZoneTextButton:SetWidth(width)
 end

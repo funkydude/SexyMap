@@ -295,6 +295,7 @@ local options = {
 											type = "color",
 											name = L["Backdrop color"],
 											order = 13,
+											hasAlpha = true,
 											get = function()
 												local c = db.backdrop.textureColor
 												local r, g, b, a = c.r or 0, c.g or 0, c.b or 0, c.a or 1
@@ -388,6 +389,7 @@ local options = {
 											type = "color",
 											order = 23,
 											name = L["Border color"],
+											hasAlpha = true,
 											get = function()
 												local c = db.backdrop.borderColor
 												local r, g, b, a = c.r or 0, c.g or 0, c.b or 0, c.a or 1
@@ -705,7 +707,7 @@ local borderOptions = {
 			local tex = getTextureAndDB(info)
 			tex:ClearAllPoints()
 			tex.settings.hNudge = v
-			tex:SetPoint("CENTER", Minimap, "CENTER", tex.settings.hNudge, tex.settings.vNudge)
+			tex:SetPoint("CENTER", Minimap, "CENTER", tex.settings.hNudge or 0, tex.settings.vNudge or 0)
 		end
 	},
 	vNudge = {
@@ -724,7 +726,7 @@ local borderOptions = {
 			local tex = getTextureAndDB(info)
 			tex:ClearAllPoints()
 			tex.settings.vNudge = v
-			tex:SetPoint("CENTER", Minimap, "CENTER", tex.settings.hNudge, tex.settings.vNudge)
+			tex:SetPoint("CENTER", Minimap, "CENTER", tex.settings.hNudge or 0, tex.settings.vNudge or 0)
 		end
 	},
 	layer = {

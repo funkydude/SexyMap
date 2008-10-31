@@ -42,10 +42,11 @@ end
 
 --[[
 ------------------------------------------------------------------------
-  Square
+  Other shapes. Define corners; locations are linearly interpolated.
 ------------------------------------------------------------------------
 ]]--
-local squarePoints = {	
+local shapePoints = {}
+shapePoints.square = {	
 	  [0] = { 1,  0},
 	 [45] = { 1,  1},
 	[135] = {-1,  1},
@@ -53,25 +54,94 @@ local squarePoints = {
 	[315] = { 1, -1},
 	[360] = { 1,  0},	
 }
-local function square(angle, radius)
-	local x,y = interpolate(squarePoints, angle)
-	return x * radius, y * radius
-end
 
---[[
-------------------------------------------------------------------------
-  Diamond
-------------------------------------------------------------------------
-]]--
-local diamondPoints = {
+shapePoints.diamond = {
 	[0]   = { 1,  0},
 	[90]  = { 0,  1},
 	[180] = {-1,  0},
 	[270] = { 0, -1},
 	[360] = { 1,  0}
 }
-local function diamond(angle, radius)
-	local x,y = interpolate(diamondPoints, angle)
+
+local off = tan(22.5)
+shapePoints.octagon = {
+	[0]   = { 1,  0},
+	[22.5]  = { 1,  off},
+	[67.5] = {off,  1},
+	[112.5] = {-off, 1},
+	[157.5]  = { -1,  off},
+	[202.5]  = { -1,  -off},
+	[247.5]  = { -off, -1},
+	[292.5]  = { off, -1},
+	[337.5]  = { 1, -off},
+	[360]  = { 1, 0},
+}
+
+local w, h = sin(30), cos(30)
+shapePoints.hexagon = {
+	[0]   = { 1,  0},
+	[60]  = { w,  h},
+	[120] = {-w,  h},
+	[180] = {-1,  0},
+	[240] = {-w, -h},
+	[300] = { w, -h},
+	[360] = { 1,  0}
+}
+
+shapePoints.bottomRight = {
+	[0]		= {1, 0},
+	[45]	= {1, 1},
+	[90]	= {0, 1},
+	[180]	= {-1, 0},
+	[225]	= {-1, -1},
+	[315]	= {1, -1},
+	[360]	= {1, 0}
+}
+for i = 91, 179, 5 do
+	shapePoints.bottomRight[i] = { cos(i), sin(i) }
+end
+
+shapePoints.topLeft = {
+	  [0] 	= { 1,  0},
+	 [45]	= { 1,  1},
+	[135] 	= {-1,  1},
+	[225] 	= {-1, -1},
+	[270] 	= { 0, -1},
+	[360] 	= { 1,  0},
+}
+for i = 271, 359, 5 do
+	shapePoints.topLeft[i] = { cos(i), sin(i) }
+end
+
+shapePoints.bottomLeft = {
+	  [0] = { 1,  0},
+	 [90] = { 0,  1},
+	[135] = {-1,  1},
+	[225] = {-1, -1},
+	[315] = { 1, -1},
+	[360] = { 1,  0},
+}
+for i = 1, 89, 5 do
+	shapePoints.bottomLeft[i] = { cos(i), sin(i) }
+end
+
+shapePoints.topRight = {
+	  [0] = { 1,  0},
+	 [45] = { 1,  1},	  
+	 [90] = { 0,  1},
+	[135] = {-1,  1},
+	[180] = {-1,  0},
+	[270] = { 0, -1},
+	[315] = { 1, -1},
+	[360] = { 1,  0},
+}
+for i = 181, 269, 5 do
+	shapePoints.topRight[i] = { cos(i), sin(i) }
+end
+
+
+local function byShape(shape, angle, radius)
+	local x,y = interpolate(shapePoints[shape], angle)
 	return x * radius, y * radius
 end
 
@@ -95,16 +165,52 @@ local shapes = {
 	},
 	["Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy"] = {
 		name = L["Faded Square"],
-		geometry = square
+		geometry = "square"
 	},
 	["Interface\\AddOns\\SexyMap\\shapes\\diamond"] = {
 		name = L["Diamond"],
-		geometry = diamond
+		geometry = "diamond"
 	},
 	["Interface\\BUTTONS\\WHITE8X8"] = {
 		name = L["Square"],
-		geometry = square
-	}
+		geometry = "square"
+	},
+	["Interface\\AddOns\\SexyMap\\shapes\\heart"] = {
+		name = L["Heart"],
+		geometry = circle
+	},
+	["Interface\\AddOns\\SexyMap\\shapes\\octagon"] = {
+		name = L["Octagon"],
+		geometry = "octagon"
+	},
+	["Interface\\AddOns\\SexyMap\\shapes\\hexagon"] = {
+		name = L["Hexagon"],
+		geometry = "hexagon"
+	},
+	["Interface\\AddOns\\SexyMap\\shapes\\snowflake"] = {
+		name = L["Snowflake"],
+		geometry = circle
+	},
+	["Interface\\AddOns\\SexyMap\\shapes\\route66"] = {
+		name = L["Route 66"],
+		geometry = circle
+	},
+	["Interface\\AddOns\\SexyMap\\shapes\\bottomright"] = {
+		name = L["Rounded - Bottom Right"],
+		geometry = "bottomRight"
+	},
+	["Interface\\AddOns\\SexyMap\\shapes\\bottomleft"] = {
+		name = L["Rounded - Bottom Left"],
+		geometry = "bottomLeft"
+	},
+	["Interface\\AddOns\\SexyMap\\shapes\\topright"] = {
+		name = L["Rounded - Top Right"],
+		geometry = "topRight"
+	},
+	["Interface\\AddOns\\SexyMap\\shapes\\topleft"] = {
+		name = L["Rounded - Top Left"],
+		geometry = "topLeft"
+	},
 }
 
 local defaults = {
@@ -143,7 +249,11 @@ function mod:GetPosition(angle, radius)
 	if angle < 0 then angle = 360 + angle end
 	angle = angle % 360
 	local func = shapes[db.shape] and shapes[db.shape].geometry or circle
-	return func(angle, radius)
+	if type(func) == "function" then
+		return func(angle, radius)
+	else
+		return byShape(func, angle, radius)
+	end
 end
 
 function mod:GetShapeOptions()
