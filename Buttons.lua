@@ -23,13 +23,15 @@ do
 	}	
 	function captureNewChildren()
 		local num = Minimap:GetNumChildren()
-		if num == childCount and lastChild == select(num, Minimap:GetChildren()) then return end
+		if num == childCount and lastChild == select(num, Minimap:GetChildren()) then return 0 end
+		childCount = num
+		lastChild = select(num, Minimap:GetChildren())
 		
 		local count = 0
 		for i = (stockIndex or 1), num do
 			local child = select(i, Minimap:GetChildren())
 			local w, h = child.GetWidth and child:GetWidth() or 0, child.GetHeight and child:GetHeight() or 0
-			local sizeOk = w > 16 and w < 100 and h > 16 and h < 100
+			local sizeOk = w > 25 and w < 100 and h > 25 and h < 100
 			if sizeOk and stockIndex and not buttons[child:GetName()] and child.SetAlpha and not ignoreButtons[child:GetName()] then
 				buttons[child:GetName() or ("Button #" .. i)] = {child, custom = true}
 				count = count + 1
@@ -444,7 +446,7 @@ do
 		for i = 1, childCount do
 			local child = select(i, Minimap:GetChildren())
 			local w, h = child.GetWidth and child:GetWidth() or 0, child.GetHeight and child:GetHeight() or 0
-			local sizeOk = w > 16 and w < 100 and h > 16 and h < 100
+			local sizeOk = w > 25 and w < 100 and h > 25 and h < 100
 			if sizeOk and not child.sexyMapMovable and child:GetName() then
 				self:MakeMovable(child)
 			end
