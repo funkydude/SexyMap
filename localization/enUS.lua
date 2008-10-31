@@ -131,6 +131,15 @@ L["Faded Circle (Large)"] = true
 L["Faded Square"] = true
 L["Diamond"] = true
 L["Square"] = true
+L["Heart"] = true
+L["Octagon"] = true
+L["Hexagon"] = true
+L["Snowflake"] = true
+L["Route 66"] = true
+L["Rounded - Bottom Right"] = true
+L["Rounded - Bottom Left"] = true
+L["Rounded - Top Right"] = true
+L["Rounded - Top Left"] = true
 L["Minimap shape"] = true
 
 -- ./ZoneText.lua
@@ -143,5 +152,11 @@ L["Font Size"] = true
 L["Font color"] = true
 
 -- ./localization/enUS.lua
+-- no localization
+
+-- ./localization/zhCN.lua
+-- no localization
+
+-- ./localization/zhTW.lua
 -- no localization
 
