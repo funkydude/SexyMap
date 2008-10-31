@@ -6,8 +6,9 @@ local db
 
 local shapeList = {
 	["Textures\\MinimapMask"] = "Circle",
-	["SPELLS\\White-Circle"] = "Faded Circle",
+	-- ["SPELLS\\White-Circle"] = "Faded Circle",
 	["ENVIRONMENTS\\STARS\\Deathsky_Mask"] = "Faded Circle (Small)",
+	["Interface\\AddOns\\SexyMap\\shapes\\largecircle"] = "Faded Circle (Large)",
 	["Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy"] = "Faded Square",
 	["Interface\\AddOns\\SexyMap\\shapes\\diamond"] = "Diamond",
 	["Interface\\BUTTONS\\WHITE8X8"] = "Square",
