@@ -170,7 +170,7 @@ local options = {
 									min = 0.5,
 									max = 5,
 									step = 0.01,
-									maxStep = 0.01,
+									bigStep = 0.01,
 									width = "full",
 									disabled = function()
 										return not db.backdrop.show
@@ -190,7 +190,7 @@ local options = {
 									min = 0,
 									max = 1,
 									step = 0.05,
-									maxStep = 0.05,
+									bigStep = 0.05,
 									width = "full",
 									disabled = function()
 										return not db.backdrop.show
@@ -278,7 +278,7 @@ local options = {
 											min = 0,
 											max = 500,
 											step = 1,
-											maxStep = 1,
+											bigStep = 1,
 											width = "full",
 											disabled = function()
 												return not db.backdrop.settings.tile
@@ -313,7 +313,7 @@ local options = {
 											min = 0,
 											max = 20,
 											step = 1,
-											maxStep = 1,
+											bigStep = 1,
 											width = "double",
 											get = function()
 												return db.backdrop.settings.insets.left
@@ -406,7 +406,7 @@ local options = {
 											min = 6,
 											max = 48,
 											step = 1,
-											maxStep = 1,
+											bigStep = 1,
 											width = "double",
 											get = function()
 												return db.backdrop.settings.edgeSize
