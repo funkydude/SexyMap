@@ -10,6 +10,8 @@ embeds.xml
 
 # Localization
 localization\enUS.lua
+localization\zhTW.lua
+localization\zhCN.lua
 
 # Core
 SexyMap.lua
