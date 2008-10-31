@@ -8,6 +8,10 @@ local texturePool = {}
 local rotateTextures = {}
 local defaultSize = 180
 local rotFrame = CreateFrame("Frame")
+local MinimapBackdrop
+local media = LibStub("LibSharedMedia-3.0")
+local Shape
+
 local layers = {
 	BACKGROUND = L["1. Background"],
 	BORDER = L["2. Border"],
@@ -110,7 +114,7 @@ local options = {
 			type = "group",
 			name = L["Current Borders"],
 			args = {
-				shape = parent:GetModule("General").options.args.shape,
+				shape = parent:GetModule("Shapes"):GetShapeOptions(),
 				newDesc = {
 					type = "description",
 					name = L["Enter a name to create a new border. The name can be anything you like to help you identify that border."],
@@ -138,6 +142,284 @@ local options = {
 					name = L["Borders"],
 					type = "group",
 					args = {
+						default = {
+							type = "group",
+							name = L["Background/edge"],
+							args = {
+								explain = {
+									type = "description",
+									name = L["You can set a background and edge file for the minimap like you would with any frame. This is useful when you want to create static square backdrops for your minimap."]
+								},
+								show = {
+									type = "toggle",
+									name = L["Enable"],
+									order = 2,
+									desc = L["Enable a backdrop and border for the minimap. This will let you set square borders more easily."],
+									get = function()
+										return db.backdrop.show
+									end,
+									set = function(info, v)
+										db.backdrop.show = v
+										mod:UpdateBackdrop()
+									end
+								},
+								scale = {
+									type = "range",
+									name = L["Scale"],
+									order = 3,
+									min = 0.5,
+									max = 5,
+									step = 0.01,
+									maxStep = 0.01,
+									width = "full",
+									disabled = function()
+										return not db.backdrop.show
+									end,
+									get = function()
+										return db.backdrop.scale or 1
+									end,
+									set = function(info, v)
+										db.backdrop.scale = v
+										mod:UpdateBackdrop()
+									end								
+								},
+								alpha = {
+									type = "range",
+									name = L["Opacity"],
+									order = 4,
+									min = 0,
+									max = 1,
+									step = 0.05,
+									maxStep = 0.05,
+									width = "full",
+									disabled = function()
+										return not db.backdrop.show
+									end,
+									get = function()
+										return db.backdrop.alpha or 1
+									end,
+									set = function(info, v)
+										db.backdrop.alpha = v
+										mod:UpdateBackdrop()
+									end								
+								},								
+								texture = {
+									type = "group",
+									name = L["Background Texture"],
+									disabled = function()
+										return not db.backdrop.show
+									end,
+									args = {
+										texture = {
+											type = "input",
+											name = L["Texture"],
+											order = 10,
+											width = "double",
+											get = function()
+												return db.backdrop.settings.bgFile
+											end,
+											set = function(info, v)
+												db.backdrop.settings.bgFile = v
+												mod:UpdateBackdrop()
+											end
+										},
+										openTexBrowser = {
+											type = "execute",
+											name = function()
+												if GetAddOnInfo("TexBrowser") ~= nil then
+													return L["Open TexBrowser"]
+												else
+													return L["TexBrowser Not Installed"]
+												end
+											end,
+											order = 11,
+											func = function()
+												if not IsAddOnLoaded("TexBrowser") then
+													EnableAddOn("TexBrowser")
+													LoadAddOn("TexBrowser")
+												end
+												TexBrowser:OnEnable()
+											end,
+											disabled = function()
+												return GetAddOnInfo("TexBrowser") == nil
+											end
+										},										
+										textureSelect = {
+											type = "select",
+											name = L["SharedMedia Texture"],
+											order = 12,
+											width = "full",
+											dialogControl = 'LSM30_Background',
+											values = AceGUIWidgetLSMlists.background,
+											get = function()
+												return db.backdrop.settings.bgFile
+											end,
+											set = function(info, v)
+												db.backdrop.settings.bgFile = media:Fetch("background", v)
+												mod:UpdateBackdrop()
+											end
+										},
+										tile = {
+											type = "toggle",
+											name = L["Tile background"],
+											order = 13,
+											get = function()
+												return db.backdrop.settings.tile
+											end,
+											set = function(info, v)
+												db.backdrop.settings.tile = v
+												mod:UpdateBackdrop()
+											end
+										},
+										tileSize = {
+											type = "range",
+											name = L["Tile size"],
+											order = 14,
+											min = 0,
+											max = 500,
+											step = 1,
+											maxStep = 1,
+											width = "full",
+											disabled = function()
+												return not db.backdrop.settings.tile
+											end,
+											get = function()
+												return db.backdrop.settings.tileSize
+											end,
+											set = function(info, v)
+												db.backdrop.settings.tileSize = v
+												mod:UpdateBackdrop()
+											end
+										},								
+										textureColor = {
+											type = "color",
+											name = L["Backdrop color"],
+											order = 13,
+											get = function()
+												local c = db.backdrop.textureColor
+												local r, g, b, a = c.r or 0, c.g or 0, c.b or 0, c.a or 1
+												return r, g, b, a
+											end,
+											set = function(info, r, g, b, a)
+												local c = db.backdrop.textureColor
+												c.r, c.g, c.b, c.a = r, g, b, a
+												mod:UpdateBackdrop()
+											end
+										},
+										inset = {
+											type = "range",
+											name = L["Backdrop insets"],
+											order = 15,
+											min = 0,
+											max = 20,
+											step = 1,
+											maxStep = 1,
+											width = "double",
+											get = function()
+												return db.backdrop.settings.insets.left
+											end,
+											set = function(info, v)
+												db.backdrop.settings.insets.left = v
+												db.backdrop.settings.insets.top = v
+												db.backdrop.settings.insets.bottom = v
+												db.backdrop.settings.insets.right = v
+												mod:UpdateBackdrop()
+											end									
+										},
+									}
+								},
+								border = {
+									type = "group",
+									name = L["Border Texture"],
+									disabled = function()
+										return not db.backdrop.show
+									end,
+									args = {
+										border = {
+											type = "input",
+											name = L["Border texture"],
+											order = 20,
+											width = "full",
+											get = function()
+												return db.backdrop.settings.edgeFile
+											end,
+											set = function(info, v)
+												db.backdrop.settings.edgeFile = v
+												mod:UpdateBackdrop()
+											end
+										},			
+										openTexBrowser = {
+											type = "execute",
+											name = function()
+												if GetAddOnInfo("TexBrowser") ~= nil then
+													return L["Open TexBrowser"]
+												else
+													return L["TexBrowser Not Installed"]
+												end
+											end,
+											order = 21,
+											func = function()
+												if not IsAddOnLoaded("TexBrowser") then
+													EnableAddOn("TexBrowser")
+													LoadAddOn("TexBrowser")
+												end
+												TexBrowser:OnEnable()
+											end,
+											disabled = function()
+												return GetAddOnInfo("TexBrowser") == nil
+											end
+										},
+										textureSelect = {
+											type = "select",
+											name = L["SharedMedia Border"],
+											order = 22,
+											width = "full",
+											dialogControl = 'LSM30_Border',
+											values = AceGUIWidgetLSMlists.border,
+											get = function()
+												return db.backdrop.settings.edgeFile
+											end,
+											set = function(info, v)
+												db.backdrop.settings.edgeFile = media:Fetch("border", v)
+												mod:UpdateBackdrop()
+											end
+										},										
+										borderColor = {
+											type = "color",
+											order = 23,
+											name = L["Border color"],
+											get = function()
+												local c = db.backdrop.borderColor
+												local r, g, b, a = c.r or 0, c.g or 0, c.b or 0, c.a or 1
+												return r, g, b, a
+											end,
+											set = function(info, r, g, b, a)
+												local c = db.backdrop.borderColor
+												c.r, c.g, c.b, c.a = r, g, b, a
+												mod:UpdateBackdrop()
+											end
+										},
+										edgeSize = {
+											type = "range",
+											name = L["Border edge size"],
+											order = 25,
+											min = 6,
+											max = 48,
+											step = 1,
+											maxStep = 1,
+											width = "double",
+											get = function()
+												return db.backdrop.settings.edgeSize
+											end,
+											set = function(info, v)
+												db.backdrop.settings.edgeSize = v
+												mod:UpdateBackdrop()
+											end									
+										},												
+									}
+								}
+							}
+						}
 					}
 				}
 			}
@@ -506,19 +788,43 @@ local defaults = {
 	profile = {
 		hideBlizzard = true,
 		borders = {},
-		applyPreset = "Blue Rune Circles"
+		applyPreset = "Blue Rune Circles",
+		backdrop = {
+			scale = 1,
+			show = false,
+			textureColor = {},
+			borderColor = {},
+			settings = {
+				bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+				edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+				insets = {left = 4, top = 4, right = 4, bottom = 4},
+				edgeSize = 16,
+				tile = false
+			}
+		}
 	}
 }
 
 function mod:OnInitialize()
+	Shape = parent:GetModule("Shapes")
+	
 	self.db = parent.db:RegisterNamespace(modName, defaults)
 	db = self.db.profile
 	parent:RegisterModuleOptions(modName, options, modName)
 	local args = parent:GetModule("General").options.args
-	args.preset = deepCopyHash(options.args.preset)
-	if args.preset then
-		args.preset.order = 2
+	args.presets = deepCopyHash(options.args.presets.args.preset)
+	if args.presets then
+		args.presets.order = 110
+		args.presets.width = "full"
+		args.presets.values = presets
 	end
+	-- Minimap:SetFrameStrata("LOW")
+	MinimapBackdrop = CreateFrame("Frame", "SexyMapMinimapBackdrop", Minimap)
+	MinimapBackdrop:SetFrameStrata("BACKGROUND")
+	MinimapBackdrop:SetFrameLevel(MinimapBackdrop:GetFrameLevel() - 1)
+	MinimapBackdrop:SetPoint("CENTER")
+	MinimapBackdrop:SetWidth(Minimap:GetWidth())
+	MinimapBackdrop:SetHeight(Minimap:GetHeight())
 end
 
 local updateTime = 1/60
@@ -544,16 +850,18 @@ function mod:OnEnable()
 	self:Update()
 	rotFrame:SetScript("OnUpdate", updateRotations)
 	
-	self:Clear()
 	if db.applyPreset then
+		self:Clear()
 		self:ApplyPreset(db.applyPreset)
 		db.applyPreset = false
 	else
 		for _, v in ipairs(db.borders) do
 			self:CreateBorderFromParams(v)
 		end
-	end	
+	end
+	
 	self:RebuildPresets()
+	self:UpdateBackdrop()
 end
 
 function mod:RebuildPresets()
@@ -567,7 +875,16 @@ function mod:RebuildPresets()
 end
 
 function mod:Clear()
-	options.args.currentGroup.args.borders.args = {}		-- leaky
+	for k, v in pairs(options.args.currentGroup.args.borders.args) do
+		if k ~= "default" then
+			-- Leaky, but we don't care too much
+			options.args.currentGroup.args.borders.args[k] = nil
+		end
+	end
+	
+	db.borders = {}	-- leaky
+	db.backdrop = deepCopyHash(defaults.profile.backdrop)	-- leaky
+	
 	for k, v in pairs(textures) do
 		tinsert(texturePool, v)
 		v:Hide()
@@ -576,19 +893,25 @@ function mod:Clear()
 	for k, v in pairs(rotateTextures) do
 		rotateTextures[k] = nil
 	end
+	self:UpdateBackdrop()
 end
 
 function mod:ApplyPreset(preset)
 	local preset = parent.borderPresets[preset] or self.db.global.userPresets[preset]
-	db.borders = deepCopyHash(preset.borders)
-	if preset.shape then
-		parent:GetModule("General"):ApplyShape(preset.shape)
-	end
 	self:Clear()
+	
+	db.borders = deepCopyHash(preset.borders)
+	db.backdrop = preset.backdrop and deepCopyHash(preset.backdrop) or deepCopyHash(defaults.profile.backdrop)
+	
+	if preset.shape then
+		Shape:ApplyShape(preset.shape)
+	end
 	
 	for _, v in ipairs(db.borders) do
 		self:CreateBorderFromParams(v)
 	end
+	
+	self:UpdateBackdrop()
 end
 
 function mod:NewBorder(name)
@@ -600,7 +923,8 @@ end
 function mod:SavePresetAs(name)
 	self.db.global.userPresets[name] = {
 		borders = deepCopyHash(db.borders),
-		shape = parent:GetModule("General").db.profile.shape
+		backdrop = deepCopyHash(db.backdrop),
+		shape = Shape:GetShape()
 	}
 	self:RebuildPresets()
 end
@@ -651,5 +975,21 @@ function mod:Update()
 		MinimapBorder:Hide()
 	else
 		MinimapBorder:Show()
+	end
+end
+
+function mod:UpdateBackdrop()
+	if db.backdrop.show then
+		MinimapBackdrop:Show()		
+		MinimapBackdrop:SetFrameStrata("BACKGROUND")
+		MinimapBackdrop:SetScale(db.backdrop.scale or 1)
+		MinimapBackdrop:SetAlpha(db.backdrop.alpha or 1)
+		MinimapBackdrop:SetBackdrop(db.backdrop.settings)
+		local t = db.backdrop.textureColor
+		MinimapBackdrop:SetBackdropColor(t.r or 0, t.g or 0, t.b or 0, t.a or 1)
+		t = db.backdrop.borderColor
+		MinimapBackdrop:SetBackdropBorderColor(t.r or 1, t.g or 1, t.b or 1, t.a or 1)
+	else
+		MinimapBackdrop:Hide()
 	end
 end

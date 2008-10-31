@@ -69,7 +69,6 @@ end
 function mod:OnEnable()
 	db = self.db.profile
 	self:RegisterEvent("MINIMAP_PING")
-	self:SecureHook("MiniMapPing_FadeOut", true)
 end
 
 function mod:MINIMAP_PING(self, arg1)

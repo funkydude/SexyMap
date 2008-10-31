@@ -28,7 +28,7 @@ local options = {
 }
 
 local defaults = {
-	profile = { autoZoom = 0 }
+	profile = { autoZoom = 5 }
 }
 function mod:OnInitialize()
 	self.db = parent.db:RegisterNamespace(modName, defaults)

@@ -2,6 +2,8 @@ local parent = SexyMap
 local modName = "Buttons"
 local mod = SexyMap:NewModule(modName, "AceTimer-3.0", "AceHook-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
+local Shape
+local db
 
 local buttons
 
@@ -232,6 +234,9 @@ function mod:OnInitialize()
 end
 
 function mod:OnEnable()
+	Shape = parent:GetModule("Shapes")
+	Shape.RegisterCallback(self, "SexyMap_ShapeChanged")
+	
 	db = self.db.profile
 	local gotLast = false
 
@@ -251,6 +256,11 @@ end
 
 function mod:OnDisable()
 	self:CancelTimer(self.movableTimer, true)
+end
+
+function mod:SexyMap_ShapeChanged()
+	parent:DisableFade(1)
+	self:UpdateDraggables()
 end
 
 function mod:FixTrackingAnchoring()
@@ -357,9 +367,12 @@ do
 			db.dragPositions[frame:GetName()] = angle
 		end
 		
+		
 		local radius = (Minimap:GetWidth() / 2) + db.radius
-		local bx = cos(angle) * radius
-		local by = sin(angle) * radius
+		local bx, by = Shape:GetPosition(angle, radius)
+		
+		-- local bx = cos(angle) * radius
+		-- local by = sin(angle) * radius
 		
 		frame:ClearAllPoints()
 		frame:SetPoint("CENTER", Minimap, "CENTER", bx, by)

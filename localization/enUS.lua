@@ -30,6 +30,26 @@ L["Create new border"] = true
 L["Clear & start over"] = true
 L["Clear the current borders and start fresh"] = true
 L["Borders"] = true
+L["Background/edge"] = true
+L["You can set a background and edge file for the minimap like you would with any frame. This is useful when you want to create static square backdrops for your minimap."] = true
+L["Enable"] = true
+L["Enable a backdrop and border for the minimap. This will let you set square borders more easily."] = true
+L["Scale"] = true
+L["Opacity"] = true
+L["Background Texture"] = true
+L["Texture"] = true
+L["Open TexBrowser"] = true
+L["TexBrowser Not Installed"] = true
+L["SharedMedia Texture"] = true
+L["Tile background"] = true
+L["Tile size"] = true
+L["Backdrop color"] = true
+L["Backdrop insets"] = true
+L["Border Texture"] = true
+L["Border texture"] = true
+L["SharedMedia Border"] = true
+L["Border color"] = true
+L["Border edge size"] = true
 L["Preset"] = true
 L["Select preset to load"] = true
 L["Select a preset to load settings from. This will erase any of your current borders."] = true
@@ -42,10 +62,7 @@ L["Name"] = true
 L["Really delete this border?"] = true
 L["Texture path"] = true
 L["Enter the full path to a texture to use. It's recommended that you use something like |cffff6600TexBrowser|r to find textures to use."] = true
-L["Open TexBrowser"] = true
-L["TexBrowser Not Installed"] = true
 L["Texture options"] = true
-L["Scale"] = true
 L["Rotation Speed"] = true
 L["Speed to rotate the texture at. A setting of 0 turns off rotation."] = true
 L["Static Rotation"] = true
@@ -90,8 +107,6 @@ L["On hover"] = true
 L["Lock minimap"] = true
 L["Show movers"] = true
 L["Clamp to screen"] = true
-L["Opacity"] = true
-L["Minimap shape"] = true
 L["Right click map to configure"] = true
 
 -- ./moduleTemplate.lua
@@ -109,12 +124,20 @@ L["In chat"] = true
 -- ./SexyMap.lua
 L["Profiles"] = true
 
+-- ./Shapes.lua
+L["Circle"] = true
+L["Faded Circle (Small)"] = true
+L["Faded Circle (Large)"] = true
+L["Faded Square"] = true
+L["Diamond"] = true
+L["Square"] = true
+L["Minimap shape"] = true
+
 -- ./ZoneText.lua
 L["Horizontal position"] = true
 L["Vertical position"] = true
 L["Width"] = true
 L["Background color"] = true
-L["Border color"] = true
 L["Font"] = true
 L["Font Size"] = true
 L["Font color"] = true

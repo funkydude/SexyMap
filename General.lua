@@ -4,16 +4,6 @@ local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
 
 local db
 
-local shapeList = {
-	["Textures\\MinimapMask"] = "Circle",
-	-- ["SPELLS\\White-Circle"] = "Faded Circle",
-	["ENVIRONMENTS\\STARS\\Deathsky_Mask"] = "Faded Circle (Small)",
-	["Interface\\AddOns\\SexyMap\\shapes\\largecircle"] = "Faded Circle (Large)",
-	["Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy"] = "Faded Square",
-	["Interface\\AddOns\\SexyMap\\shapes\\diamond"] = "Diamond",
-	["Interface\\BUTTONS\\WHITE8X8"] = "Square",
-}
-
 local options = {
 	type = "group",
 	name = "General",
@@ -85,18 +75,6 @@ local options = {
 				mod:Update()
 			end
 		},
-		shape = {
-			type = "select",
-			name = L["Minimap shape"],
-			values = shapeList,
-			order = 3,
-			get = function()
-				return db.shape or "Textures\\MinimapMask"
-			end,
-			set = function(info, v)
-				mod:ApplyShape(v)
-			end
-		},
 		rightClickToConfig = {
 			type = "toggle",
 			name = L["Right click map to configure"],
@@ -144,16 +122,8 @@ function mod:OnEnable()
 	MinimapCluster:SetClampedToScreen(db.clamp)
 	self:SetLock(db.lock)
 	self:Update()
-	self:ApplyShape()
 end
 	
-function mod:ApplyShape(shape)
-	if shape or db.shape then
-		db.shape = shape or db.shape or "Textures\\MinimapMask"
-		Minimap:SetMaskTexture(db.shape)
-	end
-end
-
 do
 	local function start(self)
 		local f = self:GetParent()
