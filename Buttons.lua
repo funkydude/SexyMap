@@ -254,6 +254,8 @@ function mod:OnEnable()
 	-- Try to capture new buttons periodically
 	self:ScheduleRepeatingTimer("MakeMovables", 1)
 	self:MakeMovables()
+	
+	self:SecureHook("Minimap_OnClick", "ReleaseDrag")
 end
 
 function mod:OnDisable()
@@ -413,6 +415,7 @@ do
 	local function getCurrentAngle(f)
 		local mx, my = Minimap:GetCenter()
 		local bx, by = f:GetCenter()
+		if not mx or not my or not bx or not by then return 0 end
 		local h, w = (by - my), (bx - mx)
 		angle = atan(h / w)
 		if w < 0 then
@@ -459,6 +462,12 @@ do
 			self:UnhookAll(frame)
 			frame.sexyMapMovable = nil
 			movables[frame] = nil
+		end
+	end
+	
+	function mod:ReleaseDrag()
+		if moving then
+			finish(moving)
 		end
 	end
 end

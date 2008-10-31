@@ -168,20 +168,18 @@ end
 function mod:Update()
 	MinimapZoneTextButton:ClearAllPoints()
 	MinimapZoneTextButton:SetPoint("BOTTOM", Minimap, "TOP", db.xOffset, db.yOffset)
-	if db.fontsize then
-		MinimapZoneTextButton:SetHeight(MinimapZoneText:GetStringHeight() + 10)
-	end
 	MinimapZoneTextButton:SetBackdropColor(db.bgColor.r, db.bgColor.g, db.bgColor.b, db.bgColor.a)
 	MinimapZoneTextButton:SetBackdropBorderColor(db.borderColor.r, db.borderColor.g, db.borderColor.b, db.borderColor.a)
 	local a, b, c = MinimapZoneText:GetFont()
 	MinimapZoneText:SetFont(db.font and media:Fetch("font", db.font) or a, db.fontsize or b, c)
-	if db.fontColor.r then
-		MinimapZoneText:SetTextColor(db.fontColor.r, db.fontColor.g, db.fontColor.b, db.fontColor.a)
-	end
 	self:ZONE_CHANGED()
 end
 
 function mod:ZONE_CHANGED()
 	local width = max(MinimapZoneText:GetStringWidth() * 1.3, db.width or 0)
+	MinimapZoneTextButton:SetHeight(MinimapZoneText:GetStringHeight() + 10)
 	MinimapZoneTextButton:SetWidth(width)
+	if db.fontColor.r then
+		MinimapZoneText:SetTextColor(db.fontColor.r, db.fontColor.g, db.fontColor.b, db.fontColor.a)
+	end
 end
