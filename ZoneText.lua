@@ -182,6 +182,6 @@ function mod:Update()
 end
 
 function mod:ZONE_CHANGED()
-	local width = max(MinimapZoneText:GetStringWidth() * 1.3, db.width)
+	local width = max(MinimapZoneText:GetStringWidth() * 1.3, db.width or 0)
 	MinimapZoneTextButton:SetWidth(width)
 end
