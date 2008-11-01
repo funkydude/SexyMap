@@ -99,7 +99,12 @@ local defaults = {
 	}
 }
 
-local movables = {"QuestWatchFrame", "DurabilityFrame", "QuestTimerFrame", "AchievementWatchFrame"}
+local movables = {
+	["QuestWatchFrame"] = L["Quest Tracker"],
+	["DurabilityFrame"] = L["Armored Man"], 
+	["QuestTimerFrame"] = L["Quest Timer"], 
+	["AchievementWatchFrame"] = L["Achievement Tracker"]
+}
 local movers = {}
 
 mod.options = options
@@ -122,8 +127,24 @@ function mod:OnEnable()
 	MinimapCluster:SetClampedToScreen(db.clamp)
 	self:SetLock(db.lock)
 	self:Update()
+	self:RegisterEvent("UPDATE_WORLD_STATES")
+	self:UPDATE_WORLD_STATES()
+	self:CreateMoversAndSetMovables()
 end
-	
+
+function mod:UPDATE_WORLD_STATES()
+	for i = 1, NUM_EXTENDED_UI_FRAMES do
+		local name = "WorldStateCaptureBar"..i
+		local f = _G[name]
+		if f and not movables[name] then
+			movables[name] = L["Capture Bars"]
+		end
+	end
+	self:CreateMoversAndSetMovables()
+end
+
+mod.movables = movables
+
 do
 	local function start(self)
 		local f = self:GetParent()
@@ -134,15 +155,20 @@ do
 	local function stop(self)
 		local f = self:GetParent()
 		f:StopMovingOrSizing()
+		
 		local x, y = f:GetCenter()
 		local n = f:GetName()
+		
 		db.framePositions[n] = db.framePositions[n] or {}
 		db.framePositions[n].x = x
 		db.framePositions[n].y = y
 	end
 
 	function mod:CreateMoversAndSetMovables()
-		for _, frame in ipairs(movables) do
+		-- hack, but needed in case of login with movers on
+		AchievementWatchFrame.desiredWidth = AchievementWatchFrame.desiredWidth or 100
+		
+		for frame, text in pairs(movables) do
 			local pf = _G[frame]
 			if pf then
 				local name = "SexyMapMover" .. frame
@@ -150,12 +176,12 @@ do
 				if not f then
 					f = CreateFrame("Frame", name, pf)
 					tinsert(movers, f)
-					l = f:CreateFontString(nil, nil, "GameFontNormalSmall")
+					local l = f:CreateFontString(nil, nil, "GameFontNormalSmall")
 					f:EnableMouse(true)
 					pf:SetMovable(true)
 					f:SetScript("OnMouseDown", start)
 					f:SetScript("OnMouseUp", stop)
-					l:SetText(("%s mover"):format(frame))
+					l:SetText(("%s mover"):format(text))
 					l:SetPoint("BOTTOM", f, "TOP")
 					f:SetBackdrop(parent.backdrop)
 					f:SetBackdropColor(0, 0.6, 0, 1)

@@ -108,6 +108,11 @@ L["Lock minimap"] = true
 L["Show movers"] = true
 L["Clamp to screen"] = true
 L["Right click map to configure"] = true
+L["Quest Tracker"] = true
+L["Armored Man"] = true
+L["Quest Timer"] = true
+L["Achievement Tracker"] = true
+L["Capture Bars"] = true
 
 -- ./moduleTemplate.lua
 -- no localization

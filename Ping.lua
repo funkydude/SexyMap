@@ -77,10 +77,10 @@ function mod:MINIMAP_PING(self, arg1)
 			local t = RAID_CLASS_COLORS[select(2, UnitClass(arg1))]
 			local r, g, b = t.r, t.g, t.b
 			if db.showAt == "chat" then
-				DEFAULT_CHAT_FRAME:AddMessage(("Ping: |cFF%x%x%x%s"):format(r * 255, g * 255, b * 255, UnitName(arg1)))
+				DEFAULT_CHAT_FRAME:AddMessage(("Ping: |cFF%02x%02x%02x%s|r"):format(r * 255, g * 255, b * 255, UnitName(arg1)))
 				pingFrame:Hide()
 			else
-				pingFrame.name:SetText(("|cFF%x%x%x%s"):format(r * 255, g * 255, b * 255, UnitName(arg1)))
+				pingFrame.name:SetText(("|cFF%02x%02x%02x%s|r"):format(r * 255, g * 255, b * 255, UnitName(arg1)))
 				pingFrame:SetWidth(pingFrame.name:GetStringWidth() + 14)
 				pingFrame:SetHeight(pingFrame.name:GetStringHeight() + 10)
 				pingFrame:Show()
