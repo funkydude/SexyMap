@@ -143,6 +143,7 @@ function mod:OnInitialize()
 	MinimapZoneText:SetAllPoints()
 	MinimapZoneTextButton:SetHeight(26)
 	MinimapZoneTextButton:SetBackdrop(parent.backdrop)
+	MinimapZoneTextButton:SetFrameStrata("MEDIUM")
 end
 
 function mod:OnEnable()

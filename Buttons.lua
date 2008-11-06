@@ -32,7 +32,7 @@ do
 			local child = select(i, Minimap:GetChildren())
 			local w, h = child.GetWidth and child:GetWidth() or 0, child.GetHeight and child:GetHeight() or 0
 			local sizeOk = w > 25 and w < 100 and h > 25 and h < 100
-			if sizeOk and stockIndex and not buttons[child:GetName()] and child.SetAlpha and not ignoreButtons[child:GetName()] then
+			if sizeOk and stockIndex and not buttons[child:GetName()] and child.SetAlpha and not ignoreButtons[child:GetName()] and not child.sexyMapIgnore then
 				buttons[child:GetName() or ("Button #" .. i)] = {child, custom = true}
 				count = count + 1
 			end

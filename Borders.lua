@@ -100,7 +100,7 @@ end
 local selectedPreset
 local options = {
 	type = "group",
-	name = "Borders",
+	name = L["Borders"],
 	childGroups = "tab",
 	args = {
 		hideBlizzard = {

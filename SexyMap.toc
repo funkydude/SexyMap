@@ -27,5 +27,6 @@ AutoZoom.lua
 Buttons.lua
 BorderPresets.lua
 Borders.lua
+Coordinates.lua
 Ping.lua
 ZoneText.lua

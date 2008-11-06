@@ -22,6 +22,7 @@ L["Disable (opaque)"] = true
 L["Alpha Key (1-bit alpha)"] = true
 L["Mod Blend (modulative)"] = true
 L["Add Blend (additive)"] = true
+L["Borders"] = true
 L["Hide default border"] = true
 L["Hide the default border on the minimap."] = true
 L["Current Borders"] = true
@@ -29,7 +30,6 @@ L["Enter a name to create a new border. The name can be anything you like to hel
 L["Create new border"] = true
 L["Clear & start over"] = true
 L["Clear the current borders and start fresh"] = true
-L["Borders"] = true
 L["Background/edge"] = true
 L["You can set a background and edge file for the minimap like you would with any frame. This is useful when you want to create static square backdrops for your minimap."] = true
 L["Enable"] = true
@@ -103,6 +103,14 @@ L["Always"] = true
 L["Never"] = true
 L["On hover"] = true
 
+-- ./Coordinates.lua
+L["Coordinates"] = true
+L["Enable Coordinates"] = true
+L["Settings"] = true
+L["Font size"] = true
+L["Lock"] = true
+L["Font color"] = true
+
 -- ./General.lua
 L["Lock minimap"] = true
 L["Show movers"] = true
@@ -147,6 +155,9 @@ L["Rounded - Top Right"] = true
 L["Rounded - Top Left"] = true
 L["Minimap shape"] = true
 
+-- ./Snap.lua
+-- no localization
+
 -- ./ZoneText.lua
 L["Horizontal position"] = true
 L["Vertical position"] = true
@@ -154,7 +165,6 @@ L["Width"] = true
 L["Background color"] = true
 L["Font"] = true
 L["Font Size"] = true
-L["Font color"] = true
 
 -- ./localization/enUS.lua
 -- no localization

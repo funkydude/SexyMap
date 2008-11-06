@@ -310,5 +310,117 @@ SexyMap.borderPresets = {
 			["scale"] = 1.07,
 		},
 		["shape"] = "Interface\\BUTTONS\\WHITE8X8",
+	},
+	["Rogue"] = {
+		["borders"] = {
+			{
+				["a"] = 1,
+				["rotSpeed"] = -8,
+				["name"] = "Rogue Rune 2",
+				["b"] = 0,
+				["scale"] = 2.13,
+				["r"] = 0.1450980392156863,
+				["g"] = 0.00392156862745098,
+				["texture"] = "SPELLS\\RogueRune2.blp",
+			}, -- [1]
+			{
+				["a"] = 1,
+				["r"] = 0.6,
+				["scale"] = 0.8900000000000001,
+				["g"] = 0.2078431372549019,
+				["disableRotation"] = true,
+				["blendMode"] = "ADD",
+				["name"] = "Glow",
+				["b"] = 0.09411764705882353,
+				["texture"] = "SPELLS\\White-Circle.blp",
+			}, -- [2]
+		},
+		["backdrop"] = {
+			["show"] = false,
+			["textureColor"] = {
+			},
+			["settings"] = {
+				["bgFile"] = "Interface\\Tooltips\\UI-Tooltip-Background",
+				["edgeFile"] = "Interface\\Tooltips\\UI-Tooltip-Border",
+				["tile"] = false,
+				["edgeSize"] = 16,
+				["insets"] = {
+					["top"] = 4,
+					["right"] = 4,
+					["left"] = 4,
+					["bottom"] = 4,
+				},
+			},
+			["borderColor"] = {
+			},
+			["scale"] = 1,
+		},
+		["shape"] = "Textures\\MinimapMask",
+	},
+	["Ruins"] = {
+		["borders"] = {
+		},
+		["backdrop"] = {
+			["show"] = true,
+			["textureColor"] = {
+				["a"] = 1,
+				["b"] = 1,
+				["g"] = 1,
+				["r"] = 1,
+			},
+			["settings"] = {
+				["bgFile"] = "World\\ENVIRONMENT\\DOODAD\\STRANGLETHORN\\TROLLRUINS\\TEX\\GARY\\GP_SNKNTMP_ATARBORDER.blp",
+				["edgeFile"] = "Interface\\Tooltips\\UI-Tooltip-Border.blp",
+				["tile"] = false,
+				["edgeSize"] = 23,
+				["insets"] = {
+					["top"] = 5,
+					["right"] = 5,
+					["left"] = 5,
+					["bottom"] = 5,
+				},
+			},
+			["borderColor"] = {
+				["a"] = 1,
+				["b"] = 0.7254901960784314,
+				["g"] = 0.8627450980392157,
+				["r"] = 1,
+			},
+			["scale"] = 1.42,
+		},
+		["shape"] = "Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy",
+	},
+	["Wood Framed"] = {
+		["borders"] = {
+		},
+		["backdrop"] = {
+			["show"] = true,
+			["textureColor"] = {
+				["a"] = 1,
+				["b"] = 1,
+				["g"] = 1,
+				["r"] = 1,
+			},
+			["settings"] = {
+				["bgFile"] = "Interface\\AchievementFrame\\UI-Achievement-StatsBackground.blp",
+				["edgeFile"] = "Interface\\AchievementFrame\\UI-Achievement-WoodBorder.blp",
+				["tile"] = false,
+				["edgeSize"] = 28,
+				["insets"] = {
+					["top"] = 4,
+					["right"] = 4,
+					["left"] = 4,
+					["bottom"] = 4,
+				},
+			},
+			["borderColor"] = {
+				["a"] = 1,
+				["b"] = 0.7254901960784314,
+				["g"] = 0.8627450980392157,
+				["r"] = 1,
+			},
+			["scale"] = 1.17,
+		},
+		["shape"] = "Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy",
 	},	
 }
