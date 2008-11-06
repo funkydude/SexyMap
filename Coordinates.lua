@@ -131,7 +131,7 @@ local defaults = {
 		backgroundColor = {},
 		locked = false,
 		fontColor = {},
-		enabled = true
+		enabled = false
 	}
 }
 local coordFrame, xcoords, ycoords
