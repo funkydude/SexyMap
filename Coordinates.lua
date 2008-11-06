@@ -133,7 +133,7 @@ local defaults = {
 		fontColor = {},
 		enabled = false
 	}
-} 
+}
 local coordFrame, xcoords, ycoords
 function mod:OnInitialize()
 	self.db = parent.db:RegisterNamespace(modName, defaults)
