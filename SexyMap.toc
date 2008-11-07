@@ -28,5 +28,7 @@ Buttons.lua
 BorderPresets.lua
 Borders.lua
 Coordinates.lua
+HudMap.xml
+HudMap.lua
 Ping.lua
 ZoneText.lua

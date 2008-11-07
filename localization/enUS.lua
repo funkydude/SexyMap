@@ -122,6 +122,10 @@ L["Quest Timer"] = true
 L["Achievement Tracker"] = true
 L["Capture Bars"] = true
 
+-- ./HudMap.lua
+L["Enable a HUD minimap. This is very useful for gathering resources, but for technical reasons, the HUD map and the normal minimap can't be shown at the same time. Showing the HUD map will turn off the normal minimap."] = true
+L["Keybinding"] = true
+
 -- ./moduleTemplate.lua
 -- no localization
 
