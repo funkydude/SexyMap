@@ -165,6 +165,21 @@ local options = {
 				db.scale = v
 				mod:SetScales()
 			end
+		},
+		alpha = {
+			type = "range",
+			name = L["Opacity"],
+			min = 0,
+			max = 1,
+			step = 0.01,
+			bigStep = 0.01,
+			get = function()
+				return db.alpha
+			end,
+			set = function(info, v)
+				db.alpha = v
+				HudMapCluster:SetAlpha(v)
+			end
 		}
 	}
 }
@@ -178,7 +193,8 @@ local defaults = {
 		useRoutes = true,
 		hudColor = {},
 		textColor = {r = 0.5, g = 1, b = 0.5, a = 1},
-		scale = 8
+		scale = 8,
+		alpha = 0.7
 	}
 }
 
@@ -189,7 +205,7 @@ function mod:OnInitialize()
 	
 	SexyMapHudMap:SetPoint("CENTER")
 	HudMapCluster:SetFrameStrata("BACKGROUND")
-	HudMapCluster:SetAlpha(0.7)
+	HudMapCluster:SetAlpha(db.alpha)
 	SexyMapHudMap:SetAlpha(0)
 	SexyMapHudMap:EnableMouse(false)
 	setmetatable(HudMapCluster, { __index = SexyMapHudMap })
@@ -209,7 +225,7 @@ function mod:OnInitialize()
 	gatherLine:SetBlendMode("ADD")
 	local nudge = 0.65
 	gatherLine:SetPoint("BOTTOM", HudMapCluster, "CENTER", 0, nudge)
-	gatherLine:SetWidth(0.3)
+	gatherLine:SetWidth(0.2)
 	gatherLine:SetHeight((SexyMapHudMap:GetWidth() * 0.214) - nudge)
 	tinsert(coloredTextures, gatherLine)
 	

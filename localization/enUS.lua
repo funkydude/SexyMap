@@ -125,6 +125,12 @@ L["Capture Bars"] = true
 -- ./HudMap.lua
 L["Enable a HUD minimap. This is very useful for gathering resources, but for technical reasons, the HUD map and the normal minimap can't be shown at the same time. Showing the HUD map will turn off the normal minimap."] = true
 L["Keybinding"] = true
+L["GatherMate is a resource gathering helper mod. Installing it allows you to have resource pins on your HudMap."] = true
+L["Use GatherMate pins"] = true
+L["Routes plots the shortest distance between resource nodes. Install it to show farming routes on your HudMap."] = true
+L["Use Routes"] = true
+L["HUD Color"] = true
+L["Text Color"] = true
 
 -- ./moduleTemplate.lua
 -- no localization
