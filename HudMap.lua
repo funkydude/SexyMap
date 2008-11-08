@@ -7,6 +7,38 @@ local db
 local updateFrame = CreateFrame("Frame")
 local updateRotations
 
+local onShow = function(self)
+	self.rotSettings = GetCVar("rotateMinimap")
+	SetCVar("rotateMinimap", "1")
+	if db.useGatherMate and GatherMate then
+		GatherMate:GetModule("Display"):ReparentMinimapPins(HudMapCluster)
+		GatherMate:GetModule("Display"):ChangedVars(nil, "ROTATE_MINIMAP", "1")
+	end
+	
+	if db.useRoutes and Routes and Routes.ReparentMinimap then
+		Routes:ReparentMinimap(HudMapCluster)
+		Routes:CVAR_UPDATE(nil, "ROTATE_MINIMAP", "1")
+	end
+	
+	updateFrame:SetScript("OnUpdate", updateRotations)
+	MinimapCluster:Hide()
+end
+
+local onHide = function(self, force)
+	SetCVar("rotateMinimap", self.rotSettings)
+	if (db.useGatherMate or force) and GatherMate then
+		GatherMate:GetModule("Display"):ReparentMinimapPins(Minimap)
+		GatherMate:GetModule("Display"):ChangedVars(nil, "ROTATE_MINIMAP", self.rotSettings)
+	end
+	
+	if (db.useRoutes or force) and Routes and Routes.ReparentMinimap then
+		Routes:ReparentMinimap(Minimap)
+		Routes:CVAR_UPDATE(nil, "ROTATE_MINIMAP", self.rotSettings)
+	end
+	
+	updateFrame:SetScript("OnUpdate", nil)
+	MinimapCluster:Show()
+end
 
 local options = {
 	type = "group",
@@ -36,36 +68,72 @@ local options = {
 			set = function(info, v)
 				SetBinding(v, "TOGGLESEXYMAPGATHERMAP")
 			end
+		},
+		gathermate = {
+			type = "toggle",
+			name = L["Use GatherMate pins"],
+			disabled = function()
+				return GatherMate == nil
+			end,
+			get = function()
+				return db.useGatherMate
+			end,
+			set = function(info, v)
+				db.useGatherMate = v
+				if HudMapCluster:IsVisible() then
+					onHide(HudMapCluster, true)
+					onShow(HudMapCluster)
+				end
+			end
+		},
+		routes = {
+			type = "toggle",
+			name = L["Use Routes"],
+			disabled = function()
+				return Routes == nil or Routes.ReparentMinimap == nil
+			end,
+			get = function()
+				return db.useRoutes
+			end,
+			set = function(info, v)
+				db.useRoutes = v
+				if HudMapCluster:IsVisible() then
+					onHide(HudMapCluster, true)
+					onShow(HudMapCluster)
+				end
+			end
+		},
+		color = {
+			type = "color",
+			hasAlpha = true,
+			name = L["HUD Color"],
+			get = function()
+				local c = db.hudColor
+				return c.r or 0, c.g or 1, c.b or 0, c.a or 1
+			end,
+			set = function(info, r, g, b, a)
+				local c = db.hudColor
+				c.r, c.g, c.b, c.a = r, g, b, a
+				mod:UpdateColors()
+			end
 		}
 	}
 }
 
-local onShow = function(self)
-	self.rotSettings = GetCVar("rotateMinimap")
-	SetCVar("rotateMinimap", "1")
-	if GatherMate then
-		GatherMate:GetModule("Display"):ReparentMinimapPins(HudMapCluster)
-		GatherMate:GetModule("Display"):ChangedVars(nil, "ROTATE_MINIMAP", "1")
-	end
-	
-	updateFrame:SetScript("OnUpdate", updateRotations)
-	MinimapCluster:Hide()
-end
-
-local onHide = function(self)
-	SetCVar("rotateMinimap", self.rotSettings)
-	if GatherMate then
-		GatherMate:GetModule("Display"):ReparentMinimapPins(Minimap)
-		GatherMate:GetModule("Display"):ChangedVars(nil, "ROTATE_MINIMAP", self.rotSettings)
-	end
-	
-	updateFrame:SetScript("OnUpdate", nil)
-	MinimapCluster:Show()
-end
-
 local directions = {}
+local defaults = {
+	profile = {
+		useGatherMate = true,
+		useRoutes = true,
+		hudColor = {}
+	}
+}
 
+local coloredTextures = {}
 function mod:OnInitialize()
+	self.db = parent.db:RegisterNamespace(modName, defaults)
+	db = self.db.profile
+	
 	SexyMapHudMap:SetPoint("CENTER")
  	HudMapCluster:SetScale(8)
 	HudMapCluster:SetAlpha(0.7)
@@ -77,28 +145,31 @@ function mod:OnInitialize()
 	gatherCircle:SetTexture([[SPELLS\CIRCLE.BLP]])
 	gatherCircle:SetBlendMode("ADD")
 	gatherCircle:SetPoint("CENTER")
-	gatherCircle:SetVertexColor(0,1,0,0.05 / HudMapCluster:GetAlpha())
 	local radius = SexyMapHudMap:GetWidth() * 0.45
 	gatherCircle:SetWidth(radius)
 	gatherCircle:SetHeight(radius)
+	gatherCircle.alphaFactor = 0.5
+	tinsert(coloredTextures, gatherCircle)
 	
 	local gatherLine = HudMapCluster:CreateTexture("GatherLine")
 	gatherLine:SetTexture([[Interface\BUTTONS\WHITE8X8.BLP]])
 	gatherLine:SetBlendMode("ADD")
-	gatherLine:SetPoint("BOTTOM", HudMapCluster, "CENTER")
-	gatherLine:SetVertexColor(0,1,0,0.1 / HudMapCluster:GetAlpha())
+	local nudge = 4 / HudMapCluster:GetScale()
+	gatherLine:SetPoint("BOTTOM", HudMapCluster, "CENTER", 0, nudge)
 	gatherLine:SetWidth(0.2)
-	gatherLine:SetHeight(SexyMapHudMap:GetWidth() * 0.214)
+	gatherLine:SetHeight((SexyMapHudMap:GetWidth() * 0.214) - nudge)
+	tinsert(coloredTextures, gatherLine)
 	
 	local playerDot = HudMapCluster:CreateTexture()
-	playerDot:SetTexture([[SPELLS\T_VFX_HERO_CIRCLE.BLP]])
+	playerDot:SetTexture([[Interface\GLUES\MODELS\UI_Tauren\gradientCircle.blp]])
 	playerDot:SetBlendMode("ADD")
 	playerDot:SetPoint("CENTER")
-	playerDot:SetVertexColor(1,1,1, 1)
-	playerDot:SetWidth(20 / HudMapCluster:GetScale())
-	playerDot:SetHeight(20 / HudMapCluster:GetScale())
+	playerDot:SetWidth(25 / HudMapCluster:GetScale())
+	playerDot:SetHeight(25 / HudMapCluster:GetScale())
+	playerDot.alphaFactor = 2
+	tinsert(coloredTextures, playerDot)
 	
-	local indicators = {"N", "NE", "E", "SE", "S", "SW", "S", "NW"}
+	local indicators = {"N", "NE", "E", "SE", "S", "SW", "W", "NW"}
 	local radius = SexyMapHudMap:GetWidth() * 0.214
 	local large, small = 16 / HudMapCluster:GetScale(), 10 / HudMapCluster:GetScale()
 	for k, v in ipairs(indicators) do
@@ -125,11 +196,13 @@ function mod:OnInitialize()
 	self:HookScript(Minimap, "OnShow", "Minimap_OnShow")
 	
 	parent:RegisterModuleOptions(modName, options, modName)
+	self:UpdateColors()
 end
 
 do
-	local target = 1 / 60
+	local target = 1 / 90
 	local total = 0
+	
 	function updateRotations(self, t)
 		total = total + t
 		if total < target then return end
@@ -168,5 +241,12 @@ function mod:Toggle(flag)
 		else
 			HudMapCluster:Hide()
 		end
+	end
+end
+
+function mod:UpdateColors()
+	local c = db.hudColor
+	for k, v in ipairs(coloredTextures) do
+		v:SetVertexColor(c.r or 0, c.g or 1, c.b or 0, (c.a or 1) * (v.alphaFactor or 1) / HudMapCluster:GetAlpha())
 	end
 end
