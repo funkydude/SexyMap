@@ -150,6 +150,10 @@ end
   Master Shapes table
 ------------------------------------------------------------------------
 ]]--
+local legacyMappings = {
+	["Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy"] = "SPELLS\\T_VFX_BORDER"
+}
+
 local shapes = {
 	["Textures\\MinimapMask"] = {
 		name = L["Circle"],
@@ -164,6 +168,10 @@ local shapes = {
 		geometry = circle
 	},
 	["Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy"] = {
+		name = L["Faded Square"],
+		geometry = "square"
+	},
+	["SPELLS\\T_VFX_BORDER"] = {
 		name = L["Faded Square"],
 		geometry = "square"
 	},
@@ -227,7 +235,7 @@ local shapeOptions = {
 	name = L["Minimap shape"],
 	values = shapeList,
 	get = function()
-		return db.shape or "Textures\\MinimapMask"
+		return legacyMappings[db.shape] or db.shape or "Textures\\MinimapMask"
 	end,
 	set = function(info, v)
 		mod:ApplyShape(v)
@@ -265,8 +273,10 @@ function mod:GetShape()
 end
 
 function mod:ApplyShape(shape)
-	if shape or db.shape then
-		db.shape = shape or db.shape or "Textures\\MinimapMask"
+	shape = legacyMappings[shape] or shape
+	dbShape = db.shape and legacyMappings[db.shape] or db.shape
+	if shape or dbShape then
+		db.shape = shape or dbShape or "Textures\\MinimapMask"
 		Minimap:SetMaskTexture(db.shape)
 	end
 	self.callbacks:Fire("SexyMap_ShapeChanged")
