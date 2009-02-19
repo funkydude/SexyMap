@@ -2,11 +2,13 @@
 ## Title: SexyMap
 ## Notes: Spice up ye olde minimap with some sexytime options.
 ## Author: Antiarc
-## OptionalDeps: Ace3, Blizzard_TimeManager
+## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibBetterBlizzOptions-1.0, LibSharedMedia-3.0, Blizzard_TimeManager, TomTom
 ## SavedVariables: SexyMapDB
 
 # Libraries, etc
+#@no-lib-strip@
 embeds.xml
+#@end-no-lib-strip@
 
 # Localization
 localization\enUS.lua
