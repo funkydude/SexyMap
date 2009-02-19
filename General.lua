@@ -181,6 +181,7 @@ do
 					pf:SetMovable(true)
 					f:SetScript("OnMouseDown", start)
 					f:SetScript("OnMouseUp", stop)
+					f:SetScript("OnLeave", stop)
 					l:SetText(("%s mover"):format(text))
 					l:SetPoint("BOTTOM", f, "TOP")
 					f:SetBackdrop(parent.backdrop)
