@@ -75,6 +75,7 @@ local options = {
 			end,
 			set = function(info, v)
 				SetBinding(v, "TOGGLESEXYMAPGATHERMAP")
+				SaveBindings(GetCurrentBindingSet())
 			end
 		},
 		gathermatedesc = {
