@@ -100,9 +100,9 @@ local defaults = {
 }
 
 local movables = {
-	["QuestWatchFrame"] = L["Quest Tracker"],
 	["DurabilityFrame"] = L["Armored Man"], 
 	["QuestTimerFrame"] = L["Quest Timer"], 
+	["QuestWatchFrame"] = L["Quest Tracker"],
 	["AchievementWatchFrame"] = L["Achievement Tracker"]
 }
 local movers = {}
@@ -165,8 +165,10 @@ do
 	end
 
 	function mod:CreateMoversAndSetMovables()
-		-- hack, but needed in case of login with movers on
-		AchievementWatchFrame.desiredWidth = AchievementWatchFrame.desiredWidth or 100
+		if select(4, GetBuildInfo()) < 30100 then
+			-- hack, but needed in case of login with movers on
+			AchievementWatchFrame.desiredWidth = AchievementWatchFrame.desiredWidth or 100
+		end
 		
 		for frame, text in pairs(movables) do
 			local pf = _G[frame]
