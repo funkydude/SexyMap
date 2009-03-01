@@ -268,6 +268,9 @@ function mod:SexyMap_ShapeChanged()
 end
 
 function mod:FixTrackingAnchoring()
+	if ElkBuffBars and ElkBuffBars.db.profile.hidetrackingframe then
+		parent:Print("|cffff0000!! Warning !!!|r Elkano's Buff Bars is set to hide the tracking button. This will hide your tracking texture. Run |cffffcc00/ebb config|r and uncheck |cffffcc00Hide minimap tracking frame|r to fix this.")
+	end
 	local x, y = MiniMapTracking:GetCenter()
 	local mx, my = Minimap:GetCenter()
 	local dx, dy = x - mx, y - my
