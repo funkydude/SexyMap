@@ -24,6 +24,9 @@ local onShow = function(self)
 		mod:Hook("GetMinimapShape")
 	end
 	
+	SexyMapHudMap:SetBlipTexture([[Interface\AddOns\SexyMap\resources\OBJECTICONS.blp]])
+	SexyMapHudMap:SetIconTexture([[Interface\AddOns\SexyMap\resources\POIICONS.blp]])
+	
 	updateFrame:SetScript("OnUpdate", updateRotations)
 	MinimapCluster:Hide()
 end
@@ -43,6 +46,9 @@ local onHide = function(self, force)
 	if _G.GetMinimapShape and mod:IsHooked("GetMinimapShape") then
 		mod:Unhook("GetMinimapShape")
 	end
+	
+	SexyMapHudMap:SetBlipTexture([[Interface\Minimap\OBJECTICONS]])
+	SexyMapHudMap:SetIconTexture([[Interface\Minimap\POIICONS]])
 	
 	updateFrame:SetScript("OnUpdate", nil)
 	MinimapCluster:Show()
