@@ -48,32 +48,7 @@ local function deepCopyHash(t)
 	return nt
 end
 
-local GetPlayerBearing
-function GetPlayerBearing()
-	local obj; -- Remains an upvalue
-	do
-		for i = 1, Minimap:GetNumChildren() do
-			local v = select(i, Minimap:GetChildren())
-			if v:IsObjectType("Model") and not v:GetName() then
-				local model = v:GetModel():lower()
-				if model:match("interface\\minimap\\minimaparrow") then 
-					obj = v; break;
-				end
-			end
-		end
-	end
-	if not obj then return; end
-
-	-- If we've found what we were looking for, rewrite function to skip the search next time.
-	GetPlayerBearing = function() 
-		if GetCVar("rotateMinimap") ~= "0" then
-			return (MiniMapCompassRing:GetFacing() * -1)
-		else
-			return obj:GetFacing(); 
-		end
-	end
-	return GetPlayerBearing();
-end
+local GetPlayerBearing = _G.GetPlayerFacing
 		
 local function RotateTexture(self, inc, set)
 	if type(inc) == "string" then

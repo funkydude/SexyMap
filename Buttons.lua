@@ -275,6 +275,9 @@ function mod:FixTrackingAnchoring()
 	local mx, my = Minimap:GetCenter()
 	local dx, dy = x - mx, y - my
 	
+	MiniMapTracking.Hide = function() end
+	MiniMapTracking:Show()
+	
 	MiniMapTracking:SetParent(UIParent)
 	MiniMapTrackingButton:SetParent(Minimap)
 	MiniMapTrackingButton:ClearAllPoints()
