@@ -271,7 +271,7 @@ do
 		total = total + t
 		if total < target then return end
 		while total > target do total = total - target end
-		local bearing = MiniMapCompassRing:GetFacing()
+		local bearing = GetPlayerFacing()
 		for k, v in ipairs(directions) do
 			local x, y = math.sin(v.rad - bearing), math.cos(v.rad - bearing)
 			v:ClearAllPoints()
