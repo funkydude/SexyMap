@@ -24,9 +24,6 @@ local onShow = function(self)
 		mod:Hook("GetMinimapShape")
 	end
 	
-	SexyMapHudMap:SetBlipTexture([[Interface\AddOns\SexyMap\resources\OBJECTICONS.blp]])
-	SexyMapHudMap:SetIconTexture([[Interface\AddOns\SexyMap\resources\POIICONS.blp]])
-	
 	updateFrame:SetScript("OnUpdate", updateRotations)
 	MinimapCluster:Hide()
 end
@@ -47,8 +44,8 @@ local onHide = function(self, force)
 		mod:Unhook("GetMinimapShape")
 	end
 	
-	SexyMapHudMap:SetBlipTexture([[Interface\Minimap\OBJECTICONS]])
-	SexyMapHudMap:SetIconTexture([[Interface\Minimap\POIICONS]])
+	-- SexyMapHudMap:SetBlipTexture([[Interface\Minimap\OBJECTICONS]])
+	-- SexyMapHudMap:SetIconTexture([[Interface\Minimap\POIICONS]])
 	
 	updateFrame:SetScript("OnUpdate", nil)
 	MinimapCluster:Show()
@@ -161,15 +158,30 @@ local options = {
 		scale = {
 			type = "range",
 			name = L["Scale"],
-			min = 5.0,
-			max = 20.0,
-			step = 0.5,
-			bigStep = 0.5,
+			min = 1.0,
+			max = 3.0,
+			step = 0.1,
+			bigStep = 0.1,
 			get = function()
 				return db.scale
 			end,
 			set = function(info, v)
 				db.scale = v
+				mod:SetScales()
+			end
+		},
+		blipScale = {
+			type = "range",
+			name = L["Blip Scale"],
+			min = 0.1,
+			max = 1.0,
+			step = 0.05,
+			bigStep = 0.05,
+			get = function()
+				return db.blipScale
+			end,
+			set = function(info, v)
+				db.blipScale = v
 				mod:SetScales()
 			end
 		},
@@ -201,23 +213,34 @@ local defaults = {
 		hudColor = {},
 		textColor = {r = 0.5, g = 1, b = 0.5, a = 1},
 		scale = 8,
+		blipScale = 1,
 		alpha = 0.7
 	}
 }
 
 local coloredTextures = {}
+local gatherCircle, gatherLine
+local indicators = {"N", "NE", "E", "SE", "S", "SW", "W", "NW"}
+
 function mod:OnInitialize()
 	self.db = parent.db:RegisterNamespace(modName, defaults)
 	db = self.db.profile
 	
-	SexyMapHudMap:SetPoint("CENTER")
+	-- Upgrade thingie for 3.1
+	if not db.setNewScale then
+		db.scale = 1.4
+		db.setNewScale = true
+	end
+	
+	SexyMapHudMap:SetPoint("CENTER", UIParent, "CENTER")
 	HudMapCluster:SetFrameStrata("BACKGROUND")
 	HudMapCluster:SetAlpha(db.alpha)
 	SexyMapHudMap:SetAlpha(0)
 	SexyMapHudMap:EnableMouse(false)
+	
 	setmetatable(HudMapCluster, { __index = SexyMapHudMap })
 	
-	local gatherCircle = HudMapCluster:CreateTexture()
+	gatherCircle = HudMapCluster:CreateTexture()
 	gatherCircle:SetTexture([[SPELLS\CIRCLE.BLP]])
 	gatherCircle:SetBlendMode("ADD")
 	gatherCircle:SetPoint("CENTER")
@@ -227,7 +250,7 @@ function mod:OnInitialize()
 	gatherCircle.alphaFactor = 0.5
 	tinsert(coloredTextures, gatherCircle)
 	
-	local gatherLine = HudMapCluster:CreateTexture("GatherLine")
+	gatherLine = HudMapCluster:CreateTexture("GatherLine")
 	gatherLine:SetTexture([[Interface\BUTTONS\WHITE8X8.BLP]])
 	gatherLine:SetBlendMode("ADD")
 	local nudge = 0.65
@@ -255,8 +278,7 @@ function mod:OnInitialize()
 		ind.rad = rot
 		ind.radius = radius
 		tinsert(directions, ind)
-	end
-	
+	end	
 
 	HudMapCluster:Hide()	
 	HudMapCluster:SetScript("OnShow", onShow)
@@ -267,6 +289,11 @@ function mod:OnInitialize()
 	parent:RegisterModuleOptions(modName, options, modName)
 	self:UpdateColors()
 	self:SetScales()
+	
+	HudMapCluster._GetScale = HudMapCluster.GetScale
+	HudMapCluster.GetScale = function()
+		return 1
+	end
 end
 
 do
@@ -307,10 +334,12 @@ function mod:Toggle(flag)
 			HudMapCluster:Hide()
 		else
 			HudMapCluster:Show()
+			mod:SetScales()
 		end
 	else
 		if flag then
 			HudMapCluster:Show()
+			mod:SetScales()
 		else
 			HudMapCluster:Hide()
 		end
@@ -334,19 +363,27 @@ function mod:GetMinimapShape()
 end
 
 function mod:SetScales()
+	SexyMapHudMap:ClearAllPoints()
+	SexyMapHudMap:SetPoint("CENTER", UIParent, "CENTER")
+	
+	HudMapCluster:ClearAllPoints()
+	HudMapCluster:SetPoint("CENTER")
+	
+	-- SexyMapHudMap:SetScale(db.scale / db.blipScale)
+	local size = UIParent:GetHeight() / db.scale
+	SexyMapHudMap:SetWidth(size)
+	SexyMapHudMap:SetHeight(size)
+	HudMapCluster:SetHeight(size)
+	HudMapCluster:SetWidth(size)
+	gatherCircle:SetWidth(size * 0.45)
+	gatherCircle:SetHeight(size * 0.45)
+	gatherLine:SetHeight((SexyMapHudMap:GetWidth() * 0.214) - 0.65)
+	
 	HudMapCluster:SetScale(db.scale)
-	local scale = HudMapCluster:GetScale()
+	playerDot:SetWidth(15)
+	playerDot:SetHeight(15)
 	
-	local large, small = 20 / scale, 11 / scale
 	for k, v in ipairs(directions) do
-		local a, b, c = v:GetFont()
-		if k % 2 ~= 0 then
-			v:SetFont(a, large, c)
-		else
-			v:SetFont(a, small, c)
-		end
+		v.radius = SexyMapHudMap:GetWidth() * 0.214
 	end
-	
-	playerDot:SetWidth(25 / scale)
-	playerDot:SetHeight(25 / scale)
 end
