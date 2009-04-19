@@ -170,21 +170,6 @@ local options = {
 				mod:SetScales()
 			end
 		},
-		blipScale = {
-			type = "range",
-			name = L["Blip Scale"],
-			min = 0.1,
-			max = 1.0,
-			step = 0.05,
-			bigStep = 0.05,
-			get = function()
-				return db.blipScale
-			end,
-			set = function(info, v)
-				db.blipScale = v
-				mod:SetScales()
-			end
-		},
 		alpha = {
 			type = "range",
 			name = L["Opacity"],
@@ -213,7 +198,6 @@ local defaults = {
 		hudColor = {},
 		textColor = {r = 0.5, g = 1, b = 0.5, a = 1},
 		scale = 8,
-		blipScale = 1,
 		alpha = 0.7
 	}
 }
@@ -369,7 +353,6 @@ function mod:SetScales()
 	HudMapCluster:ClearAllPoints()
 	HudMapCluster:SetPoint("CENTER")
 	
-	-- SexyMapHudMap:SetScale(db.scale / db.blipScale)
 	local size = UIParent:GetHeight() / db.scale
 	SexyMapHudMap:SetWidth(size)
 	SexyMapHudMap:SetHeight(size)
