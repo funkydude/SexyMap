@@ -290,7 +290,7 @@ do
 		while total > target do total = total - target end
 		local bearing = GetPlayerFacing()
 		for k, v in ipairs(directions) do
-			local x, y = math.sin(v.rad - bearing), math.cos(v.rad - bearing)
+			local x, y = math.sin(v.rad + bearing), math.cos(v.rad + bearing)
 			v:ClearAllPoints()
 			v:SetPoint("CENTER", HudMapCluster, "CENTER", x * v.radius, y * v.radius)
 		end
