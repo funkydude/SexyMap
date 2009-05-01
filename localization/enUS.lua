@@ -131,6 +131,7 @@ L["Routes plots the shortest distance between resource nodes. Install it to show
 L["Use Routes"] = true
 L["HUD Color"] = true
 L["Text Color"] = true
+L["Use QuestHelper pins"] = true
 
 -- ./moduleTemplate.lua
 -- no localization

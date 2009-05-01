@@ -15,6 +15,10 @@ local onShow = function(self)
 		GatherMate:GetModule("Display"):ChangedVars(nil, "ROTATE_MINIMAP", "1")
 	end
 	
+	if db.useQuestHelper and QuestHelper and QuestHelper.SetMinimapObject then
+		QuestHelper:SetMinimapObject(HudMapCluster)
+	end
+	
 	if db.useRoutes and Routes and Routes.ReparentMinimap then
 		Routes:ReparentMinimap(HudMapCluster)
 		Routes:CVAR_UPDATE(nil, "ROTATE_MINIMAP", "1")
@@ -33,6 +37,10 @@ local onHide = function(self, force)
 	if (db.useGatherMate or force) and GatherMate then
 		GatherMate:GetModule("Display"):ReparentMinimapPins(Minimap)
 		GatherMate:GetModule("Display"):ChangedVars(nil, "ROTATE_MINIMAP", self.rotSettings)
+	end
+	
+	if db.useQuestHelper and QuestHelper and QuestHelper.SetMinimapObject then
+		QuestHelper:SetMinimapObject(Minimap)
 	end
 	
 	if (db.useRoutes or force) and Routes and Routes.ReparentMinimap then
@@ -103,6 +111,24 @@ local options = {
 					onShow(HudMapCluster)
 				end
 			end
+		},
+		questhelper = {
+			type = "toggle",
+			order = 106,
+			name = L["Use QuestHelper pins"],
+			disabled = function()
+				return QuestHelper == nil or QuestHelper.SetMinimapObject == nil
+			end,
+			get = function()
+				return db.useQuestHelper
+			end,
+			set = function(info, v)
+				db.useQuestHelper = v
+				if HudMapCluster:IsVisible() then
+					onHide(HudMapCluster, true)
+					onShow(HudMapCluster)
+				end
+			end			
 		},
 		routesdesc = {
 			type = "description",
@@ -194,6 +220,7 @@ local playerDot
 local defaults = {
 	profile = {
 		useGatherMate = true,
+		useQuestHelper = true,
 		useRoutes = true,
 		hudColor = {},
 		textColor = {r = 0.5, g = 1, b = 0.5, a = 1},
