@@ -111,14 +111,20 @@ L["Font size"] = true
 L["Lock"] = true
 L["Font color"] = true
 
+-- ./Fader.lua
+L["Enabled"] = true
+L["Enable fader functionality"] = true
+L["Hover Opacity"] = true
+L["Normal Opacity"] = true
+
 -- ./General.lua
 L["Lock minimap"] = true
 L["Show movers"] = true
 L["Clamp to screen"] = true
 L["Right click map to configure"] = true
-L["Quest Tracker"] = true
 L["Armored Man"] = true
 L["Quest Timer"] = true
+L["Quest Tracker"] = true
 L["Achievement Tracker"] = true
 L["Capture Bars"] = true
 
@@ -127,11 +133,11 @@ L["Enable a HUD minimap. This is very useful for gathering resources, but for te
 L["Keybinding"] = true
 L["GatherMate is a resource gathering helper mod. Installing it allows you to have resource pins on your HudMap."] = true
 L["Use GatherMate pins"] = true
+L["Use QuestHelper pins"] = true
 L["Routes plots the shortest distance between resource nodes. Install it to show farming routes on your HudMap."] = true
 L["Use Routes"] = true
 L["HUD Color"] = true
 L["Text Color"] = true
-L["Use QuestHelper pins"] = true
 
 -- ./moduleTemplate.lua
 -- no localization
