@@ -77,7 +77,7 @@ function mod.Minimap_OnClick(frame, button)
 	if button == "RightButton" and mod:GetModule("General").db.profile.rightClickToConfig then
 		mod:OpenConfig()
 	else
-		Minimap_OnClick(frame)
+		Minimap_OnClick(frame, button)
 	end
 end
 
