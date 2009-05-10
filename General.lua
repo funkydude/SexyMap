@@ -58,23 +58,23 @@ local options = {
 				mod:Update()
 			end
 		},
-		alpha = {
-			type = "range",
-			name = L["Opacity"],
-			min = 0,
-			max = 1.0,
-			step = 0.01,
-			bigStep = 0.01,
-			order = 105,
-			width = "full",
-			get = function(info)
-				return db.alpha or 1
-			end,
-			set = function(info, v)
-				db.alpha = v
-				mod:Update()
-			end
-		},
+		-- alpha = {
+			-- type = "range",
+			-- name = L["Opacity"],
+			-- min = 0,
+			-- max = 1.0,
+			-- step = 0.01,
+			-- bigStep = 0.01,
+			-- order = 105,
+			-- width = "full",
+			-- get = function(info)
+				-- return db.alpha or 1
+			-- end,
+			-- set = function(info, v)
+				-- db.alpha = v
+				-- mod:Update()
+			-- end
+		-- },
 		rightClickToConfig = {
 			type = "toggle",
 			name = L["Right click map to configure"],
@@ -228,7 +228,7 @@ do
 	
 	function mod:Update()
 		MinimapCluster:SetScale(db.scale or 1)
-		MinimapCluster:SetAlpha(db.alpha or 1)
+		-- MinimapCluster:SetAlpha(db.alpha or 1)
 	end
 
 	function mod:SetLock(v)

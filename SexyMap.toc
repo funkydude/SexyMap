@@ -30,6 +30,7 @@ Buttons.lua
 BorderPresets.lua
 Borders.lua
 Coordinates.lua
+Fader.lua
 HudMap.xml
 HudMap.lua
 Ping.lua

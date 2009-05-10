@@ -131,7 +131,7 @@ do
 		fadeTime = t or 0.2
 		totalTime = 0
 		faderFrame:SetScript("OnUpdate", fade)
-	end	
+	end
 	
 	local hoverButtons = {}
 	function mod:RegisterHoverButton(frame, showFunc)
