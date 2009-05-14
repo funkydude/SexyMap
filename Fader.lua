@@ -115,10 +115,6 @@ do
 	end
 
 	function mod:OnEnable()
-		if not db.enabled then
-			self:Disable()
-			return
-		end
 		self:HookAll(MinimapCluster, "OnEnter", MinimapCluster:GetChildren())
 		startFade(MinimapCluster, 0.2, db.normalOpacity)
 	end
