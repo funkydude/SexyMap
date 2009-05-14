@@ -69,6 +69,7 @@ function mod:OnInitialize()
 	self.db = parent.db:RegisterNamespace(modName, defaults)
 	parent:RegisterModuleOptions(modName, options, modName)
 	db = self.db.profile
+	self:SetEnabledState(db.enabled)
 end
 
 do
