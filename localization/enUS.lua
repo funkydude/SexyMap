@@ -124,8 +124,7 @@ L["Clamp to screen"] = true
 L["Right click map to configure"] = true
 L["Armored Man"] = true
 L["Quest Timer"] = true
-L["Quest Tracker"] = true
-L["Achievement Tracker"] = true
+L["Quest & Achievement Tracker"] = true
 L["Capture Bars"] = true
 
 -- ./HudMap.lua
