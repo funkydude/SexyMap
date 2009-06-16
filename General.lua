@@ -101,9 +101,6 @@ local defaults = {
 
 local movables = {
 	["DurabilityFrame"] = L["Armored Man"], 
-	["QuestTimerFrame"] = L["Quest Timer"], 
-	["QuestWatchFrame"] = L["Quest Tracker"],
-	["AchievementWatchFrame"] = L["Achievement Tracker"]
 }
 local movers = {}
 
@@ -127,9 +124,12 @@ function mod:OnEnable()
 	MinimapCluster:SetClampedToScreen(db.clamp)
 	self:SetLock(db.lock)
 	self:Update()
-	self:RegisterEvent("UPDATE_WORLD_STATES")
-	self:UPDATE_WORLD_STATES()
-	self:CreateMoversAndSetMovables()
+	if not _G.Capping then
+		self:RegisterEvent("UPDATE_WORLD_STATES")
+		self:UPDATE_WORLD_STATES()
+	else
+		self:CreateMoversAndSetMovables()
+	end
 end
 
 function mod:UPDATE_WORLD_STATES()
@@ -165,11 +165,6 @@ do
 	end
 
 	function mod:CreateMoversAndSetMovables()
-		if select(4, GetBuildInfo()) < 30100 then
-			-- hack, but needed in case of login with movers on
-			AchievementWatchFrame.desiredWidth = AchievementWatchFrame.desiredWidth or 100
-		end
-		
 		for frame, text in pairs(movables) do
 			local pf = _G[frame]
 			if pf then
@@ -213,7 +208,7 @@ do
 				end
 			end
 		end
-		self:SetMovers(db.lock)
+		self:SetMovers()
 	end
 end
 
