@@ -180,7 +180,7 @@ do
 					f:SetScript("OnMouseUp", stop)
 					f:SetScript("OnLeave", stop)
 					l:SetText(("%s mover"):format(text))
-					l:SetPoint("BOTTOM", f, "TOP")
+					l:SetPoint("BOTTOM", f, "TOP")					
 					f:SetBackdrop(parent.backdrop)
 					f:SetBackdropColor(0, 0.6, 0, 1)
 				end
@@ -192,6 +192,13 @@ do
 					f:SetPoint("TOPLEFT", pf, "TOPLEFT")
 					f:SetPoint("TOPRIGHT", pf, "TOPRIGHT")
 					f:SetHeight(40)
+				end
+				
+				if f:GetRight() - f:GetLeft() < 30 then
+					f:ClearAllPoints()
+					f:SetPoint("TOPLEFT", pf, "TOPLEFT")
+					f:SetHeight(40)
+					f:SetWidth(40)
 				end
 				
 				pf:SetScript("OnShow", nil)
@@ -256,6 +263,23 @@ do
 				end
 				f.showParent = nil
 				f:Hide()
+			end
+		end
+		
+		if v then
+			self.watchFrameAdvancedStatus = GetCVar(InterfaceOptionsObjectivesPanelAdvancedWatchFrame.cvar)
+			self.watchFrameLockStatus = WatchFrame.locked
+			
+			local button = InterfaceOptionsObjectivesPanelAdvancedWatchFrame
+			button:SetChecked(true)
+			InterfaceOptionsPanel_CheckButton_Update(button)
+			
+			WatchFrame_Unlock(WatchFrame)
+		else
+			local c = GetCVar(InterfaceOptionsObjectivesPanelAdvancedWatchFrame.cvar)
+			
+			if self.watchFrameLockStatus then
+				WatchFrame_Lock(WatchFrame)
 			end
 		end
 	end

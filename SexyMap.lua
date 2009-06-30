@@ -112,13 +112,13 @@ do
 			end
 			
 			k:SetAlpha(alpha)
-			k:Show()
+			-- k:Show()
 			if alpha == fadeTarget then
 				fading[k] = nil
 				total = total - 1
-				if fadeTarget == 0 then
-					k:Hide()
-				end
+				-- if fadeTarget == 0 then
+					-- k:Hide()
+				-- end
 			end
 		end
 		
@@ -146,7 +146,7 @@ do
 			return
 		end
 		frame:SetAlpha(0)
-		frame:Hide()
+		-- frame:Hide()
 		hoverButtons[frame] = showFunc or true
 	end
 
@@ -157,7 +157,7 @@ do
 		if not frame then return end
 		if hoverButtons[frame] == true or type(hoverButtons[frame]) == "function" and hoverButtons[frame](frame) then
 			frame:SetAlpha(1)
-			frame:Show()
+			-- frame:Show()
 		end
 		hoverButtons[frame] = nil
 	end
