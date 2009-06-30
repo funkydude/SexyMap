@@ -51,6 +51,7 @@ L["SharedMedia Border"] = true
 L["Border color"] = true
 L["Border edge size"] = true
 L["Preset"] = true
+L["Reset position"] = true
 L["Select preset to load"] = true
 L["Select a preset to load settings from. This will erase any of your current borders."] = true
 L["This will wipe out any current settings!"] = true

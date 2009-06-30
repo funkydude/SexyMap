@@ -57,6 +57,13 @@ local options = {
 						db.locked = v
 					end
 				},
+				reset = {
+					type = "execute",
+					name = L["Reset position"],
+					func = function()
+						mod:ResetPosition()
+					end,
+				},
 				fontColor = {
 					type = "color",
 					name = L["Font color"],
@@ -111,10 +118,14 @@ local options = {
 }
 
 local function start(self)
+	if db.locked then return end
 	self:StartMoving()
+	self.moving = true
 end
 
 local function finish(self)
+	if not self.moving then return end
+	self.moving = nil
 	self:StopMovingOrSizing()
 	local x, y = self:GetCenter()
 	local mx, my = Minimap:GetCenter()
@@ -230,4 +241,10 @@ function mod:Update()
 	coordFrame:SetWidth(xcoords:GetStringWidth() * 1.2)
 	coordFrame:SetHeight(xcoords:GetStringHeight() + 10)
 	xcoords:SetText(pt)
+end
+
+function mod:ResetPosition()
+	coordFrame:ClearAllPoints()
+	coordFrame:SetPoint("CENTER", Minimap, "BOTTOM")
+	db.x, db.y = nil, nil
 end
