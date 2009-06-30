@@ -100,7 +100,7 @@ local defaults = {
 }
 
 local movables = {
-	["DurabilityFrame"] = L["Armored Man"], 
+	["DurabilityFrame"] = L["Armored Man"]
 }
 local movers = {}
 
@@ -127,9 +127,9 @@ function mod:OnEnable()
 	if not _G.Capping then
 		self:RegisterEvent("UPDATE_WORLD_STATES")
 		self:UPDATE_WORLD_STATES()
-	else
-		self:CreateMoversAndSetMovables()
+		movables["VehicleSeatIndicator"] = L["Vehicle Seat"]
 	end
+	self:CreateMoversAndSetMovables()
 end
 
 function mod:UPDATE_WORLD_STATES()
