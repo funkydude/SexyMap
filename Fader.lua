@@ -8,10 +8,11 @@ local options = {
 	type = "group",
 	name = modName,
 	childGroups = "tab",
+	disabled = function() return not db.enabled end,
 	args = {
 		enabled = {
 			type = "toggle",
-			name = L["Enabled"],
+			name = L["Enable fader"],
 			desc = L["Enable fader functionality"],
 			get = function()
 				return db.enabled
@@ -20,41 +21,41 @@ local options = {
 				db.enabled = v
 				return v and mod:Enable() or mod:Disable()
 			end,
-			order = 1
-		},
-		hoverOpacity = {
-			type = "range",
-			name = L["Hover Opacity"],
-			min = 0,
-			max = 100,
-			step = 1,
-			bigStep = 1,
-			get = function()
-				return db.hoverOpacity * 100.0
-			end,
-			set = function(info, v)
-				db.hoverOpacity = math.max(0.0001, v / 100.0)
-			end,
-			disabled = function() return not db.enabled end,
-			order = 3
+			disabled = false,
+			order = 1,
+			width = "full",
 		},
 		normalOpacity = {
 			type = "range",
 			name = L["Normal Opacity"],
 			min = 0,
-			max = 100,
-			step = 1,
-			bigStep = 1,
+			max = 1,
+			step = 0.01,
+			isPercent = true,
 			get = function()
-				return db.normalOpacity * 100.0
+				return db.normalOpacity
 			end,
 			set = function(info, v)
-				db.normalOpacity = math.max(0.0001, v / 100.0)
-				MinimapCluster:SetAlpha(v / 100.0)
+				db.normalOpacity = math.max(0.0001, v)
+				MinimapCluster:SetAlpha(v)
 			end,
-			disabled = function() return not db.enabled end,
 			order = 2
-		}
+		},
+		hoverOpacity = {
+			type = "range",
+			name = L["Hover Opacity"],
+			min = 0,
+			max = 1,
+			step = 0.01,
+			isPercent = true,
+			get = function()
+				return db.hoverOpacity
+			end,
+			set = function(info, v)
+				db.hoverOpacity = math.max(0.0001, v)
+			end,
+			order = 3
+		},
 	}
 }
 
