@@ -65,28 +65,92 @@ local options = {
 	args = {
 		desc = {
 			type = "description",
-			order = 1,
+			order = 0,
 			name = L["Enable a HUD minimap. This is very useful for gathering resources, but for technical reasons, the HUD map and the normal minimap can't be shown at the same time. Showing the HUD map will turn off the normal minimap."]
 		},
 		enable = {
 			type = "toggle",
-			name = L["Enable"],
+			name = L["Enable Hudmap"],
+			order = 1,
 			get = function()
 				return HudMapCluster:IsVisible()
 			end,
 			set = function(info, v)
 				mod:Toggle(v)
-			end
+			end,
 		},
 		binding = {
 			type = "keybinding",
 			name = L["Keybinding"],
+			order = 2,
 			get = function()
 				return GetBindingKey("TOGGLESEXYMAPGATHERMAP")
 			end,
 			set = function(info, v)
 				SetBinding(v, "TOGGLESEXYMAPGATHERMAP")
 				SaveBindings(GetCurrentBindingSet())
+			end
+		},
+		color = {
+			type = "color",
+			hasAlpha = true,
+			order = 3,
+			name = L["HUD Color"],
+			get = function()
+				local c = db.hudColor
+				return c.r or 0, c.g or 1, c.b or 0, c.a or 1
+			end,
+			set = function(info, r, g, b, a)
+				local c = db.hudColor
+				c.r, c.g, c.b, c.a = r, g, b, a
+				mod:UpdateColors()
+			end
+		},
+		textcolor = {
+			type = "color",
+			hasAlpha = true,
+			name = L["Text Color"],
+			order = 4,
+			get = function()
+				local c = db.textColor
+				return c.r or 0, c.g or 1, c.b or 0, c.a or 1
+			end,
+			set = function(info, r, g, b, a)
+				local c = db.textColor
+				c.r, c.g, c.b, c.a = r, g, b, a
+				mod:UpdateColors()
+			end
+		},		
+		scale = {
+			type = "range",
+			name = L["Scale"],
+			order = 5,
+			min = 1.0,
+			max = 3.0,
+			step = 0.1,
+			bigStep = 0.1,
+			get = function()
+				return db.scale
+			end,
+			set = function(info, v)
+				db.scale = v
+				mod:SetScales()
+			end
+		},
+		alpha = {
+			type = "range",
+			name = L["Opacity"],
+			order = 6,
+			min = 0,
+			max = 1,
+			step = 0.01,
+			bigStep = 0.01,
+			get = function()
+				return db.alpha
+			end,
+			set = function(info, v)
+				db.alpha = v
+				HudMapCluster:SetAlpha(v)
 			end
 		},
 		gathermatedesc = {
@@ -153,64 +217,6 @@ local options = {
 				end
 			end
 		},
-		color = {
-			type = "color",
-			hasAlpha = true,
-			name = L["HUD Color"],
-			get = function()
-				local c = db.hudColor
-				return c.r or 0, c.g or 1, c.b or 0, c.a or 1
-			end,
-			set = function(info, r, g, b, a)
-				local c = db.hudColor
-				c.r, c.g, c.b, c.a = r, g, b, a
-				mod:UpdateColors()
-			end
-		},
-		textcolor = {
-			type = "color",
-			hasAlpha = true,
-			name = L["Text Color"],
-			get = function()
-				local c = db.textColor
-				return c.r or 0, c.g or 1, c.b or 0, c.a or 1
-			end,
-			set = function(info, r, g, b, a)
-				local c = db.textColor
-				c.r, c.g, c.b, c.a = r, g, b, a
-				mod:UpdateColors()
-			end
-		},		
-		scale = {
-			type = "range",
-			name = L["Scale"],
-			min = 1.0,
-			max = 3.0,
-			step = 0.1,
-			bigStep = 0.1,
-			get = function()
-				return db.scale
-			end,
-			set = function(info, v)
-				db.scale = v
-				mod:SetScales()
-			end
-		},
-		alpha = {
-			type = "range",
-			name = L["Opacity"],
-			min = 0,
-			max = 1,
-			step = 0.01,
-			bigStep = 0.01,
-			get = function()
-				return db.alpha
-			end,
-			set = function(info, v)
-				db.alpha = v
-				HudMapCluster:SetAlpha(v)
-			end
-		}
 	}
 }
 
