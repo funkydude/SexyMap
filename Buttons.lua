@@ -72,24 +72,6 @@ local options = {
 			-- func = mod.CaptureButtons,
 			-- name = L["Capture New Buttons"]
 		-- },
-		enableDragging = {
-			type = "toggle",
-			name = L["Let SexyMap handle button dragging"],
-			desc = L["Allow SexyMap to assume drag ownership for buttons attached to the minimap. Turn this off if you have another mod that you want to use to position your minimap buttons."],
-			width = "full",
-			order = 101,
-			get = function()
-				return db.allowDragging
-			end,
-			set = function(info, v)
-				db.allowDragging = v
-				if v then
-					mod:MakeMovables()
-				else
-					mod:ReleaseMovables()
-				end
-			end
-		},
 		lockDragging = {
 			type = "toggle",
 			name = L["Lock Button Dragging"],
@@ -105,12 +87,30 @@ local options = {
 				db.lockDragging = v
 			end		
 		},
+		enableDragging = {
+			type = "toggle",
+			name = L["Let SexyMap handle button dragging"],
+			desc = L["Allow SexyMap to assume drag ownership for buttons attached to the minimap. Turn this off if you have another mod that you want to use to position your minimap buttons."],
+			width = "full",
+			order = 102,
+			get = function()
+				return db.allowDragging
+			end,
+			set = function(info, v)
+				db.allowDragging = v
+				if v then
+					mod:MakeMovables()
+				else
+					mod:ReleaseMovables()
+				end
+			end
+		},
 		controlVisibility = {
 			type = "toggle",
 			name = L["Let SexyMap control button visibility"],
 			desc = L["Turn this off if you want another mod to handle which buttons are visible on the minimap."],
 			width = "full",
-			order = 101,
+			order = 103,
 			get = function()
 				return db.controlVisibility
 			end,
@@ -134,7 +134,7 @@ local options = {
 			max = 100,
 			step = 1,
 			bigStep = 1,
-			order = 100,
+			order = 104,
 			disabled = function()
 				return not db.allowDragging
 			end,
