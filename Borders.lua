@@ -99,7 +99,7 @@ local options = {
 					type = "input",
 					name = L["Create new border"],
 					order = 2,
-					width = "double",
+					width = "full",
 					set = function(info, v)
 						mod:NewBorder(v)
 					end
@@ -405,11 +405,21 @@ local options = {
 			type = "group",
 			name = L["Preset"],
 			args = {
+				saveas = {
+					name = L["Save current settings as preset..."],
+					order = 1,
+					type = "input",
+					width = "full",
+					get = function() return "" end,
+					set = function(info, v)
+						mod:SavePresetAs(v)
+					end
+				},
 				preset = {
 					type = "select",
 					name = L["Select preset to load"],
-					width = "double",
 					desc = L["Select a preset to load settings from. This will erase any of your current borders."],
+					order = 2,
 					confirm = true,
 					confirmText = L["This will wipe out any current settings!"],
 					values = presets,
@@ -425,7 +435,7 @@ local options = {
 					name = L["Delete"],
 					type = "select",
 					confirm = true,
-					order = 110,
+					order = 3,
 					disabled = function()
 						for k, v in pairs(userPresets) do
 							return false
@@ -439,15 +449,6 @@ local options = {
 					end,
 					set = function(info, v)
 						mod.db.global.userPresets[v] = nil
-					end
-				},
-				saveas = {
-					name = L["Save current settings as preset..."],
-					type = "input",
-					width = "double",
-					get = function() return "" end,
-					set = function(info, v)
-						mod:SavePresetAs(v)
 					end
 				},
 			}
@@ -792,7 +793,7 @@ function mod:OnInitialize()
 	args.presets = deepCopyHash(options.args.presets.args.preset)
 	if args.presets then
 		args.presets.order = 110
-		args.presets.width = "full"
+		args.presets.width = nil
 		args.presets.values = presets
 	end
 	-- Minimap:SetFrameStrata("LOW")
