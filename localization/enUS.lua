@@ -4,6 +4,14 @@ local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
 local L = AceLocale:NewLocale("SexyMap", "enUS", true) 
 if not L then return end 
  
+-- Just temp, Antiarc's script will kill these and associate it all correctly
+L["Lock coordinates"] = true
+L["Show inside chat"] = true
+L["Show on minimap"] = true
+L["Text width"] = true
+L["Enable Hudmap"] = true
+L["Enable fader"] = true
+ 
 -- ./AutoZoom.lua
 L["Autozoom out after..."] = true
 L["Number of seconds to autozoom out after. Set to 0 to turn off Autozoom."] = true
