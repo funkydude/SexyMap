@@ -15,29 +15,10 @@ local options = {
 	type = "group",
 	name = modName,
 	args = {
-		xOffset = {
-			type = "range",
-			name = L["Horizontal position"],
-			min = -250,
-			max = 250,
-			step = 1,
-			bigStep = 5,
-			get = function() return db.xOffset end,
-			set = function(info, v) db.xOffset = v; mod:Update() end
-		},
-		yOffset = {
-			type = "range",
-			name = L["Vertical position"],
-			min = -250,
-			max = 250,
-			step = 1,
-			bigStep = 5,
-			get = function() return db.yOffset end,
-			set = function(info, v) db.yOffset = v; mod:Update() end
-		},
 		width = {
 			type = "range",
-			name = L["Width"],
+			name = L["Text width"],
+			order = 0,
 			min = 50,
 			max = 400,
 			step = 1,
@@ -45,48 +26,11 @@ local options = {
 			get = function() return MinimapZoneTextButton:GetWidth() end,
 			set = function(info, v) db.width = v; mod:Update() end
 		},
-		show = {
-			type = "multiselect",
-			name = ("Show %s..."):format("zone text"),
-			values = hideValues,
-			order = 1,
-			get = function(info, v)
-				return db.show == v
-			end,
-			set = function(info, v)
-				db.show = v
-				mod:SetOnHover()
-			end
-		},
-		bgColor = {
-			type = "color",
-			name = L["Background color"],
-			hasAlpha = true,
-			get = function()
-				return db.bgColor.r, db.bgColor.g, db.bgColor.b, db.bgColor.a
-			end,
-			set = function(info, r, g, b, a)
-				db.bgColor.r, db.bgColor.g, db.bgColor.b, db.bgColor.a = r, g, b, a
-				mod:Update()
-			end
-		},
-		borderColor = {
-			type = "color",
-			name = L["Border color"],
-			hasAlpha = true,
-			get = function()
-				return db.borderColor.r, db.borderColor.g, db.borderColor.b, db.borderColor.a
-			end,
-			set = function(info, r, g, b, a)
-				db.borderColor.r, db.borderColor.g, db.borderColor.b, db.borderColor.a = r, g, b, a
-				mod:Update()
-			end
-		},
 		font = {
 			type = "select",
 			name = L["Font"],
-			dialogControl = 'LSM30_Font',
-			order = 106,
+			order = 1,
+			dialogControl = "LSM30_Font",
 			values = AceGUIWidgetLSMlists.font,
 			get = function() return db.font end,
 			set = function(info, v) 
@@ -97,6 +41,7 @@ local options = {
 		fontSize = {
 			type = "range",
 			name = L["Font Size"],
+			order = 2,
 			min = 4,				
 			max = 30,
 			step = 1,
@@ -110,6 +55,7 @@ local options = {
 		fontColor = {
 			type = "color",
 			name = L["Font color"],
+			order = 3,
 			hasAlpha = true,
 			get = function()
 				return db.fontColor.r, db.fontColor.g, db.fontColor.b, db.fontColor.a
@@ -118,7 +64,68 @@ local options = {
 				db.fontColor.r, db.fontColor.g, db.fontColor.b, db.fontColor.a = r, g, b, a
 				mod:Update()
 			end		
-		}		
+		},
+		xOffset = {
+			type = "range",
+			name = L["Horizontal position"],
+			order = 6,
+			min = -250,
+			max = 250,
+			step = 1,
+			bigStep = 5,
+			get = function() return db.xOffset end,
+			set = function(info, v) db.xOffset = v; mod:Update() end
+		},
+		yOffset = {
+			type = "range",
+			name = L["Vertical position"],
+			order = 6,
+			min = -250,
+			max = 250,
+			step = 1,
+			bigStep = 5,
+			get = function() return db.yOffset end,
+			set = function(info, v) db.yOffset = v; mod:Update() end
+		},
+		bgColor = {
+			type = "color",
+			name = L["Background color"],
+			order = 7,
+			hasAlpha = true,
+			get = function()
+				return db.bgColor.r, db.bgColor.g, db.bgColor.b, db.bgColor.a
+			end,
+			set = function(info, r, g, b, a)
+				db.bgColor.r, db.bgColor.g, db.bgColor.b, db.bgColor.a = r, g, b, a
+				mod:Update()
+			end
+		},
+		borderColor = {
+			type = "color",
+			name = L["Border color"],
+			order = 8,
+			hasAlpha = true,
+			get = function()
+				return db.borderColor.r, db.borderColor.g, db.borderColor.b, db.borderColor.a
+			end,
+			set = function(info, r, g, b, a)
+				db.borderColor.r, db.borderColor.g, db.borderColor.b, db.borderColor.a = r, g, b, a
+				mod:Update()
+			end
+		},
+		show = {
+			type = "multiselect",
+			name = ("Show %s..."):format("zone text"),
+			order = 9,
+			values = hideValues,
+			get = function(info, v)
+				return db.show == v
+			end,
+			set = function(info, v)
+				db.show = v
+				mod:SetOnHover()
+			end
+		},
 	}
 }
 
