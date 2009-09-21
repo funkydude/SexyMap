@@ -4,6 +4,14 @@ local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
 local L = AceLocale:NewLocale("SexyMap", "zhCN", false) 
 if not L then return end 
  
+-- Just temp, Antiarc's script will kill these and associate it all correctly
+L["Lock coordinates"] = "锁定坐标"
+L["Show inside chat"] = "在聊天显示"
+L["Show on minimap"] = "在迷你地图显示"
+L["Text width"] = "文本宽度"
+L["Enable Hudmap"] = "启用 HUD 地图"
+L["Enable fader"] = "启用淡出"
+ 
 -- ./AutoZoom.lua
 L["Autozoom out after..."] = "自动缩放"
 L["Number of seconds to autozoom out after. Set to 0 to turn off Autozoom."] = "几秒后自动缩放。设置为“0”关闭自动缩放。"
