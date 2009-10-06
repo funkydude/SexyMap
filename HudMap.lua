@@ -24,6 +24,12 @@ local onShow = function(self)
 		Routes:CVAR_UPDATE(nil, "ROTATE_MINIMAP", "1")
 	end
 	
+	if TomTom and TomTom.ReparentMinimap then
+		TomTom:ReparentMinimap(HudMapCluster)
+		local Astrolabe = DongleStub("Astrolabe-0.4")
+		Astrolabe.processingFrame:SetParent(HudMapCluster)
+	end
+	
 	if _G.GetMinimapShape and not mod:IsHooked("GetMinimapShape") then
 		mod:Hook("GetMinimapShape")
 	end
@@ -48,12 +54,15 @@ local onHide = function(self, force)
 		Routes:CVAR_UPDATE(nil, "ROTATE_MINIMAP", self.rotSettings)
 	end
 	
+	if TomTom and TomTom.ReparentMinimap then
+		TomTom:ReparentMinimap(Minimap)
+		local Astrolabe = DongleStub("Astrolabe-0.4")
+		Astrolabe.processingFrame:SetParent(Minimap)		
+	end
+	
 	if _G.GetMinimapShape and mod:IsHooked("GetMinimapShape") then
 		mod:Unhook("GetMinimapShape")
 	end
-	
-	-- SexyMapHudMap:SetBlipTexture([[Interface\Minimap\OBJECTICONS]])
-	-- SexyMapHudMap:SetIconTexture([[Interface\Minimap\POIICONS]])
 	
 	updateFrame:SetScript("OnUpdate", nil)
 	MinimapCluster:Show()
