@@ -4,6 +4,14 @@ local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
 local L = AceLocale:NewLocale("SexyMap", "zhCN", false) 
 if not L then return end 
  
+-- Just temp, Antiarc's script will kill these and associate it all correctly
+L["Lock coordinates"] = "锁定坐标"
+L["Show inside chat"] = "在聊天显示"
+L["Show on minimap"] = "在迷你地图显示"
+L["Text width"] = "文本宽度"
+L["Enable Hudmap"] = "启用 HUD 地图"
+L["Enable fader"] = "启用淡出"
+ 
 -- ./AutoZoom.lua
 L["Autozoom out after..."] = "自动缩放"
 L["Number of seconds to autozoom out after. Set to 0 to turn off Autozoom."] = "几秒后自动缩放。设置为“0”关闭自动缩放。"
@@ -110,6 +118,7 @@ L["Settings"] = "设置"
 L["Font size"] = "字体尺寸"
 L["Lock"] = "锁定"
 L["Font color"] = "字体颜色"
+L["Reset position"] = "重置位置"
 
 -- ./Fader.lua
 L["Enabled"] = "已启用"
@@ -123,10 +132,8 @@ L["Show movers"] = "显示锚点"
 L["Clamp to screen"] = "固定在屏幕上"
 L["Right click map to configure"] = "右击地图配置"
 L["Armored Man"] = "耐久度"
-L["Quest Timer"] = "任务计时"
-L["Quest Tracker"] = "任务追踪"
-L["Achievement Tracker"] = "成就追踪"
 L["Capture Bars"] = "占领进度条"
+L["Vehicle Seat"] = "载具座位"
 
 -- ./HudMap.lua
 L["Enable a HUD minimap. This is very useful for gathering resources, but for technical reasons, the HUD map and the normal minimap can't be shown at the same time. Showing the HUD map will turn off the normal minimap."] = "启用 HUD 地图。这十分利于采集，但由于技术原因，HUD 地图和常规小地图无法同时显示。显示 HUD 地图将暂时关闭常规小地图。"

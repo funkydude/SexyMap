@@ -9,31 +9,43 @@ local pingFrame
 local options = {
 	type = "group",
 	name = modName,
+	disabled = function() return not db.showPing end,
 	args = {
 		show = {
 			type = "toggle",
+			order = 1,
 			name = L["Show who pinged"],
+			width = "full",
 			get = function()
 				return db.showPing
 			end,
 			set = function(info, v)
 				db.showPing = v
-			end
-		},
-		showAt = {
-			type = "multiselect",
-			name = L["Show..."],
-			values = {
-				map = L["On minimap"],
-				chat = L["In chat"]
-			},
-			get = function(info, v)
-				return db.showAt == v
 			end,
+			disabled = false,
+		},
+		showChat = {
+			type = "toggle",
+			order = 2,
+			name = L["Show inside chat"],
 			set = function(info, v)
-				db.showAt = v
-			end
-		}
+				db.showAt = "chat"
+			end,
+			get = function(info)
+				return db.showAt == "chat" and true or false
+			end,
+		},
+		showMap = {
+			type = "toggle",
+			order = 3,
+			name = L["Show on minimap"],
+			set = function(info, v)
+				db.showAt = "map"
+			end,
+			get = function(info)
+				return db.showAt == "map" and true or false
+			end,
+		},
 	}
 }
 
@@ -71,20 +83,21 @@ function mod:OnEnable()
 	self:RegisterEvent("MINIMAP_PING")
 end
 
-function mod:MINIMAP_PING(self, arg1)
-	if not UnitIsUnit(arg1, "player") or true then
-		if db.showPing then
-			local t = RAID_CLASS_COLORS[select(2, UnitClass(arg1))]
-			local r, g, b = t.r, t.g, t.b
-			if db.showAt == "chat" then
-				DEFAULT_CHAT_FRAME:AddMessage(("Ping: |cFF%02x%02x%02x%s|r"):format(r * 255, g * 255, b * 255, UnitName(arg1)))
-				pingFrame:Hide()
-			else
-				pingFrame.name:SetText(("|cFF%02x%02x%02x%s|r"):format(r * 255, g * 255, b * 255, UnitName(arg1)))
-				pingFrame:SetWidth(pingFrame.name:GetStringWidth() + 14)
-				pingFrame:SetHeight(pingFrame.name:GetStringHeight() + 10)
-				pingFrame:Show()
-			end
+-- MINIMAP_PING can fire twice at the same time, just a simple way of throttling it
+local lastX, lastY
+function mod:MINIMAP_PING(self, unit, x, y)
+	if( db.showPing and lastX ~= x and lastY ~= y ) then
+		lastX, lastY = x, y
+		
+		local color = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
+		if db.showAt == "chat" then
+			DEFAULT_CHAT_FRAME:AddMessage(("Ping: |cFF%02x%02x%02x%s|r"):format(color.r * 255, color.g * 255, color.b * 255, UnitName(unit)))
+			pingFrame:Hide()
+		else
+			pingFrame.name:SetFormattedText("|cFF%02x%02x%02x%s|r", color.r * 255, color.g * 255, color.b * 255, UnitName(unit))
+			pingFrame:SetWidth(pingFrame.name:GetStringWidth() + 14)
+			pingFrame:SetHeight(pingFrame.name:GetStringHeight() + 10)
+			pingFrame:Show()
 		end
 	end
 end

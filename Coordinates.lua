@@ -8,10 +8,12 @@ local options = {
 	type = "group",
 	name = L["Coordinates"],
 	childGroups = "tab",
+	disabled = function() return not db.enabled end,
 	args = {
 		enable = {
 			type = "toggle",
 			name = L["Enable Coordinates"],
+			order = 1,
 			get = function()
 				return db.enabled
 			end,
@@ -22,99 +24,106 @@ local options = {
 				else
 					parent:DisableModule(modName)
 				end
+			end,
+			disabled = false,
+		},
+		lock = {
+			type = "toggle",
+			name = L["Lock coordinates"],
+			order = 2,
+			get = function()
+				return db.locked
+			end,
+			set = function(info, v)
+				db.locked = v
+			end,
+			width = "full",
+		},
+		fontSize = {
+			type = "range",
+			name = L["Font size"],
+			order = 3,
+			min = 8,
+			max = 30,
+			step = 1,
+			bigStep = 1,
+			get = function()
+				return db.fontSize or 12
+			end,
+			set = function(info, v)
+				db.fontSize = v
+				mod:Update()
+				mod:UpdateCoords()
 			end
 		},
-		settings = {
-			type = "group",
-			name = L["Settings"],
-			disabled = function()
-				return not db.enabled
+		fontColor = {
+			type = "color",
+			name = L["Font color"],
+			order = 4,
+			hasAlpha = true,
+			get = function()
+				local c = db.fontColor
+				local r, g, b, a = c.r or 0, c.g or 0, c.b or 0, c.a or 1
+				return r, g, b, a
 			end,
-			args = {
-				fontSize = {
-					type = "range",
-					name = L["Font size"],
-					min = 8,
-					max = 30,
-					step = 1,
-					bigStep = 1,
-					get = function()
-						return db.fontSize or 12
-					end,
-					set = function(info, v)
-						db.fontSize = v
-						mod:Update()
-						mod:UpdateCoords()
-					end
-				},
-				lock = {
-					type = "toggle",
-					name = L["Lock"],
-					get = function()
-						return db.locked
-					end,
-					set = function(info, v)
-						db.locked = v
-					end
-				},
-				fontColor = {
-					type = "color",
-					name = L["Font color"],
-					order = 13,
-					hasAlpha = true,
-					get = function()
-						local c = db.fontColor
-						local r, g, b, a = c.r or 0, c.g or 0, c.b or 0, c.a or 1
-						return r, g, b, a
-					end,
-					set = function(info, r, g, b, a)
-						local c = db.fontColor
-						c.r, c.g, c.b, c.a = r, g, b, a
-						mod:Update()
-					end
-				},
-				backgroundColor = {
-					type = "color",
-					name = L["Backdrop color"],
-					order = 13,
-					hasAlpha = true,
-					get = function()
-						local c = db.backgroundColor
-						local r, g, b, a = c.r or 0, c.g or 0, c.b or 0, c.a or 1
-						return r, g, b, a
-					end,
-					set = function(info, r, g, b, a)
-						local c = db.backgroundColor
-						c.r, c.g, c.b, c.a = r, g, b, a
-						mod:Update()
-					end		
-				},
-				borderColor = {
-					type = "color",
-					name = L["Border color"],
-					order = 13,
-					hasAlpha = true,
-					get = function()
-						local c = db.borderColor
-						local r, g, b, a = c.r or 0, c.g or 0, c.b or 0, c.a or 1
-						return r, g, b, a
-					end,
-					set = function(info, r, g, b, a)
-						local c = db.borderColor
-						c.r, c.g, c.b, c.a = r, g, b, a
-						mod:Update()
-					end		
-				}
-			}
-		}
+			set = function(info, r, g, b, a)
+				local c = db.fontColor
+				c.r, c.g, c.b, c.a = r, g, b, a
+				mod:Update()
+			end
+		},
+		backgroundColor = {
+			type = "color",
+			name = L["Backdrop color"],
+			order = 5,
+			hasAlpha = true,
+			get = function()
+				local c = db.backgroundColor
+				local r, g, b, a = c.r or 0, c.g or 0, c.b or 0, c.a or 1
+				return r, g, b, a
+			end,
+			set = function(info, r, g, b, a)
+				local c = db.backgroundColor
+				c.r, c.g, c.b, c.a = r, g, b, a
+				mod:Update()
+			end		
+		},
+		borderColor = {
+			type = "color",
+			name = L["Border color"],
+			order = 5,
+			hasAlpha = true,
+			get = function()
+				local c = db.borderColor
+				local r, g, b, a = c.r or 0, c.g or 0, c.b or 0, c.a or 1
+				return r, g, b, a
+			end,
+			set = function(info, r, g, b, a)
+				local c = db.borderColor
+				c.r, c.g, c.b, c.a = r, g, b, a
+				mod:Update()
+			end		
+		},
+		reset = {
+			type = "execute",
+			name = L["Reset position"],
+			order = 6,
+			func = function()
+				mod:ResetPosition()
+			end,
+		},
 	}
 }
 
 local function start(self)
+	if db.locked then return end
 	self:StartMoving()
+	self.moving = true
 end
 
 local function finish(self)
+	if not self.moving then return end
+	self.moving = nil
 	self:StopMovingOrSizing()
 	local x, y = self:GetCenter()
 	local mx, my = Minimap:GetCenter()
@@ -230,4 +239,10 @@ function mod:Update()
 	coordFrame:SetWidth(xcoords:GetStringWidth() * 1.2)
 	coordFrame:SetHeight(xcoords:GetStringHeight() + 10)
 	xcoords:SetText(pt)
+end
+
+function mod:ResetPosition()
+	coordFrame:ClearAllPoints()
+	coordFrame:SetPoint("CENTER", Minimap, "BOTTOM")
+	db.x, db.y = nil, nil
 end

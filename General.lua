@@ -9,8 +9,10 @@ local options = {
 	name = "General",
 	args = {
 		lock = {
+			order = 1,
 			name = L["Lock minimap"],
 			type = "toggle",
+			width = "full",
 			get = function()
 				return db.lock
 			end,
@@ -19,7 +21,20 @@ local options = {
 				mod:SetLock(v)
 			end
 		},
+		rightClickToConfig = {
+			order = 2,
+			type = "toggle",
+			name = L["Right click map to configure"],
+			width = "full",
+			get = function()
+				return db.rightClickToConfig
+			end,
+			set = function(info, v)
+				db.rightClickToConfig = v
+			end
+		},
 		movers = {
+			order = 3,
 			name = L["Show movers"],
 			type = "toggle",
 			get = function()
@@ -31,6 +46,7 @@ local options = {
 			end
 		},
 		clamp = {
+			order = 4,
 			type = "toggle",
 			name = L["Clamp to screen"],
 			get = function()
@@ -42,6 +58,7 @@ local options = {
 			end
 		},
 		scale = {
+			order = 5,
 			type = "range",
 			name = L["Scale"],
 			min = 0.2,
@@ -49,7 +66,6 @@ local options = {
 			step = 0.01,
 			bigStep = 0.01,
 			order = 104,
-			width = "full",
 			get = function(info)
 				return db.scale or 1
 			end,
@@ -75,17 +91,6 @@ local options = {
 				-- mod:Update()
 			-- end
 		-- },
-		rightClickToConfig = {
-			type = "toggle",
-			name = L["Right click map to configure"],
-			width = "double",
-			get = function()
-				return db.rightClickToConfig
-			end,
-			set = function(info, v)
-				db.rightClickToConfig = v
-			end
-		}
 	}
 }
 
@@ -100,8 +105,7 @@ local defaults = {
 }
 
 local movables = {
-	["DurabilityFrame"] = L["Armored Man"], 
-	["QuestTimerFrame"] = L["Quest Timer"]
+	["DurabilityFrame"] = L["Armored Man"]
 }
 local movers = {}
 
@@ -125,8 +129,11 @@ function mod:OnEnable()
 	MinimapCluster:SetClampedToScreen(db.clamp)
 	self:SetLock(db.lock)
 	self:Update()
-	self:RegisterEvent("UPDATE_WORLD_STATES")
-	self:UPDATE_WORLD_STATES()
+	if not _G.Capping then
+		self:RegisterEvent("UPDATE_WORLD_STATES")
+		self:UPDATE_WORLD_STATES()
+		movables["VehicleSeatIndicator"] = L["Vehicle Seat"]
+	end
 	self:CreateMoversAndSetMovables()
 end
 
@@ -213,7 +220,7 @@ do
 				end
 			end
 		end
-		self:SetMovers(db.lock)
+		self:SetMovers()
 	end
 end
 

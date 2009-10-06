@@ -4,6 +4,14 @@ local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
 local L = AceLocale:NewLocale("SexyMap", "enUS", true) 
 if not L then return end 
  
+-- Just temp, Antiarc's script will kill these and associate it all correctly
+L["Lock coordinates"] = true
+L["Show inside chat"] = true
+L["Show on minimap"] = true
+L["Text width"] = true
+L["Enable Hudmap"] = true
+L["Enable fader"] = true
+ 
 -- ./AutoZoom.lua
 L["Autozoom out after..."] = true
 L["Number of seconds to autozoom out after. Set to 0 to turn off Autozoom."] = true
@@ -110,6 +118,7 @@ L["Settings"] = true
 L["Font size"] = true
 L["Lock"] = true
 L["Font color"] = true
+L["Reset position"] = true
 
 -- ./Fader.lua
 L["Enabled"] = true
@@ -123,9 +132,8 @@ L["Show movers"] = true
 L["Clamp to screen"] = true
 L["Right click map to configure"] = true
 L["Armored Man"] = true
-L["Quest Timer"] = true
-L["Quest & Achievement Tracker"] = true
 L["Capture Bars"] = true
+L["Vehicle Seat"] = true
 
 -- ./HudMap.lua
 L["Enable a HUD minimap. This is very useful for gathering resources, but for technical reasons, the HUD map and the normal minimap can't be shown at the same time. Showing the HUD map will turn off the normal minimap."] = true
