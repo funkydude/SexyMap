@@ -99,6 +99,7 @@ do
 	local fadeTarget = 0
 	local fadeTime
 	local totalTime = 0
+	local hoverOverrides, hoverExempt = {}, {}
 	
 	local function fade(self, t)
 		totalTime = totalTime + t
@@ -145,7 +146,10 @@ do
 			-- self:Print("Unable to register", frameName, ", does not exit")
 			return
 		end
-		frame:SetAlpha(0)
+		if hoverButtons[frame] then return end
+		if not hoverExempt[frame] then
+			frame:SetAlpha(0)
+		end
 		-- frame:Hide()
 		hoverButtons[frame] = showFunc or true
 	end
@@ -161,17 +165,49 @@ do
 		end
 		hoverButtons[frame] = nil
 	end
-
+	
+	local function UpdateHoverOverrides(self, e)
+		for k, v in pairs(hoverOverrides) do
+			local ret = v(k, e)
+			if ret then
+				hoverExempt[k] = true
+				k:SetAlpha(1)
+				fading[k] = nil
+			else
+				hoverExempt[k] = false
+				mod:OnExit()
+			end
+		end
+	end
+	
+	function mod:RegisterHoverOverride(frame, func, ...)
+		local frameName = frame
+		if type(frame) == "string" then
+			frame = _G[frame]
+		elseif frame then
+			frameName = frame:GetName()
+		end
+		
+		hoverOverrides[frame] = func
+		for i = 1, select("#", ...) do
+			local event = select(i, ...)
+			if not faderFrame:IsEventRegistered(event) then
+				faderFrame:RegisterEvent(event)
+			end
+		end
+		faderFrame:SetScript("OnEvent", UpdateHoverOverrides)
+	end
+	
 	function mod:OnEnter()
 		if self.checkExit then return end
 		self.checkExit = self:ScheduleRepeatingTimer("CheckExited", 0.1)
 		fadeTarget = 1
 		for k, v in pairs(hoverButtons) do
-			if v == true or type(v) == "function" and v(k) then
+			if not hoverExempt[k] and (v == true or type(v) == "function" and v(k)) then
 				fading[k] = k:GetAlpha()
-				startFade()
 			end
 		end
+		startFade()
 	end
 
 	function mod:OnExit()
@@ -180,9 +216,11 @@ do
 		
 		fadeTarget = 0
 		for k, v in pairs(hoverButtons) do
-			fading[k] = k:GetAlpha()
-			startFade()
+			if not hoverExempt[k] then
+				fading[k] = k:GetAlpha()
+			end
 		end
+		startFade()
 	end
 
 	function mod:CheckExited()

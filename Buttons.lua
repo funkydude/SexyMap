@@ -174,7 +174,9 @@ do
 	}
 	
 	buttons = {
-		calendar	= {"GameTimeFrame"},
+		calendar	= {"GameTimeFrame", override = function(f, e)
+						return CalendarGetNumPendingInvites() > 0
+					end, overrideEvents = { "CALENDAR_UPDATE_PENDING_INVITES", "PLAYER_ENTERING_WORLD" }},
 		worldmap 	= {"MiniMapWorldMapButton"},
 		tracking	= {"MiniMapTrackingButton"},
 		zoom		= {"MinimapZoomIn", "MinimapZoomOut"},
@@ -248,6 +250,9 @@ function mod:OnEnable()
 	MiniMapWorldMapButton:SetParent(Minimap)
 	MinimapZoomIn:SetParent(Minimap)
 	MinimapZoomOut:SetParent(Minimap)
+	
+	-- self:RegisterEvent("CALENDAR_UPDATE_EVENT_LIST_PENDING", "Update")
+	-- self:RegisterEvent("UPDATE_PENDING_MAIL", "Update")
 
 	self:FixTrackingAnchoring()
 	
@@ -319,6 +324,9 @@ function mod:Update()
 			for _, f in ipairs(v) do
 				if v.custom and f:IsVisible() or not v.custom then
 					parent:RegisterHoverButton(f, v.show)
+					if v.override then
+						parent:RegisterHoverOverride(f, v.override, unpack(v.overrideEvents))
+					end
 				end
 			end
 		elseif hide == "never" then
@@ -327,7 +335,7 @@ function mod:Update()
 				if f.Hide then
 					f:Hide()
 				end
-			end
+			end			
 		else
 			for _, f in ipairs(v) do
 				f = type(f) == "string" and _G[f] or f

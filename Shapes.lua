@@ -169,11 +169,13 @@ local shapes = {
 	},
 	["Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy"] = {
 		name = L["Faded Square"],
-		geometry = "square"
+		geometry = "square",
+		shape = "SQUARE"
 	},
 	["SPELLS\\T_VFX_BORDER"] = {
 		name = L["Faded Square"],
-		geometry = "square"
+		geometry = "square",
+		shape = "SQUARE"
 	},
 	["Interface\\AddOns\\SexyMap\\shapes\\diamond"] = {
 		name = L["Diamond"],
@@ -181,7 +183,8 @@ local shapes = {
 	},
 	["Interface\\BUTTONS\\WHITE8X8"] = {
 		name = L["Square"],
-		geometry = "square"
+		geometry = "square",
+		shape = "SQUARE"
 	},
 	["Interface\\AddOns\\SexyMap\\shapes\\heart"] = {
 		name = L["Heart"],
@@ -205,19 +208,23 @@ local shapes = {
 	},
 	["Interface\\AddOns\\SexyMap\\shapes\\bottomright"] = {
 		name = L["Rounded - Bottom Right"],
-		geometry = "bottomRight"
+		geometry = "bottomRight",
+		shape = "CORNER-BOTTOMRIGHT"
 	},
 	["Interface\\AddOns\\SexyMap\\shapes\\bottomleft"] = {
 		name = L["Rounded - Bottom Left"],
-		geometry = "bottomLeft"
+		geometry = "bottomLeft",
+		shape = "CORNER-BOTTOMLEFT"
 	},
 	["Interface\\AddOns\\SexyMap\\shapes\\topright"] = {
 		name = L["Rounded - Top Right"],
-		geometry = "topRight"
+		geometry = "topRight",
+		shape = "CORNER-TOPRIGHT"
 	},
 	["Interface\\AddOns\\SexyMap\\shapes\\topleft"] = {
 		name = L["Rounded - Top Left"],
-		geometry = "topLeft"
+		geometry = "topLeft",
+		shape = "CORNER-TOPLEFT"
 	},
 }
 
@@ -272,12 +279,19 @@ function mod:GetShape()
 	return db.shape
 end
 
+local minimapShape
+
 function mod:ApplyShape(shape)
 	shape = legacyMappings[shape] or shape
 	dbShape = db.shape and legacyMappings[db.shape] or db.shape
 	if shape or dbShape then
+		minimapShape = (shape or dbShape).shape or "ROUND"
 		db.shape = shape or dbShape or "Textures\\MinimapMask"
 		Minimap:SetMaskTexture(db.shape)
 	end
 	self.callbacks:Fire("SexyMap_ShapeChanged")
+end
+
+function GetMininmapShape()
+	return minimapShape or "ROUND"
 end
