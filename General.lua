@@ -4,6 +4,8 @@ local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
 
 local db
 
+local dragUpdate
+
 local options = {
 	type = "group",
 	name = "General",
@@ -105,7 +107,8 @@ local defaults = {
 }
 
 local movables = {
-	["DurabilityFrame"] = L["Armored Man"]
+	["DurabilityFrame"] = L["Armored Man"],
+	["WatchFrame"] = L["Objectives Tracker"]
 }
 local movers = {}
 
@@ -121,7 +124,14 @@ function mod:OnInitialize()
 	MinimapZoneTextButton:RegisterForDrag("LeftButton")
 	self:SetLock(db.lock)
 	
-	self:SecureHook("updateContainerFrameAnchors", "CreateMoversAndSetMovables")
+	self:SecureHook("updateContainerFrameAnchors", "CreateMoversAndSetMovables")	
+end
+
+function mod:WatchFrame_Update(...)
+	if not WatchFrame:IsUserPlaced() then reanchorWatchFrame() end
+	self.hooks.WatchFrame_Update(...)	
+	-- updateWatchFrameHeight()
+	-- WatchFrame:SetHeight(WatchFrame.realHeight or WatchFrame:GetHeight())
 end
 
 function mod:OnEnable()
@@ -135,6 +145,7 @@ function mod:OnEnable()
 		movables["VehicleSeatIndicator"] = L["Vehicle Seat"]
 	end
 	self:CreateMoversAndSetMovables()
+	self:RawHook("WatchFrame_Update", true)
 end
 
 function mod:UPDATE_WORLD_STATES()
@@ -155,18 +166,21 @@ do
 		local f = self:GetParent()
 		local x, y = f:GetLeft(), f:GetBottom()
 		f:StartMoving()
+		f:SetClampedToScreen(false)
 	end
 
 	local function stop(self)
 		local f = self:GetParent()
 		f:StopMovingOrSizing()
 		
-		local x, y = f:GetCenter()
+		local x, y = f:GetLeft(), f:GetTop()
 		local n = f:GetName()
 		
 		db.framePositions[n] = db.framePositions[n] or {}
 		db.framePositions[n].x = x
 		db.framePositions[n].y = y
+		f:SetUserPlaced(true)
+		-- f:SetClampedToScreen(f.clamped)
 	end
 
 	function mod:CreateMoversAndSetMovables()
@@ -216,21 +230,80 @@ do
 				if db.framePositions[frame] then
 					local x, y = db.framePositions[frame].x, db.framePositions[frame].y
 					pf:ClearAllPoints()
-					pf:SetPoint("CENTER", UIParent, "BOTTOMLEFT", x, y)				
+					pf:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", x, y)					
+					pf:SetUserPlaced(true)
 				end
 			end
 		end
-		self:SetMovers()
+		self:SetMovers()		
 	end
 end
 
 do
+
+	function reanchorWatchFrame()
+		local mx, my = MinimapCluster:GetCenter()
+		local sx, sy = UIParent:GetCenter()
+		local change, from, to, side = false, nil, nil, nil
+		if my < sy then
+			from = "BOTTOM"
+			to = "TOP"
+			side = to
+		else
+			from = "TOP"
+			to = "BOTTOM"
+			side = to
+		end
+		if mx < sx then
+			from = from .. "LEFT"
+			to = to .. "LEFT"
+		else
+			from = from .. "RIGHT"
+			to = to .. "RIGHT"
+		end
+		WatchFrame:ClearAllPoints()
+		WatchFrame:SetPoint(from, MinimapCluster, to)		
+		-- WatchFrame:SetHeight(1000)
+		WatchFrame:SetPoint(side, UIParent, side)
+	end
+	
+	function updateWatchFrameHeight()
+		-- local ofrom, frm, oto = WatchFrame:GetPoint(1)
+		-- print("Got point for watchframe:", ofrom, oto)
+		-- if ofrom and ofrom:match("BOTTOM") then
+			local highest, lowest = -9999, 9999
+			for i = 1, 200 do
+				local l = _G["WatchFrameLine"..i]
+				if l and l:IsVisible() then
+					local top, bottom = l:GetTop(), l:GetBottom()
+					if top and top > highest then
+						highest = top
+					end
+					if bottom and bottom < lowest then
+						lowest = bottom
+					end
+				end
+			end
+			if highest ~= -9999 and lowest ~= 9999 then
+				ht = highest - lowest + 50
+				WatchFrame:SetHeight(ht)
+				print("Setting height:", ht)
+				WatchFrame.realHeight = ht
+			end
+		-- end
+	end
+	
+	local function dragUpdate()
+		mod:WatchFrame_Update(WatchFrame)
+	end
 	local function start(self)
 		MinimapCluster:StartMoving()
+		MinimapCluster:SetScript("OnUpdate", dragUpdate)
 	end
 
 	local function stop(self)
 		MinimapCluster:StopMovingOrSizing()
+		MinimapCluster:SetScript("OnUpdate", nil)
 	end
 	
 	function mod:Update()
@@ -270,22 +343,6 @@ do
 				f:Hide()
 			end
 		end
-		
-		if v then
-			self.watchFrameAdvancedStatus = GetCVar(InterfaceOptionsObjectivesPanelAdvancedWatchFrame.cvar)
-			self.watchFrameLockStatus = WatchFrame.locked
-			
-			local button = InterfaceOptionsObjectivesPanelAdvancedWatchFrame
-			button:SetChecked(true)
-			InterfaceOptionsPanel_CheckButton_Update(button)
-			
-			WatchFrame_Unlock(WatchFrame)
-		else
-			local c = GetCVar(InterfaceOptionsObjectivesPanelAdvancedWatchFrame.cvar)
-			
-			if self.watchFrameLockStatus then
-				WatchFrame_Lock(WatchFrame)
-			end
-		end
+		WatchFrame:SetPoint("BOTTOM", UIParent, "BOTTOM")
 	end
 end

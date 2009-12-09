@@ -4,14 +4,6 @@ local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
 local L = AceLocale:NewLocale("SexyMap", "enUS", true) 
 if not L then return end 
  
--- Just temp, Antiarc's script will kill these and associate it all correctly
-L["Lock coordinates"] = true
-L["Show inside chat"] = true
-L["Show on minimap"] = true
-L["Text width"] = true
-L["Enable Hudmap"] = true
-L["Enable fader"] = true
- 
 -- ./AutoZoom.lua
 L["Autozoom out after..."] = true
 L["Number of seconds to autozoom out after. Set to 0 to turn off Autozoom."] = true
@@ -59,12 +51,12 @@ L["SharedMedia Border"] = true
 L["Border color"] = true
 L["Border edge size"] = true
 L["Preset"] = true
+L["Save current settings as preset..."] = true
 L["Select preset to load"] = true
 L["Select a preset to load settings from. This will erase any of your current borders."] = true
 L["This will wipe out any current settings!"] = true
 L["Delete"] = true
 L["Really delete this preset? This can't be undone."] = true
-L["Save current settings as preset..."] = true
 L["Entry options"] = true
 L["Name"] = true
 L["Really delete this border?"] = true
@@ -91,9 +83,9 @@ L["Force a square texture. Fixed distortion on square textures."] = true
 L["Addon Buttons"] = true
 L["Standard Buttons"] = true
 L["Capture New Buttons"] = true
+L["Lock Button Dragging"] = true
 L["Let SexyMap handle button dragging"] = true
 L["Allow SexyMap to assume drag ownership for buttons attached to the minimap. Turn this off if you have another mod that you want to use to position your minimap buttons."] = true
-L["Lock Button Dragging"] = true
 L["Let SexyMap control button visibility"] = true
 L["Turn this off if you want another mod to handle which buttons are visible on the minimap."] = true
 L["Drag Radius"] = true
@@ -114,54 +106,54 @@ L["On hover"] = true
 -- ./Coordinates.lua
 L["Coordinates"] = true
 L["Enable Coordinates"] = true
-L["Settings"] = true
+L["Lock coordinates"] = true
 L["Font size"] = true
-L["Lock"] = true
 L["Font color"] = true
 L["Reset position"] = true
 
 -- ./Fader.lua
-L["Enabled"] = true
+L["Enable fader"] = true
 L["Enable fader functionality"] = true
-L["Hover Opacity"] = true
 L["Normal Opacity"] = true
+L["Hover Opacity"] = true
 
 -- ./General.lua
 L["Lock minimap"] = true
+L["Right click map to configure"] = true
 L["Show movers"] = true
 L["Clamp to screen"] = true
-L["Right click map to configure"] = true
 L["Armored Man"] = true
-L["Capture Bars"] = true
+L["Objectives Tracker"] = true
 L["Vehicle Seat"] = true
+L["Capture Bars"] = true
 
 -- ./HudMap.lua
 L["Enable a HUD minimap. This is very useful for gathering resources, but for technical reasons, the HUD map and the normal minimap can't be shown at the same time. Showing the HUD map will turn off the normal minimap."] = true
+L["Enable Hudmap"] = true
 L["Keybinding"] = true
+L["HUD Color"] = true
+L["Text Color"] = true
 L["GatherMate is a resource gathering helper mod. Installing it allows you to have resource pins on your HudMap."] = true
 L["Use GatherMate pins"] = true
 L["Use QuestHelper pins"] = true
 L["Routes plots the shortest distance between resource nodes. Install it to show farming routes on your HudMap."] = true
 L["Use Routes"] = true
-L["HUD Color"] = true
-L["Text Color"] = true
 
--- ./moduleTemplate.lua
+-- ./localization/enUS.lua
 -- no localization
 
--- ./oldBorders.lua
--- no localization
-
--- ./Ping.lua
+-- ./localization/zhCN.lua
+L["Show inside chat"] = true
+L["Show on minimap"] = true
+L["Text width"] = true
+L["Settings"] = true
+L["Lock"] = true
+L["Enabled"] = true
 L["Show who pinged"] = true
 L["Show..."] = true
 L["On minimap"] = true
 L["In chat"] = true
-
--- ./SexyMap.lua
 L["Profiles"] = true
-
--- ./Shapes.lua
 L["Circle"] = true
 L["Faded Circle (Small)"] = true
 L["Faded Circle (Large)"] = true
@@ -178,11 +170,6 @@ L["Rounded - Bottom Left"] = true
 L["Rounded - Top Right"] = true
 L["Rounded - Top Left"] = true
 L["Minimap shape"] = true
-
--- ./Snap.lua
--- no localization
-
--- ./ZoneText.lua
 L["Horizontal position"] = true
 L["Vertical position"] = true
 L["Width"] = true
@@ -190,12 +177,27 @@ L["Background color"] = true
 L["Font"] = true
 L["Font Size"] = true
 
--- ./localization/enUS.lua
--- no localization
-
--- ./localization/zhCN.lua
--- no localization
-
 -- ./localization/zhTW.lua
+-- no localization
+
+-- ./moduleTemplate.lua
+-- no localization
+
+-- ./oldBorders.lua
+-- no localization
+
+-- ./Ping.lua
+-- no localization
+
+-- ./SexyMap.lua
+-- no localization
+
+-- ./Shapes.lua
+-- no localization
+
+-- ./Snap.lua
+-- no localization
+
+-- ./ZoneText.lua
 -- no localization
 

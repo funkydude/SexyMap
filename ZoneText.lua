@@ -142,9 +142,9 @@ local defaults = {
 function mod:OnInitialize()
 	self.db = parent.db:RegisterNamespace(modName, defaults)
 	parent:RegisterModuleOptions(modName, options, "Zone Button")
-	MinimapToggleButton:ClearAllPoints()
-	MinimapToggleButton:SetParent(MinimapZoneTextButton)
-	MinimapToggleButton:SetPoint("LEFT", MinimapZoneTextButton, "RIGHT", -3, 0)
+	-- MinimapToggleButton:ClearAllPoints()
+	-- MinimapToggleButton:SetParent(MinimapZoneTextButton)
+	-- MinimapToggleButton:SetPoint("LEFT", MinimapZoneTextButton, "RIGHT", -3, 0)
 	
 	MinimapZoneText:ClearAllPoints()
 	MinimapZoneText:SetAllPoints()
