@@ -100,6 +100,7 @@ L["New mail indicator"] = true
 L["Voice chat"] = true
 L["Battlegrounds icon"] = true
 L["Dungeon finder icon"] = true
+L["Dungeon difficulty"] = true
 L["Always"] = true
 L["Never"] = true
 L["On hover"] = true

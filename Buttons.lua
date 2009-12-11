@@ -194,6 +194,7 @@ do
 		voice		= L["Voice chat"],
 		pvp			= L["Battlegrounds icon"],
 		lfg			= L["Dungeon finder icon"],
+		difficulty  = L["Dungeon difficulty"]
 	}
 	
 	buttons = {
@@ -224,6 +225,12 @@ do
 							-- return mode == "queued" or mode == "listed" or mode == "rolecheck"
 						-- end,
 						-- overrideEvents = { "LFG_UPDATE" }
+					  },
+		difficulty  = { "MiniMapInstanceDifficulty",
+						show = function(f)
+							local _, instanceType, difficulty, _, maxPlayers, playerDifficulty, isDynamicInstance = GetInstanceInfo();
+							return ( ( instanceType == "party" or instanceType == "raid" ) and not ( difficulty == 1 and maxPlayers == 5 ) )
+						end
 					  }
 	}
 
@@ -280,9 +287,10 @@ function mod:OnEnable()
 	self.findClock = self:ScheduleRepeatingTimer("FindClock", 0.5)
 	self:Update()
 
-	MiniMapWorldMapButton:SetParent(Minimap)
-	MinimapZoomIn:SetParent(Minimap)
-	MinimapZoomOut:SetParent(Minimap)
+	-- MiniMapWorldMapButton:SetParent(Minimap)
+	-- MinimapZoomIn:SetParent(Minimap)
+	-- MinimapZoomOut:SetParent(Minimap)
+	MiniMapInstanceDifficulty:EnableMouse(true)
 	
 	-- self:RegisterEvent("CALENDAR_UPDATE_EVENT_LIST_PENDING", "Update")
 	-- self:RegisterEvent("UPDATE_PENDING_MAIL", "Update")
@@ -292,6 +300,8 @@ function mod:OnEnable()
 	-- Try to capture new buttons periodically
 	self:ScheduleRepeatingTimer("MakeMovables", 1)
 	self:MakeMovables()
+	
+	MiniMapInstanceDifficulty:SetFrameLevel(Minimap:GetFrameLevel() + 10)
 	
 	self:SecureHook("Minimap_OnClick", "ReleaseDrag")
 end
