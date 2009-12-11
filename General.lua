@@ -287,7 +287,6 @@ do
 			if highest ~= -9999 and lowest ~= 9999 then
 				ht = highest - lowest + 50
 				WatchFrame:SetHeight(ht)
-				print("Setting height:", ht)
 				WatchFrame.realHeight = ht
 			end
 		-- end

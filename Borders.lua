@@ -848,7 +848,6 @@ function mod:RebuildPresets()
 		presets[k] = k
 	end
 	for k, v in pairs(parent.borderPresets) do
-		print("Found preset:", k)
 		presets[k] = k
 	end	
 end
