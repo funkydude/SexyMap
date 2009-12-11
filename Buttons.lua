@@ -6,8 +6,30 @@ local Shape
 local db
 
 local buttons
+local allChildren = {}
+local ignoreButtons = {MinimapPing = true}
 
-local RAD_TO_DEG = 57.2957795
+local function concatChildren(t, ...)
+	for i = 1, select("#", ...) do
+		local v = select(i, ...)
+		if not ignoreButtons[v] then
+			tinsert(t, v)
+		end
+	end
+end
+
+local lastChildCount = 0
+local lastChild = nil
+local function getChildren()
+	local total = Minimap:GetNumChildren() + MinimapBackdrop:GetNumChildren() + MinimapCluster:GetNumChildren()
+	if total == lastChildCount then return allChildren end
+	lastChildCount = total
+	wipe(allChildren)
+	concatChildren(allChildren, Minimap:GetChildren())
+	concatChildren(allChildren, MinimapBackdrop:GetChildren())
+	concatChildren(allChildren, MinimapCluster:GetChildren())
+	return allChildren
+end
 
 local captureNewChildren
 do
@@ -22,14 +44,14 @@ do
 		MiniMapVoiceChatFrame = true,
 	}	
 	function captureNewChildren()
-		local num = Minimap:GetNumChildren()
-		if num == childCount and lastChild == select(num, Minimap:GetChildren()) then return 0 end
-		childCount = num
-		lastChild = select(num, Minimap:GetChildren())
+		local children = getChildren()
+		if #children == childCount and lastChild == children[#children] then return 0 end
+		childCount = #children
+		lastChild = children[#children]
 		
 		local count = 0
-		for i = (stockIndex or 1), num do
-			local child = select(i, Minimap:GetChildren())
+		for i = (stockIndex or 1), #children do
+			local child = children[i]
 			local w, h = child.GetWidth and child:GetWidth() or 0, child.GetHeight and child:GetHeight() or 0
 			local sizeOk = w > 25 and w < 100 and h > 25 and h < 100
 			if sizeOk and stockIndex and not buttons[child:GetName()] and child.SetAlpha and not ignoreButtons[child:GetName()] and not child.sexyMapIgnore then
@@ -171,6 +193,7 @@ do
 		mail		= L["New mail indicator"],
 		voice		= L["Voice chat"],
 		pvp			= L["Battlegrounds icon"],
+		lfg			= L["Dungeon finder icon"],
 	}
 	
 	buttons = {
@@ -191,7 +214,17 @@ do
 					end},
 		pvp 		= {"MiniMapBattlefieldFrame", show = function(f)
 						return not ( BattlefieldFrame.numQueues == 0 and (not CanHearthAndResurrectFromArea()) )
-					end}
+					end },
+		lfg 		= { "MiniMapLFGFrame",
+						show = function(f)
+							return GetLFGMode()
+						end,
+						-- override = function(f, e)
+							-- local mode = GetLFGMode()
+							-- return mode == "queued" or mode == "listed" or mode == "rolecheck"
+						-- end,
+						-- overrideEvents = { "LFG_UPDATE" }
+					  }
 	}
 
 	local hideValues = {
@@ -374,17 +407,24 @@ do
 	
 	local GetCursorPosition = _G.GetCursorPosition
 	
-	local function setPosition(frame, mx, my, angle)
-		if not angle then
-			local x, y = Minimap:GetCenter()
-			x, y = x * Minimap:GetEffectiveScale(), y * Minimap:GetEffectiveScale()
-			
-			local dx, dy = mx - x, my - y
-			angle = atan(dy / dx)
-			if dx < 0 then angle = angle + 180 end
-			db.dragPositions[frame:GetName()] = angle
+	local function getCurrentAngle(f, bx, by)
+		local mx, my = Minimap:GetCenter()
+		if not mx or not my or not bx or not by then return 0 end
+		local h, w = (by - my), (bx - mx)
+		local angle = atan(h / w)
+		if w < 0 then
+			angle = angle + 180
 		end
-		
+		return angle
+	end	
+	
+	local function setPosition(frame, angle)
+		if not angle then
+			local x, y = GetCursorPosition()
+			x, y = x / Minimap:GetEffectiveScale(), y / Minimap:GetEffectiveScale()
+			angle = getCurrentAngle(frame, x, y)
+			db.dragPositions[frame:GetName()] = angle
+		end		
 		
 		local radius = (Minimap:GetWidth() / 2) + db.radius
 		local bx, by = Shape:GetPosition(angle, radius)
@@ -397,8 +437,7 @@ do
 	end
 	
 	local function updatePosition()
-		local mx, my =  GetCursorPosition()
-		setPosition(moving, mx, my)
+		setPosition(moving)
 	end
 	
 	local function start(frame)
@@ -417,6 +456,7 @@ do
 	
 	function mod:MakeMovable(frame)
 		if not frame then return end
+		if frame.sexyMapMovable then return end
 		if movables[frame] then return end
 		movables[frame] = true
 		
@@ -426,27 +466,14 @@ do
 		frame.sexyMapMovable = true
 	end
 	
-	local function getCurrentAngle(f)
-		local mx, my = Minimap:GetCenter()
-		local bx, by = f:GetCenter()
-		if not mx or not my or not bx or not by then return 0 end
-		local h, w = (by - my), (bx - mx)
-		local angle = atan(h / w)
-		if w < 0 then
-			angle = angle + 180
-		end
-		return angle
-	end
-	
 	function mod:UpdateDraggables()
 		if not db.allowDragging then return end
 		
-		for f, v in pairs(movables) do
-			local angle = db.dragPositions[f:GetName()]
-			angle = angle or getCurrentAngle(f)
+		for f, v in pairs(movables) do			
+			local x, y = f:GetCenter()
+			local angle = db.dragPositions[f:GetName()] or getCurrentAngle(f, x, y)
 			if angle then
-				local x, y = f:GetCenter()
-				setPosition(f, x, y, angle)
+				setPosition(f, angle)
 			end
 		end
 	end
@@ -457,14 +484,15 @@ do
 		
 		if not db.allowDragging then return end
 		
-		local childCount = Minimap:GetNumChildren()
+		local children = getChildren()
+		local childCount = #children
 		if childCount == lastChildCount then return end
 		lastChildCount = childCount
 		for i = 1, childCount do
-			local child = select(i, Minimap:GetChildren())
+			local child = children[i]
 			local w, h = child.GetWidth and child:GetWidth() or 0, child.GetHeight and child:GetHeight() or 0
 			local sizeOk = w > 25 and w < 100 and h > 25 and h < 100
-			if sizeOk and not child.sexyMapMovable and child:GetName() then
+			if sizeOk and child:GetName() then
 				self:MakeMovable(child)
 			end
 		end

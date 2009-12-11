@@ -98,40 +98,6 @@ SexyMap.borderPresets = {
 		},
 		shape = "Textures\\MinimapMask"
 	},
-	["Midnight Moon"] = {
-		borders = {
-			{
-				["a"] = 0.6400000154972076,
-				["rotSpeed"] = 0,
-				["b"] = 1,
-				["scale"] = 1.47,
-				["g"] = 0.1137254901960784,
-				["rotation"] = 0,
-				["name"] = "Shadow",
-				["drawLayer"] = "BORDER",
-				["blendMode"] = "BLEND",
-				["r"] = 0,
-				["texture"] = "SPELLS\\T_VFX_Moon_Black.blp",
-			}, -- [1]
-			{
-				["a"] = 0.4900000095367432,
-				["hNudge"] = 0,
-				["rotSpeed"] = 0,
-				["b"] = 1,
-				["scale"] = 1.58,
-				["g"] = 0.5882352941176471,
-				["vNudge"] = 0,
-				["drawLayer"] = "OVERLAY",
-				["name"] = "Glow",
-				["disableRotation"] = true,
-				["rotation"] = 191,
-				["r"] = 0.3372549019607843,
-				["blendMode"] = "ADD",
-				["texture"] = "SPELLS\\MoonCrescentGlow2.blp",
-			}, -- [2]
-		},
-		shape = "Textures\\MinimapMask"
-	},
 	["Jewels"] = {
 		borders = {
 			{
@@ -201,6 +167,39 @@ SexyMap.borderPresets = {
 		},
 		shape = "Interface\\BUTTONS\\WHITE8X8"
 	},
+	["Rustic"] = {
+		["borders"] = {
+		},
+		["backdrop"] = {
+			["show"] = true,
+			["textureColor"] = {
+				["a"] = 1,
+				["r"] = 1,
+				["g"] = 0.9215686274509803,
+				["b"] = 0.6627450980392157,
+			},
+			["settings"] = {
+				["edgeSize"] = 28,
+				["edgeFile"] = "Interface\\LFGFrame\\LFGBorder.blp",
+				["tile"] = false,
+				["bgFile"] = "World\\EXPANSION02\\DOODADS\\Ulduar\\UL_SpinningRoomRings_Ring07.blp",
+				["insets"] = {
+					["top"] = 9,
+					["right"] = 9,
+					["left"] = 9,
+					["bottom"] = 9,
+				},
+			},
+			["borderColor"] = {
+				["a"] = 1,
+				["r"] = 1,
+				["g"] = 0.7607843137254902,
+				["b"] = 0.7176470588235294,
+			},
+			["scale"] = 1.25,
+		},
+		["shape"] = "SPELLS\\T_VFX_BORDER",
+	},	
 	Parchment = {
 		borders = {
 			{
@@ -576,20 +575,175 @@ SexyMap.borderPresets = {
 			["textureColor"] = {
 			},
 			["settings"] = {
-			["bgFile"] = "Interface\\Tooltips\\UI-Tooltip-Background",
-			["edgeFile"] = "Interface\\Tooltips\\UI-Tooltip-Border",
-			["tile"] = false,
-			["edgeSize"] = 16,
-			["insets"] = {
-			["top"] = 4,
-			["right"] = 4,
-			["left"] = 4,
-			["bottom"] = 4,
+				["bgFile"] = "Interface\\Tooltips\\UI-Tooltip-Background",
+				["edgeFile"] = "Interface\\Tooltips\\UI-Tooltip-Border",
+				["tile"] = false,
+				["edgeSize"] = 16,
+				["insets"] = {
+					["top"] = 4,
+					["right"] = 4,
+					["left"] = 4,
+					["bottom"] = 4,
+				},
+			},
+			["borderColor"] = {},
+			["scale"] = 1,
 		},
+		["shape"] = "Textures\\MinimapMask",
 	},
-	["borderColor"] = {},
-	["scale"] = 1,
-},
+	["Shamanism by Jaygoody"] = {
+		["borders"] = {
+			{
+				["a"] = 1,
+				["hNudge"] = 65,
+				["b"] = 1,
+				["scale"] = 0.4,
+				["g"] = 1,
+				["vNudge"] = 65,
+				["disableRotation"] = true,
+				["name"] = "Rune Earth",
+				["r"] = 1,
+				["texture"] = "World\\GENERIC\\PASSIVEDOODADS\\ShamanStone\\SHAMANSTONEEARTH.blp",
+			}, -- [1]
+			{
+				["disableRotation"] = true,
+				["hNudge"] = -65,
+				["name"] = "Rune Air",
+				["scale"] = 0.35,
+				["texture"] = "World\\GENERIC\\PASSIVEDOODADS\\ShamanStone\\ShamanStoneAir.blp",
+				["vNudge"] = -65,
+			}, -- [2]
+			{
+				["a"] = 1,
+				["hNudge"] = 65,
+				["b"] = 1,
+				["scale"] = 0.35,
+				["g"] = 0.984313725490196,
+				["vNudge"] = -65,
+				["disableRotation"] = true,
+				["name"] = "Rune Water",
+				["r"] = 0.4392156862745098,
+				["texture"] = "World\\GENERIC\\PASSIVEDOODADS\\ShamanStone\\ShamanStoneWater.blp",
+			}, -- [3]
+			{
+				["a"] = 1,
+				["hNudge"] = -65,
+				["r"] = 1,
+				["scale"] = 0.35,
+				["g"] = 1,
+				["vNudge"] = 65,
+				["disableRotation"] = true,
+				["name"] = "Rune Fire",
+				["b"] = 1,
+				["texture"] = "World\\GENERIC\\PASSIVEDOODADS\\ShamanStone\\ShamanStoneFlame.blp",
+			}, -- [4]
+			{
+				["a"] = 1,
+				["rotSpeed"] = 9,
+				["b"] = 1,
+				["scale"] = 1.79,
+				["g"] = 1,
+				["drawLayer"] = "BORDER",
+				["name"] = "Outer Rings",
+				["disableRotation"] = false,
+				["rotation"] = 184,
+				["r"] = 1,
+				["blendMode"] = "ADD",
+				["texture"] = "SPELLS\\Shockwave4.blp",
+			}, -- [5]
+			{
+				["a"] = 0.75,
+				["rotSpeed"] = 10,
+				["b"] = 1,
+				["scale"] = 1.12,
+				["g"] = 0.5568627450980392,
+				["drawLayer"] = "BORDER",
+				["name"] = "Outer Glow",
+				["disableRotation"] = true,
+				["r"] = 0,
+				["blendMode"] = "ADD",
+				["texture"] = "World\\ENVIRONMENT\\DOODAD\\GENERALDOODADS\\ELEMENTALRIFTS\\Shockwave_blue.blp",
+			}, -- [6]
+			{
+				["a"] = 0.3700000047683716,
+				["name"] = "Edge Radiance",
+				["rotSpeed"] = -1,
+				["b"] = 0,
+				["scale"] = 1.49,
+				["r"] = 1,
+				["g"] = 0.6313725490196078,
+				["texture"] = "SPELLS\\SHOCKWAVE_INVERTGREY.BLP",
+			}, -- [7]
+			{
+				["a"] = 0.5,
+				["hNudge"] = -65,
+				["b"] = 0,
+				["g"] = 0.2313725490196079,
+				["vNudge"] = 65,
+				["drawLayer"] = "BACKGROUND",
+				["name"] = "Glow Fire",
+				["disableRotation"] = true,
+				["r"] = 1,
+				["texture"] = "SPELLS\\GENERICGLOW64.BLP",
+			}, -- [8]
+			{
+				["a"] = 0.4700000286102295,
+				["hNudge"] = -65,
+				["b"] = 0.9333333333333334,
+				["scale"] = 1.11,
+				["g"] = 0,
+				["vNudge"] = -65,
+				["drawLayer"] = "BACKGROUND",
+				["name"] = "Glow Air",
+				["disableRotation"] = false,
+				["r"] = 1,
+				["texture"] = "SPELLS\\GENERICGLOW64.BLP",
+			}, -- [9]
+			{
+				["a"] = 0.5100000202655792,
+				["hNudge"] = 65,
+				["r"] = 0,
+				["scale"] = 1.11,
+				["g"] = 0.04705882352941176,
+				["vNudge"] = -65,
+				["drawLayer"] = "BACKGROUND",
+				["name"] = "Glow Water",
+				["b"] = 1,
+				["texture"] = "SPELLS\\GENERICGLOW64.BLP",
+			}, -- [10]
+			{
+				["a"] = 0.4000000357627869,
+				["hNudge"] = 65,
+				["b"] = 0,
+				["scale"] = 1.1,
+				["g"] = 1,
+				["vNudge"] = 65,
+				["drawLayer"] = "BACKGROUND",
+				["name"] = "Glow Earth",
+				["r"] = 0.2588235294117647,
+				["texture"] = "SPELLS\\GENERICGLOW64.BLP",
+			}, -- [11]
+		},
+		["backdrop"] = {
+			["show"] = false,
+			["textureColor"] = {
+			},
+			["settings"] = {
+				["bgFile"] = "Interface\\Tooltips\\UI-Tooltip-Background",
+				["edgeFile"] = "Interface\\Tooltips\\UI-Tooltip-Border",
+				["tile"] = false,
+				["edgeSize"] = 16,
+				["insets"] = {
+					["top"] = 4,
+					["right"] = 4,
+					["left"] = 4,
+					["bottom"] = 4,
+				},
+			},
+			["borderColor"] = {
+			},
+			["scale"] = 1,
+		},
 		["shape"] = "Textures\\MinimapMask",
 	},
 }

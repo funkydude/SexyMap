@@ -15,7 +15,7 @@ local function interpolate(points, angle)
 	table.sort(keys)
 	local pre, post = 0, 360
 	for _, key in ipairs(keys) do
-		if key < angle then
+		if key <= angle then
 			pre = key
 		else
 			post = key

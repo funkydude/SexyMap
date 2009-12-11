@@ -848,6 +848,7 @@ function mod:RebuildPresets()
 		presets[k] = k
 	end
 	for k, v in pairs(parent.borderPresets) do
+		print("Found preset:", k)
 		presets[k] = k
 	end	
 end
@@ -875,7 +876,7 @@ function mod:Clear()
 end
 
 function mod:ApplyPreset(preset)
-	local preset = parent.borderPresets[preset] or self.db.global.userPresets[preset]
+	local preset = self.db.global.userPresets[preset] or parent.borderPresets[preset]
 	self:Clear()
 	
 	db.borders = deepCopyHash(preset.borders)
