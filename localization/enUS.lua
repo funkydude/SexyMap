@@ -126,6 +126,7 @@ L["Show movers"] = true
 L["Clamp to screen"] = true
 L["Armored Man"] = true
 L["Objectives Tracker"] = true
+L["Boss frames (Gunships, etc)"] = true
 L["Vehicle Seat"] = true
 L["Capture Bars"] = true
 

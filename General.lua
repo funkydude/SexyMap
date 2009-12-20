@@ -108,7 +108,8 @@ local defaults = {
 
 local movables = {
 	["DurabilityFrame"] = L["Armored Man"],
-	["WatchFrame"] = L["Objectives Tracker"]
+	["WatchFrame"] = L["Objectives Tracker"],
+	["Boss1TargetFrame"] = L["Boss frames (Gunships, etc)"],
 }
 local movers = {}
 
@@ -219,9 +220,6 @@ do
 					f:SetHeight(40)
 					f:SetWidth(40)
 				end
-				
-				pf:SetScript("OnShow", nil)
-				pf:SetScript("OnHide", nil)
 				
 				if not db.lock then
 					f:Hide()
