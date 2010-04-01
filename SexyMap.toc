@@ -1,7 +1,8 @@
 ## Interface: 30300
 ## Title: SexyMap
 ## Notes: Spice up ye olde minimap with some sexytime options.
-## Notes-zhCN: 热辣小地图和一些性感计时器选项。
+## Notes-zhCN: 热辣小地图并包含一些性感计时器选项。
+## Notes-zhTW: 熱辣小地圖并包含一些性感計時器選項。
 ## Author: Antiarc
 ## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibBetterBlizzOptions-1.0, LibSharedMedia-3.0, Blizzard_TimeManager, TomTom, Capping
 ## SavedVariables: SexyMapDB
