@@ -36,3 +36,4 @@ HudMap.xml
 HudMap.lua
 Ping.lua
 ZoneText.lua
+ 
