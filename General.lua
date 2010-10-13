@@ -185,6 +185,7 @@ do
 	end
 
 	function mod:CreateMoversAndSetMovables()
+		if InCombatLockdown() then return end
 		for frame, text in pairs(movables) do
 			local pf = _G[frame]
 			if pf then

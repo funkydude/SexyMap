@@ -59,7 +59,7 @@ function mod:OnInitialize()
 	self.db = parent.db:RegisterNamespace(modName, defaults)
 	db = self.db.profile
 	parent:RegisterModuleOptions(modName, options, modName)
-	pingFrame = CreateFrame("Frame", "SexyMapPingFrame", MinimapPing)
+	pingFrame = CreateFrame("Frame", "SexyMapPingFrame", Minimap)
 	pingFrame:SetBackdrop({
 		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
 		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
@@ -71,7 +71,7 @@ function mod:OnInitialize()
 	pingFrame:SetBackdropBorderColor(0,0,0,0.6)
 	pingFrame:SetHeight(20)
 	pingFrame:SetWidth(100)
-	pingFrame:SetPoint("TOP", MinimapPing, "BOTTOM", 0, 15)
+	pingFrame:SetPoint("TOP", Minimap, "TOP", 0, 15)
 	pingFrame:SetFrameStrata("HIGH")
 	pingFrame.name = pingFrame:CreateFontString(nil, nil, "GameFontNormalSmall")
 	pingFrame.name:SetAllPoints()

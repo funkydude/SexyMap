@@ -213,9 +213,11 @@ do
 		voice 		= {"MiniMapVoiceChatFrame", show = function(f)
 						return IsVoiceChatEnabled() and GetNumVoiceSessions()
 					end},
-		pvp 		= {"MiniMapBattlefieldFrame", show = function(f)
+		--[[
+    pvp 		= {"MiniMapBattlefieldFrame", show = function(f)
 						return not ( BattlefieldFrame.numQueues == 0 and (not CanHearthAndResurrectFromArea()) )
 					end },
+    ]]--
 		lfg 		= { "MiniMapLFGFrame",
 						show = function(f)
 							return GetLFGMode()

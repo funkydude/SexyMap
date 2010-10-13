@@ -1,4 +1,4 @@
-## Interface: 30300
+## Interface: 40000
 ## Title: SexyMap
 ## Notes: Spice up ye olde minimap with some sexytime options.
 ## Notes-zhCN: 热辣小地图并包含一些性感计时器选项。
