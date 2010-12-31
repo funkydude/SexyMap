@@ -1,6 +1,6 @@
 local parent = SexyMap
 local modName = "Ping"
-local mod = SexyMap:NewModule(modName, "AceEvent-3.0")
+local mod = SexyMap:NewModule(modName, "AceEvent-3.0", "AceTimer-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
 local db
 
@@ -98,6 +98,11 @@ function mod:MINIMAP_PING(self, unit, x, y)
 			pingFrame:SetWidth(pingFrame.name:GetStringWidth() + 14)
 			pingFrame:SetHeight(pingFrame.name:GetStringHeight() + 10)
 			pingFrame:Show()
+			mod:ScheduleTimer("HidePingFrame", 3)
 		end
 	end
+end
+
+function mod:HidePingFrame()
+	pingFrame:Hide()
 end
