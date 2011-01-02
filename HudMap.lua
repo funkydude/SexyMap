@@ -10,9 +10,9 @@ local updateRotations
 local onShow = function(self)
 	self.rotSettings = GetCVar("rotateMinimap")
 	SetCVar("rotateMinimap", "1")
-	if db.useGatherMate and GatherMate then
-		GatherMate:GetModule("Display"):ReparentMinimapPins(HudMapCluster)
-		GatherMate:GetModule("Display"):ChangedVars(nil, "ROTATE_MINIMAP", "1")
+	if db.useGatherMate and GatherMate2 then
+		GatherMate2:GetModule("Display"):ReparentMinimapPins(HudMapCluster)
+		GatherMate2:GetModule("Display"):ChangedVars(nil, "ROTATE_MINIMAP", "1")
 	end
 	
 	if db.useQuestHelper and QuestHelper and QuestHelper.SetMinimapObject then
@@ -40,9 +40,9 @@ end
 
 local onHide = function(self, force)
 	SetCVar("rotateMinimap", self.rotSettings)
-	if (db.useGatherMate or force) and GatherMate then
-		GatherMate:GetModule("Display"):ReparentMinimapPins(Minimap)
-		GatherMate:GetModule("Display"):ChangedVars(nil, "ROTATE_MINIMAP", self.rotSettings)
+	if (db.useGatherMate or force) and GatherMate2 then
+		GatherMate2:GetModule("Display"):ReparentMinimapPins(Minimap)
+		GatherMate2:GetModule("Display"):ChangedVars(nil, "ROTATE_MINIMAP", self.rotSettings)
 	end
 	
 	if db.useQuestHelper and QuestHelper and QuestHelper.SetMinimapObject then
@@ -172,7 +172,7 @@ local options = {
 			order = 105,
 			name = L["Use GatherMate pins"],
 			disabled = function()
-				return GatherMate == nil
+				return GatherMate2 == nil
 			end,
 			get = function()
 				return db.useGatherMate
