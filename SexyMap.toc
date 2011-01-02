@@ -12,6 +12,11 @@
 embeds.xml
 #@end-no-lib-strip@
 
+# Libraries not on WoWAce/Curse (will be included in no-lib packages)
+# Astrolabe is bundled with TomTom (it's not packaged with SexyMap)
+# Libs\Astrolabe\Load.xml
+
+
 # Localization
 localization\enUS.lua
 localization\zhTW.lua
