@@ -33,8 +33,7 @@ function mod:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("SexyMapDB", defaults)
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("SexyMap", options)
 	self:RegisterChatCommand("minimap", "OpenConfig")
-	self:RegisterChatCommand("sexymap", "OpenConfig")
-	self:RegisterChatCommand("map", "OpenConfig")
+	self:RegisterChatCommand("sexymap", "OpenConfig")	
 end
 
 function mod:OnEnable()
