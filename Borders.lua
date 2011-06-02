@@ -83,7 +83,7 @@ local options = {
 			name = L["Hide default border"],
 			desc = L["Hide the default border on the minimap."],
 			get = function() return db.hideBlizzard end,
-			set = function(info, v) db.hideBlizzard = v; mod:Update() end,
+			set = function(info, v) db.hideBlizzard = v; mod:UpdateBorder() end,
 		},	
 		currentGroup = {
 			type = "group",
@@ -825,21 +825,20 @@ end
 
 function mod:OnEnable()
 	db = self.db.profile
-	self:Update()
-	rotFrame:SetScript("OnUpdate", updateRotations)
-	
+
+	self:RebuildPresets()
+
 	if db.applyPreset then
-		self:Clear()
 		self:ApplyPreset(db.applyPreset)
 		db.applyPreset = false
 	else
-		for _, v in ipairs(db.borders) do
-			self:CreateBorderFromParams(v)
-		end
+		self:ApplySettings()
 	end
 	
-	self:RebuildPresets()
-	self:UpdateBackdrop()
+end
+
+function mod:OnDisable()
+	self:ClearWidgets()
 end
 
 function mod:RebuildPresets()
@@ -853,43 +852,20 @@ function mod:RebuildPresets()
 end
 
 function mod:Clear()
-	for k, v in pairs(options.args.currentGroup.args.borders.args) do
-		if k ~= "default" then
-			-- Leaky, but we don't care too much
-			options.args.currentGroup.args.borders.args[k] = nil
-		end
-	end
-	
+	db.shape = "Textures\\MinimapMask"
 	db.borders = {}	-- leaky
 	db.backdrop = deepCopyHash(defaults.profile.backdrop)	-- leaky
-	
-	for k, v in pairs(textures) do
-		tinsert(texturePool, v)
-		v:Hide()
-		textures[k] = nil
-	end
-	for k, v in pairs(rotateTextures) do
-		rotateTextures[k] = nil
-	end
-	self:UpdateBackdrop()
+	return self:ApplySettings()
 end
 
 function mod:ApplyPreset(preset)
 	local preset = self.db.global.userPresets[preset] or parent.borderPresets[preset]
-	self:Clear()
 	
 	db.borders = deepCopyHash(preset.borders)
 	db.backdrop = preset.backdrop and deepCopyHash(preset.backdrop) or deepCopyHash(defaults.profile.backdrop)
+	db.shape = preset.shape
 	
-	if preset.shape then
-		Shape:ApplyShape(preset.shape)
-	end
-	
-	for _, v in ipairs(db.borders) do
-		self:CreateBorderFromParams(v)
-	end
-	
-	self:UpdateBackdrop()
+	return self:ApplySettings()	
 end
 
 function mod:NewBorder(name)
@@ -948,7 +924,46 @@ function mod:CreateBorderFromParams(t)
 	return tex
 end
 
-function mod:Update()
+function mod:ClearWidgets()
+	for k, v in pairs(options.args.currentGroup.args.borders.args) do
+		if k ~= "default" then
+			-- Leaky, but we don't care too much
+			options.args.currentGroup.args.borders.args[k] = nil
+		end
+	end
+	for k, v in pairs(textures) do
+		tinsert(texturePool, v)
+		v:Hide()
+		textures[k] = nil
+	end
+	for k, v in pairs(rotateTextures) do
+		rotateTextures[k] = nil
+	end
+	rotFrame:SetScript("OnUpdate", nil)
+end
+
+function mod:ApplySettings()
+	self:ClearWidgets()
+
+	if db.shape then
+		Shape:ApplyShape(db.shape)
+	end
+	
+	for _, v in ipairs(db.borders) do
+		self:CreateBorderFromParams(v)
+	end
+	
+	if next(rotateTextures) then
+		rotFrame:SetScript("OnUpdate", updateRotations)
+	else
+		rotFrame:SetScript("OnUpdate", nil)
+	end
+
+	self:UpdateBorder()
+	self:UpdateBackdrop()
+end
+
+function mod:UpdateBorder()
 	if db.hideBlizzard then
 		MinimapBorder:Hide()
 	else
