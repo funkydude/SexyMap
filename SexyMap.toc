@@ -1,4 +1,4 @@
-## Interface: 40200
+## Interface: 40300
 ## Title: SexyMap
 ## Notes: Spice up ye olde minimap with some sexytime options.
 ## Notes-zhCN: 热辣小地图并包含一些性感计时器选项。
@@ -42,4 +42,4 @@ HudMap.xml
 HudMap.lua
 Ping.lua
 ZoneText.lua
- 
+
