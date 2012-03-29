@@ -292,6 +292,7 @@ function mod:ApplyShape(shape)
 	self.callbacks:Fire("SexyMap_ShapeChanged")
 end
 
-function GetMininmapShape()
-	return minimapShape or "ROUND"
+function GetMinimapShape()
+	return shapes[db.shape] and shapes[db.shape].shape or "ROUND"
 end
+
