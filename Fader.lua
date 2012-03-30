@@ -1,6 +1,8 @@
-local parent = SexyMap
+
+local _, addon = ...
+local parent = addon.SexyMap
 local modName = "Fader"
-local mod = SexyMap:NewModule(modName, "AceTimer-3.0", "AceHook-3.0")
+local mod = addon.SexyMap:NewModule(modName, "AceTimer-3.0", "AceHook-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
 local db
 
@@ -79,7 +81,7 @@ do
 	local fadeTarget = 0
 	local fadeTime
 	local totalTime = 0
-	
+
 	local function fade(self, t)
 		totalTime = totalTime + t
 		local pct = min(1, totalTime / fadeTime)
@@ -90,7 +92,7 @@ do
 			if not k.SetAlpha then
 				parent:Print("No SetAlpha for", k:GetName())
 			end
-			
+
 			k:SetAlpha(alpha)
 			k:Show()
 			if pct == 1 then
@@ -101,12 +103,12 @@ do
 				end
 			end
 		end
-		
+
 		if total == 0 then
 			faderFrame:SetScript("OnUpdate", nil)
 		end
 	end
-	
+
 	local function startFade(f, t, to)
 		fading[f] = f:GetAlpha()
 		fadeTarget = to
@@ -138,7 +140,7 @@ do
 		self.checkExit = nil
 		startFade(MinimapCluster, 0.2, db.normalOpacity)
 	end
-	
+
 	function mod:CheckExited()
 		local f = GetMouseFocus()
 		if f then

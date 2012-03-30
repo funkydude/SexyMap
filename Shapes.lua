@@ -1,6 +1,8 @@
-local parent = SexyMap
+
+local _, addon = ...
+local parent = addon.SexyMap
 local modName = "Shapes"
-local mod = SexyMap:NewModule(modName)
+local mod = addon.SexyMap:NewModule(modName)
 local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
 local db
 local CallbackHandler = LibStub:GetLibrary("CallbackHandler-1.0")
@@ -46,13 +48,13 @@ end
 ------------------------------------------------------------------------
 ]]--
 local shapePoints = {}
-shapePoints.square = {	
+shapePoints.square = {
 	  [0] = { 1,  0},
 	 [45] = { 1,  1},
 	[135] = {-1,  1},
 	[225] = {-1, -1},
 	[315] = { 1, -1},
-	[360] = { 1,  0},	
+	[360] = { 1,  0},
 }
 
 shapePoints.diamond = {
@@ -127,7 +129,7 @@ end
 
 shapePoints.topRight = {
 	  [0] = { 1,  0},
-	 [45] = { 1,  1},	  
+	 [45] = { 1,  1},
 	 [90] = { 0,  1},
 	[135] = {-1,  1},
 	[180] = {-1,  0},

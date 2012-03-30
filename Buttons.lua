@@ -1,6 +1,8 @@
-local parent = SexyMap
+
+local _, addon = ...
+local parent = addon.SexyMap
 local modName = "Buttons"
-local mod = SexyMap:NewModule(modName, "AceTimer-3.0", "AceHook-3.0")
+local mod = addon.SexyMap:NewModule(modName, "AceTimer-3.0", "AceHook-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
 local Shape
 local db
@@ -42,13 +44,13 @@ do
 		MinimapZoomIn = true,
 		MinimapZoomOut = true,
 		MiniMapVoiceChatFrame = true,
-	}	
+	}
 	function captureNewChildren()
 		local children = getChildren()
 		if #children == childCount and lastChild == children[#children] then return 0 end
 		childCount = #children
 		lastChild = children[#children]
-		
+
 		local count = 0
 		for i = (stockIndex or 1), #children do
 			local child = children[i]
@@ -107,7 +109,7 @@ local options = {
 			end,
 			set = function(info, v)
 				db.lockDragging = v
-			end		
+			end
 		},
 		enableDragging = {
 			type = "toggle",
@@ -147,8 +149,8 @@ local options = {
 				else
 					mod:Update()
 				end
-			end		
-		},		
+			end
+		},
 		dragRadius = {
 			type = "range",
 			name = L["Drag Radius"],
@@ -196,7 +198,7 @@ do
 		lfg			= L["Dungeon finder icon"],
 		difficulty  = L["Dungeon difficulty"]
 	}
-	
+
 	buttons = {
 		calendar	= {"GameTimeFrame", override = function(f, e)
 						return CalendarGetNumPendingInvites() > 0
@@ -239,14 +241,14 @@ do
 	local hideValues = {
 		["always"] = L["Always"],
 		["never"] = L["Never"],
-		["hover"] = L["On hover"]	
+		["hover"] = L["On hover"]
 	}
 
-	local function hideGet(info, v)		
+	local function hideGet(info, v)
 		local key = info[#info]:gsub(" ", "_")
 		return v == (db[key] and db[key].hide or "hover")
 	end
-	
+
 	local function hideSet(info, v)
 		local key = info[#info]:gsub(" ", "_")
 		db[key] = db[key] or {}
@@ -269,20 +271,19 @@ do
 			get = hideGet,
 			set = hideSet
 		}
-	end	
+	end
 end
 
 function mod:OnInitialize()
 	self.db = parent.db:RegisterNamespace(modName, defaults)
 	db = self.db.profile
 	parent:RegisterModuleOptions(modName, options, modName)
-	self:AddMouseWheelZoom()
 end
 
 function mod:OnEnable()
 	Shape = parent:GetModule("Shapes")
 	Shape.RegisterCallback(self, "SexyMap_ShapeChanged")
-	
+
 	db = self.db.profile
 	local gotLast = false
 
@@ -293,18 +294,18 @@ function mod:OnEnable()
 	-- MinimapZoomIn:SetParent(Minimap)
 	-- MinimapZoomOut:SetParent(Minimap)
 	MiniMapInstanceDifficulty:EnableMouse(true)
-	
+
 	-- self:RegisterEvent("CALENDAR_UPDATE_EVENT_LIST_PENDING", "Update")
 	-- self:RegisterEvent("UPDATE_PENDING_MAIL", "Update")
 
 	self:FixTrackingAnchoring()
-	
+
 	-- Try to capture new buttons periodically
 	self:ScheduleRepeatingTimer("MakeMovables", 1)
 	self:MakeMovables()
-	
+
 	MiniMapInstanceDifficulty:SetFrameLevel(Minimap:GetFrameLevel() + 10)
-	
+
 	self:SecureHook("Minimap_OnClick", "ReleaseDrag")
 end
 
@@ -324,10 +325,10 @@ function mod:FixTrackingAnchoring()
 	local x, y = MiniMapTracking:GetCenter()
 	local mx, my = Minimap:GetCenter()
 	local dx, dy = x - mx, y - my
-	
+
 	MiniMapTracking.Hide = function() end
 	MiniMapTracking:Show()
-	
+
 	MiniMapTracking:SetParent(UIParent)
 	MiniMapTrackingButton:SetParent(Minimap)
 	MiniMapTrackingButton:ClearAllPoints()
@@ -357,7 +358,7 @@ function mod:FindClock()
 end
 
 function mod:Update()
-	if not db.controlVisibility then return end 
+	if not db.controlVisibility then return end
 	for k, v in pairs(buttons) do
 		local hide = db[k] and db[k].hide or "hover"
 		if hide ~= "hover" then
@@ -380,7 +381,7 @@ function mod:Update()
 				if f.Hide then
 					f:Hide()
 				end
-			end			
+			end
 		else
 			for _, f in ipairs(v) do
 				f = type(f) == "string" and _G[f] or f
@@ -393,22 +394,7 @@ function mod:Update()
 					end
 				end
 			end
-		end				
-	end
-end
-
-do
-	local function wheel(self, dir)
-		if dir == -1 and Minimap:GetZoom() > 0 then
-			Minimap_ZoomOutClick()
-		elseif dir == 1 and Minimap:GetZoom() < Minimap:GetZoomLevels() then
-			Minimap_ZoomInClick()
 		end
-	end
-	
-	function mod:AddMouseWheelZoom()
-		Minimap:EnableMouseWheel()
-		Minimap:SetScript("OnMouseWheel", wheel)
 	end
 end
 
@@ -416,9 +402,9 @@ do
 	local moving
 	local movables = {}
 	local dragFrame = CreateFrame("Frame", nil, UIParent)
-	
+
 	local GetCursorPosition = _G.GetCursorPosition
-	
+
 	local function getCurrentAngle(f, bx, by)
 		local mx, my = Minimap:GetCenter()
 		if not mx or not my or not bx or not by then return 0 end
@@ -428,60 +414,60 @@ do
 			angle = angle + 180
 		end
 		return angle
-	end	
-	
+	end
+
 	local function setPosition(frame, angle)
 		if not angle then
 			local x, y = GetCursorPosition()
 			x, y = x / Minimap:GetEffectiveScale(), y / Minimap:GetEffectiveScale()
 			angle = getCurrentAngle(frame, x, y)
 			db.dragPositions[frame:GetName()] = angle
-		end		
-		
+		end
+
 		local radius = (Minimap:GetWidth() / 2) + db.radius
 		local bx, by = Shape:GetPosition(angle, radius)
-		
+
 		-- local bx = cos(angle) * radius
 		-- local by = sin(angle) * radius
-		
+
 		frame:ClearAllPoints()
 		frame:SetPoint("CENTER", Minimap, "CENTER", bx, by)
 	end
-	
+
 	local function updatePosition()
 		setPosition(moving)
 	end
-	
+
 	local function start(frame)
 		if db.lockDragging then return end
-		
+
 		dragFrame:SetScript("OnUpdate", updatePosition)
 		parent:DisableFade()
 		moving = frame
 	end
-	
+
 	local function finish(frame)
 		moving = nil
 		parent:EnableFade()
 		dragFrame:SetScript("OnUpdate", nil)
 	end
-	
+
 	function mod:MakeMovable(frame)
 		if not frame then return end
 		if frame.sexyMapMovable then return end
 		if movables[frame] then return end
 		movables[frame] = true
-		
+
 		frame:RegisterForDrag("LeftButton")
 		self:RawHookScript(frame, "OnDragStart", start)
 		self:RawHookScript(frame, "OnDragStop", finish)
 		frame.sexyMapMovable = true
 	end
-	
+
 	function mod:UpdateDraggables()
 		if not db.allowDragging then return end
-		
-		for f, v in pairs(movables) do			
+
+		for f, v in pairs(movables) do
 			local x, y = f:GetCenter()
 			local angle = db.dragPositions[f:GetName()] or getCurrentAngle(f, x, y)
 			if angle then
@@ -489,13 +475,13 @@ do
 			end
 		end
 	end
-	
+
 	local lastChildCount = 0
 	function mod:MakeMovables()
 		self:CaptureButtons()
-		
+
 		if not db.allowDragging then return end
-		
+
 		local children = getChildren()
 		local childCount = #children
 		if childCount == lastChildCount then return end
@@ -510,7 +496,7 @@ do
 		end
 		self:UpdateDraggables()
 	end
-	
+
 	function mod:ReleaseMovables()
 		for frame, on in pairs(movables) do
 			self:UnhookAll(frame)
@@ -518,7 +504,7 @@ do
 			movables[frame] = nil
 		end
 	end
-	
+
 	function mod:ReleaseDrag()
 		if moving then
 			finish(moving)

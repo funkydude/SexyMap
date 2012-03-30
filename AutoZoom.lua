@@ -1,8 +1,9 @@
-local parent = SexyMap
+
+local _, addon = ...
+local parent = addon.SexyMap
 local modName = "AutoZoom"
-local mod = SexyMap:NewModule(modName, "AceTimer-3.0", "AceHook-3.0")
+local mod = addon.SexyMap:NewModule(modName, "AceTimer-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
-local db
 
 local options = {
 	type = "group",
@@ -18,13 +19,13 @@ local options = {
 			step = 1,
 			bigStep = 1,
 			get = function()
-				return db.autoZoom
+				return mod.db.profile.autoZoom
 			end,
 			set = function(info, v)
-				db.autoZoom = v
+				mod.db.profile.autoZoom = v
 			end
 		}
-	}	
+	}
 }
 
 local defaults = {
@@ -32,26 +33,35 @@ local defaults = {
 }
 function mod:OnInitialize()
 	self.db = parent.db:RegisterNamespace(modName, defaults)
-	db = self.db.profile
 	parent:RegisterModuleOptions(modName, options, modName)
 end
 
+-- This module should be merged into the core as it really doesn't qualify to be a separate module
+local timerHandle = nil
 function mod:OnEnable()
-	db = self.db.profile
-	self:SecureHook(Minimap, "SetZoom")
-end
-
-function mod:SetZoom()
-	if db.autoZoom > 0 then
-		self:CancelTimer(self.timer, true)
-		self.timer = self:ScheduleTimer("ZoomOut", db.autoZoom)
+	Minimap:EnableMouseWheel(true)
+	Minimap:SetScript("OnMouseWheel", function(frame, d)
+		if d > 0 then
+			MinimapZoomIn:Click()
+		elseif d < 0 then
+			MinimapZoomOut:Click()
+		end
+		if mod.db.profile.autoZoom > 0 then
+			if timerHandle then
+				mod:CancelTimer(timerHandle, true)
+			end
+			timerHandle = mod:ScheduleTimer("ZoomOut", mod.db.profile.autoZoom)
+		end
+	end)
+	if mod.db.profile.autoZoom > 0 then
+		self:ZoomOut()
 	end
 end
 
 function mod:ZoomOut()
-	if Minimap:GetZoom() > 0 then
-		Minimap:SetZoom(0)
-		MinimapZoomOut:Disable()
-		MinimapZoomIn:Enable()
+	timerHandle = nil
+	for i = 1, 5 do
+		MinimapZoomOut:Click()
 	end
 end
+

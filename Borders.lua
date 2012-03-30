@@ -1,6 +1,8 @@
-local parent = SexyMap
+
+local _, addon = ...
+local parent = addon.SexyMap
 local modName = "Borders"
-local mod = SexyMap:NewModule(modName)
+local mod = addon.SexyMap:NewModule(modName)
 local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
 local db
 local textures = {}
@@ -49,7 +51,7 @@ local function deepCopyHash(t)
 end
 
 local GetPlayerBearing = _G.GetPlayerFacing
-		
+
 local function RotateTexture(self, inc, set)
 	if type(inc) == "string" then
 		local bearing = GetPlayerBearing()
@@ -62,7 +64,7 @@ local function RotateTexture(self, inc, set)
 		self.hAngle = (set and 0 or self.hAngle or 0) - inc;
 		local s = sin(self.hAngle);
 		local c = cos(self.hAngle);
-		
+
 		self:SetTexCoord(
 			0.5 - s, 0.5 + c,
 			0.5 + c, 0.5 + s,
@@ -84,7 +86,7 @@ local options = {
 			desc = L["Hide the default border on the minimap."],
 			get = function() return db.hideBlizzard end,
 			set = function(info, v) db.hideBlizzard = v; mod:UpdateBorder() end,
-		},	
+		},
 		currentGroup = {
 			type = "group",
 			name = L["Current Borders"],
@@ -112,7 +114,7 @@ local options = {
 					func = function()
 						mod:Clear()
 					end
-				},		
+				},
 				borders = {
 					name = L["Borders"],
 					type = "group",
@@ -156,7 +158,7 @@ local options = {
 									set = function(info, v)
 										db.backdrop.scale = v
 										mod:UpdateBackdrop()
-									end								
+									end
 								},
 								alpha = {
 									type = "range",
@@ -176,8 +178,8 @@ local options = {
 									set = function(info, v)
 										db.backdrop.alpha = v
 										mod:UpdateBackdrop()
-									end								
-								},								
+									end
+								},
 								texture = {
 									type = "group",
 									name = L["Background Texture"],
@@ -218,7 +220,7 @@ local options = {
 											disabled = function()
 												return GetAddOnInfo("TexBrowser") == nil
 											end
-										},										
+										},
 										textureSelect = {
 											type = "select",
 											name = L["SharedMedia Texture"],
@@ -265,7 +267,7 @@ local options = {
 												db.backdrop.settings.tileSize = v
 												mod:UpdateBackdrop()
 											end
-										},								
+										},
 										textureColor = {
 											type = "color",
 											name = L["Backdrop color"],
@@ -300,7 +302,7 @@ local options = {
 												db.backdrop.settings.insets.bottom = v
 												db.backdrop.settings.insets.right = v
 												mod:UpdateBackdrop()
-											end									
+											end
 										},
 									}
 								},
@@ -323,7 +325,7 @@ local options = {
 												db.backdrop.settings.edgeFile = v
 												mod:UpdateBackdrop()
 											end
-										},			
+										},
 										openTexBrowser = {
 											type = "execute",
 											name = function()
@@ -359,7 +361,7 @@ local options = {
 												db.backdrop.settings.edgeFile = media:Fetch("border", v)
 												mod:UpdateBackdrop()
 											end
-										},										
+										},
 										borderColor = {
 											type = "color",
 											order = 23,
@@ -391,8 +393,8 @@ local options = {
 											set = function(info, v)
 												db.backdrop.settings.edgeSize = v
 												mod:UpdateBackdrop()
-											end									
-										},												
+											end
+										},
 									}
 								}
 							}
@@ -452,7 +454,7 @@ local options = {
 					end
 				},
 			}
-		}	
+		}
 	}
 }
 
@@ -555,7 +557,7 @@ local borderOptions = {
 		type = "header",
 		name = L["Texture options"],
 		order = 99
-	},	
+	},
 	scale = {
 		type = "range",
 		name = L["Scale"],
@@ -733,7 +735,7 @@ local borderOptions = {
 			local tex = getTextureAndDB(info)
 			tex.settings.blendMode = v
 			tex:SetBlendMode(v)
-		end	
+		end
 	},
 	disableRotation = {
 		type = "toggle",
@@ -785,7 +787,7 @@ local defaults = {
 
 function mod:OnInitialize()
 	Shape = parent:GetModule("Shapes")
-	
+
 	self.db = parent.db:RegisterNamespace(modName, defaults)
 	db = self.db.profile
 	parent:RegisterModuleOptions(modName, options, modName)
@@ -834,7 +836,7 @@ function mod:OnEnable()
 	else
 		self:ApplySettings()
 	end
-	
+
 end
 
 function mod:OnDisable()
@@ -848,7 +850,7 @@ function mod:RebuildPresets()
 	end
 	for k, v in pairs(parent.borderPresets) do
 		presets[k] = k
-	end	
+	end
 end
 
 function mod:Clear()
@@ -860,17 +862,17 @@ end
 
 function mod:ApplyPreset(preset)
 	local preset = self.db.global.userPresets[preset] or parent.borderPresets[preset]
-	
+
 	db.borders = deepCopyHash(preset.borders)
 	db.backdrop = preset.backdrop and deepCopyHash(preset.backdrop) or deepCopyHash(defaults.profile.backdrop)
 	db.shape = preset.shape
-	
-	return self:ApplySettings()	
+
+	return self:ApplySettings()
 end
 
 function mod:NewBorder(name)
 	local t = {name = name}
-	tinsert(db.borders, t)	
+	tinsert(db.borders, t)
 	self:CreateBorderFromParams(t)
 end
 
@@ -896,7 +898,7 @@ function mod:CreateBorderFromParams(t)
 	tex:SetWidth(defaultSize * (t.scale or 1))
 	tex:SetHeight(defaultSize * (t.scale or 1))
 	tex:SetDrawLayer(t.drawLayer or "ARTWORK")
-	
+
 	tex.rotSpeed = t.rotSpeed or 0
 	tex.settings = t
 	tex:Show()
@@ -910,11 +912,11 @@ function mod:CreateBorderFromParams(t)
 		end
 		RotateTexture(tex, t.rotation or 0, true)
 	end
-	
+
 	local r,g,b,a = t.r or 1, t.g or 1, t.b or 1, t.a or 1
 	tex:SetVertexColor(r,g,b,a)
 	textures["tex" .. inc] = tex
-	
+
 	options.args.currentGroup.args.borders.args["tex" .. inc] = {
 		type = "group",
 		name = t.name or ("Border #" .. inc),
@@ -948,11 +950,11 @@ function mod:ApplySettings()
 	if db.shape then
 		Shape:ApplyShape(db.shape)
 	end
-	
+
 	for _, v in ipairs(db.borders) do
 		self:CreateBorderFromParams(v)
 	end
-	
+
 	if next(rotateTextures) then
 		rotFrame:SetScript("OnUpdate", updateRotations)
 	else
@@ -973,7 +975,7 @@ end
 
 function mod:UpdateBackdrop()
 	if db.backdrop.show then
-		MinimapBackdrop:Show()		
+		MinimapBackdrop:Show()
 		MinimapBackdrop:SetFrameStrata("BACKGROUND")
 		MinimapBackdrop:SetScale(db.backdrop.scale or 1)
 		MinimapBackdrop:SetAlpha(db.backdrop.alpha or 1)

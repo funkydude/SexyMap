@@ -1,16 +1,18 @@
-local parent = SexyMap
+
+local _, addon = ...
+local parent = addon.SexyMap
 local modName = "ZoneText"
 local media = LibStub("LibSharedMedia-3.0")
-local mod = SexyMap:NewModule(modName, "AceEvent-3.0")
+local mod = addon.SexyMap:NewModule(modName, "AceEvent-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
 local db
 
 local hideValues = {
 	["always"] = L["Always"],
 	["never"] = L["Never"],
-	["hover"] = L["On hover"]	
+	["hover"] = L["On hover"]
 }
-	
+
 local options = {
 	type = "group",
 	name = modName,
@@ -33,7 +35,7 @@ local options = {
 			dialogControl = "LSM30_Font",
 			values = AceGUIWidgetLSMlists.font,
 			get = function() return db.font end,
-			set = function(info, v) 
+			set = function(info, v)
 				db.font = v
 				mod:Update()
 			end
@@ -42,15 +44,15 @@ local options = {
 			type = "range",
 			name = L["Font Size"],
 			order = 2,
-			min = 4,				
+			min = 4,
 			max = 30,
 			step = 1,
 			bigStep = 1,
 			get = function() return db.fontsize end,
-			set = function(info, v) 
+			set = function(info, v)
 				db.fontsize = v
 				mod:Update()
-			end		
+			end
 		},
 		fontColor = {
 			type = "color",
@@ -63,7 +65,7 @@ local options = {
 			set = function(info, r, g, b, a)
 				db.fontColor.r, db.fontColor.g, db.fontColor.b, db.fontColor.a = r, g, b, a
 				mod:Update()
-			end		
+			end
 		},
 		xOffset = {
 			type = "range",
@@ -145,7 +147,7 @@ function mod:OnInitialize()
 	-- MinimapToggleButton:ClearAllPoints()
 	-- MinimapToggleButton:SetParent(MinimapZoneTextButton)
 	-- MinimapToggleButton:SetPoint("LEFT", MinimapZoneTextButton, "RIGHT", -3, 0)
-	
+
 	MinimapZoneText:ClearAllPoints()
 	MinimapZoneText:SetAllPoints()
 	MinimapZoneTextButton:SetHeight(26)

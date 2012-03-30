@@ -1,6 +1,8 @@
-local parent = SexyMap
+
+local _, addon = ...
+local parent = addon.SexyMap
 local modName = "Coordinates"
-local mod = SexyMap:NewModule(modName, "AceTimer-3.0")
+local mod = addon.SexyMap:NewModule(modName, "AceTimer-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
 local db
 
@@ -86,7 +88,7 @@ local options = {
 				local c = db.backgroundColor
 				c.r, c.g, c.b, c.a = r, g, b, a
 				mod:Update()
-			end		
+			end
 		},
 		borderColor = {
 			type = "color",
@@ -102,7 +104,7 @@ local options = {
 				local c = db.borderColor
 				c.r, c.g, c.b, c.a = r, g, b, a
 				mod:Update()
-			end		
+			end
 		},
 		reset = {
 			type = "execute",
@@ -147,7 +149,7 @@ local coordFrame, xcoords, ycoords
 function mod:OnInitialize()
 	self.db = parent.db:RegisterNamespace(modName, defaults)
 	db = self.db.profile
-	
+
 	coordFrame = CreateFrame("Frame", "SexyMapCoordFrame", Minimap)
 	coordFrame:SetBackdrop({
 		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
@@ -168,14 +170,14 @@ function mod:OnInitialize()
 	ycoords:SetPoint("TOPRIGHT", coordFrame, "TOPRIGHT", -3, 0)
 	ycoords:SetPoint("BOTTOMRIGHT")
 	ycoords:SetJustifyH("LEFT")
-	
+
 	coordFrame:SetMovable(true)
 	coordFrame:EnableMouse()
 	coordFrame.sexyMapIgnore = true
 
 	coordFrame:SetScript("OnMouseDown", start)
 	coordFrame:SetScript("OnMouseUp", finish)
-	
+
 	self:UpdateCoords()
 	self:Update()
 	parent:RegisterModuleOptions(modName, options, modName)
@@ -193,7 +195,7 @@ function mod:OnEnable()
 	else
 		coordFrame:SetPoint("CENTER", Minimap, "BOTTOM")
 	end
-	
+
 	coordFrame:Show()
 	self.updateTimer = self:ScheduleRepeatingTimer("UpdateCoords", 0.05)
 	-- parent:GetModule("Buttons"):MakeMovable(coordFrame)
@@ -227,13 +229,13 @@ function mod:Update()
 		xcoords:SetTextColor(c.r or 1, c.g or 1, c.b or 1, c.a or 1)
 		ycoords:SetTextColor(c.r or 1, c.g or 1, c.b or 1, c.a or 1)
 	end
-	
+
 	if db.fontSize then
 		local f, s, flags = xcoords:GetFont()
 		xcoords:SetFont(f, db.fontSize, flags)
 		ycoords:SetFont(f, db.fontSize, flags)
 	end
-	
+
 	local pt = xcoords:GetText()
 	xcoords:SetText(("%2.1f,  %2.1f"):format(22.222,22.222))
 	coordFrame:SetWidth(xcoords:GetStringWidth() * 1.2)

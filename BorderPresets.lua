@@ -1,4 +1,6 @@
-SexyMap.borderPresets = {				
+
+local _, addon = ...
+addon.SexyMap.borderPresets = {
 	["Blue Rune Circles"] = {
 		borders = {
 			{
@@ -94,7 +96,7 @@ SexyMap.borderPresets = {
 				["r"] = 1,
 				["g"] = 0.6705882352941176,
 				["texture"] = "SPELLS\\T_VFX_HERO_CIRCLE.BLP",
-			}, -- [3]	
+			}, -- [3]
 		},
 		shape = "Textures\\MinimapMask"
 	},
@@ -199,7 +201,7 @@ SexyMap.borderPresets = {
 			["scale"] = 1.25,
 		},
 		["shape"] = "SPELLS\\T_VFX_BORDER",
-	},	
+	},
 	Parchment = {
 		borders = {
 			{
@@ -234,7 +236,7 @@ SexyMap.borderPresets = {
 				["a"] = 1,
 				["g"] = 0.6313725490196078,
 				["texture"] = "Interface\\AchievementFrame\\UI-Achievement-Parchment-Horizontal.blp",
-			}, -- [3]		
+			}, -- [3]
 		},
 		shape = "Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy"
 	},
@@ -421,7 +423,7 @@ SexyMap.borderPresets = {
 			["scale"] = 1.17,
 		},
 		["shape"] = "Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy",
-	},	
+	},
 	["Emerald Portal by Korryna"] = {
 		["borders"] = {
 			{
@@ -747,3 +749,4 @@ SexyMap.borderPresets = {
 		["shape"] = "Textures\\MinimapMask",
 	},
 }
+

@@ -1,5 +1,7 @@
-local parent = SexyMap
-local mod = SexyMap:NewModule("General", "AceTimer-3.0", "AceEvent-3.0", "AceHook-3.0")
+
+local _, addon = ...
+local parent = addon.SexyMap
+local mod = addon.SexyMap:NewModule("General", "AceTimer-3.0", "AceEvent-3.0", "AceHook-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
 
 local db
@@ -119,18 +121,18 @@ function mod:OnInitialize()
 	self.db = parent.db:RegisterNamespace("Movers", defaults)
 	db = self.db.profile
 	parent:RegisterModuleOptions("Movers", options, "Movers")
-	
+
 	MinimapBorderTop:Hide()
 	Minimap:RegisterForDrag("LeftButton")
 	MinimapZoneTextButton:RegisterForDrag("LeftButton")
 	self:SetLock(db.lock)
-	
-	self:SecureHook("updateContainerFrameAnchors", "CreateMoversAndSetMovables")	
+
+	self:SecureHook("updateContainerFrameAnchors", "CreateMoversAndSetMovables")
 end
 
 function mod:WatchFrame_Update(...)
 	if not WatchFrame:IsUserPlaced() then reanchorWatchFrame() end
-	self.hooks.WatchFrame_Update(...)	
+	self.hooks.WatchFrame_Update(...)
 	-- updateWatchFrameHeight()
 	-- WatchFrame:SetHeight(WatchFrame.realHeight or WatchFrame:GetHeight())
 end
@@ -173,10 +175,10 @@ do
 	local function stop(self)
 		local f = self:GetParent()
 		f:StopMovingOrSizing()
-		
+
 		local x, y = f:GetLeft(), f:GetTop()
 		local n = f:GetName()
-		
+
 		db.framePositions[n] = db.framePositions[n] or {}
 		db.framePositions[n].x = x
 		db.framePositions[n].y = y
@@ -201,11 +203,11 @@ do
 					f:SetScript("OnMouseUp", stop)
 					f:SetScript("OnLeave", stop)
 					l:SetText(("%s mover"):format(text))
-					l:SetPoint("BOTTOM", f, "TOP")					
+					l:SetPoint("BOTTOM", f, "TOP")
 					f:SetBackdrop(parent.backdrop)
 					f:SetBackdropColor(0, 0.6, 0, 1)
 				end
-				
+
 				f:ClearAllPoints()
 				f:SetAllPoints()
 				if f:GetTop() - f:GetBottom() < 30 then
@@ -214,27 +216,27 @@ do
 					f:SetPoint("TOPRIGHT", pf, "TOPRIGHT")
 					f:SetHeight(40)
 				end
-				
+
 				if f:GetRight() - f:GetLeft() < 30 then
 					f:ClearAllPoints()
 					f:SetPoint("TOPLEFT", pf, "TOPLEFT")
 					f:SetHeight(40)
 					f:SetWidth(40)
 				end
-				
+
 				if not db.lock then
 					f:Hide()
 				end
-				
+
 				if db.framePositions[frame] then
 					local x, y = db.framePositions[frame].x, db.framePositions[frame].y
 					pf:ClearAllPoints()
-					pf:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", x, y)					
+					pf:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", x, y)
 					pf:SetUserPlaced(true)
 				end
 			end
 		end
-		self:SetMovers()		
+		self:SetMovers()
 	end
 end
 
@@ -261,11 +263,11 @@ do
 			to = to .. "RIGHT"
 		end
 		WatchFrame:ClearAllPoints()
-		WatchFrame:SetPoint(from, MinimapCluster, to)		
+		WatchFrame:SetPoint(from, MinimapCluster, to)
 		-- WatchFrame:SetHeight(1000)
 		WatchFrame:SetPoint(side, UIParent, side)
 	end
-	
+
 	function updateWatchFrameHeight()
 		-- local ofrom, frm, oto = WatchFrame:GetPoint(1)
 		-- print("Got point for watchframe:", ofrom, oto)
@@ -290,7 +292,7 @@ do
 			end
 		-- end
 	end
-	
+
 	local function dragUpdate()
 		mod:WatchFrame_Update(WatchFrame)
 	end
@@ -303,7 +305,7 @@ do
 		MinimapCluster:StopMovingOrSizing()
 		MinimapCluster:SetScript("OnUpdate", nil)
 	end
-	
+
 	function mod:Update()
 		MinimapCluster:SetScale(db.scale or 1)
 		-- MinimapCluster:SetAlpha(db.alpha or 1)
@@ -323,7 +325,7 @@ do
 		end
 		MinimapCluster:SetMovable(true)
 	end
-	
+
 	function mod:SetMovers()
 		local v = db.movers
 		if v then
@@ -331,7 +333,7 @@ do
 				f.showParent = not not f:GetParent():IsVisible()		-- convert nil -> false
 				f:GetParent():Show()
 				f:Show()
-			end	
+			end
 		else
 			for _, f in ipairs(movers) do
 				if f.showParent == false then

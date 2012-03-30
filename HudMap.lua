@@ -1,6 +1,8 @@
-local parent = SexyMap
+
+local _, addon = ...
+local parent = addon.SexyMap
 local modName = "HudMap"
-local mod = SexyMap:NewModule(modName, "AceTimer-3.0", "AceEvent-3.0", "AceHook-3.0")
+local mod = addon.SexyMap:NewModule(modName, "AceTimer-3.0", "AceEvent-3.0", "AceHook-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
 local db
 
@@ -14,26 +16,26 @@ local onShow = function(self)
 		GatherMate2:GetModule("Display"):ReparentMinimapPins(HudMapCluster)
 		GatherMate2:GetModule("Display"):ChangedVars(nil, "ROTATE_MINIMAP", "1")
 	end
-	
+
 	if db.useQuestHelper and QuestHelper and QuestHelper.SetMinimapObject then
 		QuestHelper:SetMinimapObject(HudMapCluster)
 	end
-	
+
 	if db.useRoutes and Routes and Routes.ReparentMinimap then
 		Routes:ReparentMinimap(HudMapCluster)
 		Routes:CVAR_UPDATE(nil, "ROTATE_MINIMAP", "1")
 	end
-	
+
 	if TomTom and TomTom.ReparentMinimap then
 		TomTom:ReparentMinimap(HudMapCluster)
 		local Astrolabe = DongleStub("TTAstrolabe-1.0") -- Astrolabe is bundled with TomTom (it's not packaged with SexyMap)
 		Astrolabe.processingFrame:SetParent(HudMapCluster)
 	end
-	
+
 	if _G.GetMinimapShape and not mod:IsHooked("GetMinimapShape") then
 		mod:Hook("GetMinimapShape")
 	end
-	
+
 	updateFrame:SetScript("OnUpdate", updateRotations)
 	MinimapCluster:Hide()
 end
@@ -44,26 +46,26 @@ local onHide = function(self, force)
 		GatherMate2:GetModule("Display"):ReparentMinimapPins(Minimap)
 		GatherMate2:GetModule("Display"):ChangedVars(nil, "ROTATE_MINIMAP", self.rotSettings)
 	end
-	
+
 	if db.useQuestHelper and QuestHelper and QuestHelper.SetMinimapObject then
 		QuestHelper:SetMinimapObject(Minimap)
 	end
-	
+
 	if (db.useRoutes or force) and Routes and Routes.ReparentMinimap then
 		Routes:ReparentMinimap(Minimap)
 		Routes:CVAR_UPDATE(nil, "ROTATE_MINIMAP", self.rotSettings)
 	end
-	
+
 	if TomTom and TomTom.ReparentMinimap then
 		TomTom:ReparentMinimap(Minimap)
 		local Astrolabe = DongleStub("TTAstrolabe-1.0") -- Astrolabe is bundled with TomTom (it's not packaged with SexyMap)
-		Astrolabe.processingFrame:SetParent(Minimap)		
+		Astrolabe.processingFrame:SetParent(Minimap)
 	end
-	
+
 	if _G.GetMinimapShape and mod:IsHooked("GetMinimapShape") then
 		mod:Unhook("GetMinimapShape")
 	end
-	
+
 	updateFrame:SetScript("OnUpdate", nil)
 	MinimapCluster:Show()
 end
@@ -129,7 +131,7 @@ local options = {
 				c.r, c.g, c.b, c.a = r, g, b, a
 				mod:UpdateColors()
 			end
-		},		
+		},
 		scale = {
 			type = "range",
 			name = L["Scale"],
@@ -201,13 +203,13 @@ local options = {
 					onHide(HudMapCluster, true)
 					onShow(HudMapCluster)
 				end
-			end			
+			end
 		},
 		routesdesc = {
 			type = "description",
 			name = L["Routes plots the shortest distance between resource nodes. Install it to show farming routes on your HudMap."],
 			order = 109,
-		},		
+		},
 		routes = {
 			type = "toggle",
 			name = L["Use Routes"],
@@ -251,21 +253,21 @@ local indicators = {"N", "NE", "E", "SE", "S", "SW", "W", "NW"}
 function mod:OnInitialize()
 	self.db = parent.db:RegisterNamespace(modName, defaults)
 	db = self.db.profile
-	
+
 	-- Upgrade thingie for 3.1
 	if not db.setNewScale then
 		db.scale = 1.4
 		db.setNewScale = true
 	end
-	
+
 	SexyMapHudMap:SetPoint("CENTER", UIParent, "CENTER")
 	HudMapCluster:SetFrameStrata("BACKGROUND")
 	HudMapCluster:SetAlpha(db.alpha)
 	SexyMapHudMap:SetAlpha(0)
 	SexyMapHudMap:EnableMouse(false)
-	
+
 	setmetatable(HudMapCluster, { __index = SexyMapHudMap })
-	
+
 	gatherCircle = HudMapCluster:CreateTexture()
 	gatherCircle:SetTexture([[SPELLS\CIRCLE.BLP]])
 	gatherCircle:SetBlendMode("ADD")
@@ -275,7 +277,7 @@ function mod:OnInitialize()
 	gatherCircle:SetHeight(radius)
 	gatherCircle.alphaFactor = 0.5
 	tinsert(coloredTextures, gatherCircle)
-	
+
 	gatherLine = HudMapCluster:CreateTexture("GatherLine")
 	gatherLine:SetTexture([[Interface\BUTTONS\WHITE8X8.BLP]])
 	gatherLine:SetBlendMode("ADD")
@@ -284,14 +286,14 @@ function mod:OnInitialize()
 	gatherLine:SetWidth(0.2)
 	gatherLine:SetHeight((SexyMapHudMap:GetWidth() * 0.214) - nudge)
 	tinsert(coloredTextures, gatherLine)
-	
+
 	playerDot = HudMapCluster:CreateTexture()
 	playerDot:SetTexture([[Interface\GLUES\MODELS\UI_Tauren\gradientCircle.blp]])
 	playerDot:SetBlendMode("ADD")
 	playerDot:SetPoint("CENTER")
 	playerDot.alphaFactor = 2
 	tinsert(coloredTextures, playerDot)
-	
+
 	local indicators = {"N", "NE", "E", "SE", "S", "SW", "W", "NW"}
 	local radius = SexyMapHudMap:GetWidth() * 0.214
 	for k, v in ipairs(indicators) do
@@ -304,18 +306,18 @@ function mod:OnInitialize()
 		ind.rad = rot
 		ind.radius = radius
 		tinsert(directions, ind)
-	end	
+	end
 
-	HudMapCluster:Hide()	
+	HudMapCluster:Hide()
 	HudMapCluster:SetScript("OnShow", onShow)
-	HudMapCluster:SetScript("OnHide", onHide)	
+	HudMapCluster:SetScript("OnHide", onHide)
 	self:HookScript(Minimap, "OnShow", "Minimap_OnShow")
 	self:HookScript(MinimapCluster, "OnShow", "Minimap_OnShow")
-	
+
 	parent:RegisterModuleOptions(modName, options, modName)
 	self:UpdateColors()
 	self:SetScales()
-	
+
 	HudMapCluster._GetScale = HudMapCluster.GetScale
 	HudMapCluster.GetScale = function()
 		return 1
@@ -325,7 +327,7 @@ end
 do
 	local target = 1 / 90
 	local total = 0
-	
+
 	function updateRotations(self, t)
 		total = total + t
 		if total < target then return end
@@ -377,7 +379,7 @@ function mod:UpdateColors()
 	for k, v in ipairs(coloredTextures) do
 		v:SetVertexColor(c.r or 0, c.g or 1, c.b or 0, (c.a or 1) * (v.alphaFactor or 1) / HudMapCluster:GetAlpha())
 	end
-	
+
 	c = db.textColor
 	for k, v in ipairs(directions) do
 		v:SetTextColor(c.r, c.g, c.b, c.a)
@@ -391,10 +393,10 @@ end
 function mod:SetScales()
 	SexyMapHudMap:ClearAllPoints()
 	SexyMapHudMap:SetPoint("CENTER", UIParent, "CENTER")
-	
+
 	HudMapCluster:ClearAllPoints()
 	HudMapCluster:SetPoint("CENTER")
-	
+
 	local size = UIParent:GetHeight() / db.scale
 	SexyMapHudMap:SetWidth(size)
 	SexyMapHudMap:SetHeight(size)
@@ -403,11 +405,11 @@ function mod:SetScales()
 	gatherCircle:SetWidth(size * 0.45)
 	gatherCircle:SetHeight(size * 0.45)
 	gatherLine:SetHeight((SexyMapHudMap:GetWidth() * 0.214) - 0.65)
-	
+
 	HudMapCluster:SetScale(db.scale)
 	playerDot:SetWidth(15)
 	playerDot:SetHeight(15)
-	
+
 	for k, v in ipairs(directions) do
 		v.radius = SexyMapHudMap:GetWidth() * 0.214
 	end

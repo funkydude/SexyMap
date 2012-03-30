@@ -1,6 +1,8 @@
-local parent = SexyMap
+
+local _, addon = ...
+local parent = addon.SexyMap
 local modName = "Ping"
-local mod = SexyMap:NewModule(modName, "AceEvent-3.0", "AceTimer-3.0")
+local mod = addon.SexyMap:NewModule(modName, "AceEvent-3.0", "AceTimer-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
 local db
 
@@ -88,7 +90,7 @@ local lastX, lastY
 function mod:MINIMAP_PING(self, unit, x, y)
 	if( db.showPing and lastX ~= x and lastY ~= y ) then
 		lastX, lastY = x, y
-		
+
 		local color = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
 		if db.showAt == "chat" then
 			DEFAULT_CHAT_FRAME:AddMessage(("Ping: |cFF%02x%02x%02x%s|r"):format(color.r * 255, color.g * 255, color.b * 255, UnitName(unit)))

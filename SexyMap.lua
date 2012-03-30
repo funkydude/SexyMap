@@ -1,6 +1,8 @@
-SexyMap = LibStub("AceAddon-3.0"):NewAddon("SexyMap", "AceEvent-3.0", "AceConsole-3.0", "AceHook-3.0", "AceTimer-3.0")
+
+local _, addon = ...
+addon.SexyMap = LibStub("AceAddon-3.0"):NewAddon("SexyMap", "AceEvent-3.0", "AceConsole-3.0", "AceHook-3.0", "AceTimer-3.0")
+local mod = addon.SexyMap
 local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
-local mod = SexyMap
 
 local _G = getfenv(0)
 local pairs, ipairs, type, select = _G.pairs, _G.ipairs, _G.type, _G.select
@@ -33,22 +35,22 @@ function mod:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("SexyMapDB", defaults)
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("SexyMap", options)
 	self:RegisterChatCommand("minimap", "OpenConfig")
-	self:RegisterChatCommand("sexymap", "OpenConfig")	
+	self:RegisterChatCommand("sexymap", "OpenConfig")
 end
 
 function mod:OnEnable()
 	if _G.simpleMinimap then
 		self:Print("|cffff0000Warning!|r simpleMinimap is enabled. SexyMap may not work correctly.")
 	end
-	
+
 	if not self.profilesRegistered then
 		self:RegisterModuleOptions("Profiles", LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db), L["Profiles"])
 		self.profilesRegistered = true
 	end
-	
+
 	Minimap:SetScript("OnMouseUp", mod.Minimap_OnClick)
 	self:HookAll(MinimapCluster, "OnEnter", MinimapCluster:GetChildren())
-	
+
 	self.db.RegisterCallback(self, "OnProfileChanged", "ReloadAddon")
 	self.db.RegisterCallback(self, "OnProfileCopied", "ReloadAddon")
 	self.db.RegisterCallback(self, "OnProfileReset", "ReloadAddon")
@@ -99,7 +101,7 @@ do
 	local fadeTime
 	local totalTime = 0
 	local hoverOverrides, hoverExempt = {}, {}
-	
+
 	local function fade(self, t)
 		totalTime = totalTime + t
 		local pct = min(1, totalTime / fadeTime)
@@ -110,7 +112,7 @@ do
 			if not k.SetAlpha then
 				mod:Print("No SetAlpha for", k:GetName())
 			end
-			
+
 			k:SetAlpha(alpha)
 			-- k:Show()
 			if alpha == fadeTarget then
@@ -121,18 +123,18 @@ do
 				-- end
 			end
 		end
-		
+
 		if total == 0 then
 			faderFrame:SetScript("OnUpdate", nil)
 		end
 	end
-	
+
 	local function startFade(t)
 		fadeTime = t or 0.2
 		totalTime = 0
 		faderFrame:SetScript("OnUpdate", fade)
 	end
-	
+
 	local hoverButtons = {}
 	function mod:RegisterHoverButton(frame, showFunc)
 		local frameName = frame
@@ -164,7 +166,7 @@ do
 		end
 		hoverButtons[frame] = nil
 	end
-	
+
 	local function UpdateHoverOverrides(self, e)
 		for k, v in pairs(hoverOverrides) do
 			local ret = v(k, e)
@@ -178,7 +180,7 @@ do
 			end
 		end
 	end
-	
+
 	function mod:RegisterHoverOverride(frame, func, ...)
 		local frameName = frame
 		if type(frame) == "string" then
@@ -186,7 +188,7 @@ do
 		elseif frame then
 			frameName = frame:GetName()
 		end
-		
+
 		hoverOverrides[frame] = func
 		for i = 1, select("#", ...) do
 			local event = select(i, ...)
@@ -196,7 +198,7 @@ do
 		end
 		faderFrame:SetScript("OnEvent", UpdateHoverOverrides)
 	end
-	
+
 	function mod:OnEnter()
 		if self.checkExit then return end
 		self.checkExit = self:ScheduleRepeatingTimer("CheckExited", 0.1)
@@ -212,7 +214,7 @@ do
 	function mod:OnExit()
 		self:CancelTimer(self.checkExit, true)
 		self.checkExit = nil
-		
+
 		fadeTarget = 0
 		for k, v in pairs(hoverButtons) do
 			if not hoverExempt[k] then
@@ -234,7 +236,7 @@ do
 			self:OnExit()
 		end
 	end
-	
+
 	function mod:EnableFade()
 		self.fadeDisabled = false
 	end
