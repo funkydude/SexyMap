@@ -26,7 +26,7 @@ local onShow = function(self)
 	
 	if TomTom and TomTom.ReparentMinimap then
 		TomTom:ReparentMinimap(HudMapCluster)
-		local Astrolabe = DongleStub("Astrolabe-1.0") -- Astrolabe is bundled with TomTom (it's not packaged with SexyMap)
+		local Astrolabe = DongleStub("TTAstrolabe-1.0") -- Astrolabe is bundled with TomTom (it's not packaged with SexyMap)
 		Astrolabe.processingFrame:SetParent(HudMapCluster)
 	end
 	
@@ -56,7 +56,7 @@ local onHide = function(self, force)
 	
 	if TomTom and TomTom.ReparentMinimap then
 		TomTom:ReparentMinimap(Minimap)
-		local Astrolabe = DongleStub("Astrolabe-1.0") -- Astrolabe is bundled with TomTom (it's not packaged with SexyMap)
+		local Astrolabe = DongleStub("TTAstrolabe-1.0") -- Astrolabe is bundled with TomTom (it's not packaged with SexyMap)
 		Astrolabe.processingFrame:SetParent(Minimap)		
 	end
 	
