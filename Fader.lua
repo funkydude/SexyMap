@@ -90,7 +90,7 @@ do
 			local alpha = v + ((fadeTarget - v) * pct)
 			total = total + 1
 			if not k.SetAlpha then
-				parent:Print("No SetAlpha for", k:GetName())
+				print("|cFF33FF99SexyMap|r: No SetAlpha for", k:GetName())
 			end
 
 			k:SetAlpha(alpha)

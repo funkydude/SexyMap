@@ -270,7 +270,7 @@ do
 
 	function updateWatchFrameHeight()
 		-- local ofrom, frm, oto = WatchFrame:GetPoint(1)
-		-- print("Got point for watchframe:", ofrom, oto)
+		-- print("|cFF33FF99SexyMap|r: Got point for watchframe:", ofrom, oto)
 		-- if ofrom and ofrom:match("BOTTOM") then
 			local highest, lowest = -9999, 9999
 			for i = 1, 200 do
