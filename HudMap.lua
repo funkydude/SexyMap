@@ -260,6 +260,7 @@ function mod:OnInitialize()
 		db.setNewScale = true
 	end
 
+	SexyMapHudMap.module = self
 	SexyMapHudMap:SetPoint("CENTER", UIParent, "CENTER")
 	HudMapCluster:SetFrameStrata("BACKGROUND")
 	HudMapCluster:SetAlpha(db.alpha)
@@ -268,6 +269,8 @@ function mod:OnInitialize()
 
 	setmetatable(HudMapCluster, { __index = SexyMapHudMap })
 
+	BINDING_HEADER_SexyMap = "SexyMap"
+	BINDING_NAME_TOGGLESEXYMAPGATHERMAP = "Toggle HudMap On/Off"
 	gatherCircle = HudMapCluster:CreateTexture()
 	gatherCircle:SetTexture([[SPELLS\CIRCLE.BLP]])
 	gatherCircle:SetBlendMode("ADD")
