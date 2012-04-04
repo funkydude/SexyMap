@@ -5,7 +5,6 @@ local modName = "ZoneText"
 local media = LibStub("LibSharedMedia-3.0")
 local mod = addon.SexyMap:NewModule(modName, "AceEvent-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
-local db
 
 local hideValues = {
 	["always"] = L["Always"],
@@ -26,7 +25,7 @@ local options = {
 			step = 1,
 			bigStep = 5,
 			get = function() return MinimapZoneTextButton:GetWidth() end,
-			set = function(info, v) db.width = v; mod:Update() end
+			set = function(info, v) mod.db.profile.width = v; mod:Update() end
 		},
 		font = {
 			type = "select",
@@ -34,9 +33,9 @@ local options = {
 			order = 1,
 			dialogControl = "LSM30_Font",
 			values = AceGUIWidgetLSMlists.font,
-			get = function() return db.font end,
+			get = function() return mod.db.profile.font end,
 			set = function(info, v)
-				db.font = v
+				mod.db.profile.font = v
 				mod:Update()
 			end
 		},
@@ -48,9 +47,9 @@ local options = {
 			max = 30,
 			step = 1,
 			bigStep = 1,
-			get = function() return db.fontsize end,
+			get = function() return mod.db.profile.fontsize or select(2, MinimapZoneText:GetFont()) end,
 			set = function(info, v)
-				db.fontsize = v
+				mod.db.profile.fontsize = v
 				mod:Update()
 			end
 		},
@@ -60,10 +59,14 @@ local options = {
 			order = 3,
 			hasAlpha = true,
 			get = function()
-				return db.fontColor.r, db.fontColor.g, db.fontColor.b, db.fontColor.a
+				if mod.db.profile.fontColor.r then
+					return mod.db.profile.fontColor.r, mod.db.profile.fontColor.g, mod.db.profile.fontColor.b, mod.db.profile.fontColor.a
+				else
+					return MinimapZoneText:GetTextColor()
+				end
 			end,
 			set = function(info, r, g, b, a)
-				db.fontColor.r, db.fontColor.g, db.fontColor.b, db.fontColor.a = r, g, b, a
+				mod.db.profile.fontColor.r, mod.db.profile.fontColor.g, mod.db.profile.fontColor.b, mod.db.profile.fontColor.a = r, g, b, a
 				mod:Update()
 			end
 		},
@@ -75,8 +78,8 @@ local options = {
 			max = 250,
 			step = 1,
 			bigStep = 5,
-			get = function() return db.xOffset end,
-			set = function(info, v) db.xOffset = v; mod:Update() end
+			get = function() return mod.db.profile.xOffset end,
+			set = function(info, v) mod.db.profile.xOffset = v; mod:Update() end
 		},
 		yOffset = {
 			type = "range",
@@ -86,8 +89,8 @@ local options = {
 			max = 250,
 			step = 1,
 			bigStep = 5,
-			get = function() return db.yOffset end,
-			set = function(info, v) db.yOffset = v; mod:Update() end
+			get = function() return mod.db.profile.yOffset end,
+			set = function(info, v) mod.db.profile.yOffset = v; mod:Update() end
 		},
 		bgColor = {
 			type = "color",
@@ -95,10 +98,10 @@ local options = {
 			order = 7,
 			hasAlpha = true,
 			get = function()
-				return db.bgColor.r, db.bgColor.g, db.bgColor.b, db.bgColor.a
+				return mod.db.profile.bgColor.r, mod.db.profile.bgColor.g, mod.db.profile.bgColor.b, mod.db.profile.bgColor.a
 			end,
 			set = function(info, r, g, b, a)
-				db.bgColor.r, db.bgColor.g, db.bgColor.b, db.bgColor.a = r, g, b, a
+				mod.db.profile.bgColor.r, mod.db.profile.bgColor.g, mod.db.profile.bgColor.b, mod.db.profile.bgColor.a = r, g, b, a
 				mod:Update()
 			end
 		},
@@ -108,10 +111,10 @@ local options = {
 			order = 8,
 			hasAlpha = true,
 			get = function()
-				return db.borderColor.r, db.borderColor.g, db.borderColor.b, db.borderColor.a
+				return mod.db.profile.borderColor.r, mod.db.profile.borderColor.g, mod.db.profile.borderColor.b, mod.db.profile.borderColor.a
 			end,
 			set = function(info, r, g, b, a)
-				db.borderColor.r, db.borderColor.g, db.borderColor.b, db.borderColor.a = r, g, b, a
+				mod.db.profile.borderColor.r, mod.db.profile.borderColor.g, mod.db.profile.borderColor.b, mod.db.profile.borderColor.a = r, g, b, a
 				mod:Update()
 			end
 		},
@@ -121,10 +124,10 @@ local options = {
 			order = 9,
 			values = hideValues,
 			get = function(info, v)
-				return db.show == v
+				return mod.db.profile.show == v
 			end,
 			set = function(info, v)
-				db.show = v
+				mod.db.profile.show = v
 				mod:SetOnHover()
 			end
 		},
@@ -156,7 +159,6 @@ function mod:OnInitialize()
 end
 
 function mod:OnEnable()
-	db = self.db.profile
 	self:Update()
 	self:SetOnHover()
 	self:RegisterEvent("ZONE_CHANGED")
@@ -168,28 +170,29 @@ function mod:SetOnHover()
 	parent:UnregisterHoverButton(MinimapZoneTextButton)
 	MinimapZoneTextButton:Show()
 	MinimapZoneTextButton:SetAlpha(1)
-	if db.show == "never" then
+	if mod.db.profile.show == "never" then
 		MinimapZoneTextButton:Hide()
-	elseif db.show == "hover" then
+	elseif mod.db.profile.show == "hover" then
 		parent:RegisterHoverButton(MinimapZoneTextButton)
 	end
 end
 
 function mod:Update()
 	MinimapZoneTextButton:ClearAllPoints()
-	MinimapZoneTextButton:SetPoint("BOTTOM", Minimap, "TOP", db.xOffset, db.yOffset)
-	MinimapZoneTextButton:SetBackdropColor(db.bgColor.r, db.bgColor.g, db.bgColor.b, db.bgColor.a)
-	MinimapZoneTextButton:SetBackdropBorderColor(db.borderColor.r, db.borderColor.g, db.borderColor.b, db.borderColor.a)
+	MinimapZoneTextButton:SetPoint("BOTTOM", Minimap, "TOP", mod.db.profile.xOffset, mod.db.profile.yOffset)
+	MinimapZoneTextButton:SetBackdropColor(mod.db.profile.bgColor.r, mod.db.profile.bgColor.g, mod.db.profile.bgColor.b, mod.db.profile.bgColor.a)
+	MinimapZoneTextButton:SetBackdropBorderColor(mod.db.profile.borderColor.r, mod.db.profile.borderColor.g, mod.db.profile.borderColor.b, mod.db.profile.borderColor.a)
 	local a, b, c = MinimapZoneText:GetFont()
-	MinimapZoneText:SetFont(db.font and media:Fetch("font", db.font) or a, db.fontsize or b, c)
+	MinimapZoneText:SetFont(mod.db.profile.font and media:Fetch("font", mod.db.profile.font) or a, mod.db.profile.fontsize or b, c)
 	self:ZONE_CHANGED()
 end
 
 function mod:ZONE_CHANGED()
-	local width = max(MinimapZoneText:GetStringWidth() * 1.3, db.width or 0)
+	local width = max(MinimapZoneText:GetStringWidth() * 1.3, mod.db.profile.width or 0)
 	MinimapZoneTextButton:SetHeight(MinimapZoneText:GetStringHeight() + 10)
 	MinimapZoneTextButton:SetWidth(width)
-	if db.fontColor.r then
-		MinimapZoneText:SetTextColor(db.fontColor.r, db.fontColor.g, db.fontColor.b, db.fontColor.a)
+	if mod.db.profile.fontColor.r then
+		MinimapZoneText:SetTextColor(mod.db.profile.fontColor.r, mod.db.profile.fontColor.g, mod.db.profile.fontColor.b, mod.db.profile.fontColor.a)
 	end
 end
+
