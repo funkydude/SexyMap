@@ -4,7 +4,7 @@ local parent = addon.SexyMap
 local modName = "ZoneText"
 local media = LibStub("LibSharedMedia-3.0")
 local mod = addon.SexyMap:NewModule(modName, "AceEvent-3.0")
-local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
+local L = addon.L
 
 local hideValues = {
 	["always"] = L["Always"],

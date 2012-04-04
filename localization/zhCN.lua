@@ -1,8 +1,7 @@
-﻿-- This file is script-generated and should not be manually edited. 
--- Localizers may copy this file to edit as necessary. 
-local AceLocale = LibStub:GetLibrary("AceLocale-3.0") 
-local L = AceLocale:NewLocale("SexyMap", "zhCN", false) 
-if not L then return end 
+
+if GetLocale() ~= "zhCN" then return end
+local _, sm = ...
+local L = sm.L
  
 -- ./AutoZoom.lua
 L["Autozoom out after..."] = "自动缩放"

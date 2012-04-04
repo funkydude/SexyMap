@@ -3,7 +3,7 @@ local _, addon = ...
 local parent = addon.SexyMap
 local modName = "Borders"
 local mod = addon.SexyMap:NewModule(modName)
-local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
+local L = addon.L
 local db
 local textures = {}
 local texturePool = {}

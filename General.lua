@@ -2,7 +2,7 @@
 local _, addon = ...
 local parent = addon.SexyMap
 local mod = addon.SexyMap:NewModule("General", "AceTimer-3.0", "AceEvent-3.0", "AceHook-3.0")
-local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
+local L = addon.L
 
 local db
 

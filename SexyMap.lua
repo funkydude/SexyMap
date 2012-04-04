@@ -2,7 +2,7 @@
 local sexymap, addon = ...
 addon.SexyMap = LibStub("AceAddon-3.0"):NewAddon(sexymap, "AceEvent-3.0", "AceHook-3.0", "AceTimer-3.0")
 local mod = addon.SexyMap
-local L = LibStub("AceLocale-3.0"):GetLocale(sexymap)
+local L = addon.L
 
 local _G = getfenv(0)
 local pairs, ipairs, type, select = _G.pairs, _G.ipairs, _G.type, _G.select

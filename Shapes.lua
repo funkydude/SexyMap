@@ -3,7 +3,7 @@ local _, addon = ...
 local parent = addon.SexyMap
 local modName = "Shapes"
 local mod = addon.SexyMap:NewModule(modName)
-local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
+local L = addon.L
 local db
 local CallbackHandler = LibStub:GetLibrary("CallbackHandler-1.0")
 mod.callbacks = CallbackHandler:New(mod)

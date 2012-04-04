@@ -3,7 +3,7 @@ local _, addon = ...
 local parent = addon.SexyMap
 local modName = "AutoZoom"
 local mod = addon.SexyMap:NewModule(modName, "AceTimer-3.0")
-local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
+local L = addon.L
 
 local options = {
 	type = "group",

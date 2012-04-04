@@ -3,7 +3,7 @@ local _, addon = ...
 local parent = addon.SexyMap
 local modName = "Ping"
 local mod = addon.SexyMap:NewModule(modName, "AceEvent-3.0", "AceTimer-3.0")
-local L = LibStub("AceLocale-3.0"):GetLocale("SexyMap")
+local L = addon.L
 local db
 
 local pingFrame
