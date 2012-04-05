@@ -84,7 +84,8 @@ local anim = animGroup:CreateAnimation("Alpha")
 animGroup:SetScript("OnFinished", function() pingFrame:Hide() end)
 anim:SetChange(-1)
 anim:SetOrder(1)
-anim:SetDuration(6)
+anim:SetDuration(3)
+anim:SetStartDelay(3)
 
 pingFrame:SetScript("OnEvent", function(_, _, unit)
 	local color = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
