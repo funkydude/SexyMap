@@ -80,7 +80,7 @@ pingFrame.name:SetAllPoints()
 pingFrame:Hide()
 
 local animGroup = pingFrame:CreateAnimationGroup()
-local anim = animGroup:CreateAnimation()
+local anim = animGroup:CreateAnimation("Alpha")
 animGroup:SetScript("OnFinished", function() pingFrame:Hide() end)
 anim:SetChange(-1)
 anim:SetOrder(1)
