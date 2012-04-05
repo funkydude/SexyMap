@@ -2,7 +2,7 @@
 local _, addon = ...
 local parent = addon.SexyMap
 local modName = "Coordinates"
-local mod = addon.SexyMap:NewModule(modName, "AceTimer-3.0")
+local mod = addon.SexyMap:NewModule(modName)
 local L = addon.L
 
 local options = {
@@ -54,7 +54,6 @@ local options = {
 			set = function(info, v)
 				mod.db.profile.fontSize = v
 				mod:Update()
-				mod:UpdateCoords()
 			end
 		},
 		fontColor = {
@@ -150,6 +149,7 @@ function mod:OnEnable()
 		coordsText = coordFrame:CreateFontString(nil, nil, "GameFontNormalSmall")
 		coordsText:SetPoint("CENTER", coordFrame, "CENTER")
 		coordsText:SetJustifyH("CENTER")
+		coordsText:SetText("00.0, 00.0")
 
 		coordFrame:SetMovable(true)
 		coordFrame:EnableMouse()
@@ -175,8 +175,18 @@ function mod:OnEnable()
 			end
 		end)
 
-		self:UpdateCoords()
-		self:Update()
+		local animgroup = coordFrame:CreateAnimationGroup()
+		local anim = animgroup:CreateAnimation()
+		animgroup.GetPlayerMapPosition = GetPlayerMapPosition
+		animgroup.text = coordsText
+		animgroup:SetScript("OnLoop", function(self)
+			local x, y = self.GetPlayerMapPosition"player"
+			self.text:SetFormattedText("%.1f, %.1f", x*100, y*100)
+		end)
+		anim:SetOrder(1)
+		anim:SetDuration(0.1)
+		animgroup:SetLooping("REPEAT")
+		animgroup:Play()
 	end
 	if self.db.profile.x then
 		coordFrame:ClearAllPoints()
@@ -186,22 +196,12 @@ function mod:OnEnable()
 	end
 
 	coordFrame:Show()
-	self:ScheduleRepeatingTimer("UpdateCoords", 0.2)
+	self:Update()
 end
 
 function mod:OnDisable()
 	if coordFrame then
-		self:CancelAllTimers()
 		coordFrame:Hide()
-	end
-end
-
-do
-	local GetPlayerMapPosition = GetPlayerMapPosition
-	local txt = "%.1f, %.1f"
-	function mod:UpdateCoords()
-		local x, y = GetPlayerMapPosition"player"
-		coordsText:SetFormattedText(txt, x*100, y*100)
 	end
 end
 
