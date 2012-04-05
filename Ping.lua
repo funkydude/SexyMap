@@ -2,16 +2,21 @@
 local _, addon = ...
 local parent = addon.SexyMap
 local modName = "Ping"
-local mod = addon.SexyMap:NewModule(modName, "AceEvent-3.0", "AceTimer-3.0")
+local mod = addon.SexyMap:NewModule(modName)
 local L = addon.L
-local db
-
 local pingFrame
+
+local defaults = {
+	profile = {
+		showPing = true,
+		showAt = "map"
+	}
+}
 
 local options = {
 	type = "group",
 	name = modName,
-	disabled = function() return not db.showPing end,
+	disabled = function() return not mod.db.profile.showPing end,
 	args = {
 		show = {
 			type = "toggle",
@@ -19,10 +24,15 @@ local options = {
 			name = L["Show who pinged"],
 			width = "full",
 			get = function()
-				return db.showPing
+				return mod.db.profile.showPing
 			end,
 			set = function(info, v)
-				db.showPing = v
+				mod.db.profile.showPing = v
+				if v then
+					pingFrame:RegisterEvent("MINIMAP_PING")
+				else
+					pingFrame:UnregisterEvent("MINIMAP_PING")
+				end
 			end,
 			disabled = false,
 		},
@@ -31,10 +41,10 @@ local options = {
 			order = 2,
 			name = L["Show inside chat"],
 			set = function(info, v)
-				db.showAt = "chat"
+				mod.db.profile.showAt = "chat"
 			end,
 			get = function(info)
-				return db.showAt == "chat" and true or false
+				return mod.db.profile.showAt == "chat" and true or false
 			end,
 		},
 		showMap = {
@@ -42,69 +52,59 @@ local options = {
 			order = 3,
 			name = L["Show on minimap"],
 			set = function(info, v)
-				db.showAt = "map"
+				mod.db.profile.showAt = "map"
 			end,
 			get = function(info)
-				return db.showAt == "map" and true or false
+				return mod.db.profile.showAt == "map" and true or false
 			end,
 		},
 	}
 }
 
-local defaults = {
-	profile = {
-		showPing = true,
-		showAt = "map"
-	}
-}
+pingFrame = CreateFrame("Frame", "SexyMapPingFrame", Minimap)
+pingFrame:SetBackdrop({
+	bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+	insets = {left = 2, top = 2, right = 2, bottom = 2},
+	edgeSize = 12,
+	tile = true
+})
+pingFrame:SetBackdropColor(0,0,0,0.8)
+pingFrame:SetBackdropBorderColor(0,0,0,0.6)
+pingFrame:SetHeight(20)
+pingFrame:SetWidth(100)
+pingFrame:SetPoint("TOP", Minimap, "TOP", 0, 15)
+pingFrame:SetFrameStrata("HIGH")
+pingFrame.name = pingFrame:CreateFontString(nil, nil, "GameFontNormalSmall")
+pingFrame.name:SetAllPoints()
+pingFrame:Hide()
+
+local animGroup = pingFrame:CreateAnimationGroup()
+local anim = animGroup:CreateAnimation()
+animGroup:SetScript("OnFinished", function() pingFrame:Hide() end)
+anim:SetChange(-1)
+anim:SetOrder(1)
+anim:SetDuration(6)
+
+pingFrame:SetScript("OnEvent", function(_, _, unit)
+	local color = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
+	if mod.db.profile.showAt == "chat" then
+		DEFAULT_CHAT_FRAME:AddMessage(("Ping: |cFF%02x%02x%02x%s|r"):format(color.r * 255, color.g * 255, color.b * 255, UnitName(unit)))
+	else
+		pingFrame.name:SetFormattedText("|cFF%02x%02x%02x%s|r", color.r * 255, color.g * 255, color.b * 255, UnitName(unit))
+		pingFrame:SetWidth(pingFrame.name:GetStringWidth() + 14)
+		pingFrame:SetHeight(pingFrame.name:GetStringHeight() + 10)
+		animGroup:Stop()
+		pingFrame:Show()
+		animGroup:Play()
+	end
+end)
+
 function mod:OnInitialize()
 	self.db = parent.db:RegisterNamespace(modName, defaults)
-	db = self.db.profile
 	parent:RegisterModuleOptions(modName, options, modName)
-	pingFrame = CreateFrame("Frame", "SexyMapPingFrame", Minimap)
-	pingFrame:SetBackdrop({
-		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
-		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-		insets = {left = 2, top = 2, right = 2, bottom = 2},
-		edgeSize = 12,
-		tile = true
-	})
-	pingFrame:SetBackdropColor(0,0,0,0.8)
-	pingFrame:SetBackdropBorderColor(0,0,0,0.6)
-	pingFrame:SetHeight(20)
-	pingFrame:SetWidth(100)
-	pingFrame:SetPoint("TOP", Minimap, "TOP", 0, 15)
-	pingFrame:SetFrameStrata("HIGH")
-	pingFrame.name = pingFrame:CreateFontString(nil, nil, "GameFontNormalSmall")
-	pingFrame.name:SetAllPoints()
-	pingFrame:Hide()
-end
-
-function mod:OnEnable()
-	db = self.db.profile
-	self:RegisterEvent("MINIMAP_PING")
-end
-
--- MINIMAP_PING can fire twice at the same time, just a simple way of throttling it
-local lastX, lastY
-function mod:MINIMAP_PING(self, unit, x, y)
-	if( db.showPing and lastX ~= x and lastY ~= y ) then
-		lastX, lastY = x, y
-
-		local color = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
-		if db.showAt == "chat" then
-			DEFAULT_CHAT_FRAME:AddMessage(("Ping: |cFF%02x%02x%02x%s|r"):format(color.r * 255, color.g * 255, color.b * 255, UnitName(unit)))
-			pingFrame:Hide()
-		else
-			pingFrame.name:SetFormattedText("|cFF%02x%02x%02x%s|r", color.r * 255, color.g * 255, color.b * 255, UnitName(unit))
-			pingFrame:SetWidth(pingFrame.name:GetStringWidth() + 14)
-			pingFrame:SetHeight(pingFrame.name:GetStringHeight() + 10)
-			pingFrame:Show()
-			mod:ScheduleTimer("HidePingFrame", 3)
-		end
+	if self.db.profile.showPing then
+		pingFrame:RegisterEvent("MINIMAP_PING")
 	end
 end
 
-function mod:HidePingFrame()
-	pingFrame:Hide()
-end
