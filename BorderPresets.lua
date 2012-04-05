@@ -9,14 +9,14 @@ addon.SexyMap.borderPresets = {
 				["name"] = "Rune 1",
 				["b"] = 1,
 				["scale"] = 1.4,
-				["rotSpeed"] = -16,
+				["rotSpeed"] = -30,
 				["g"] = 0.4784313725490196,
 				["texture"] = "SPELLS\\AURARUNE256.BLP",
 			}, -- [1]
 			{
 				["a"] = 0.3799999952316284,
 				["r"] = 0.196078431372549,
-				["rotSpeed"] = 4,
+				["rotSpeed"] = 60,
 				["b"] = 1,
 				["scale"] = 2.1,
 				["name"] = "Rune 2",
@@ -245,12 +245,11 @@ addon.SexyMap.borderPresets = {
 		["borders"] = {
 			{
 				["a"] = 1,
-				["rotSpeed"] = -16,
 				["b"] = 1,
+				["rotSpeed"] = 0,
 				["scale"] = 1.4,
 				["g"] = 0.6862745098039216,
 				["name"] = "Rune 1",
-				["playerRotation"] = "normal",
 				["r"] = 0.5764705882352941,
 				["texture"] = "SPELLS\\AURARUNE256.BLP",
 			}, -- [1]
@@ -258,7 +257,6 @@ addon.SexyMap.borderPresets = {
 				["a"] = 0.3799999952316284,
 				["rotSpeed"] = 0,
 				["b"] = 1,
-				["playerRotation"] = "none",
 				["g"] = 0.6588235294117647,
 				["rotation"] = 105,
 				["name"] = "Rune 2",
@@ -277,7 +275,7 @@ addon.SexyMap.borderPresets = {
 			}, -- [3]
 			{
 				["a"] = 1,
-				["rotSpeed"] = -6,
+				["rotSpeed"] = -120,
 				["name"] = "Rune 3",
 				["b"] = 0.3529411764705882,
 				["scale"] = 1.65,
@@ -316,7 +314,7 @@ addon.SexyMap.borderPresets = {
 		["borders"] = {
 			{
 				["a"] = 1,
-				["rotSpeed"] = -8,
+				["rotSpeed"] = -32,
 				["name"] = "Rogue Rune 2",
 				["b"] = 0,
 				["scale"] = 2.13,
@@ -429,7 +427,7 @@ addon.SexyMap.borderPresets = {
 			{
 				["a"] = 1,
 				["hNudge"] = 2,
-				["rotSpeed"] = 8,
+				["rotSpeed"] = 80,
 				["r"] = 0,
 				["scale"] = 1.17,
 				["g"] = 0.4745098039215686,
@@ -463,7 +461,7 @@ addon.SexyMap.borderPresets = {
 			{
 				["a"] = 0.7199999988079071,
 				["hNudge"] = 41,
-				["rotSpeed"] = 41,
+				["rotSpeed"] = 6,
 				["b"] = 1,
 				["scale"] = 1.22,
 				["g"] = 0.8705882352941177,
@@ -479,7 +477,7 @@ addon.SexyMap.borderPresets = {
 			{
 				["a"] = 0.2599999904632568,
 				["hNudge"] = -57,
-				["rotSpeed"] = -8,
+				["rotSpeed"] = -60,
 				["b"] = 0.05098039215686274,
 				["scale"] = 0.8400000000000001,
 				["g"] = 0.4156862745098039,
@@ -492,7 +490,7 @@ addon.SexyMap.borderPresets = {
 			{
 				["a"] = 0.1800000071525574,
 				["hNudge"] = 39,
-				["rotSpeed"] = 8,
+				["rotSpeed"] = 60,
 				["b"] = 0.1176470588235294,
 				["scale"] = 0.8700000000000001,
 				["g"] = 0.4313725490196079,
@@ -504,7 +502,7 @@ addon.SexyMap.borderPresets = {
 			{
 				["a"] = 0.1200000047683716,
 				["hNudge"] = 53,
-				["rotSpeed"] = -13,
+				["rotSpeed"] = 60,
 				["b"] = 0.7764705882352941,
 				["scale"] = 0.78,
 				["g"] = 1,
@@ -516,7 +514,7 @@ addon.SexyMap.borderPresets = {
 			{
 				["a"] = 0.09000003337860107,
 				["hNudge"] = -48,
-				["rotSpeed"] = -6,
+				["rotSpeed"] = -60,
 				["b"] = 0.4352941176470588,
 				["scale"] = 0.8500000000000001,
 				["g"] = 1,
@@ -527,7 +525,7 @@ addon.SexyMap.borderPresets = {
 			}, -- [8]
 			{
 				["a"] = 0.14000004529953,
-				["rotSpeed"] = -14,
+				["rotSpeed"] = -20,
 				["name"] = "Nature Rune Large CCW",
 				["b"] = 0.07450980392156863,
 				["scale"] = 1.81,
@@ -537,7 +535,7 @@ addon.SexyMap.borderPresets = {
 			}, -- [9]
 			{
 				["a"] = 0.6599999964237213,
-				["rotSpeed"] = -1,
+				["rotSpeed"] = -300,
 				["b"] = 0.01568627450980392,
 				["scale"] = 1.45,
 				["g"] = 0.4666666666666667,
@@ -549,7 +547,7 @@ addon.SexyMap.borderPresets = {
 			}, -- [10]
 			{
 				["a"] = 0.5800000131130219,
-				["rotSpeed"] = 2,
+				["rotSpeed"] = 240,
 				["b"] = 0.06666666666666667,
 				["scale"] = 1.46,
 				["g"] = 0.3098039215686275,
@@ -641,7 +639,7 @@ addon.SexyMap.borderPresets = {
 			}, -- [4]
 			{
 				["a"] = 1,
-				["rotSpeed"] = 9,
+				["rotSpeed"] = 60,
 				["b"] = 1,
 				["scale"] = 1.79,
 				["g"] = 1,
@@ -655,7 +653,7 @@ addon.SexyMap.borderPresets = {
 			}, -- [5]
 			{
 				["a"] = 0.75,
-				["rotSpeed"] = 10,
+				["rotSpeed"] = 40,
 				["b"] = 1,
 				["scale"] = 1.12,
 				["g"] = 0.5568627450980392,
@@ -669,7 +667,7 @@ addon.SexyMap.borderPresets = {
 			{
 				["a"] = 0.3700000047683716,
 				["name"] = "Edge Radiance",
-				["rotSpeed"] = -1,
+				["rotSpeed"] = -300,
 				["b"] = 0,
 				["scale"] = 1.49,
 				["r"] = 1,

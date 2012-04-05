@@ -9,7 +9,7 @@ local textures = {}
 local texturePool = {}
 local rotateTextures = {}
 local defaultSize = 180
-local rotFrame = CreateFrame("Frame")
+--local rotFrame = CreateFrame("Frame")
 local MinimapBackdrop
 local media = LibStub("LibSharedMedia-3.0")
 local Shape
@@ -29,11 +29,7 @@ local blendModes = {
 	ADD = L["Add Blend (additive)"],
 }
 
-local _G = getfenv(0)
-local tinsert, tremove, pairs, ipairs, type, select = _G.tinsert, _G.tremove, _G.pairs, _G.ipairs, _G.type, _G.select
-local sin, cos = _G.sin, _G.cos
-
-local Minimap, MinimapCluster, MinimapBorder = _G.Minimap, _G.MinimapCluster, _G.MinimapBorder
+local Minimap, MinimapCluster, MinimapBorder = Minimap, MinimapCluster, MinimapBorder
 
 local presets, userPresets = {}, {}
 
@@ -50,11 +46,9 @@ local function deepCopyHash(t)
 	return nt
 end
 
-local GetPlayerBearing = _G.GetPlayerFacing
-
 local function RotateTexture(self, inc, set)
 	if type(inc) == "string" then
-		local bearing = GetPlayerBearing()
+		local bearing = GetPlayerFacing()
 		if inc == "normal" then
 			bearing = bearing * -1
 		end
@@ -580,10 +574,10 @@ local borderOptions = {
 	},
 	rotation = {
 		type = "range",
-		name = L["Rotation Speed"],
-		desc = L["Speed to rotate the texture at. A setting of 0 turns off rotation."],
-		min = -120,
-		max = 120,
+		name = L["Rotation Speed (seconds)"],
+		desc = L["The time it takes (in seconds) to complete one rotation. A setting of 0 turns off rotation."],
+		min = -300,
+		max = 300,
 		step = 1,
 		bigStep = 1,
 		order = 114,
@@ -630,7 +624,7 @@ local borderOptions = {
 			rotateTextures[tex] = nil
 		end
 	},
-	playerRotation = {
+	--[[playerRotation = {
 		type = "multiselect",
 		name = L["Match player rotation"],
 		values = {
@@ -652,7 +646,7 @@ local borderOptions = {
 			end
 			tex.settings.playerRotation = v
 		end
-	},
+	},]]
 	color = {
 		type = "color",
 		name = L["Texture tint"],
@@ -807,7 +801,7 @@ function mod:OnInitialize()
 	MinimapBackdrop:SetHeight(Minimap:GetHeight())
 end
 
-local updateTime = 1/60
+--[[local updateTime = 1/60
 local totalTime = 0
 local function updateRotations(self, t)
 	totalTime = totalTime + t
@@ -823,7 +817,7 @@ local function updateRotations(self, t)
 			totalTime = totalTime - updateTime
 		end
 	end
-end
+end]]
 
 function mod:OnEnable()
 	db = self.db.profile
@@ -939,9 +933,12 @@ function mod:ClearWidgets()
 		textures[k] = nil
 	end
 	for k, v in pairs(rotateTextures) do
+		local getAnim = k:GetAnimationGroups()
+		if getAnim then
+			getAnim:Stop()
+		end
 		rotateTextures[k] = nil
 	end
-	rotFrame:SetScript("OnUpdate", nil)
 end
 
 function mod:ApplySettings()
@@ -956,9 +953,38 @@ function mod:ApplySettings()
 	end
 
 	if next(rotateTextures) then
-		rotFrame:SetScript("OnUpdate", updateRotations)
-	else
-		rotFrame:SetScript("OnUpdate", nil)
+		for k, v in pairs(rotateTextures) do
+			if type(v) == "number" then
+				local getAnim = k:GetAnimationGroups()
+				if getAnim then
+					getAnim:Stop()
+					local anim = getAnim:GetAnimations()
+					if v > 0 then
+						anim:SetDegrees(-360)
+						anim:SetDuration(v)
+						getAnim:Play()
+					elseif v < 0 then
+						anim:SetDegrees(360)
+						anim:SetDuration(-v)
+						getAnim:Play()
+					end
+				else
+					local animgroup = k:CreateAnimationGroup()
+					local anim = animgroup:CreateAnimation("Rotation")
+					anim:SetOrder(1)
+					animgroup:SetLooping("REPEAT")
+					if v > 0 then
+						anim:SetDegrees(-360)
+						anim:SetDuration(v)
+						animgroup:Play()
+					elseif v < 0 then
+						anim:SetDegrees(360)
+						anim:SetDuration(-v)
+						animgroup:Play()
+					end
+				end
+			end
+		end
 	end
 
 	self:UpdateBorder()
@@ -988,3 +1014,4 @@ function mod:UpdateBackdrop()
 		MinimapBackdrop:Hide()
 	end
 end
+
