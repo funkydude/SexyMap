@@ -287,7 +287,6 @@ function mod:OnEnable()
 	db = self.db.profile
 	local gotLast = false
 
-	self.findClock = self:ScheduleRepeatingTimer("FindClock", 0.5)
 	self:Update()
 
 	-- MiniMapWorldMapButton:SetParent(Minimap)
@@ -347,13 +346,6 @@ function mod:CaptureButtons()
 			mod:addButtonOptions(k, v)
 		end
 		self:Update()
-	end
-end
-
-function mod:FindClock()
-	if _G.TimeManagerClockButton then
-		self:CancelTimer(self.findClock, true)
-		self.findClock = nil
 	end
 end
 
