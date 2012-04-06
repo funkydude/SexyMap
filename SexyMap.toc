@@ -29,7 +29,6 @@ General.lua
 Shapes.lua
 
 # Other modules
-AutoZoom.lua
 Buttons.lua
 BorderPresets.lua
 Borders.lua
