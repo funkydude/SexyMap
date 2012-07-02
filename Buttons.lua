@@ -401,6 +401,7 @@ do
 		local mx, my = Minimap:GetCenter()
 		if not mx or not my or not bx or not by then return 0 end
 		local h, w = (by - my), (bx - mx)
+		if w == 0 then w = 0.001 end
 		local angle = atan(h / w)
 		if w < 0 then
 			angle = angle + 180

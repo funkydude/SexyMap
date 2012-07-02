@@ -11,12 +11,6 @@ local min = _G.math.min
 local MinimapCluster = _G.MinimapCluster
 local GetMouseFocus = _G.GetMouseFocus
 
-local options = {
-	type = "group",
-	args = {}
-}
-mod.options = options
-
 local defaults = {
 	profile = {}
 }
@@ -29,11 +23,8 @@ mod.backdrop = {
 	tile = true
 }
 
-local optionFrames = {}
-local ACD3 = LibStub("AceConfigDialog-3.0")
 function mod:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("SexyMapDB", defaults)
-	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(sexymap, options)
 
 	-- Configure Slash Handler
 	SlashCmdList[sexymap] = function() InterfaceOptionsFrame_OpenToCategory(sexymap) end
@@ -72,14 +63,9 @@ function mod:HookAll(frame, script, ...)
 	end
 end
 
-function mod:OpenConfig(name)
-	InterfaceOptionsFrame_OpenToCategory(optionFrames.Profiles)
-	InterfaceOptionsFrame_OpenToCategory(optionFrames[name] or optionFrames.default)
-end
-
 function mod.Minimap_OnClick(frame, button)
 	if button == "RightButton" and mod:GetModule("General").db.profile.rightClickToConfig then
-		mod:OpenConfig()
+		InterfaceOptionsFrame_OpenToCategory(sexymap)
 	else
 		Minimap_OnClick(frame, button)
 	end
@@ -89,11 +75,12 @@ function mod:OnDisable()
 end
 
 function mod:RegisterModuleOptions(name, optionTbl, displayName)
-	options.args[name] = (type(optionTbl) == "function") and optionTbl() or optionTbl
-	if not optionFrames.default then
-		optionFrames.default = ACD3:AddToBlizOptions(sexymap, nil, nil, name)
+	if name == "General" then
+		LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(sexymap, optionTbl)
+		LibStub("AceConfigDialog-3.0"):AddToBlizOptions(sexymap)
 	else
-		optionFrames[name] = ACD3:AddToBlizOptions(sexymap, displayName, sexymap, name)
+		LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(sexymap..name, optionTbl)
+		LibStub("AceConfigDialog-3.0"):AddToBlizOptions(sexymap..name, displayName, sexymap)
 	end
 end
 

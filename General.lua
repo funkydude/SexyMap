@@ -121,7 +121,7 @@ mod.options = options
 function mod:OnInitialize()
 	self.db = parent.db:RegisterNamespace("Movers", defaults)
 	db = self.db.profile
-	parent:RegisterModuleOptions("Movers", options, "Movers")
+	parent:RegisterModuleOptions("General", options, "General")
 
 	MinimapBorderTop:Hide()
 	Minimap:RegisterForDrag("LeftButton")
