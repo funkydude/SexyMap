@@ -2,7 +2,7 @@
 local _, addon = ...
 local parent = addon.SexyMap
 local modName = "Fader"
-local mod = addon.SexyMap:NewModule(modName, "AceTimer-3.0", "AceHook-3.0")
+local mod = addon.SexyMap:NewModule(modName, "AceHook-3.0")
 local L = addon.L
 local db
 
@@ -117,27 +117,33 @@ do
 		faderFrame:SetScript("OnUpdate", fade)
 	end
 
+	local updateTimer
 	function mod:OnEnable()
 		self:HookAll(MinimapCluster, "OnEnter", MinimapCluster:GetChildren())
 		startFade(MinimapCluster, 0.2, db.normalOpacity)
+		if not updateTimer then
+			updateTimer = CreateFrame("Frame"):CreateAnimationGroup()
+			local anim = updateTimer:CreateAnimation()
+			updateTimer:SetScript("OnLoop", self.CheckExited)
+			anim:SetOrder(1)
+			anim:SetDuration(0.1)
+			updateTimer:SetLooping("REPEAT")
+		end
 	end
 
 	function mod:OnDisable()
 		self:UnhookAll(MinimapCluster, "OnEnter", MinimapCluster:GetChildren())
 		startFade(MinimapCluster, 0.2, 1)
-		self:CancelTimer(self.checkExit, true)
-		self.checkExit = nil
+		updateTimer:Stop()
 	end
 
 	function mod:OnEnter()
-		if self.checkExit then return end
-		self.checkExit = self:ScheduleRepeatingTimer("CheckExited", 0.1)
+		updateTimer:Play()
 		startFade(MinimapCluster, 0.2, db.hoverOpacity)
 	end
 
 	function mod:OnLeave()
-		self:CancelTimer(self.checkExit, true)
-		self.checkExit = nil
+		updateTimer:Stop()
 		startFade(MinimapCluster, 0.2, db.normalOpacity)
 	end
 
@@ -149,7 +155,7 @@ do
 				if p == MinimapCluster then return true end
 				p = p:GetParent()
 			end
-			self:OnLeave()
+			mod:OnLeave()
 		end
 	end
 end

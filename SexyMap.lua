@@ -1,6 +1,6 @@
 
 local sexymap, addon = ...
-addon.SexyMap = LibStub("AceAddon-3.0"):NewAddon(sexymap, "AceEvent-3.0", "AceHook-3.0", "AceTimer-3.0")
+addon.SexyMap = LibStub("AceAddon-3.0"):NewAddon(sexymap, "AceEvent-3.0", "AceHook-3.0")
 local mod = addon.SexyMap
 local L = addon.L
 
@@ -32,6 +32,7 @@ function mod:OnInitialize()
 	SLASH_SexyMap2 = "/sexymap"
 end
 
+local updateTimer, fadeTimer, fadeAnim
 function mod:OnEnable()
 	if _G.simpleMinimap then
 		print("|cFF33FF99SexyMap|r: |cffff0000Warning!|r simpleMinimap is enabled. SexyMap may not work correctly.")
@@ -48,6 +49,24 @@ function mod:OnEnable()
 	self.db.RegisterCallback(self, "OnProfileChanged", "ReloadAddon")
 	self.db.RegisterCallback(self, "OnProfileCopied", "ReloadAddon")
 	self.db.RegisterCallback(self, "OnProfileReset", "ReloadAddon")
+
+	-- Terrible, clean this up
+	if not updateTimer then
+		updateTimer = CreateFrame("Frame"):CreateAnimationGroup()
+		local anim = updateTimer:CreateAnimation()
+		updateTimer:SetScript("OnLoop", self.CheckExited)
+		anim:SetOrder(1)
+		anim:SetDuration(0.1)
+		updateTimer:SetLooping("REPEAT")
+	end
+	if not fadeTimer then
+		fadeTimer = CreateFrame("Frame"):CreateAnimationGroup()
+		fadeAnim = fadeTimer:CreateAnimation()
+		fadeTimer:SetScript("OnFinished", self.EnableFade)
+		fadeAnim:SetOrder(1)
+		fadeAnim:SetDuration(1)
+		fadeTimer:SetLooping("NONE")
+	end
 end
 
 function mod:ReloadAddon()
@@ -190,8 +209,7 @@ do
 	end
 
 	function mod:OnEnter()
-		if self.checkExit then return end
-		self.checkExit = self:ScheduleRepeatingTimer("CheckExited", 0.1)
+		updateTimer:Play()
 		fadeTarget = 1
 		for k, v in pairs(hoverButtons) do
 			if not hoverExempt[k] and (v == true or type(v) == "function" and v(k)) then
@@ -202,8 +220,7 @@ do
 	end
 
 	function mod:OnExit()
-		self:CancelTimer(self.checkExit, true)
-		self.checkExit = nil
+		updateTimer:Stop()
 
 		fadeTarget = 0
 		for k, v in pairs(hoverButtons) do
@@ -215,7 +232,7 @@ do
 	end
 
 	function mod:CheckExited()
-		if self.fadeDisabled then return end
+		if mod.fadeDisabled then return end
 		local f = GetMouseFocus()
 		if f then
 			local p = f:GetParent()
@@ -223,20 +240,21 @@ do
 				if p == MinimapCluster then return true end
 				p = p:GetParent()
 			end
-			self:OnExit()
+			mod:OnExit()
 		end
 	end
 
 	function mod:EnableFade()
-		self.fadeDisabled = false
+		mod.fadeDisabled = false
 	end
 
 	function mod:DisableFade(forHowLong)
 		self.fadeDisabled = true
 		self:OnEnter()
 		if forHowLong and forHowLong > 0 then
-			self:CancelTimer(self.enableFadeAfter, true)
-			self.enableFadeAfter = self:ScheduleTimer("EnableFade", forHowLong)
+			fadeTimer:Stop()
+			fadeAnim:SetDuration(forHowLong)
+			fadeTimer:Play()
 		end
 	end
 end
