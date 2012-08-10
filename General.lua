@@ -128,7 +128,11 @@ function mod:OnInitialize()
 	MinimapZoneTextButton:RegisterForDrag("LeftButton")
 	self:SetLock(db.lock)
 
-	self:SecureHook("updateContainerFrameAnchors", "CreateMoversAndSetMovables")
+	if updateContainerFrameAnchors then --XXX MoP compat
+		self:SecureHook("updateContainerFrameAnchors", "CreateMoversAndSetMovables")
+	else
+		self:SecureHook("UpdateContainerFrameAnchors", "CreateMoversAndSetMovables")
+	end
 end
 
 function mod:WatchFrame_Update(...)
