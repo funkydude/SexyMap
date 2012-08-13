@@ -197,7 +197,7 @@ local options = {
 										openTexBrowser = {
 											type = "execute",
 											name = function()
-												if GetAddOnInfo("TexBrowser") ~= nil then
+												if select(5, GetAddOnInfo("TexBrowser")) then
 													return L["Open TexBrowser"]
 												else
 													return L["TexBrowser Not Installed"]
@@ -212,7 +212,7 @@ local options = {
 												TexBrowser:OnEnable()
 											end,
 											disabled = function()
-												return GetAddOnInfo("TexBrowser") == nil
+												return not select(5, GetAddOnInfo("TexBrowser"))
 											end
 										},
 										textureSelect = {
@@ -453,7 +453,7 @@ local options = {
 }
 
 local function getLeaf(info)
-	return info.options.args[info[1]].args[info[2]].args[info[3]].args[info[4]]
+	return info.options.args[info[1]].args[info[2]].args[info[3]]
 end
 
 local function getTextureAndDB(info)
@@ -494,7 +494,7 @@ local borderOptions = {
 					break
 				end
 			end
-			info.options.args[info[1]].args[info[2]].args[info[3]].args[index] = nil
+			info.options.args[info[1]].args[info[2]].args[index] = nil
 			rotateTextures[textures[index]] = nil
 			tinsert(texturePool, textures[index])
 			textures[index]:Hide()
@@ -514,7 +514,7 @@ local borderOptions = {
 	openTexBrowser = {
 		type = "execute",
 		name = function()
-			if GetAddOnInfo("TexBrowser") ~= nil then
+			if select(5, GetAddOnInfo("TexBrowser")) then
 				return L["Open TexBrowser"]
 			else
 				return L["TexBrowser Not Installed"]
@@ -529,7 +529,7 @@ local borderOptions = {
 			TexBrowser:OnEnable()
 		end,
 		disabled = function()
-			return GetAddOnInfo("TexBrowser") == nil
+			return not select(5, GetAddOnInfo("TexBrowser"))
 		end
 	},
 	texture = {
