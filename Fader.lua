@@ -21,7 +21,12 @@ local options = {
 			end,
 			set = function(info, v)
 				db.enabled = v
-				return v and mod:Enable() or mod:Disable()
+				if v then
+					mod:Enable()
+				else
+					Minimap:SetAlpha(1)
+					mod:Disable()
+				end
 			end,
 			disabled = false,
 			order = 1,
