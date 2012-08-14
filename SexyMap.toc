@@ -5,7 +5,7 @@
 ## Notes-zhCN: 热辣小地图并包含一些性感计时器选项。
 ## Notes-zhTW: 熱辣小地圖并包含一些性感計時器選項。
 ## Author: Antiarc, Funkydude
-## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, Blizzard_TimeManager, TomTom, Capping
+## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, Blizzard_TimeManager, TomTom
 ## SavedVariables: SexyMapDB
 
 # Libraries, etc
