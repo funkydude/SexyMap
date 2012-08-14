@@ -3,14 +3,28 @@ local _, addon = ...
 local parent = addon.SexyMap
 local modName = "ZoneText"
 local media = LibStub("LibSharedMedia-3.0")
-local mod = addon.SexyMap:NewModule(modName, "AceEvent-3.0")
+local mod = addon.SexyMap:NewModule(modName)
 local L = addon.L
 
-local hideValues = {
-	["always"] = L["Always"],
-	["never"] = L["Never"],
-	["hover"] = L["On hover"]
-}
+local updateLayout = function()
+	MinimapZoneTextButton:ClearAllPoints()
+	MinimapZoneTextButton:SetPoint("BOTTOM", Minimap, "TOP", mod.db.profile.xOffset, mod.db.profile.yOffset)
+	MinimapZoneTextButton:SetBackdropColor(mod.db.profile.bgColor.r, mod.db.profile.bgColor.g, mod.db.profile.bgColor.b, mod.db.profile.bgColor.a)
+	MinimapZoneTextButton:SetBackdropBorderColor(mod.db.profile.borderColor.r, mod.db.profile.borderColor.g, mod.db.profile.borderColor.b, mod.db.profile.borderColor.a)
+	local a, b, c = MinimapZoneText:GetFont()
+	MinimapZoneText:SetFont(mod.db.profile.font and media:Fetch("font", mod.db.profile.font) or a, mod.db.profile.fontsize or b, c)
+
+	parent:UnregisterHoverButton(MinimapZoneTextButton)
+	MinimapZoneTextButton:Show()
+	MinimapZoneTextButton:SetAlpha(1)
+	if mod.db.profile.show == "never" then
+		MinimapZoneTextButton:Hide()
+	elseif mod.db.profile.show == "hover" then
+		parent:RegisterHoverButton(MinimapZoneTextButton)
+	end
+
+	mod:ZoneChanged()
+end
 
 local options = {
 	type = "group",
@@ -25,7 +39,7 @@ local options = {
 			step = 1,
 			bigStep = 5,
 			get = function() return MinimapZoneTextButton:GetWidth() end,
-			set = function(info, v) mod.db.profile.width = v; mod:Update() end
+			set = function(info, v) mod.db.profile.width = v updateLayout() end
 		},
 		font = {
 			type = "select",
@@ -36,7 +50,7 @@ local options = {
 			get = function() return mod.db.profile.font end,
 			set = function(info, v)
 				mod.db.profile.font = v
-				mod:Update()
+				updateLayout()
 			end
 		},
 		fontSize = {
@@ -50,7 +64,7 @@ local options = {
 			get = function() return mod.db.profile.fontsize or select(2, MinimapZoneText:GetFont()) end,
 			set = function(info, v)
 				mod.db.profile.fontsize = v
-				mod:Update()
+				updateLayout()
 			end
 		},
 		fontColor = {
@@ -67,7 +81,7 @@ local options = {
 			end,
 			set = function(info, r, g, b, a)
 				mod.db.profile.fontColor.r, mod.db.profile.fontColor.g, mod.db.profile.fontColor.b, mod.db.profile.fontColor.a = r, g, b, a
-				mod:Update()
+				updateLayout()
 			end
 		},
 		xOffset = {
@@ -79,7 +93,7 @@ local options = {
 			step = 1,
 			bigStep = 5,
 			get = function() return mod.db.profile.xOffset end,
-			set = function(info, v) mod.db.profile.xOffset = v; mod:Update() end
+			set = function(info, v) mod.db.profile.xOffset = v updateLayout() end
 		},
 		yOffset = {
 			type = "range",
@@ -90,7 +104,7 @@ local options = {
 			step = 1,
 			bigStep = 5,
 			get = function() return mod.db.profile.yOffset end,
-			set = function(info, v) mod.db.profile.yOffset = v; mod:Update() end
+			set = function(info, v) mod.db.profile.yOffset = v updateLayout() end
 		},
 		bgColor = {
 			type = "color",
@@ -102,7 +116,7 @@ local options = {
 			end,
 			set = function(info, r, g, b, a)
 				mod.db.profile.bgColor.r, mod.db.profile.bgColor.g, mod.db.profile.bgColor.b, mod.db.profile.bgColor.a = r, g, b, a
-				mod:Update()
+				updateLayout()
 			end
 		},
 		borderColor = {
@@ -115,79 +129,55 @@ local options = {
 			end,
 			set = function(info, r, g, b, a)
 				mod.db.profile.borderColor.r, mod.db.profile.borderColor.g, mod.db.profile.borderColor.b, mod.db.profile.borderColor.a = r, g, b, a
-				mod:Update()
+				updateLayout()
 			end
 		},
 		show = {
 			type = "multiselect",
 			name = ("Show %s..."):format("zone text"),
 			order = 9,
-			values = hideValues,
+			values = {
+				["always"] = L["Always"],
+				["never"] = L["Never"],
+				["hover"] = L["On hover"],
+			},
 			get = function(info, v)
 				return mod.db.profile.show == v
 			end,
 			set = function(info, v)
 				mod.db.profile.show = v
-				mod:SetOnHover()
+				updateLayout()
 			end
 		},
 	}
 }
 
-local defaults = {
-	profile = {
-		xOffset = 0,
-		yOffset = 0,
-		bgColor = {r = 0, g = 0, b = 0, a = 1},
-		borderColor = {r = 0, g = 0, b = 0, a = 1},
-		fontColor = {},
-		show = "always"
-	}
-}
 function mod:OnInitialize()
+	local defaults = {
+		profile = {
+			xOffset = 0,
+			yOffset = 0,
+			bgColor = {r = 0, g = 0, b = 0, a = 1},
+			borderColor = {r = 0, g = 0, b = 0, a = 1},
+			fontColor = {},
+			show = "always"
+		}
+	}
+
 	self.db = parent.db:RegisterNamespace(modName, defaults)
-	parent:RegisterModuleOptions(modName, options, "Zone Button")
-	-- MinimapToggleButton:ClearAllPoints()
-	-- MinimapToggleButton:SetParent(MinimapZoneTextButton)
-	-- MinimapToggleButton:SetPoint("LEFT", MinimapZoneTextButton, "RIGHT", -3, 0)
+	parent:RegisterModuleOptions(modName, options, "Zone Text")
 
 	MinimapZoneText:ClearAllPoints()
 	MinimapZoneText:SetAllPoints()
 	MinimapZoneTextButton:SetHeight(26)
 	MinimapZoneTextButton:SetBackdrop(parent.backdrop)
 	MinimapZoneTextButton:SetFrameStrata("MEDIUM")
+
+	updateLayout()
+	MinimapCluster:HookScript("OnEvent", self.ZoneChanged)
 end
 
-function mod:OnEnable()
-	self:Update()
-	self:SetOnHover()
-	self:RegisterEvent("ZONE_CHANGED")
-	self:RegisterEvent("ZONE_CHANGED_INDOORS", "ZONE_CHANGED")
-	self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "ZONE_CHANGED")
-end
-
-function mod:SetOnHover()
-	parent:UnregisterHoverButton(MinimapZoneTextButton)
-	MinimapZoneTextButton:Show()
-	MinimapZoneTextButton:SetAlpha(1)
-	if mod.db.profile.show == "never" then
-		MinimapZoneTextButton:Hide()
-	elseif mod.db.profile.show == "hover" then
-		parent:RegisterHoverButton(MinimapZoneTextButton)
-	end
-end
-
-function mod:Update()
-	MinimapZoneTextButton:ClearAllPoints()
-	MinimapZoneTextButton:SetPoint("BOTTOM", Minimap, "TOP", mod.db.profile.xOffset, mod.db.profile.yOffset)
-	MinimapZoneTextButton:SetBackdropColor(mod.db.profile.bgColor.r, mod.db.profile.bgColor.g, mod.db.profile.bgColor.b, mod.db.profile.bgColor.a)
-	MinimapZoneTextButton:SetBackdropBorderColor(mod.db.profile.borderColor.r, mod.db.profile.borderColor.g, mod.db.profile.borderColor.b, mod.db.profile.borderColor.a)
-	local a, b, c = MinimapZoneText:GetFont()
-	MinimapZoneText:SetFont(mod.db.profile.font and media:Fetch("font", mod.db.profile.font) or a, mod.db.profile.fontsize or b, c)
-	self:ZONE_CHANGED()
-end
-
-function mod:ZONE_CHANGED()
+function mod:ZoneChanged()
 	local width = max(MinimapZoneText:GetStringWidth() * 1.3, mod.db.profile.width or 0)
 	MinimapZoneTextButton:SetHeight(MinimapZoneText:GetStringHeight() + 10)
 	MinimapZoneTextButton:SetWidth(width)
