@@ -594,7 +594,16 @@ local borderOptions = {
 			local tex = getTextureAndDB(info)
 			tex.settings.rotSpeed = v
 			tex.rotSpeed = v
-			rotateTextures[tex] = v ~= 0 and v or nil
+			if v == 0 then
+				local getAnim = tex:GetAnimationGroups()
+				if getAnim then
+					getAnim:Stop()
+				end
+				rotateTextures[tex] = nil
+			else
+				rotateTextures[tex] = v
+				mod:StartRotations()
+			end
 		end
 	},
 	staticRotation = {
@@ -744,12 +753,18 @@ local borderOptions = {
 		set = function(info, v)
 			local tex = getTextureAndDB(info)
 			tex.settings.disableRotation = v
+			RotateTexture(tex, tex.settings.rotation or 0, true)
+			local getAnim = tex:GetAnimationGroups()
 			if v then
-				tex:SetTexCoord(0, 1, 0, 1)
+				if getAnim then
+					getAnim:Stop()
+				end
 				rotateTextures[tex] = nil
 			else
+				if getAnim then
+					getAnim:Play()
+				end
 				rotateTextures[tex] = tex.settings.rotSpeed
-				RotateTexture(tex, tex.settings.rotation or 0, true)
 			end
 		end
 	}
@@ -941,17 +956,7 @@ function mod:ClearWidgets()
 	end
 end
 
-function mod:ApplySettings()
-	self:ClearWidgets()
-
-	if db.shape then
-		Shape:ApplyShape(db.shape)
-	end
-
-	for _, v in ipairs(db.borders) do
-		self:CreateBorderFromParams(v)
-	end
-
+function mod:StartRotations()
 	if next(rotateTextures) then
 		for k, v in pairs(rotateTextures) do
 			if type(v) == "number" then
@@ -986,6 +991,20 @@ function mod:ApplySettings()
 			end
 		end
 	end
+end
+
+function mod:ApplySettings()
+	self:ClearWidgets()
+
+	if db.shape then
+		Shape:ApplyShape(db.shape)
+	end
+
+	for _, v in ipairs(db.borders) do
+		self:CreateBorderFromParams(v)
+	end
+
+	self:StartRotations()
 
 	self:UpdateBorder()
 	self:UpdateBackdrop()
