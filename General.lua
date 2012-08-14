@@ -1,13 +1,10 @@
 
 local _, addon = ...
 local parent = addon.SexyMap
-local mod = addon.SexyMap:NewModule("General", "AceEvent-3.0", "AceHook-3.0")
+local mod = addon.SexyMap:NewModule("General", "AceEvent-3.0") --, "AceHook-3.0")
 local L = addon.L
 
 local db
-
-local dragUpdate
-
 local options = {
 	type = "group",
 	name = "General",
@@ -16,17 +13,28 @@ local options = {
 			order = 1,
 			name = L["Lock minimap"],
 			type = "toggle",
-			width = "full",
 			get = function()
 				return db.lock
 			end,
 			set = function(info, v)
 				db.lock = v
-				mod:SetLock(v)
-			end
+				Minimap:SetMovable(not db.lock)
+			end,
+		},
+		clamp = {
+			order = 2,
+			type = "toggle",
+			name = L["Clamp to screen"],
+			get = function()
+				return db.clamp
+			end,
+			set = function(info, v)
+				db.clamp = v
+				Minimap:SetClampedToScreen(v)
+			end,
 		},
 		rightClickToConfig = {
-			order = 2,
+			order = 3,
 			type = "toggle",
 			name = L["Right click map to configure"],
 			width = "full",
@@ -35,9 +43,9 @@ local options = {
 			end,
 			set = function(info, v)
 				db.rightClickToConfig = v
-			end
+			end,
 		},
-		movers = {
+		--[[movers = {
 			order = 3,
 			name = L["Show movers"],
 			type = "toggle",
@@ -46,37 +54,30 @@ local options = {
 			end,
 			set = function(info, v)
 				db.movers = v
-				mod:SetMovers()
-			end
-		},
-		clamp = {
-			order = 4,
-			type = "toggle",
-			name = L["Clamp to screen"],
-			get = function()
-				return db.clamp
+				--mod:SetMovers()
 			end,
-			set = function(info, v)
-				db.clamp = v
-				MinimapCluster:SetClampedToScreen(v)
-			end
-		},
+		},]]
 		scale = {
-			order = 5,
+			order = 4,
 			type = "range",
 			name = L["Scale"],
 			min = 0.2,
 			max = 3.0,
 			step = 0.01,
 			bigStep = 0.01,
-			order = 104,
+			width = "double",
 			get = function(info)
 				return db.scale or 1
 			end,
 			set = function(info, v)
 				db.scale = v
 				mod:Update()
-			end
+			end,
+		},
+		zoomSpacer = {
+			order = 5,
+			type = "header",
+			name = "",
 		},
 		zoom = {
 			order = 6,
@@ -84,7 +85,7 @@ local options = {
 			name = L["Autozoom out after..."],
 			desc = L["Number of seconds to autozoom out after. Set to 0 to turn off Autozoom."],
 			min = 0,
-			width = "double",
+			width = "full",
 			max = 60,
 			step = 1,
 			bigStep = 1,
@@ -93,8 +94,13 @@ local options = {
 			end,
 			set = function(info, v)
 				mod.db.profile.autoZoom = v
-			end
-		}
+			end,
+		},
+		spacer = {
+			order = 7,
+			type = "header",
+			name = "",
+		},
 	}
 }
 
@@ -108,14 +114,14 @@ local defaults = {
 		framePositions = {}
 	}
 }
-
+--[[
 local movables = {
 	["DurabilityFrame"] = L["Armored Man"],
 	["WatchFrame"] = L["Objectives Tracker"],
 	["Boss1TargetFrame"] = L["Boss frames (Gunships, etc)"],
 }
 local movers = {}
-
+]]
 mod.options = options
 
 function mod:OnInitialize()
@@ -123,28 +129,28 @@ function mod:OnInitialize()
 	db = self.db.profile
 	parent:RegisterModuleOptions("General", options, "General")
 
-	MinimapBorderTop:Hide()
-	Minimap:RegisterForDrag("LeftButton")
-	MinimapZoneTextButton:RegisterForDrag("LeftButton")
-	self:SetLock(db.lock)
-
+	--MinimapZoneTextButton:RegisterForDrag("LeftButton")
+	--self:SetLock(db.lock)
+--[[
 	if updateContainerFrameAnchors then --XXX MoP compat
 		self:SecureHook("updateContainerFrameAnchors", "CreateMoversAndSetMovables")
 	else
 		self:SecureHook("UpdateContainerFrameAnchors", "CreateMoversAndSetMovables")
-	end
+	end]]
 end
-
+--[[
 function mod:WatchFrame_Update(...)
 	if not WatchFrame:IsUserPlaced() then reanchorWatchFrame() end
 	self.hooks.WatchFrame_Update(...)
 	-- updateWatchFrameHeight()
 	-- WatchFrame:SetHeight(WatchFrame.realHeight or WatchFrame:GetHeight())
 end
-
+]]
 function mod:OnEnable()
-	--[[ AutoZoom & MouseWheelZoom setup ]]--
-	local animGroup = CreateFrame("Frame"):CreateAnimationGroup()
+	local Minimap = Minimap
+
+	--[[ Auto Zoom Out ]]--
+	local animGroup = Minimap:CreateAnimationGroup()
 	local anim = animGroup:CreateAnimation()
 	animGroup:SetScript("OnFinished", function()
 		for i = 1, 5 do
@@ -153,6 +159,8 @@ function mod:OnEnable()
 	end)
 	anim:SetOrder(1)
 	anim:SetDuration(1)
+
+	--[[ MouseWheel Zoom ]]--
 	Minimap:EnableMouseWheel(true)
 	Minimap:SetScript("OnMouseWheel", function(frame, d)
 		if d > 0 then
@@ -170,19 +178,36 @@ function mod:OnEnable()
 		animGroup:Play()
 	end
 
-	db = self.db.profile
-	MinimapCluster:SetClampedToScreen(db.clamp)
-	self:SetLock(db.lock)
-	self:Update()
-	if not _G.Capping then
+	MinimapCluster:EnableMouse(false)
+
+	MinimapBorderTop:Hide()
+	Minimap:RegisterForDrag("LeftButton")
+	Minimap:SetClampedToScreen(db.clamp)
+	Minimap:SetScale(db.scale or 1)
+	Minimap:SetMovable(not db.lock)
+
+	Minimap:SetScript("OnDragStart", function(self) if self:IsMovable() then self:StartMoving() end end)
+	Minimap:SetScript("OnDragStop", function(self)
+		self:StopMovingOrSizing()
+		local p, _, rp, x, y = Minimap:GetPoint()
+		db.point, db.relpoint, db.x, db.y = p, rp, x, y
+	end)
+
+	if db.point then
+		Minimap:SetPoint(db.point, nil, db.relpoint, db.x, db.y)
+	end
+
+	--self:SetLock(db.lock)
+	--self:Update()
+	--[[if not _G.Capping then
 		self:RegisterEvent("UPDATE_WORLD_STATES")
 		self:UPDATE_WORLD_STATES()
 		movables["VehicleSeatIndicator"] = L["Vehicle Seat"]
 	end
 	self:CreateMoversAndSetMovables()
-	self:RawHook("WatchFrame_Update", true)
+	self:RawHook("WatchFrame_Update", true)]]
 end
-
+--[[
 function mod:UPDATE_WORLD_STATES()
 	for i = 1, NUM_EXTENDED_UI_FRAMES do
 		local name = "WorldStateCaptureBar"..i
@@ -378,3 +403,5 @@ do
 		WatchFrame:SetPoint("BOTTOM", UIParent, "BOTTOM")
 	end
 end
+]]
+
