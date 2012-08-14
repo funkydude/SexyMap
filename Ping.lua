@@ -88,7 +88,8 @@ anim:SetDuration(3)
 anim:SetStartDelay(3)
 
 pingFrame:SetScript("OnEvent", function(_, _, unit)
-	local color = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
+	local class = select(2, UnitClass(unit))
+	local color = CUSTOM_CLASS_COLORS and CUSTOM_CLASS_COLORS[class] or RAID_CLASS_COLORS[class] or GRAY_FONT_COLOR
 	if mod.db.profile.showAt == "chat" then
 		DEFAULT_CHAT_FRAME:AddMessage(("Ping: |cFF%02x%02x%02x%s|r"):format(color.r * 255, color.g * 255, color.b * 255, UnitName(unit)))
 	else
