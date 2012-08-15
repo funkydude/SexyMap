@@ -9,7 +9,6 @@ local textures = {}
 local texturePool = {}
 local rotateTextures = {}
 local defaultSize = 180
---local rotFrame = CreateFrame("Frame")
 local MinimapBackdrop
 local media = LibStub("LibSharedMedia-3.0")
 local Shape
@@ -807,7 +806,7 @@ function mod:OnInitialize()
 		args.presets.width = nil
 		args.presets.values = presets
 	end
-	-- Minimap:SetFrameStrata("LOW")
+
 	MinimapBackdrop = CreateFrame("Frame", "SexyMapMinimapBackdrop", Minimap)
 	MinimapBackdrop:SetFrameStrata("BACKGROUND")
 	MinimapBackdrop:SetFrameLevel(MinimapBackdrop:GetFrameLevel() - 1)
@@ -815,24 +814,6 @@ function mod:OnInitialize()
 	MinimapBackdrop:SetWidth(Minimap:GetWidth())
 	MinimapBackdrop:SetHeight(Minimap:GetHeight())
 end
-
---[[local updateTime = 1/60
-local totalTime = 0
-local function updateRotations(self, t)
-	totalTime = totalTime + t
-	if totalTime >= updateTime then
-		for k, v in pairs(rotateTextures) do
-			if type(v) == "number" then
-				RotateTexture(k, v * totalTime)
-			else
-				RotateTexture(k, v)
-			end
-		end
-		while totalTime > updateTime do
-			totalTime = totalTime - updateTime
-		end
-	end
-end]]
 
 function mod:OnEnable()
 	db = self.db.profile

@@ -115,17 +115,16 @@ local options = {
 	}
 }
 
-local defaults = {
-	profile = {
-		borderColor = {},
-		backgroundColor = {},
-		locked = false,
-		fontColor = {},
-		enabled = false
-	}
-}
-
 function mod:OnInitialize()
+	local defaults = {
+		profile = {
+			borderColor = {},
+			backgroundColor = {},
+			locked = false,
+			fontColor = {},
+			enabled = false
+		}
+	}
 	self.db = parent.db:RegisterNamespace(modName, defaults)
 	parent:RegisterModuleOptions(modName, options, modName)
 end
@@ -177,11 +176,10 @@ function mod:OnEnable()
 
 		local animgroup = coordFrame:CreateAnimationGroup()
 		local anim = animgroup:CreateAnimation()
-		animgroup.GetPlayerMapPosition = GetPlayerMapPosition
-		animgroup.text = coordsText
+		local GetPlayerMapPosition = GetPlayerMapPosition
 		animgroup:SetScript("OnLoop", function(self)
-			local x, y = self.GetPlayerMapPosition"player"
-			self.text:SetFormattedText("%.1f, %.1f", x*100, y*100)
+			local x, y = GetPlayerMapPosition"player"
+			coordsText:SetFormattedText("%.1f, %.1f", x*100, y*100)
 		end)
 		anim:SetOrder(1)
 		anim:SetDuration(0.1)

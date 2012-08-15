@@ -104,16 +104,6 @@ local options = {
 	}
 }
 
-local defaults = {
-	profile = {
-		lock = true,
-		clamp = true,
-		movers = false,
-		rightClickToConfig = true,
-		autoZoom = 5,
-		framePositions = {}
-	}
-}
 --[[
 local movables = {
 	["DurabilityFrame"] = L["Armored Man"],
@@ -125,28 +115,20 @@ local movers = {}
 mod.options = options
 
 function mod:OnInitialize()
+	local defaults = {
+		profile = {
+			lock = true,
+			clamp = true,
+			movers = false,
+			rightClickToConfig = true,
+			autoZoom = 5,
+			framePositions = {}
+		}
+	}
 	self.db = parent.db:RegisterNamespace("Movers", defaults)
 	db = self.db.profile
 	parent:RegisterModuleOptions("General", options, "General")
 
-	--MinimapZoneTextButton:RegisterForDrag("LeftButton")
-	--self:SetLock(db.lock)
---[[
-	if updateContainerFrameAnchors then --XXX MoP compat
-		self:SecureHook("updateContainerFrameAnchors", "CreateMoversAndSetMovables")
-	else
-		self:SecureHook("UpdateContainerFrameAnchors", "CreateMoversAndSetMovables")
-	end]]
-end
---[[
-function mod:WatchFrame_Update(...)
-	if not WatchFrame:IsUserPlaced() then reanchorWatchFrame() end
-	self.hooks.WatchFrame_Update(...)
-	-- updateWatchFrameHeight()
-	-- WatchFrame:SetHeight(WatchFrame.realHeight or WatchFrame:GetHeight())
-end
-]]
-function mod:OnEnable()
 	local Minimap = Minimap
 
 	--[[ Auto Zoom Out ]]--
@@ -197,6 +179,25 @@ function mod:OnEnable()
 		Minimap:SetPoint(db.point, nil, db.relpoint, db.x, db.y)
 	end
 
+	--MinimapZoneTextButton:RegisterForDrag("LeftButton")
+	--self:SetLock(db.lock)
+--[[
+	if updateContainerFrameAnchors then --XXX MoP compat
+		self:SecureHook("updateContainerFrameAnchors", "CreateMoversAndSetMovables")
+	else
+		self:SecureHook("UpdateContainerFrameAnchors", "CreateMoversAndSetMovables")
+	end]]
+end
+--[[
+function mod:WatchFrame_Update(...)
+	if not WatchFrame:IsUserPlaced() then reanchorWatchFrame() end
+	self.hooks.WatchFrame_Update(...)
+	-- updateWatchFrameHeight()
+	-- WatchFrame:SetHeight(WatchFrame.realHeight or WatchFrame:GetHeight())
+end
+]]
+function mod:OnEnable()
+	db = self.db.profile
 	--self:SetLock(db.lock)
 	--self:Update()
 	--[[if not _G.Capping then

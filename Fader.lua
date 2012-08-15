@@ -82,6 +82,7 @@ end
 
 local hooked
 function mod:OnEnable()
+	db = self.db.profile
 	Minimap:SetAlpha(db.normalOpacity)
 
 	if not hooked then

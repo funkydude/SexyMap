@@ -6,13 +6,6 @@ local mod = addon.SexyMap:NewModule(modName)
 local L = addon.L
 local pingFrame
 
-local defaults = {
-	profile = {
-		showPing = true,
-		showAt = "map"
-	}
-}
-
 local options = {
 	type = "group",
 	name = modName,
@@ -103,6 +96,12 @@ pingFrame:SetScript("OnEvent", function(_, _, unit)
 end)
 
 function mod:OnInitialize()
+	local defaults = {
+		profile = {
+			showPing = true,
+			showAt = "map"
+		}
+	}
 	self.db = parent.db:RegisterNamespace(modName, defaults)
 	parent:RegisterModuleOptions(modName, options, modName)
 	if self.db.profile.showPing then

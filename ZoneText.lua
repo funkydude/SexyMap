@@ -166,7 +166,10 @@ function mod:OnInitialize()
 
 	self.db = parent.db:RegisterNamespace(modName, defaults)
 	parent:RegisterModuleOptions(modName, options, "Zone Text")
+end
 
+local hooked
+function mod:OnEnable()
 	MinimapZoneText:ClearAllPoints()
 	MinimapZoneText:SetAllPoints()
 	MinimapZoneTextButton:SetHeight(26)
@@ -174,7 +177,10 @@ function mod:OnInitialize()
 	MinimapZoneTextButton:SetFrameStrata("MEDIUM")
 
 	updateLayout()
-	MinimapCluster:HookScript("OnEvent", self.ZoneChanged)
+	if not hooked then
+		hooked = true
+		MinimapCluster:HookScript("OnEvent", self.ZoneChanged)
+	end
 end
 
 function mod:ZoneChanged()
