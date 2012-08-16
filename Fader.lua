@@ -80,38 +80,67 @@ function mod:OnInitialize()
 	self:SetEnabledState(db.enabled)
 end
 
-local hooked
-function mod:OnEnable()
-	db = self.db.profile
-	Minimap:SetAlpha(db.normalOpacity)
+do
+	local animGroup = Minimap:CreateAnimationGroup()
+	local anim = animGroup:CreateAnimation("Alpha")
+	animGroup:SetScript("OnFinished", function()
+		local focus = GetMouseFocus()
+		-- Minimap or Minimap icons
+		if focus and (GetMouseFocus():GetName() == "Minimap" or (focus:GetParent() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
+			Minimap:SetAlpha(db.hoverOpacity)
+		else
+			Minimap:SetAlpha(db.normalOpacity)
+		end
+	end)
+	anim:SetOrder(1)
+	anim:SetDuration(0.5)
 
-	if not hooked then
-		hooked = true
-
-		local animGroup = Minimap:CreateAnimationGroup()
-		local anim = animGroup:CreateAnimation("Alpha")
-		animGroup:SetScript("OnFinished", function()
-			Minimap:SetAlpha(GetMouseFocus():GetName() == "Minimap" and db.hoverOpacity or db.normalOpacity)
-		end)
-		anim:SetOrder(1)
-		anim:SetDuration(0.5)
-
-		Minimap:HookScript("OnEnter", function()
-			if db.enabled then
-				animGroup:Stop()
-				Minimap:SetAlpha(db.normalOpacity)
-				anim:SetChange(db.hoverOpacity-db.normalOpacity)
-				animGroup:Play()
+	local OnEnter, OnLeave
+	-- Function for hooking the Minimap/Icon's OnEnter/OnLeave
+	local hooked = {}
+	local hookIcons = function(...)
+		for i=1, select("#", ...) do
+			local f = select(i, ...)
+			if not hooked[f:GetName()] then
+				hooked[f:GetName()] = true
+				f:HookScript("OnEnter", OnEnter)
+				f:HookScript("OnLeave", OnLeave)
 			end
-		end)
-		Minimap:HookScript("OnLeave", function()
-			if db.enabled then
-				animGroup:Stop()
-				Minimap:SetAlpha(db.hoverOpacity)
-				anim:SetChange(db.normalOpacity-db.hoverOpacity)
-				animGroup:Play()
-			end
-		end)
+		end
+	end
+
+	local fadeStop -- Use a variable to prevent fadeout/in when moving the mouse around minimap/icons
+
+	OnEnter = function(f)
+		if fadeStop then return end
+		if db.enabled then
+			animGroup:Stop()
+			anim:SetChange(db.hoverOpacity-db.normalOpacity)
+			animGroup:Play()
+		end
+		hookIcons(Minimap:GetChildren()) -- Instead of using a timer to periodically hook new icons
+	end
+	OnLeave = function(f)
+		local focus = GetMouseFocus()
+		if focus and (GetMouseFocus():GetName() == "Minimap" or (focus:GetParent() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
+			fadeStop = true
+			return
+		end
+		fadeStop = nil
+		if db.enabled then
+			animGroup:Stop()
+			anim:SetChange(db.normalOpacity-db.hoverOpacity)
+			animGroup:Play()
+		end
+	end
+
+	function mod:OnEnable()
+		db = self.db.profile
+		Minimap:SetAlpha(db.normalOpacity)
+
+		hookIcons(MinimapCluster:GetChildren()) -- Minimap & Icons
+		hookIcons(Minimap:GetChildren()) -- Minimap Icons
+		hookIcons(MinimapBackdrop:GetChildren()) -- More Icons
 	end
 end
 
