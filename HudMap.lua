@@ -2,7 +2,7 @@
 local _, addon = ...
 local parent = addon.SexyMap
 local modName = "HudMap"
-local mod = addon.SexyMap:NewModule(modName, "AceEvent-3.0", "AceHook-3.0")
+local mod = addon.SexyMap:NewModule(modName, "AceHook-3.0")
 local L = addon.L
 local db
 
@@ -346,17 +346,17 @@ end
 
 function mod:OnEnable()
 	db = self.db.profile
-	self:RegisterEvent("PLAYER_LOGOUT")
+	updateFrame:RegisterEvent("PLAYER_LOGOUT")
 end
+
+updateFrame:SetScript("OnEvent", function()
+	mod:Toggle(false)
+end)
 
 function mod:Minimap_OnShow()
 	if HudMapCluster:IsVisible() then
 		HudMapCluster:Hide()
 	end
-end
-
-function mod:PLAYER_LOGOUT()
-	self:Toggle(false)
 end
 
 function mod:Toggle(flag)
