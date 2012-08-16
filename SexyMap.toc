@@ -16,6 +16,13 @@ embeds.xml
 
 # Localization
 localization\enUS.lua
+localization\deDE.lua
+localization\ruRU.lua
+localization\esES.lua
+localization\esMX.lua
+localization\frFR.lua
+localization\itIT.lua
+localization\koKR.lua
 localization\zhTW.lua
 localization\zhCN.lua
 
