@@ -84,9 +84,9 @@ do
 	local animGroup = Minimap:CreateAnimationGroup()
 	local anim = animGroup:CreateAnimation("Alpha")
 	animGroup:SetScript("OnFinished", function()
-		local focus = GetMouseFocus()
+		local focus = GetMouseFocus() and GetMouseFocus():GetParent()
 		-- Minimap or Minimap icons
-		if focus and (GetMouseFocus():GetName() == "Minimap" or (focus:GetParent() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
+		if focus and focus:GetName():find("Mini[Mm]ap") then
 			Minimap:SetAlpha(db.hoverOpacity)
 		else
 			Minimap:SetAlpha(db.normalOpacity)
@@ -121,8 +121,8 @@ do
 		hookIcons(Minimap:GetChildren()) -- Instead of using a timer to periodically hook new icons
 	end
 	OnLeave = function(f)
-		local focus = GetMouseFocus()
-		if focus and (GetMouseFocus():GetName() == "Minimap" or (focus:GetParent() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
+		local focus = GetMouseFocus() and GetMouseFocus():GetParent()
+		if focus and focus:GetName():find("Mini[Mm]ap") then
 			fadeStop = true
 			return
 		end
