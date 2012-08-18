@@ -73,37 +73,44 @@ function mod:WatchFrame_Update(...)
 	-- WatchFrame:SetHeight(WatchFrame.realHeight or WatchFrame:GetHeight())
 end
 
-function mod:OnEnable()
-	db = self.db.profile
-	if not db.enabled then self:Disable() return end
+do
+	local hooked
+	function mod:OnEnable()
+		db = self.db.profile
+		if not db.enabled then self:Disable() return end
 
-	if updateContainerFrameAnchors then --XXX MoP compat
-		self:SecureHook("updateContainerFrameAnchors", "CreateMoversAndSetMovables")
-	else
-		self:SecureHook("UpdateContainerFrameAnchors", "CreateMoversAndSetMovables")
-	end
+		self:SetLock(db.lock)
+		self:Update()
 
-	self:SetLock(db.lock)
-	self:Update()
-	if not select(4, GetAddOnInfo("Capping")) then
-		local f = CreateFrame("Frame")
-		f:RegisterEvent("UPDATE_WORLD_STATES")
-		local updateStates = function()
-			for i = 1, NUM_EXTENDED_UI_FRAMES do
-				local name = "WorldStateCaptureBar"..i
-				local f = _G[name]
-				if f and not movables[name] then
-					movables[name] = L["Capture Bars"]
-				end
-			end
-			mod:CreateMoversAndSetMovables()
+		if hooked then return end
+		hooked = true
+
+		if updateContainerFrameAnchors then --XXX MoP compat
+			self:SecureHook("updateContainerFrameAnchors", "CreateMoversAndSetMovables")
+		else
+			self:SecureHook("UpdateContainerFrameAnchors", "CreateMoversAndSetMovables")
 		end
-		f:SetScript("OnEvent", updateStates)
-		updateStates()
-		movables["VehicleSeatIndicator"] = L["Vehicle Seat"]
+
+		if not select(4, GetAddOnInfo("Capping")) then
+			local f = CreateFrame("Frame")
+			f:RegisterEvent("UPDATE_WORLD_STATES")
+			local updateStates = function()
+				for i = 1, NUM_EXTENDED_UI_FRAMES do
+					local name = "WorldStateCaptureBar"..i
+					local f = _G[name]
+					if f and not movables[name] then
+						movables[name] = L["Capture Bars"]
+					end
+				end
+				mod:CreateMoversAndSetMovables()
+			end
+			f:SetScript("OnEvent", updateStates)
+			updateStates()
+			movables["VehicleSeatIndicator"] = L["Vehicle Seat"]
+		end
+		self:CreateMoversAndSetMovables()
+		self:RawHook("WatchFrame_Update", true)
 	end
-	self:CreateMoversAndSetMovables()
-	self:RawHook("WatchFrame_Update", true)
 end
 
 mod.movables = movables
