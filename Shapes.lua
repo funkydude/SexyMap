@@ -215,22 +215,22 @@ local shapes = {
 	["Interface\\AddOns\\SexyMap\\shapes\\bottomright"] = {
 		name = L["Rounded - Bottom Right"],
 		geometry = "bottomRight",
-		shape = "CORNER-BOTTOMRIGHT"
+		shape = "CORNER-TOPLEFT"
 	},
 	["Interface\\AddOns\\SexyMap\\shapes\\bottomleft"] = {
 		name = L["Rounded - Bottom Left"],
 		geometry = "bottomLeft",
-		shape = "CORNER-BOTTOMLEFT"
+		shape = "CORNER-TOPRIGHT"
 	},
 	["Interface\\AddOns\\SexyMap\\shapes\\topright"] = {
 		name = L["Rounded - Top Right"],
 		geometry = "topRight",
-		shape = "CORNER-TOPRIGHT"
+		shape = "CORNER-BOTTOMLEFT"
 	},
 	["Interface\\AddOns\\SexyMap\\shapes\\topleft"] = {
 		name = L["Rounded - Top Left"],
 		geometry = "topLeft",
-		shape = "CORNER-TOPLEFT"
+		shape = "CORNER-BOTTOMRIGHT"
 	},
 }
 
