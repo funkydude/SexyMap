@@ -1,24 +1,46 @@
 
 local _, addon = ...
 local parent = addon.SexyMap
-local mod = addon.SexyMap:NewModule("Movers")
+local mod = addon.SexyMap:NewModule("Movers", "AceHook-3.0")
 local L = addon.L
 
 local db
 local options = {
 	type = "group",
-	name = "General",
+	name = "Movers",
 	args = {
-		movers = {
-			order = 3,
-			name = L["Show movers"],
+		desc = {
+			order = 0.5,
+			name = "WARNING: This module is not officially supported, expect problems when using this module such as taints, loss of quest tracker functionality, or boss frames jumping around. Blizzard frames like the quest tracker and boss health aren't designed to be moved, I suggest you use addons that replace these frames e.g. Unit Frames for boss health.",
+			type = "description",
+		},
+		enable = {
+			order = 1,
+			name = "Enable Movers",
 			type = "toggle",
 			get = function()
-				return db.movers
+				return db.enabled
 			end,
 			set = function(info, v)
-				db.movers = v
-				--mod:SetMovers()
+				db.enabled = v
+				if v then
+					mod:Enable()
+				else
+					mod:Disable()
+				end
+				mod:SetMovers()
+			end,
+		},
+		lock = {
+			order = 2,
+			name = "Lock Movers",
+			type = "toggle",
+			get = function()
+				return db.lock
+			end,
+			set = function(info, v)
+				db.lock = v
+				mod:SetLock(v)
 			end,
 		},
 	},
@@ -35,18 +57,13 @@ function mod:OnInitialize()
 	local defaults = {
 		profile = {
 			enabled = false,
-			framePositions = {}
+			lock = false,
+			framePositions = {},
 		}
 	}
 	self.db = parent.db:RegisterNamespace("Movers", defaults)
 	db = self.db.profile
-	parent:RegisterModuleOptions("General", options, "General")
-
-	if updateContainerFrameAnchors then --XXX MoP compat
-		self:SecureHook("updateContainerFrameAnchors", "CreateMoversAndSetMovables")
-	else
-		self:SecureHook("UpdateContainerFrameAnchors", "CreateMoversAndSetMovables")
-	end
+	parent:RegisterModuleOptions("Movers", options, "Movers")
 end
 
 function mod:WatchFrame_Update(...)
@@ -58,27 +75,35 @@ end
 
 function mod:OnEnable()
 	db = self.db.profile
-	--self:SetLock(db.lock)
-	--self:Update()
-	--[[if not _G.Capping then
-		self:RegisterEvent("UPDATE_WORLD_STATES")
-		self:UPDATE_WORLD_STATES()
+	if not db.enabled then self:Disable() return end
+
+	if updateContainerFrameAnchors then --XXX MoP compat
+		self:SecureHook("updateContainerFrameAnchors", "CreateMoversAndSetMovables")
+	else
+		self:SecureHook("UpdateContainerFrameAnchors", "CreateMoversAndSetMovables")
+	end
+
+	self:SetLock(db.lock)
+	self:Update()
+	if not select(4, GetAddOnInfo("Capping")) then
+		local f = CreateFrame("Frame")
+		f:RegisterEvent("UPDATE_WORLD_STATES")
+		local updateStates = function()
+			for i = 1, NUM_EXTENDED_UI_FRAMES do
+				local name = "WorldStateCaptureBar"..i
+				local f = _G[name]
+				if f and not movables[name] then
+					movables[name] = L["Capture Bars"]
+				end
+			end
+			mod:CreateMoversAndSetMovables()
+		end
+		f:SetScript("OnEvent", updateStates)
+		updateStates()
 		movables["VehicleSeatIndicator"] = L["Vehicle Seat"]
 	end
 	self:CreateMoversAndSetMovables()
-	self:RawHook("WatchFrame_Update", true)]]
-end
-
-
-function mod:UPDATE_WORLD_STATES()
-	for i = 1, NUM_EXTENDED_UI_FRAMES do
-		local name = "WorldStateCaptureBar"..i
-		local f = _G[name]
-		if f and not movables[name] then
-			movables[name] = L["Capture Bars"]
-		end
-	end
-	self:CreateMoversAndSetMovables()
+	self:RawHook("WatchFrame_Update", true)
 end
 
 mod.movables = movables
@@ -242,13 +267,14 @@ do
 			MinimapZoneTextButton:SetScript("OnDragStop", stop)
 		end
 		MinimapCluster:SetMovable(true)
+		self:SetMovers()
 	end
 
 	function mod:SetMovers()
-		local v = db.movers
+		local v = db.enabled and (not db.lock)
 		if v then
 			for _, f in ipairs(movers) do
-				f.showParent = not not f:GetParent():IsVisible()		-- convert nil -> false
+				f.showParent = not not f:GetParent():IsVisible() -- convert nil -> false
 				f:GetParent():Show()
 				f:Show()
 			end

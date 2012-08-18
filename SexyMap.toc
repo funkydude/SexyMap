@@ -43,6 +43,7 @@ Coordinates.lua
 Fader.lua
 HudMap.xml
 HudMap.lua
+Movers.lua
 Ping.lua
 ZoneText.lua
 
