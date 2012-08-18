@@ -94,6 +94,7 @@ local options = {
 
 mod.options = options
 
+local animGroup, anim
 function mod:OnInitialize()
 	local defaults = {
 		profile = {
@@ -107,11 +108,9 @@ function mod:OnInitialize()
 	db = self.db.profile
 	parent:RegisterModuleOptions("General", options, "General")
 
-	local Minimap = Minimap
-
 	--[[ Auto Zoom Out ]]--
-	local animGroup = Minimap:CreateAnimationGroup()
-	local anim = animGroup:CreateAnimation()
+	animGroup = Minimap:CreateAnimationGroup()
+	anim = animGroup:CreateAnimation()
 	animGroup:SetScript("OnFinished", function()
 		for i = 1, 5 do
 			MinimapZoomOut:Click()
@@ -119,6 +118,12 @@ function mod:OnInitialize()
 	end)
 	anim:SetOrder(1)
 	anim:SetDuration(1)
+end
+
+function mod:OnEnable()
+	db = self.db.profile
+
+	local Minimap = Minimap
 
 	--[[ MouseWheel Zoom ]]--
 	Minimap:EnableMouseWheel(true)
@@ -138,7 +143,12 @@ function mod:OnInitialize()
 		animGroup:Play()
 	end
 
-	MinimapCluster:EnableMouse(false)
+	MinimapCluster:EnableMouse(false) -- Don't leave an invisible dead zone
+
+	-- Make sure the various minimap buttons follow the minimap
+	MinimapBackdrop:ClearAllPoints()
+	MinimapBackdrop:SetParent(Minimap)
+	MinimapBackdrop:SetPoint("CENTER", Minimap, "CENTER")
 
 	MinimapBorderTop:Hide()
 	Minimap:RegisterForDrag("LeftButton")
@@ -156,9 +166,5 @@ function mod:OnInitialize()
 	if db.point then
 		Minimap:SetPoint(db.point, nil, db.relpoint, db.x, db.y)
 	end
-end
-
-function mod:OnEnable()
-	db = self.db.profile
 end
 

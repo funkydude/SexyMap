@@ -290,15 +290,7 @@ function mod:OnEnable()
 
 	self:Update()
 
-	-- MiniMapWorldMapButton:SetParent(Minimap)
-	-- MinimapZoomIn:SetParent(Minimap)
-	-- MinimapZoomOut:SetParent(Minimap)
 	MiniMapInstanceDifficulty:EnableMouse(true)
-
-	-- self:RegisterEvent("CALENDAR_UPDATE_EVENT_LIST_PENDING", "Update")
-	-- self:RegisterEvent("UPDATE_PENDING_MAIL", "Update")
-
-	self:FixTrackingAnchoring()
 
 	-- Try to capture new buttons periodically
 	if not updateTimer then -- Temp, should scrap this entirely
@@ -324,28 +316,6 @@ end
 function mod:SexyMap_ShapeChanged()
 	parent:DisableFade(1)
 	self:UpdateDraggables()
-end
-
-function mod:FixTrackingAnchoring()
-	if ElkBuffBars and ElkBuffBars.db.profile.hidetrackingframe then
-		print("|cFF33FF99SexyMap|r: |cffff0000!! Warning !!!|r Elkano's Buff Bars is set to hide the tracking button. This will hide your tracking texture. Run |cffffcc00/ebb config|r and uncheck |cffffcc00Hide minimap tracking frame|r to fix this.")
-	end
-	local x, y = MiniMapTracking:GetCenter()
-	local mx, my = Minimap:GetCenter()
-	local dx, dy = x - mx, y - my
-
-	MiniMapTracking.Hide = function() end
-	MiniMapTracking:Show()
-
-	MiniMapTracking:SetParent(UIParent)
-	MiniMapTrackingButton:SetParent(Minimap)
-	MiniMapTrackingButton:ClearAllPoints()
-	MiniMapTrackingButton:SetPoint("CENTER", Minimap, "CENTER", dx, dy)
-	MiniMapTrackingButton:SetFrameStrata("LOW")
-	MiniMapTracking:SetParent(MiniMapTrackingButton)
-	MiniMapTracking:SetFrameStrata("BACKGROUND")
-	MiniMapTracking:ClearAllPoints()
-	MiniMapTracking:SetPoint("CENTER")
 end
 
 function mod:CaptureButtons()

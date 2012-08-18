@@ -11,7 +11,7 @@ local options = {
 	args = {
 		desc = {
 			order = 0.5,
-			name = "WARNING: This module is not officially supported, expect problems when using this module such as taints, loss of quest tracker functionality, or boss frames jumping around. Blizzard frames like the quest tracker and boss health aren't designed to be moved, I suggest you use addons that replace these frames e.g. Unit Frames for boss health.",
+			name = "WARNING: This feature is not officially supported, expect problems when using this feature such as taints, loss of quest tracker functionality, or boss frames jumping around. Blizzard frames like the quest tracker and boss health aren't designed to be moved, I suggest you use addons that replace these frames e.g. Unit Frames for boss health.",
 			type = "description",
 		},
 		enable = {
