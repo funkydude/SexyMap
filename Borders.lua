@@ -9,7 +9,7 @@ local textures = {}
 local texturePool = {}
 local rotateTextures = {}
 local defaultSize = 180
-local MinimapBackdrop
+local customBackdrop
 local media = LibStub("LibSharedMedia-3.0")
 local Shape
 
@@ -196,7 +196,7 @@ local options = {
 										openTexBrowser = {
 											type = "execute",
 											name = function()
-												if select(5, GetAddOnInfo("TexBrowser")) then
+												if select(2, GetAddOnInfo("TexBrowser")) then
 													return L["Open TexBrowser"]
 												else
 													return L["TexBrowser Not Installed"]
@@ -211,7 +211,7 @@ local options = {
 												TexBrowser:OnEnable()
 											end,
 											disabled = function()
-												return not select(5, GetAddOnInfo("TexBrowser"))
+												return not select(2, GetAddOnInfo("TexBrowser"))
 											end
 										},
 										textureSelect = {
@@ -322,7 +322,7 @@ local options = {
 										openTexBrowser = {
 											type = "execute",
 											name = function()
-												if GetAddOnInfo("TexBrowser") ~= nil then
+												if select(2, GetAddOnInfo("TexBrowser")) then
 													return L["Open TexBrowser"]
 												else
 													return L["TexBrowser Not Installed"]
@@ -337,7 +337,7 @@ local options = {
 												TexBrowser:OnEnable()
 											end,
 											disabled = function()
-												return GetAddOnInfo("TexBrowser") == nil
+												return not select(2, GetAddOnInfo("TexBrowser"))
 											end
 										},
 										textureSelect = {
@@ -513,7 +513,7 @@ local borderOptions = {
 	openTexBrowser = {
 		type = "execute",
 		name = function()
-			if select(5, GetAddOnInfo("TexBrowser")) then
+			if select(2, GetAddOnInfo("TexBrowser")) then
 				return L["Open TexBrowser"]
 			else
 				return L["TexBrowser Not Installed"]
@@ -528,7 +528,7 @@ local borderOptions = {
 			TexBrowser:OnEnable()
 		end,
 		disabled = function()
-			return not select(5, GetAddOnInfo("TexBrowser"))
+			return not select(2, GetAddOnInfo("TexBrowser"))
 		end
 	},
 	texture = {
@@ -807,12 +807,12 @@ function mod:OnInitialize()
 		args.presets.values = presets
 	end
 
-	MinimapBackdrop = CreateFrame("Frame", "SexyMapMinimapBackdrop", Minimap)
-	MinimapBackdrop:SetFrameStrata("BACKGROUND")
-	MinimapBackdrop:SetFrameLevel(MinimapBackdrop:GetFrameLevel() - 1)
-	MinimapBackdrop:SetPoint("CENTER")
-	MinimapBackdrop:SetWidth(Minimap:GetWidth())
-	MinimapBackdrop:SetHeight(Minimap:GetHeight())
+	customBackdrop = CreateFrame("Frame", "SexyMapCustomBackdrop", Minimap)
+	customBackdrop:SetFrameStrata("BACKGROUND")
+	customBackdrop:SetFrameLevel(customBackdrop:GetFrameLevel() - 1)
+	customBackdrop:SetPoint("CENTER")
+	customBackdrop:SetWidth(Minimap:GetWidth())
+	customBackdrop:SetHeight(Minimap:GetHeight())
 end
 
 function mod:OnEnable()
@@ -1001,17 +1001,17 @@ end
 
 function mod:UpdateBackdrop()
 	if db.backdrop.show then
-		MinimapBackdrop:Show()
-		MinimapBackdrop:SetFrameStrata("BACKGROUND")
-		MinimapBackdrop:SetScale(db.backdrop.scale or 1)
-		MinimapBackdrop:SetAlpha(db.backdrop.alpha or 1)
-		MinimapBackdrop:SetBackdrop(db.backdrop.settings)
+		customBackdrop:Show()
+		customBackdrop:SetFrameStrata("BACKGROUND")
+		customBackdrop:SetScale(db.backdrop.scale or 1)
+		customBackdrop:SetAlpha(db.backdrop.alpha or 1)
+		customBackdrop:SetBackdrop(db.backdrop.settings)
 		local t = db.backdrop.textureColor
-		MinimapBackdrop:SetBackdropColor(t.r or 0, t.g or 0, t.b or 0, t.a or 1)
+		customBackdrop:SetBackdropColor(t.r or 0, t.g or 0, t.b or 0, t.a or 1)
 		t = db.backdrop.borderColor
-		MinimapBackdrop:SetBackdropBorderColor(t.r or 1, t.g or 1, t.b or 1, t.a or 1)
+		customBackdrop:SetBackdropBorderColor(t.r or 1, t.g or 1, t.b or 1, t.a or 1)
 	else
-		MinimapBackdrop:Hide()
+		customBackdrop:Hide()
 	end
 end
 
