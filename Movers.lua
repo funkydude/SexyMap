@@ -80,7 +80,6 @@ do
 		if not db.enabled then self:Disable() return end
 
 		self:SetLock(db.lock)
-		self:Update()
 
 		if hooked then return end
 		hooked = true
@@ -255,10 +254,6 @@ do
 	local function stop(self)
 		MinimapCluster:StopMovingOrSizing()
 		MinimapCluster:SetScript("OnUpdate", nil)
-	end
-
-	function mod:Update()
-		MinimapCluster:SetScale(db.scale or 1)
 	end
 
 	function mod:SetLock(v)

@@ -59,7 +59,7 @@ local options = {
 			end,
 			set = function(info, v)
 				db.scale = v
-				mod:Update()
+				Minimap:SetScale(v)
 			end,
 		},
 		zoomSpacer = {
@@ -177,6 +177,7 @@ function mod:OnEnable()
 	end)
 
 	if db.point then
+		Minimap:ClearAllPoints()
 		Minimap:SetPoint(db.point, nil, db.relpoint, db.x, db.y)
 	end
 end
