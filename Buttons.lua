@@ -38,7 +38,7 @@ do
 	local childCount, lastChild, stockIndex
 	-- Buttons to ignore if they show up in iteration. Usually due to manually parenting them to the minimap.
 	local ignoreButtons = {
-		MiniMapTrackingButton = true,
+		MiniMapTracking = true,
 		MiniMapWorldMapButton = true,
 		TimeManagerClockButton = true,
 		MinimapZoomIn = true,
@@ -204,7 +204,7 @@ do
 						return CalendarGetNumPendingInvites() > 0
 					end, overrideEvents = { "CALENDAR_UPDATE_PENDING_INVITES", "PLAYER_ENTERING_WORLD" }},
 		worldmap 	= {"MiniMapWorldMapButton"},
-		tracking	= {"MiniMapTrackingButton"},
+		tracking	= {"MiniMapTracking"},
 		zoom		= {"MinimapZoomIn", "MinimapZoomOut"},
 		mapclock	= {"TimeManagerClockButton"},
 		close	 	= {"MinimapToggleButton"},
@@ -302,6 +302,7 @@ function mod:OnEnable()
 		updateTimer:SetLooping("REPEAT")
 	end
 	updateTimer:Play()
+	self:MakeTrackingMovable()
 	self:MakeMovables()
 
 	MiniMapInstanceDifficulty:SetFrameLevel(Minimap:GetFrameLevel() + 10)
@@ -434,6 +435,22 @@ do
 		self:RawHookScript(frame, "OnDragStart", start)
 		self:RawHookScript(frame, "OnDragStop", finish)
 		frame.sexyMapMovable = true
+	end
+
+	function mod:MakeTrackingMovable()
+		if MiniMapTracking.sexyMapMovable then return end
+		if movables[MiniMapTracking] then return end
+		movables[MiniMapTracking] = true
+		MiniMapTrackingButton:RegisterForDrag("LeftButton")
+		MiniMapTrackingButton:HookScript("OnDragStart", function()
+			if db.lockDragging then return end
+
+			parent:DisableFade()
+			moving = MiniMapTracking
+			dragFrame:SetScript("OnUpdate", updatePosition)
+		end)
+		MiniMapTrackingButton:HookScript("OnDragStop", finish)
+		MiniMapTracking.sexyMapMovable = true
 	end
 
 	function mod:UpdateDraggables()

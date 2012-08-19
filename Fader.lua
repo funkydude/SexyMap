@@ -144,6 +144,7 @@ do
 		Minimap:SetAlpha(db.normalOpacity)
 
 		hookIcons(MinimapCluster:GetChildren()) -- Minimap & Icons
+		hookIcons(MiniMapTrackingButton) -- Tracking
 		hookIcons(Minimap:GetChildren()) -- Minimap Icons
 		hookIcons(MinimapBackdrop:GetChildren()) -- More Icons
 	end
