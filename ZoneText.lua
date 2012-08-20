@@ -8,20 +8,12 @@ local L = addon.L
 
 local updateLayout = function()
 	MinimapZoneTextButton:ClearAllPoints()
+	MinimapZoneTextButton:SetParent(Minimap)
 	MinimapZoneTextButton:SetPoint("BOTTOM", Minimap, "TOP", mod.db.profile.xOffset, mod.db.profile.yOffset)
 	MinimapZoneTextButton:SetBackdropColor(mod.db.profile.bgColor.r, mod.db.profile.bgColor.g, mod.db.profile.bgColor.b, mod.db.profile.bgColor.a)
 	MinimapZoneTextButton:SetBackdropBorderColor(mod.db.profile.borderColor.r, mod.db.profile.borderColor.g, mod.db.profile.borderColor.b, mod.db.profile.borderColor.a)
 	local a, b, c = MinimapZoneText:GetFont()
 	MinimapZoneText:SetFont(mod.db.profile.font and media:Fetch("font", mod.db.profile.font) or a, mod.db.profile.fontsize or b, c)
-
-	parent:UnregisterHoverButton(MinimapZoneTextButton)
-	MinimapZoneTextButton:Show()
-	MinimapZoneTextButton:SetAlpha(1)
-	if mod.db.profile.show == "never" then
-		MinimapZoneTextButton:Hide()
-	elseif mod.db.profile.show == "hover" then
-		parent:RegisterHoverButton(MinimapZoneTextButton)
-	end
 
 	mod:ZoneChanged()
 end
@@ -129,23 +121,6 @@ local options = {
 			end,
 			set = function(info, r, g, b, a)
 				mod.db.profile.borderColor.r, mod.db.profile.borderColor.g, mod.db.profile.borderColor.b, mod.db.profile.borderColor.a = r, g, b, a
-				updateLayout()
-			end
-		},
-		show = {
-			type = "multiselect",
-			name = ("Show %s..."):format("zone text"),
-			order = 9,
-			values = {
-				["always"] = L["Always"],
-				["never"] = L["Never"],
-				["hover"] = L["On hover"],
-			},
-			get = function(info, v)
-				return mod.db.profile.show == v
-			end,
-			set = function(info, v)
-				mod.db.profile.show = v
 				updateLayout()
 			end
 		},

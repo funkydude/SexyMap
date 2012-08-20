@@ -78,6 +78,13 @@ function mod:OnInitialize()
 	parent:RegisterModuleOptions(modName, options, modName)
 	db = self.db.profile
 	self:SetEnabledState(db.enabled)
+
+	parent.RegisterCallback(self, "SexyMap_NewFrame")
+end
+
+function mod:OnEnable()
+	db = self.db.profile
+	Minimap:SetAlpha(db.normalOpacity)
 end
 
 do
@@ -95,43 +102,27 @@ do
 	anim:SetOrder(1)
 	anim:SetDuration(0.5)
 
-	local OnEnter, OnLeave
-	-- Function for hooking the Minimap/Icon's OnEnter/OnLeave
-	local hooked = {}
-	local hookIcons = function(...)
-		for i=1, select("#", ...) do
-			local f = select(i, ...)
-			local n = f:GetName()
-			if n and not hooked[n] then
-				hooked[n] = true
-				f:HookScript("OnEnter", OnEnter)
-				f:HookScript("OnLeave", OnLeave)
-			end
-		end
-	end
-
 	local fadeStop -- Use a variable to prevent fadeout/in when moving the mouse around minimap/icons
 
-	OnEnter = function(f)
-		if fadeStop then return end
+	local OnEnter = function()
 		if db.enabled then
+			if fadeStop then return end
+
 			animGroup:Stop()
 			Minimap:SetAlpha(db.normalOpacity)
 			anim:SetChange(db.hoverOpacity-db.normalOpacity)
 			animGroup:Play()
 		end
-		hookIcons(Minimap:GetChildren()) -- Instead of using a timer to periodically hook new icons
 	end
-	OnLeave = function(f)
-		-- Minimap or Minimap icons including nil checks to compensate for other addons
-		local focus = GetMouseFocus()
-		if focus and focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap") then
-			fadeStop = true
-			return
-		end
-		fadeStop = nil
-
+	local OnLeave = function()
 		if db.enabled then
+			local focus = GetMouseFocus() -- Minimap or Minimap icons including nil checks to compensate for other addons
+			if focus and focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap") then
+				fadeStop = true
+				return
+			end
+			fadeStop = nil
+
 			animGroup:Stop()
 			Minimap:SetAlpha(db.hoverOpacity)
 			anim:SetChange(db.normalOpacity-db.hoverOpacity)
@@ -139,14 +130,9 @@ do
 		end
 	end
 
-	function mod:OnEnable()
-		db = self.db.profile
-		Minimap:SetAlpha(db.normalOpacity)
-
-		hookIcons(MinimapCluster:GetChildren()) -- Minimap & Icons
-		hookIcons(MiniMapTrackingButton) -- Tracking
-		hookIcons(Minimap:GetChildren()) -- Minimap Icons
-		hookIcons(MinimapBackdrop:GetChildren()) -- More Icons
+	function mod:SexyMap_NewFrame(_, f)
+		f:HookScript("OnEnter", OnEnter)
+		f:HookScript("OnLeave", OnLeave)
 	end
 end
 

@@ -4,12 +4,7 @@ addon.SexyMap = LibStub("AceAddon-3.0"):NewAddon(sexymap, "AceHook-3.0")
 local mod = addon.SexyMap
 local L = addon.L
 
-local _G = getfenv(0)
-local pairs, ipairs, type, select = _G.pairs, _G.ipairs, _G.type, _G.select
-
-local min = _G.math.min
-local MinimapCluster = _G.MinimapCluster
-local GetMouseFocus = _G.GetMouseFocus
+local cbh = LibStub:GetLibrary("CallbackHandler-1.0"):New(mod)
 
 local defaults = {
 	profile = {}
@@ -32,7 +27,6 @@ function mod:OnInitialize()
 	SLASH_SexyMap2 = "/sexymap"
 end
 
-local updateTimer, fadeTimer, fadeAnim
 function mod:OnEnable()
 	if not self.profilesRegistered then
 		self:RegisterModuleOptions("Profiles", LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db), L["Profiles"])
@@ -40,42 +34,17 @@ function mod:OnEnable()
 	end
 
 	Minimap:SetScript("OnMouseUp", mod.Minimap_OnClick)
-	self:HookAll(MinimapCluster, "OnEnter", MinimapCluster:GetChildren())
 
 	self.db.RegisterCallback(self, "OnProfileChanged", "ReloadAddon")
 	self.db.RegisterCallback(self, "OnProfileCopied", "ReloadAddon")
 	self.db.RegisterCallback(self, "OnProfileReset", "ReloadAddon")
 
-	-- Terrible, clean this up
-	if not updateTimer then
-		updateTimer = CreateFrame("Frame"):CreateAnimationGroup()
-		local anim = updateTimer:CreateAnimation()
-		updateTimer:SetScript("OnLoop", self.CheckExited)
-		anim:SetOrder(1)
-		anim:SetDuration(0.1)
-		updateTimer:SetLooping("REPEAT")
-	end
-	if not fadeTimer then
-		fadeTimer = CreateFrame("Frame"):CreateAnimationGroup()
-		fadeAnim = fadeTimer:CreateAnimation()
-		fadeTimer:SetScript("OnFinished", self.EnableFade)
-		fadeAnim:SetOrder(1)
-		fadeAnim:SetDuration(1)
-		fadeTimer:SetLooping("NONE")
-	end
+	self:ConfigureFrameGrab()
 end
 
 function mod:ReloadAddon()
 	self:Disable()
 	self:Enable()
-end
-
-function mod:HookAll(frame, script, ...)
-	self:HookScript(frame, script)
-	for i = 1, select("#", ...) do
-		local f = select(i, ...)
-		self:HookScript(f, script)
-	end
 end
 
 function mod.Minimap_OnClick(frame, button)
@@ -84,9 +53,6 @@ function mod.Minimap_OnClick(frame, button)
 	else
 		Minimap_OnClick(frame, button)
 	end
-end
-
-function mod:OnDisable()
 end
 
 function mod:RegisterModuleOptions(name, optionTbl, displayName)
@@ -100,157 +66,36 @@ function mod:RegisterModuleOptions(name, optionTbl, displayName)
 end
 
 do
-	local faderFrame = CreateFrame("Frame")
-	local fading = {}
-	local fadeTarget = 0
-	local fadeTime
-	local totalTime = 0
-	local hoverOverrides, hoverExempt = {}, {}
-
-	local function fade(self, t)
-		totalTime = totalTime + t
-		local pct = min(1, totalTime / fadeTime)
-		local total = 0
-		for k, v in pairs(fading) do
-			local alpha = v + ((fadeTarget - v) * pct)
-			total = total + 1
-			if not k.SetAlpha then
-				print("|cFF33FF99SexyMap|r: No SetAlpha for", k:GetName())
-			end
-
-			k:SetAlpha(alpha)
-			-- k:Show()
-			if alpha == fadeTarget then
-				fading[k] = nil
-				total = total - 1
-				-- if fadeTarget == 0 then
-					-- k:Hide()
-				-- end
-			end
-		end
-
-		if total == 0 then
-			faderFrame:SetScript("OnUpdate", nil)
-		end
-	end
-
-	local function startFade(t)
-		fadeTime = t or 0.2
-		totalTime = 0
-		faderFrame:SetScript("OnUpdate", fade)
-	end
-
-	local hoverButtons = {}
-	function mod:RegisterHoverButton(frame, showFunc)
-		local frameName = frame
-		if type(frame) == "string" then
-			frame = _G[frame]
-		elseif frame then
-			frameName = frame:GetName()
-		end
-		if not frame then
-			-- print("|cFF33FF99SexyMap|r: Unable to register", frameName, ", does not exit")
-			return
-		end
-		if hoverButtons[frame] then return end
-		if not hoverExempt[frame] then
-			frame:SetAlpha(0)
-		end
-		-- frame:Hide()
-		hoverButtons[frame] = showFunc or true
-	end
-
-	function mod:UnregisterHoverButton(frame)
-		if type(frame) == "string" then
-			frame = _G[frame]
-		end
-		if not frame then return end
-		if hoverButtons[frame] == true or type(hoverButtons[frame]) == "function" and hoverButtons[frame](frame) then
-			frame:SetAlpha(1)
-			-- frame:Show()
-		end
-		hoverButtons[frame] = nil
-	end
-
-	local function UpdateHoverOverrides(self, e)
-		for k, v in pairs(hoverOverrides) do
-			local ret = v(k, e)
-			if ret then
-				hoverExempt[k] = true
-				k:SetAlpha(1)
-				fading[k] = nil
-			else
-				hoverExempt[k] = false
-				mod:OnExit()
+	local alreadyGrabbed = {}
+	local grabFrames = function(...)
+		for i=1, select("#", ...) do
+			local f = select(i, ...)
+			local n = f:GetName()
+			if n and not alreadyGrabbed[n] then
+				alreadyGrabbed[n] = true
+				cbh:Fire("SexyMap_NewFrame", f)
 			end
 		end
 	end
 
-	function mod:RegisterHoverOverride(frame, func, ...)
-		local frameName = frame
-		if type(frame) == "string" then
-			frame = _G[frame]
-		elseif frame then
-			frameName = frame:GetName()
+	local updateTimer
+	function mod:ConfigureFrameGrab()
+		if updateTimer then return end
+		-- Try to capture new frames periodically
+		-- We'd use ADDON_LOADED but it's too early, some addons load a minimap icon afterwards
+		if not updateTimer then
+			updateTimer = CreateFrame("Frame"):CreateAnimationGroup()
+			local anim = updateTimer:CreateAnimation()
+			local Minimap = Minimap
+			updateTimer:SetScript("OnLoop", function() grabFrames(Minimap:GetChildren()) end)
+			anim:SetOrder(1)
+			anim:SetDuration(1)
+			updateTimer:SetLooping("REPEAT")
 		end
-
-		hoverOverrides[frame] = func
-		for i = 1, select("#", ...) do
-			local event = select(i, ...)
-			if not faderFrame:IsEventRegistered(event) then
-				faderFrame:RegisterEvent(event)
-			end
-		end
-		faderFrame:SetScript("OnEvent", UpdateHoverOverrides)
-	end
-
-	function mod:OnEnter()
+		grabFrames(MinimapCluster:GetChildren()) -- Minimap & Icons
+		grabFrames(Minimap:GetChildren()) -- Minimap Icons
+		grabFrames(MiniMapTrackingButton, MinimapBackdrop:GetChildren()) -- More Icons
 		updateTimer:Play()
-		fadeTarget = 1
-		for k, v in pairs(hoverButtons) do
-			if not hoverExempt[k] and (v == true or type(v) == "function" and v(k)) then
-				fading[k] = k:GetAlpha()
-			end
-		end
-		startFade()
-	end
-
-	function mod:OnExit()
-		updateTimer:Stop()
-
-		fadeTarget = 0
-		for k, v in pairs(hoverButtons) do
-			if not hoverExempt[k] then
-				fading[k] = k:GetAlpha()
-			end
-		end
-		startFade()
-	end
-
-	function mod:CheckExited()
-		if mod.fadeDisabled then return end
-		local f = GetMouseFocus()
-		if f then
-			local p = f:GetParent()
-			while(p and p ~= UIParent) do
-				if p == MinimapCluster then return true end
-				p = p:GetParent()
-			end
-			mod:OnExit()
-		end
-	end
-
-	function mod:EnableFade()
-		mod.fadeDisabled = false
-	end
-
-	function mod:DisableFade(forHowLong)
-		self.fadeDisabled = true
-		self:OnEnter()
-		if forHowLong and forHowLong > 0 then
-			fadeTimer:Stop()
-			fadeAnim:SetDuration(forHowLong)
-			fadeTimer:Play()
-		end
 	end
 end
+

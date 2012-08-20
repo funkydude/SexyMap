@@ -2,11 +2,34 @@
 local _, addon = ...
 local parent = addon.SexyMap
 local modName = "Buttons"
-local mod = addon.SexyMap:NewModule(modName, "AceHook-3.0")
+local mod = addon.SexyMap:NewModule(modName)
 local L = addon.L
 local Shape
 local db
 
+local animFrames = {}
+local blizzButtons = {
+	GameTimeFrame = L["Calendar"],
+	MiniMapTracking = L["Tracking Button"],
+	MinimapZoneTextButton = "zone text",
+	MinimapZoomIn = "zoom in",
+	MinimapZoomOut = "zoom out",
+	MiniMapWorldMapButton = L["Map Button"],
+	TimeManagerClockButton = L["Clock"],
+}
+local dynamicButtons = {
+	GuildInstanceDifficulty = "guild dungeon difficulty (when available)",
+	MiniMapChallengeMode = "challenge mode (when available)",
+	MiniMapInstanceDifficulty = "Dungeon difficulty (when available)",
+	MiniMapMailFrame = "new mail indicator (when available)",
+	MiniMapRecordingButton = "video record (when available, Mac OSX only)",
+	MiniMapVoiceChatFrame = "voice chat (when available)",
+	QueueStatusMinimapButton = "queue status (when available)",
+	MiniMapLFGFrame = "LFG (when available)", -- XXX mop temp
+	MiniMapBattlefieldFrame = "PVP (when available)", -- XXX mop temp
+}
+
+--[[
 local buttons
 local allChildren = {}
 local ignoreButtons = {MinimapPing = true}
@@ -67,7 +90,7 @@ do
 		return count
 	end
 end
-
+]]
 local options = {
 	type = "group",
 	name = modName,
@@ -80,7 +103,16 @@ local options = {
 				return not db.controlVisibility
 			end,
 			args = {},
-			order = 2
+			order = 3,
+		},
+		dynamic = {
+			type = "group",
+			name = "Dynamic Buttons",
+			disabled = function()
+				return not db.controlVisibility
+			end,
+			args = {},
+			order = 2,
 		},
 		stock = {
 			type = "group",
@@ -89,20 +121,16 @@ local options = {
 			end,
 			name = L["Standard Buttons"],
 			args = {},
-			order = 1
+			order = 1,
 		},
-		-- capture = {
-			-- type = "execute",
-			-- func = mod.CaptureButtons,
-			-- name = L["Capture New Buttons"]
-		-- },
 		lockDragging = {
 			type = "toggle",
 			name = L["Lock Button Dragging"],
 			width = "full",
 			order = 101,
 			disabled = function()
-				return not db.allowDragging
+				return true
+				--return not db.allowDragging
 			end,
 			get = function()
 				return db.lockDragging
@@ -117,6 +145,11 @@ local options = {
 			desc = L["Allow SexyMap to assume drag ownership for buttons attached to the minimap. Turn this off if you have another mod that you want to use to position your minimap buttons."],
 			width = "full",
 			order = 102,
+			--
+			disabled = function()
+				return true
+			end,
+			--
 			get = function()
 				return db.allowDragging
 			end,
@@ -140,14 +173,12 @@ local options = {
 			end,
 			set = function(info, v)
 				db.controlVisibility = v
-				if not v then
-					for k, v in pairs(buttons) do
-						for _, f in ipairs(v) do
-							parent:UnregisterHoverButton(f)
-						end
+				for _,f in pairs(animFrames) do
+					if not v then
+						mod:ChangeFrameVisibility(f, "always")
+					else
+						mod:ChangeFrameVisibility(f, db.visibilitySettings[f:GetName()] or "hover")
 					end
-				else
-					mod:Update()
 				end
 			end
 		},
@@ -160,7 +191,8 @@ local options = {
 			bigStep = 1,
 			order = 104,
 			disabled = function()
-				return not db.allowDragging
+				return true
+				--return not db.allowDragging
 			end,
 			get = function()
 				return db.radius
@@ -174,146 +206,177 @@ local options = {
 	}
 }
 
-local defaults = {
-	profile = {
-		radius = 2,
-		dragPositions = {},
-		allowDragging = true,
-		controlVisibility = true
-	}
-}
-
 do
-	local translations = {
-		calendar 	= L["Calendar"],
-		worldmap 	= L["Map Button"],
-		tracking 	= L["Tracking Button"],
-		zoom 		= L["Zoom Buttons"],
-		mapclock 	= L["Clock"],
-		close 		= L["Close button"],
-		direction	= L["Compass labels"],
-		mail		= L["New mail indicator"],
-		voice		= L["Voice chat"],
-		pvp			= L["Battlegrounds icon"],
-		lfg			= L["Dungeon finder icon"],
-		difficulty  = L["Dungeon difficulty"]
-	}
-
-	buttons = {
-		calendar	= {"GameTimeFrame", override = function(f, e)
-						return CalendarGetNumPendingInvites() > 0
-					end, overrideEvents = { "CALENDAR_UPDATE_PENDING_INVITES", "PLAYER_ENTERING_WORLD" }},
-		worldmap 	= {"MiniMapWorldMapButton"},
-		tracking	= {"MiniMapTracking"},
-		zoom		= {"MinimapZoomIn", "MinimapZoomOut"},
-		mapclock	= {"TimeManagerClockButton"},
-		close	 	= {"MinimapToggleButton"},
-		direction	= {"MinimapNorthTag"},
-		mail		= {"MiniMapMailFrame", show = function(f)
-						return HasNewMail()
-					end},
-		voice 		= {"MiniMapVoiceChatFrame", show = function(f)
-						return IsVoiceChatEnabled() and GetNumVoiceSessions()
-					end},
-		--[[
-    pvp 		= {"MiniMapBattlefieldFrame", show = function(f)
-						return not ( BattlefieldFrame.numQueues == 0 and (not CanHearthAndResurrectFromArea()) )
-					end },
-    ]]--
-		lfg 		= { "MiniMapLFGFrame",
-						show = function(f)
-							return GetLFGMode()
-						end,
-						-- override = function(f, e)
-							-- local mode = GetLFGMode()
-							-- return mode == "queued" or mode == "listed" or mode == "rolecheck"
-						-- end,
-						-- overrideEvents = { "LFG_UPDATE" }
-					  },
-		difficulty  = { "MiniMapInstanceDifficulty",
-						show = function(f)
-							local _, instanceType, difficulty, _, maxPlayers, playerDifficulty, isDynamicInstance = GetInstanceInfo();
-							return ( ( instanceType == "party" or instanceType == "raid" ) and not ( difficulty == 1 and maxPlayers == 5 ) )
-						end
-					  }
-	}
-
 	local hideValues = {
 		["always"] = L["Always"],
 		["never"] = L["Never"],
-		["hover"] = L["On hover"]
+		["hover"] = L["On hover"],
+	}
+	local dynamicValues = {
+		["always"] = L["Always"],
+		["hover"] = L["On hover"],
 	}
 
 	local function hideGet(info, v)
-		local key = info[#info]:gsub(" ", "_")
-		return v == (db[key] and db[key].hide or "hover")
+		return (db.visibilitySettings[info[#info]] or "hover") == v
 	end
 
 	local function hideSet(info, v)
-		local key = info[#info]:gsub(" ", "_")
-		db[key] = db[key] or {}
-		db[key].hide = v
-		mod:Update()
+		local name = info[#info]
+		db.visibilitySettings[name] = v ~= "hover" and v or nil
+		mod:ChangeFrameVisibility(_G[name], v)
 	end
 
-	function mod:addButtonOptions(k, v)
-		local key = k:gsub(" ", "_")
+	function mod:AddButtonOptions(name, blizzIcon, dynamic)
 		local p
-		if v and v.custom then
-			p = options.args.custom.args
+		if blizzIcon then
+			p = options.args.stock.args -- Blizz icon = stock section
+		elseif dynamic then
+			p = options.args.dynamic.args -- Blizz dynamic (off by default) icon = dynamic section
 		else
-			p = options.args.stock.args
+			p = options.args.custom.args -- Addon icon = custom section
 		end
-		p[key] = p[key] or {
+		p[name] =  {
 			type = "multiselect",
-			name = ("Show %s..."):format(translations[k] or k),
-			values = hideValues,
+			name = ("Show %s:"):format(blizzButtons[name] or dynamicButtons[name] or name:gsub("LibDBIcon10_", "")),
+			values = dynamic and dynamicValues or hideValues,
 			get = hideGet,
-			set = hideSet
+			set = hideSet,
 		}
 	end
 end
 
 function mod:OnInitialize()
+	local defaults = {
+		profile = {
+			radius = 2,
+			dragPositions = {},
+			visibilitySettings = {
+				MinimapZoomIn = "never",
+				MinimapZoomOut = "never",
+				MiniMapWorldMapButton = "never",
+				MinimapZoneTextButton = "always",
+				TimeManagerClockButton = "always",
+				MiniMapMailFrame = "always",
+			},
+			allowDragging = true,
+			controlVisibility = true
+		}
+	}
 	self.db = parent.db:RegisterNamespace(modName, defaults)
 	db = self.db.profile
 	parent:RegisterModuleOptions(modName, options, modName)
+
+	parent.RegisterCallback(self, "SexyMap_NewFrame")
 end
 
-local updateTimer
 function mod:OnEnable()
 	Shape = parent:GetModule("Shapes")
-	Shape.RegisterCallback(self, "SexyMap_ShapeChanged")
+	--Shape.RegisterCallback(self, "SexyMap_ShapeChanged")
 
 	db = self.db.profile
 	local gotLast = false
 
-	self:Update()
+	--self:Update()
 
 	MiniMapInstanceDifficulty:EnableMouse(true)
 
-	-- Try to capture new buttons periodically
-	if not updateTimer then -- Temp, should scrap this entirely
-		updateTimer = CreateFrame("Frame"):CreateAnimationGroup()
-		local anim = updateTimer:CreateAnimation()
-		updateTimer:SetScript("OnLoop", self.MakeMovables)
-		anim:SetOrder(1)
-		anim:SetDuration(1)
-		updateTimer:SetLooping("REPEAT")
-	end
-	updateTimer:Play()
-	self:MakeTrackingMovable()
-	self:MakeMovables()
+	--self:MakeTrackingMovable()
+	--self:MakeMovables()
 
 	MiniMapInstanceDifficulty:SetFrameLevel(Minimap:GetFrameLevel() + 10)
-
-	self:SecureHook("Minimap_OnClick", "ReleaseDrag")
 end
 
-function mod:OnDisable()
-	updateTimer:Stop()
+do
+	local fadeIgnore = {
+		Minimap = true,
+		MinimapBackdrop = true,
+		SexyMapPingFrame = true,
+		SexyMapCustomBackdrop = true,
+		MiniMapTrackingButton = true, -- Child of MiniMapTracking which is faded
+	}
+
+	local OnFinished = function(anim)
+		-- Minimap or Minimap icons including nil checks to compensate for other addons
+		local f, focus = anim:GetParent(), GetMouseFocus()
+		if focus and focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap") then
+			f:SetAlpha(1)
+		else
+			f:SetAlpha(0)
+		end
+	end
+
+
+	local fadeStop -- Use a variable to prevent fadeout/in when moving the mouse around minimap/icons
+
+	local OnEnter = function()
+		if not db.controlVisibility or fadeStop then return end
+
+		for _,v in pairs(animFrames) do
+			local n = v:GetName()
+			if not db.visibilitySettings[n] then
+				v.smAnimGroup:Stop()
+				v:SetAlpha(0)
+				v.smAlphaAnim:SetChange(1)
+				v.smAnimGroup:Play()
+			end
+		end
+	end
+	local OnLeave = function()
+		if not db.controlVisibility then return end
+		local focus = GetMouseFocus() -- Minimap or Minimap icons including nil checks to compensate for other addons
+		if focus and focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap") then
+			fadeStop = true
+			return
+		end
+		fadeStop = nil
+
+		for _,v in pairs(animFrames) do
+			local n = v:GetName()
+			if not db.visibilitySettings[n] then
+				v.smAnimGroup:Stop()
+				v:SetAlpha(1)
+				v.smAlphaAnim:SetChange(-1)
+				v.smAnimGroup:Play()
+			end
+		end
+	end
+
+	function mod:SexyMap_NewFrame(_, f)
+		local n, w = f:GetName(), f:GetWidth()
+		-- Don't add animations for ignored frames, dynamically try to skip frames that may not be minimap buttons by checking size
+		if not fadeIgnore[n] and w > 20 then
+			f.smAnimGroup = f:CreateAnimationGroup()
+			f.smAlphaAnim = f.smAnimGroup:CreateAnimation("Alpha")
+			f.smAlphaAnim:SetOrder(1)
+			f.smAlphaAnim:SetDuration(0.5)
+			f.smAnimGroup:SetScript("OnFinished", OnFinished)
+			tinsert(animFrames, f)
+
+			if db.controlVisibility then
+				self:ChangeFrameVisibility(f, db.visibilitySettings[n] or "hover")
+			end
+			self:AddButtonOptions(n, blizzButtons[n], dynamicButtons[n])
+		end
+		f:HookScript("OnEnter", OnEnter)
+		f:HookScript("OnLeave", OnLeave)
+	end
+
+	function mod:ChangeFrameVisibility(frame, vis)
+		if vis == "always" then
+			if not dynamicButtons[frame:GetName()] then frame:Show() end
+			frame:SetAlpha(1)
+		elseif vis == "never" then
+			frame:Hide()
+		else
+			if not dynamicButtons[frame:GetName()] then frame:Show() end
+			frame:SetAlpha(0)
+		end
+	end
 end
 
+
+--[[
 function mod:SexyMap_ShapeChanged()
 	parent:DisableFade(1)
 	self:UpdateDraggables()
@@ -493,10 +556,189 @@ do
 			movables[frame] = nil
 		end
 	end
+end
+]]
+--[[
 
-	function mod:ReleaseDrag()
-		if moving then
-			finish(moving)
+====================================================
+====================================================
+====================================================
+====================================================
+
+]]
+--[[
+do
+	local updateTimer, fadeTimer, fadeAnim
+	-- Terrible, clean this up
+	if not updateTimer then
+		updateTimer = CreateFrame("Frame"):CreateAnimationGroup()
+		local anim = updateTimer:CreateAnimation()
+		updateTimer:SetScript("OnLoop", self.CheckExited)
+		anim:SetOrder(1)
+		anim:SetDuration(0.1)
+		updateTimer:SetLooping("REPEAT")
+	end
+	if not fadeTimer then
+		fadeTimer = CreateFrame("Frame"):CreateAnimationGroup()
+		fadeAnim = fadeTimer:CreateAnimation()
+		fadeTimer:SetScript("OnFinished", self.EnableFade)
+		fadeAnim:SetOrder(1)
+		fadeAnim:SetDuration(1)
+		fadeTimer:SetLooping("NONE")
+	end
+
+	local faderFrame = CreateFrame("Frame")
+	local fading = {}
+	local fadeTarget = 0
+	local fadeTime
+	local totalTime = 0
+	local hoverOverrides, hoverExempt = {}, {}
+
+	local function fade(self, t)
+		totalTime = totalTime + t
+		local pct = min(1, totalTime / fadeTime)
+		local total = 0
+		for k, v in pairs(fading) do
+			local alpha = v + ((fadeTarget - v) * pct)
+			total = total + 1
+			if not k.SetAlpha then
+				print("|cFF33FF99SexyMap|r: No SetAlpha for", k:GetName())
+			end
+
+			k:SetAlpha(alpha)
+			-- k:Show()
+			if alpha == fadeTarget then
+				fading[k] = nil
+				total = total - 1
+				-- if fadeTarget == 0 then
+					-- k:Hide()
+				-- end
+			end
+		end
+
+		if total == 0 then
+			faderFrame:SetScript("OnUpdate", nil)
+		end
+	end
+
+	local function startFade(t)
+		fadeTime = t or 0.2
+		totalTime = 0
+		faderFrame:SetScript("OnUpdate", fade)
+	end
+
+	local hoverButtons = {}
+	function mod:RegisterHoverButton(frame, showFunc)
+		local frameName = frame
+		if type(frame) == "string" then
+			frame = _G[frame]
+		elseif frame then
+			frameName = frame:GetName()
+		end
+		if not frame then
+			-- print("|cFF33FF99SexyMap|r: Unable to register", frameName, ", does not exit")
+			return
+		end
+		if hoverButtons[frame] then return end
+		if not hoverExempt[frame] then
+			frame:SetAlpha(0)
+		end
+		-- frame:Hide()
+		hoverButtons[frame] = showFunc or true
+	end
+
+	function mod:UnregisterHoverButton(frame)
+		if type(frame) == "string" then
+			frame = _G[frame]
+		end
+		if not frame then return end
+		if hoverButtons[frame] == true or type(hoverButtons[frame]) == "function" and hoverButtons[frame](frame) then
+			frame:SetAlpha(1)
+			-- frame:Show()
+		end
+		hoverButtons[frame] = nil
+	end
+
+	local function UpdateHoverOverrides(self, e)
+		for k, v in pairs(hoverOverrides) do
+			local ret = v(k, e)
+			if ret then
+				hoverExempt[k] = true
+				k:SetAlpha(1)
+				fading[k] = nil
+			else
+				hoverExempt[k] = false
+				mod:OnExit()
+			end
+		end
+	end
+
+	function mod:RegisterHoverOverride(frame, func, ...)
+		local frameName = frame
+		if type(frame) == "string" then
+			frame = _G[frame]
+		elseif frame then
+			frameName = frame:GetName()
+		end
+
+		hoverOverrides[frame] = func
+		for i = 1, select("#", ...) do
+			local event = select(i, ...)
+			if not faderFrame:IsEventRegistered(event) then
+				faderFrame:RegisterEvent(event)
+			end
+		end
+		faderFrame:SetScript("OnEvent", UpdateHoverOverrides)
+	end
+
+	function mod:OnEnter()
+		updateTimer:Play()
+		fadeTarget = 1
+		for k, v in pairs(hoverButtons) do
+			if not hoverExempt[k] and (v == true or type(v) == "function" and v(k)) then
+				fading[k] = k:GetAlpha()
+			end
+		end
+		startFade()
+	end
+
+	function mod:OnExit()
+		updateTimer:Stop()
+
+		fadeTarget = 0
+		for k, v in pairs(hoverButtons) do
+			if not hoverExempt[k] then
+				fading[k] = k:GetAlpha()
+			end
+		end
+		startFade()
+	end
+
+	function mod:CheckExited()
+		if mod.fadeDisabled then return end
+		local f = GetMouseFocus()
+		if f then
+			local p = f:GetParent()
+			while(p and p ~= UIParent) do
+				if p == MinimapCluster then return true end
+				p = p:GetParent()
+			end
+			mod:OnExit()
+		end
+	end
+
+	function mod:EnableFade()
+		mod.fadeDisabled = false
+	end
+
+	function mod:DisableFade(forHowLong)
+		self.fadeDisabled = true
+		self:OnEnter()
+		if forHowLong and forHowLong > 0 then
+			fadeTimer:Stop()
+			fadeAnim:SetDuration(forHowLong)
+			fadeTimer:Play()
 		end
 	end
 end
+]]
