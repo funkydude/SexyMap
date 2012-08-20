@@ -293,6 +293,7 @@ do
 		MinimapBackdrop = true,
 		SexyMapPingFrame = true,
 		SexyMapCustomBackdrop = true,
+		SexyMapCoordFrame = true,
 		MiniMapTrackingButton = true, -- Child of MiniMapTracking which is faded
 	}
 

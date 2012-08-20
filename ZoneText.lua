@@ -135,7 +135,6 @@ function mod:OnInitialize()
 			bgColor = {r = 0, g = 0, b = 0, a = 1},
 			borderColor = {r = 0, g = 0, b = 0, a = 1},
 			fontColor = {},
-			show = "always"
 		}
 	}
 
