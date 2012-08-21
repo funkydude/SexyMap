@@ -76,8 +76,8 @@ L["Force a square texture. Fixed distortion on square textures."] = "Force a squ
 L["Calendar"] = "Calendar"
 L["Tracking Button"] = "Tracking Button"
 L["Zone Text"] = "Zone Text"
-L["Zoom In"] = "Zoom In Button"
-L["Zoom Out"] = "Zoom Out Button"
+L["Zoom In Button"] = "Zoom In Button"
+L["Zoom Out Button"] = "Zoom Out Button"
 L["Map Button"] = "Map Button"
 L["Clock"] = "Clock"
 
