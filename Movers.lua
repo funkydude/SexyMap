@@ -42,6 +42,7 @@ local options = {
 				db.lock = v
 				mod:SetLock(v)
 			end,
+			disabled = function() return not db.enabled end,
 		},
 	},
 }
