@@ -55,13 +55,7 @@ local options = {
 }
 
 pingFrame = CreateFrame("Frame", "SexyMapPingFrame", Minimap)
-pingFrame:SetBackdrop({
-	bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
-	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-	insets = {left = 2, top = 2, right = 2, bottom = 2},
-	edgeSize = 12,
-	tile = true
-})
+pingFrame:SetBackdrop(addon.backdrop)
 pingFrame:SetBackdropColor(0,0,0,0.8)
 pingFrame:SetBackdropBorderColor(0,0,0,0.6)
 pingFrame:SetHeight(20)

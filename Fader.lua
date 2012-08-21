@@ -74,7 +74,7 @@ function mod:OnInitialize()
 		}
 	}
 	self.db = parent.db:RegisterNamespace(modName, defaults)
-	parent:RegisterModuleOptions(modName, options, ["Fader"])
+	parent:RegisterModuleOptions(modName, options, L["Fader"])
 	db = self.db.profile
 	self:SetEnabledState(db.enabled)
 

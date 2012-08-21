@@ -138,13 +138,7 @@ function mod:OnEnable()
 
 	if not coordFrame then
 		coordFrame = CreateFrame("Frame", "SexyMapCoordFrame", Minimap)
-		coordFrame:SetBackdrop({
-			bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
-			edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-			insets = {left = 2, top = 2, right = 2, bottom = 2},
-			edgeSize = 12,
-			tile = true
-		})
+		coordFrame:SetBackdrop(addon.backdrop)
 		coordsText = coordFrame:CreateFontString(nil, nil, "GameFontNormalSmall")
 		coordsText:SetPoint("CENTER", coordFrame, "CENTER")
 		coordsText:SetJustifyH("CENTER")
