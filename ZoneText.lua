@@ -24,7 +24,7 @@ local options = {
 	args = {
 		width = {
 			type = "range",
-			name = L["Text width"],
+			name = L["Text Width"],
 			order = 0,
 			min = 50,
 			max = 400,
@@ -61,7 +61,7 @@ local options = {
 		},
 		fontColor = {
 			type = "color",
-			name = L["Font color"],
+			name = L["Font Color"],
 			order = 3,
 			hasAlpha = true,
 			get = function()
@@ -78,7 +78,7 @@ local options = {
 		},
 		xOffset = {
 			type = "range",
-			name = L["Horizontal position"],
+			name = L["Horizontal Position"],
 			order = 6,
 			min = -250,
 			max = 250,
@@ -89,7 +89,7 @@ local options = {
 		},
 		yOffset = {
 			type = "range",
-			name = L["Vertical position"],
+			name = L["Vertical Position"],
 			order = 6,
 			min = -250,
 			max = 250,
@@ -100,7 +100,7 @@ local options = {
 		},
 		bgColor = {
 			type = "color",
-			name = L["Background color"],
+			name = L["Background Color"],
 			order = 7,
 			hasAlpha = true,
 			get = function()
@@ -113,7 +113,7 @@ local options = {
 		},
 		borderColor = {
 			type = "color",
-			name = L["Border color"],
+			name = L["Border Color"],
 			order = 8,
 			hasAlpha = true,
 			get = function()
@@ -139,7 +139,7 @@ function mod:OnInitialize()
 	}
 
 	self.db = parent.db:RegisterNamespace(modName, defaults)
-	parent:RegisterModuleOptions(modName, options, "Zone Text")
+	parent:RegisterModuleOptions(modName, options, L["Zone Text"])
 end
 
 local hooked

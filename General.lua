@@ -11,7 +11,7 @@ local options = {
 	args = {
 		lock = {
 			order = 1,
-			name = L["Lock minimap"],
+			name = L["Lock Minimap"],
 			type = "toggle",
 			get = function()
 				return db.lock
@@ -25,6 +25,7 @@ local options = {
 			order = 2,
 			type = "toggle",
 			name = L["Clamp to screen"],
+			desc = L["Prevent the minimap from being moved off the screen"],
 			get = function()
 				return db.clamp
 			end,
@@ -36,7 +37,8 @@ local options = {
 		rightClickToConfig = {
 			order = 3,
 			type = "toggle",
-			name = L["Right click map to configure"],
+			name = L["Right Click Configure"],
+			desc = L["Right clicking the map will open the SexyMap options"],
 			width = "full",
 			get = function()
 				return db.rightClickToConfig
@@ -70,8 +72,8 @@ local options = {
 		zoom = {
 			order = 6,
 			type = "range",
-			name = L["Autozoom out after..."],
-			desc = L["Number of seconds to autozoom out after. Set to 0 to turn off Autozoom."],
+			name = L["Auto Zoom-Out Delay"],
+			desc = L["If you zoom into the map, this feature will automatically zoom out after the selected period of time (seconds)"],
 			min = 0,
 			width = "full",
 			max = 60,

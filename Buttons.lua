@@ -10,22 +10,22 @@ local animFrames = {}
 local blizzButtons = {
 	GameTimeFrame = L["Calendar"],
 	MiniMapTracking = L["Tracking Button"],
-	MinimapZoneTextButton = "zone text",
-	MinimapZoomIn = "zoom in",
-	MinimapZoomOut = "zoom out",
+	MinimapZoneTextButton = L["Zone Text"],
+	MinimapZoomIn = L["Zoom In Button"],
+	MinimapZoomOut = L["Zoom Out Button"],
 	MiniMapWorldMapButton = L["Map Button"],
 	TimeManagerClockButton = L["Clock"],
 }
 local dynamicButtons = {
-	GuildInstanceDifficulty = "guild dungeon difficulty (when available)",
-	MiniMapChallengeMode = "challenge mode (when available)",
-	MiniMapInstanceDifficulty = "Dungeon difficulty (when available)",
-	MiniMapMailFrame = "new mail indicator (when available)",
-	MiniMapRecordingButton = "video record (when available, Mac OSX only)",
-	MiniMapVoiceChatFrame = "voice chat (when available)",
-	QueueStatusMinimapButton = "queue status (when available)",
-	MiniMapLFGFrame = "LFG (when available)", -- XXX mop temp
-	MiniMapBattlefieldFrame = "PVP (when available)", -- XXX mop temp
+	GuildInstanceDifficulty = L["Guild Dungeon Difficulty Indicator (When Available)"],
+	MiniMapChallengeMode = L["Challenge Mode Button (When Available)"],
+	MiniMapInstanceDifficulty = L["Dungeon Difficulty Indicator (When Available)"],
+	MiniMapMailFrame = L["New Mail Indicator (When Available)"],
+	MiniMapRecordingButton = L["Video Recording Button (Mac OSX Only, When Available)"],
+	MiniMapVoiceChatFrame = L["Voice Chat Button (When Available)"],
+	QueueStatusMinimapButton = L["Queue Status Button (When Available)"],
+	MiniMapLFGFrame = "LFG", -- XXX mop temp
+	MiniMapBattlefieldFrame = "PVP", -- XXX mop temp
 }
 
 local options = {
@@ -44,7 +44,7 @@ local options = {
 		},
 		dynamic = {
 			type = "group",
-			name = "Dynamic Buttons",
+			name = L["Dynamic Buttons"],
 			disabled = function()
 				return not db.controlVisibility
 			end,
@@ -135,11 +135,11 @@ do
 	local hideValues = {
 		["always"] = L["Always"],
 		["never"] = L["Never"],
-		["hover"] = L["On hover"],
+		["hover"] = L["On Hover"],
 	}
 	local dynamicValues = {
 		["always"] = L["Always"],
-		["hover"] = L["On hover"],
+		["hover"] = L["On Hover"],
 	}
 
 	local function hideGet(info, v)
@@ -163,7 +163,7 @@ do
 		end
 		p[name] =  {
 			type = "multiselect",
-			name = ("Show %s:"):format(blizzButtons[name] or dynamicButtons[name] or name:gsub("LibDBIcon10_", "")),
+			name = L["Show %s:"]:format(blizzButtons[name] or dynamicButtons[name] or name:gsub("LibDBIcon10_", "")),
 			values = dynamic and dynamicValues or hideValues,
 			get = hideGet,
 			set = hideSet,
@@ -191,7 +191,7 @@ function mod:OnInitialize()
 	}
 	self.db = parent.db:RegisterNamespace(modName, defaults)
 	db = self.db.profile
-	parent:RegisterModuleOptions(modName, options, modName)
+	parent:RegisterModuleOptions(modName, options, L["Buttons"])
 
 	Shape = parent:GetModule("Shapes")
 	Shape.RegisterCallback(self, "SexyMap_ShapeChanged", "UpdateDraggables")

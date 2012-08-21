@@ -14,8 +14,7 @@ local options = {
 	args = {
 		enabled = {
 			type = "toggle",
-			name = L["Enable fader"],
-			desc = L["Enable fader functionality"],
+			name = L["Enable Minimap Fader"],
 			get = function()
 				return db.enabled
 			end,
@@ -75,7 +74,7 @@ function mod:OnInitialize()
 		}
 	}
 	self.db = parent.db:RegisterNamespace(modName, defaults)
-	parent:RegisterModuleOptions(modName, options, modName)
+	parent:RegisterModuleOptions(modName, options, ["Fader"])
 	db = self.db.profile
 	self:SetEnabledState(db.enabled)
 

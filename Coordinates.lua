@@ -30,7 +30,7 @@ local options = {
 		},
 		lock = {
 			type = "toggle",
-			name = L["Lock coordinates"],
+			name = L["Lock Coordinates"],
 			order = 2,
 			get = function()
 				return mod.db.profile.locked
@@ -42,7 +42,7 @@ local options = {
 		},
 		fontSize = {
 			type = "range",
-			name = L["Font size"],
+			name = L["Font Size"],
 			order = 3,
 			min = 8,
 			max = 30,
@@ -58,7 +58,7 @@ local options = {
 		},
 		fontColor = {
 			type = "color",
-			name = L["Font color"],
+			name = L["Font Color"],
 			order = 4,
 			hasAlpha = true,
 			get = function()
@@ -74,7 +74,7 @@ local options = {
 		},
 		backgroundColor = {
 			type = "color",
-			name = L["Backdrop color"],
+			name = L["Backdrop Color"],
 			order = 5,
 			hasAlpha = true,
 			get = function()
@@ -90,7 +90,7 @@ local options = {
 		},
 		borderColor = {
 			type = "color",
-			name = L["Border color"],
+			name = L["Border Color"],
 			order = 5,
 			hasAlpha = true,
 			get = function()
@@ -106,7 +106,7 @@ local options = {
 		},
 		reset = {
 			type = "execute",
-			name = L["Reset position"],
+			name = L["Reset Position"],
 			order = 6,
 			func = function()
 				mod:ResetPosition()
@@ -126,7 +126,7 @@ function mod:OnInitialize()
 		}
 	}
 	self.db = parent.db:RegisterNamespace(modName, defaults)
-	parent:RegisterModuleOptions(modName, options, modName)
+	parent:RegisterModuleOptions(modName, options, L["Coordinates"])
 end
 
 local coordFrame, coordsText

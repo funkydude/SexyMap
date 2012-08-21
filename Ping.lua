@@ -103,7 +103,7 @@ function mod:OnInitialize()
 		}
 	}
 	self.db = parent.db:RegisterNamespace(modName, defaults)
-	parent:RegisterModuleOptions(modName, options, modName)
+	parent:RegisterModuleOptions(modName, options, L["Ping"])
 	if self.db.profile.showPing then
 		pingFrame:RegisterEvent("MINIMAP_PING")
 	end

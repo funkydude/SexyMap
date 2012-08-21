@@ -11,12 +11,12 @@ local options = {
 	args = {
 		desc = {
 			order = 0.5,
-			name = "WARNING: This feature is not officially supported, expect problems when using this feature such as taints, loss of quest tracker functionality, or boss frames jumping around. Blizzard frames like the quest tracker and boss health aren't designed to be moved, I suggest you use addons that replace these frames e.g. Unit Frames for boss health.",
+			name = L["Movers Warning"],
 			type = "description",
 		},
 		enable = {
 			order = 1,
-			name = "Enable Movers",
+			name = L["Enable Movers"],
 			type = "toggle",
 			get = function()
 				return db.enabled
@@ -33,7 +33,7 @@ local options = {
 		},
 		lock = {
 			order = 2,
-			name = "Lock Movers",
+			name = L["Lock Movers"],
 			type = "toggle",
 			get = function()
 				return db.lock
@@ -50,7 +50,7 @@ local options = {
 local movables = {
 	["DurabilityFrame"] = L["Armored Man"],
 	["WatchFrame"] = L["Objectives Tracker"],
-	["Boss1TargetFrame"] = L["Boss frames (Gunships, etc)"],
+	["Boss1TargetFrame"] = L["Boss Frames"],
 }
 local movers = {}
 
@@ -64,7 +64,7 @@ function mod:OnInitialize()
 	}
 	self.db = parent.db:RegisterNamespace("Movers", defaults)
 	db = self.db.profile
-	parent:RegisterModuleOptions("Movers", options, "Movers")
+	parent:RegisterModuleOptions("Movers", options, L["Movers"])
 end
 
 do
