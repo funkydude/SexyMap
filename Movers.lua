@@ -40,7 +40,7 @@ local options = {
 			end,
 			set = function(info, v)
 				db.lock = v
-				mod:SetLock(v)
+				mod:SetMovers()
 			end,
 			disabled = function() return not db.enabled end,
 		},
@@ -68,12 +68,38 @@ function mod:OnInitialize()
 end
 
 do
+	--[[local reanchorWatchFrame = function()
+		local mx, my = MinimapCluster:GetCenter()
+		local sx, sy = UIParent:GetCenter()
+		local change, from, to, side = false, nil, nil, nil
+		if my < sy then
+			from = "BOTTOM"
+			to = "TOP"
+			side = to
+		else
+			from = "TOP"
+			to = "BOTTOM"
+			side = to
+		end
+		if mx < sx then
+			from = from .. "LEFT"
+			to = to .. "LEFT"
+		else
+			from = from .. "RIGHT"
+			to = to .. "RIGHT"
+		end
+		WatchFrame:ClearAllPoints()
+		WatchFrame:SetPoint(from, MinimapCluster, to)
+		-- WatchFrame:SetHeight(1000)
+		WatchFrame:SetPoint(side, UIParent, side)
+	end]]
+
 	local hooked
 	function mod:OnEnable()
 		db = self.db.profile
 		if not db.enabled then self:Disable() return end
 
-		self:SetLock(db.lock)
+		self:SetMovers()
 
 		if hooked then return end
 		hooked = true
@@ -102,11 +128,11 @@ do
 			movables["VehicleSeatIndicator"] = L["Vehicle Seat"]
 		end
 		self:CreateMoversAndSetMovables()
-		hooksecurefunc("WatchFrame_Update", function()
+		--[[hooksecurefunc("WatchFrame_Update", function()
 			if not WatchFrame:IsUserPlaced() then
 				reanchorWatchFrame()
 			end
-		end)
+		end)]]
 	end
 end
 
@@ -131,7 +157,6 @@ do
 		db.framePositions[n].x = x
 		db.framePositions[n].y = y
 		f:SetUserPlaced(true)
-		-- f:SetClampedToScreen(f.clamped)
 	end
 
 	function mod:CreateMoversAndSetMovables()
@@ -188,106 +213,23 @@ do
 	end
 end
 
-do
-
-	function reanchorWatchFrame()
-		local mx, my = MinimapCluster:GetCenter()
-		local sx, sy = UIParent:GetCenter()
-		local change, from, to, side = false, nil, nil, nil
-		if my < sy then
-			from = "BOTTOM"
-			to = "TOP"
-			side = to
-		else
-			from = "TOP"
-			to = "BOTTOM"
-			side = to
+function mod:SetMovers()
+	local v = db.enabled and (not db.lock)
+	if v then
+		for _, f in ipairs(movers) do
+			f.showParent = not not f:GetParent():IsVisible() -- convert nil -> false
+			f:GetParent():Show()
+			f:Show()
 		end
-		if mx < sx then
-			from = from .. "LEFT"
-			to = to .. "LEFT"
-		else
-			from = from .. "RIGHT"
-			to = to .. "RIGHT"
+	else
+		for _, f in ipairs(movers) do
+			if f.showParent == false then
+				f:GetParent():Hide()
+			end
+			f.showParent = nil
+			f:Hide()
 		end
-		WatchFrame:ClearAllPoints()
-		WatchFrame:SetPoint(from, MinimapCluster, to)
-		-- WatchFrame:SetHeight(1000)
-		WatchFrame:SetPoint(side, UIParent, side)
 	end
-
-	function updateWatchFrameHeight()
-		-- local ofrom, frm, oto = WatchFrame:GetPoint(1)
-		-- print("|cFF33FF99SexyMap|r: Got point for watchframe:", ofrom, oto)
-		-- if ofrom and ofrom:match("BOTTOM") then
-			local highest, lowest = -9999, 9999
-			for i = 1, 200 do
-				local l = _G["WatchFrameLine"..i]
-				if l and l:IsVisible() then
-					local top, bottom = l:GetTop(), l:GetBottom()
-					if top and top > highest then
-						highest = top
-					end
-					if bottom and bottom < lowest then
-						lowest = bottom
-					end
-				end
-			end
-			if highest ~= -9999 and lowest ~= 9999 then
-				ht = highest - lowest + 50
-				WatchFrame:SetHeight(ht)
-				WatchFrame.realHeight = ht
-			end
-		-- end
-	end
-
-	local function dragUpdate()
-		mod:WatchFrame_Update(WatchFrame)
-	end
-	local function start(self)
-		MinimapCluster:StartMoving()
-		MinimapCluster:SetScript("OnUpdate", dragUpdate)
-	end
-
-	local function stop(self)
-		MinimapCluster:StopMovingOrSizing()
-		MinimapCluster:SetScript("OnUpdate", nil)
-	end
-
-	function mod:SetLock(v)
-		if v then
-			Minimap:SetScript("OnDragStart", nil)
-			Minimap:SetScript("OnDragStop", nil)
-			MinimapZoneTextButton:SetScript("OnDragStart", nil)
-			MinimapZoneTextButton:SetScript("OnDragStop", nil)
-		else
-			Minimap:SetScript("OnDragStart", start)
-			Minimap:SetScript("OnDragStop", stop)
-			MinimapZoneTextButton:SetScript("OnDragStart", start)
-			MinimapZoneTextButton:SetScript("OnDragStop", stop)
-		end
-		MinimapCluster:SetMovable(true)
-		self:SetMovers()
-	end
-
-	function mod:SetMovers()
-		local v = db.enabled and (not db.lock)
-		if v then
-			for _, f in ipairs(movers) do
-				f.showParent = not not f:GetParent():IsVisible() -- convert nil -> false
-				f:GetParent():Show()
-				f:Show()
-			end
-		else
-			for _, f in ipairs(movers) do
-				if f.showParent == false then
-					f:GetParent():Hide()
-				end
-				f.showParent = nil
-				f:Hide()
-			end
-		end
-		WatchFrame:SetPoint("BOTTOM", UIParent, "BOTTOM")
-	end
+	WatchFrame:SetPoint("BOTTOM", UIParent, "BOTTOM")
 end
 
