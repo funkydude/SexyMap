@@ -6,11 +6,7 @@ local L = addon.L
 
 local cbh = LibStub:GetLibrary("CallbackHandler-1.0"):New(mod)
 
-local defaults = {
-	profile = {}
-}
-
-mod.backdrop = {
+addon.backdrop = {
 	bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
 	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
 	insets = {left = 4, top = 4, right = 4, bottom = 4},
@@ -19,6 +15,9 @@ mod.backdrop = {
 }
 
 function mod:OnInitialize()
+	local defaults = {
+		profile = {}
+	}
 	self.db = LibStub("AceDB-3.0"):New("SexyMapDB", defaults)
 
 	-- Configure Slash Handler

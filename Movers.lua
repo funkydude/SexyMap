@@ -152,7 +152,7 @@ do
 					f:SetScript("OnLeave", stop)
 					l:SetText(("%s mover"):format(text))
 					l:SetPoint("BOTTOM", f, "TOP")
-					f:SetBackdrop(parent.backdrop)
+					f:SetBackdrop(addon.backdrop)
 					f:SetBackdropColor(0, 0.6, 0, 1)
 				end
 

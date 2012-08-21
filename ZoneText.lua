@@ -147,7 +147,7 @@ function mod:OnEnable()
 	MinimapZoneText:ClearAllPoints()
 	MinimapZoneText:SetAllPoints()
 	MinimapZoneTextButton:SetHeight(26)
-	MinimapZoneTextButton:SetBackdrop(parent.backdrop)
+	MinimapZoneTextButton:SetBackdrop(addon.backdrop)
 	MinimapZoneTextButton:SetFrameStrata("MEDIUM")
 
 	updateLayout()
