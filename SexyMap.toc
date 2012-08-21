@@ -25,6 +25,7 @@ localization\itIT.lua
 localization\koKR.lua
 localization\zhTW.lua
 localization\zhCN.lua
+localization\ptBR.lua
 
 # Core
 SexyMap.lua
