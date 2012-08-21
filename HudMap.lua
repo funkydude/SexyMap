@@ -32,12 +32,8 @@ local onShow = function(self)
 		Astrolabe.processingFrame:SetParent(HudMapCluster)
 	end
 
-	if _G.GetMinimapShape and not mod:IsHooked("GetMinimapShape") then
-		mod:Hook("GetMinimapShape")
-	end
-
 	updateFrame:SetScript("OnUpdate", updateRotations)
-	MinimapCluster:Hide()
+	Minimap:Hide()
 end
 
 local onHide = function(self, force)
@@ -62,12 +58,8 @@ local onHide = function(self, force)
 		Astrolabe.processingFrame:SetParent(Minimap)
 	end
 
-	if _G.GetMinimapShape and mod:IsHooked("GetMinimapShape") then
-		mod:Unhook("GetMinimapShape")
-	end
-
 	updateFrame:SetScript("OnUpdate", nil)
-	MinimapCluster:Show()
+	Minimap:Show()
 end
 
 local options = {
@@ -314,8 +306,7 @@ function mod:OnInitialize()
 	HudMapCluster:Hide()
 	HudMapCluster:SetScript("OnShow", onShow)
 	HudMapCluster:SetScript("OnHide", onHide)
-	self:HookScript(Minimap, "OnShow", "Minimap_OnShow")
-	self:HookScript(MinimapCluster, "OnShow", "Minimap_OnShow")
+	Minimap:HookScript("OnShow", self.Minimap_OnShow)
 
 	parent:RegisterModuleOptions(modName, options, modName)
 	self:UpdateColors()
@@ -387,10 +378,6 @@ function mod:UpdateColors()
 	for k, v in ipairs(directions) do
 		v:SetTextColor(c.r, c.g, c.b, c.a)
 	end
-end
-
-function mod:GetMinimapShape()
-	return "ROUND"
 end
 
 function mod:SetScales()

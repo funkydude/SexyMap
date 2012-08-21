@@ -1,6 +1,6 @@
 
 local sexymap, addon = ...
-addon.SexyMap = LibStub("AceAddon-3.0"):NewAddon(sexymap, "AceHook-3.0")
+addon.SexyMap = LibStub("AceAddon-3.0"):NewAddon(sexymap)
 local mod = addon.SexyMap
 local L = addon.L
 

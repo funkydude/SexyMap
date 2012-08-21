@@ -300,6 +300,10 @@ function mod:ApplyShape(shape)
 end
 
 function GetMinimapShape()
-	return shapes[db.shape] and shapes[db.shape].shape or "ROUND"
+	if HudMapCluster and HudMapCluster:IsShown() then -- HudMap module compat
+		return "ROUND"
+	else
+		return shapes[db.shape] and shapes[db.shape].shape or "ROUND"
+	end
 end
 

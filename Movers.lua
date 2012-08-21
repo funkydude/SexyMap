@@ -1,7 +1,7 @@
 
 local _, addon = ...
 local parent = addon.SexyMap
-local mod = addon.SexyMap:NewModule("Movers", "AceHook-3.0")
+local mod = addon.SexyMap:NewModule("Movers")
 local L = addon.L
 
 local db
@@ -67,13 +67,6 @@ function mod:OnInitialize()
 	parent:RegisterModuleOptions("Movers", options, "Movers")
 end
 
-function mod:WatchFrame_Update(...)
-	if not WatchFrame:IsUserPlaced() then reanchorWatchFrame() end
-	self.hooks.WatchFrame_Update(...)
-	-- updateWatchFrameHeight()
-	-- WatchFrame:SetHeight(WatchFrame.realHeight or WatchFrame:GetHeight())
-end
-
 do
 	local hooked
 	function mod:OnEnable()
@@ -86,9 +79,9 @@ do
 		hooked = true
 
 		if updateContainerFrameAnchors then --XXX MoP compat
-			self:SecureHook("updateContainerFrameAnchors", "CreateMoversAndSetMovables")
+			hooksecurefunc("updateContainerFrameAnchors", self.CreateMoversAndSetMovables)
 		else
-			self:SecureHook("UpdateContainerFrameAnchors", "CreateMoversAndSetMovables")
+			hooksecurefunc("UpdateContainerFrameAnchors", self.CreateMoversAndSetMovables)
 		end
 
 		if not select(4, GetAddOnInfo("Capping")) then
@@ -109,7 +102,11 @@ do
 			movables["VehicleSeatIndicator"] = L["Vehicle Seat"]
 		end
 		self:CreateMoversAndSetMovables()
-		self:RawHook("WatchFrame_Update", true)
+		hooksecurefunc("WatchFrame_Update", function()
+			if not WatchFrame:IsUserPlaced() then
+				reanchorWatchFrame()
+			end
+		end)
 	end
 end
 
@@ -187,7 +184,7 @@ do
 				end
 			end
 		end
-		self:SetMovers()
+		mod:SetMovers()
 	end
 end
 
