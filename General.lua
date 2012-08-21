@@ -34,12 +34,21 @@ local options = {
 				Minimap:SetClampedToScreen(v)
 			end,
 		},
-		rightClickToConfig = {
+		rotate = {
 			order = 3,
+			type = "toggle",
+			name = ROTATE_MINIMAP,
+			desc = OPTION_TOOLTIP_ROTATE_MINIMAP,
+			get = function()
+				return GetCVar("rotateMinimap") == "1"
+			end,
+			set = ToggleMiniMapRotation,
+		},
+		rightClickToConfig = {
+			order = 4,
 			type = "toggle",
 			name = L["Right Click Configure"],
 			desc = L["Right clicking the map will open the SexyMap options"],
-			width = "full",
 			get = function()
 				return db.rightClickToConfig
 			end,
@@ -48,7 +57,7 @@ local options = {
 			end,
 		},
 		scale = {
-			order = 4,
+			order = 5,
 			type = "range",
 			name = L["Scale"],
 			min = 0.2,
@@ -65,12 +74,12 @@ local options = {
 			end,
 		},
 		zoomSpacer = {
-			order = 5,
+			order = 6,
 			type = "header",
 			name = "",
 		},
 		zoom = {
-			order = 6,
+			order = 7,
 			type = "range",
 			name = L["Auto Zoom-Out Delay"],
 			desc = L["If you zoom into the map, this feature will automatically zoom out after the selected period of time (seconds)"],
@@ -87,7 +96,7 @@ local options = {
 			end,
 		},
 		spacer = {
-			order = 7,
+			order = 8,
 			type = "header",
 			name = "",
 		},
