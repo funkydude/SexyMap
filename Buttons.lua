@@ -4,7 +4,7 @@ local parent = addon.SexyMap
 local modName = "Buttons"
 local mod = addon.SexyMap:NewModule(modName)
 local L = addon.L
-local Shape, db, moving
+local Shape, db, moving, ButtonFadeOut
 
 local animFrames = {}
 local blizzButtons = {
@@ -201,16 +201,12 @@ end
 
 function mod:OnEnable()
 	db = self.db.profile
-
-	MiniMapInstanceDifficulty:EnableMouse(true)
-	MiniMapInstanceDifficulty:SetFrameLevel(Minimap:GetFrameLevel() + 10)
 end
 
 --------------------------------------------------------------------------------
 -- Fading
 --
 
-local ButtonFadeOut
 do
 	local fadeIgnore = {
 		Minimap = true,
@@ -282,6 +278,9 @@ do
 			end
 			self:AddButtonOptions(n, blizzButtons[n], dynamicButtons[n])
 
+			if n == "MiniMapInstanceDifficulty" or n == "GuildInstanceDifficulty" then
+				f:SetParent(Minimap)
+			end
 			if n == "MiniMapTracking" then
 				self:MakeMovable(MiniMapTrackingButton, f)
 			elseif n == "MinimapZoneTextButton" then
@@ -315,7 +314,7 @@ end
 
 do
 
-	local dragFrame = CreateFrame("Frame", nil, UIParent)
+	local dragFrame = CreateFrame("Frame")
 
 	local getCurrentAngle = function(f, bx, by)
 		local mx, my = Minimap:GetCenter()
@@ -355,12 +354,13 @@ do
 		dragFrame:SetScript("OnUpdate", updatePosition)
 	end
 	local OnDragStop = function()
+		dragFrame:SetScript("OnUpdate", nil)
 		moving = nil
 		ButtonFadeOut() -- Call the fade out function
-		dragFrame:SetScript("OnUpdate", nil)
 	end
 
 	function mod:MakeMovable(frame, tracking)
+		frame:EnableMouse(true)
 		frame:RegisterForDrag("LeftButton")
 		if tracking then
 			frame:SetScript("OnDragStart", function()
