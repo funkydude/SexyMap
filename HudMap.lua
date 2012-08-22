@@ -2,7 +2,7 @@
 local _, addon = ...
 local parent = addon.SexyMap
 local modName = "HudMap"
-local mod = addon.SexyMap:NewModule(modName, "AceHook-3.0")
+local mod = addon.SexyMap:NewModule(modName)
 local L = addon.L
 local db
 
