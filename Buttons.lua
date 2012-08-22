@@ -148,7 +148,7 @@ do
 
 	local function hideSet(info, v)
 		local name = info[#info]
-		db.visibilitySettings[name] = v ~= "hover" and v or nil
+		db.visibilitySettings[name] = v
 		mod:ChangeFrameVisibility(_G[name], v)
 	end
 
@@ -234,7 +234,7 @@ do
 
 		for _,v in pairs(animFrames) do
 			local n = v:GetName()
-			if not db.visibilitySettings[n] then
+			if not db.visibilitySettings[n] or db.visibilitySettings[n] == "hover" then
 				v.smAnimGroup:Stop()
 				v:SetAlpha(0)
 				v.smAlphaAnim:SetChange(1)
@@ -253,7 +253,7 @@ do
 
 		for _,v in pairs(animFrames) do
 			local n = v:GetName()
-			if not db.visibilitySettings[n] then
+			if not db.visibilitySettings[n] or db.visibilitySettings[n] == "hover" then
 				v.smAnimGroup:Stop()
 				v:SetAlpha(1)
 				v.smAlphaAnim:SetChange(-1)
@@ -315,9 +315,6 @@ end
 do
 
 	local dragFrame = CreateFrame("Frame")
-	dragFrame:RegisterEvent("PLAYER_LOGIN")
-	-- Fix addon buttons not setting potisition
-	dragFrame:SetScript("OnEvent", function() mod:UpdateDraggables() end)
 
 	local getCurrentAngle = function(f, bx, by)
 		local mx, my = Minimap:GetCenter()

@@ -37,8 +37,6 @@ function mod:OnEnable()
 	self.db.RegisterCallback(self, "OnProfileChanged", "ReloadAddon")
 	self.db.RegisterCallback(self, "OnProfileCopied", "ReloadAddon")
 	self.db.RegisterCallback(self, "OnProfileReset", "ReloadAddon")
-
-	self:ConfigureFrameGrab()
 end
 
 function mod:ReloadAddon()
@@ -77,24 +75,24 @@ do
 		end
 	end
 
-	local updateTimer
-	function mod:ConfigureFrameGrab()
-		if updateTimer then return end
+	local frame = CreateFrame("Frame")
+	frame:RegisterEvent("PLAYER_LOGIN")
+	frame:SetScript("OnEvent", function(f)
 		-- Try to capture new frames periodically
 		-- We'd use ADDON_LOADED but it's too early, some addons load a minimap icon afterwards
-		if not updateTimer then
-			updateTimer = CreateFrame("Frame"):CreateAnimationGroup()
-			local anim = updateTimer:CreateAnimation()
-			local Minimap = Minimap
-			updateTimer:SetScript("OnLoop", function() grabFrames(Minimap:GetChildren()) end)
-			anim:SetOrder(1)
-			anim:SetDuration(1)
-			updateTimer:SetLooping("REPEAT")
-		end
-		grabFrames(MinimapCluster:GetChildren()) -- Minimap & Icons
-		grabFrames(Minimap:GetChildren()) -- Minimap Icons
-		grabFrames(MiniMapTrackingButton, MinimapBackdrop:GetChildren()) -- More Icons
+		local updateTimer = f:CreateAnimationGroup()
+		local anim = updateTimer:CreateAnimation()
+		updateTimer:SetScript("OnLoop", function() grabFrames(Minimap:GetChildren()) end)
+		anim:SetOrder(1)
+		anim:SetDuration(1)
+		updateTimer:SetLooping("REPEAT")
 		updateTimer:Play()
-	end
+
+		grabFrames(MinimapCluster:GetChildren()) -- Minimap & Icons
+		grabFrames(MiniMapTrackingButton, MinimapBackdrop:GetChildren()) -- More Icons
+
+		f:UnregisterEvent("PLAYER_LOGIN")
+		f:SetScript("OnEvent", nil)
+	end)
 end
 
