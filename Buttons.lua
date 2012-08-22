@@ -315,6 +315,9 @@ end
 do
 
 	local dragFrame = CreateFrame("Frame")
+	dragFrame:RegisterEvent("PLAYER_LOGIN")
+	-- Fix addon buttons not setting potisition
+	dragFrame:SetScript("OnEvent", function() mod:UpdateDraggables() end)
 
 	local getCurrentAngle = function(f, bx, by)
 		local mx, my = Minimap:GetCenter()
