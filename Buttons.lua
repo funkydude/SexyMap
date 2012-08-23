@@ -232,13 +232,13 @@ do
 	local OnEnter = function()
 		if not db.controlVisibility or fadeStop or moving then return end
 
-		for _,v in pairs(animFrames) do
-			local n = v:GetName()
+		for _,f in pairs(animFrames) do
+			local n = f:GetName()
 			if not db.visibilitySettings[n] or db.visibilitySettings[n] == "hover" then
-				v.smAnimGroup:Stop()
-				v:SetAlpha(0)
-				v.smAlphaAnim:SetChange(1)
-				v.smAnimGroup:Play()
+				f.smAnimGroup:Stop()
+				f:SetAlpha(0)
+				f.smAlphaAnim:SetChange(1)
+				f.smAnimGroup:Play()
 			end
 		end
 	end
@@ -251,13 +251,13 @@ do
 		end
 		fadeStop = nil
 
-		for _,v in pairs(animFrames) do
-			local n = v:GetName()
+		for _,f in pairs(animFrames) do
+			local n = f:GetName()
 			if not db.visibilitySettings[n] or db.visibilitySettings[n] == "hover" then
-				v.smAnimGroup:Stop()
-				v:SetAlpha(1)
-				v.smAlphaAnim:SetChange(-1)
-				v.smAnimGroup:Play()
+				f.smAnimGroup:Stop()
+				f:SetAlpha(1)
+				f.smAlphaAnim:SetChange(-1)
+				f.smAnimGroup:Play()
 			end
 		end
 	end
@@ -266,6 +266,7 @@ do
 		local n, w = f:GetName(), f:GetWidth()
 		-- Don't add animations for ignored frames, dynamically try to skip frames that may not be minimap buttons by checking size
 		if not fadeIgnore[n] and w > 20 then
+			-- Create the animations
 			f.smAnimGroup = f:CreateAnimationGroup()
 			f.smAlphaAnim = f.smAnimGroup:CreateAnimation("Alpha")
 			f.smAlphaAnim:SetOrder(1)
@@ -273,14 +274,18 @@ do
 			f.smAnimGroup:SetScript("OnFinished", OnFinished)
 			tinsert(animFrames, f)
 
+			-- Configure fading
 			if db.controlVisibility then
 				self:ChangeFrameVisibility(f, db.visibilitySettings[n] or "hover")
 			end
 			self:AddButtonOptions(n, blizzButtons[n], dynamicButtons[n])
 
+			-- These two frames are parented to MinimapCluster, if the map scale is changed they won't drag properly, so we parent to Minimap
 			if n == "MiniMapInstanceDifficulty" or n == "GuildInstanceDifficulty" then
 				f:SetParent(Minimap)
 			end
+
+			-- Configure dragging
 			if n == "MiniMapTracking" then
 				self:MakeMovable(MiniMapTrackingButton, f)
 			elseif n == "MinimapZoneTextButton" then

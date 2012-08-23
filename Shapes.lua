@@ -285,13 +285,10 @@ function mod:GetShape()
 	return db.shape
 end
 
-local minimapShape
-
 function mod:ApplyShape(shape)
 	shape = legacyMappings[shape] or shape
 	local dbShape = db.shape and legacyMappings[db.shape] or db.shape
 	if shape or dbShape then
-		minimapShape = (shape or dbShape).shape or "ROUND"
 		db.shape = shape or dbShape or "Textures\\MinimapMask"
 		parent:GetModule("Borders").db.profile.shape = db.shape
 		Minimap:SetMaskTexture(db.shape)
