@@ -124,6 +124,24 @@ local options = {
 				updateLayout()
 			end
 		},
+		fade = {
+			type = "multiselect",
+			name = L["Show %s:"]:format(L["Zone Text"]),
+			values = {
+				["always"] = L["Always"],
+				["never"] = L["Never"],
+				["hover"] = L["On Hover"],
+			},
+			get = function(info, v)
+				local btn = parent:GetModule("Buttons")
+				return (btn.db.profile.visibilitySettings.MinimapZoneTextButton or "hover") == v
+			end,
+			set = function(info, v)
+				local btn = parent:GetModule("Buttons")
+				btn.db.profile.visibilitySettings.MinimapZoneTextButton = v
+				btn:ChangeFrameVisibility(MinimapZoneTextButton, v)
+			end,
+		}
 	}
 }
 

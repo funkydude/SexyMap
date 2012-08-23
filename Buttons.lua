@@ -10,7 +10,6 @@ local animFrames = {}
 local blizzButtons = {
 	GameTimeFrame = L["Calendar"],
 	MiniMapTracking = L["Tracking Button"],
-	MinimapZoneTextButton = L["Zone Text"],
 	MinimapZoomIn = L["Zoom In Button"],
 	MinimapZoomOut = L["Zoom Out Button"],
 	MiniMapWorldMapButton = L["Map Button"],
@@ -161,7 +160,7 @@ do
 		else
 			p = options.args.custom.args -- Addon icon = custom section
 		end
-		p[name] =  {
+		p[name] = {
 			type = "multiselect",
 			name = L["Show %s:"]:format(blizzButtons[name] or dynamicButtons[name] or name:gsub("LibDBIcon10_", "")),
 			values = dynamic and dynamicValues or hideValues,
@@ -278,20 +277,21 @@ do
 			if db.controlVisibility then
 				self:ChangeFrameVisibility(f, db.visibilitySettings[n] or "hover")
 			end
-			self:AddButtonOptions(n, blizzButtons[n], dynamicButtons[n])
 
-			-- These two frames are parented to MinimapCluster, if the map scale is changed they won't drag properly, so we parent to Minimap
-			if n == "MiniMapInstanceDifficulty" or n == "GuildInstanceDifficulty" then
-				f:SetParent(Minimap)
-			end
+			if n ~= "MinimapZoneTextButton" then -- Don't add config or moving capability to the Zone Text frame, handled in the Zone Text module
+				self:AddButtonOptions(n, blizzButtons[n], dynamicButtons[n])
 
-			-- Configure dragging
-			if n == "MiniMapTracking" then
-				self:MakeMovable(MiniMapTrackingButton, f)
-			elseif n == "MinimapZoneTextButton" then
-				-- Sorry, no moving for you!
-			else
-				self:MakeMovable(f)
+				-- These two frames are parented to MinimapCluster, if the map scale is changed they won't drag properly, so we parent to Minimap
+				if n == "MiniMapInstanceDifficulty" or n == "GuildInstanceDifficulty" then
+					f:SetParent(Minimap)
+				end
+
+				-- Configure dragging
+				if n == "MiniMapTracking" then
+					self:MakeMovable(MiniMapTrackingButton, f)
+				else
+					self:MakeMovable(f)
+				end
 			end
 		end
 		f:HookScript("OnEnter", OnEnter)
