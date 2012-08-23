@@ -203,6 +203,7 @@ local options = {
 												end
 											end,
 											order = 11,
+											width = "full",
 											func = function()
 												if not IsAddOnLoaded("TexBrowser") then
 													EnableAddOn("TexBrowser")
@@ -329,6 +330,7 @@ local options = {
 												end
 											end,
 											order = 21,
+											width = "full",
 											func = function()
 												if not IsAddOnLoaded("TexBrowser") then
 													EnableAddOn("TexBrowser")
@@ -520,6 +522,7 @@ local borderOptions = {
 			end
 		end,
 		order = 52,
+		width = "full",
 		func = function()
 			if not IsAddOnLoaded("TexBrowser") then
 				EnableAddOn("TexBrowser")
