@@ -263,8 +263,8 @@ do
 
 	function mod:SexyMap_NewFrame(_, f)
 		local n, w, h = f:GetName(), f:GetWidth(), f:GetHeight()
-		-- Don't add animations for ignored frames, dynamically try to skip frames that may not be minimap buttons by checking size
-		if not fadeIgnore[n] and w > 20 and h < 40 then
+		-- Always allow Blizz frames, skip ignored frames, dynamically try to skip frames that may not be minimap buttons by checking size
+		if (blizzButtons[n] or dynamicButtons[n]) or (not fadeIgnore[n] and w > 20 and h < 35) then
 			-- Create the animations
 			f.smAnimGroup = f:CreateAnimationGroup()
 			f.smAlphaAnim = f.smAnimGroup:CreateAnimation("Alpha")
