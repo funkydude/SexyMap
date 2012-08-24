@@ -10,6 +10,7 @@ local animFrames = {}
 local blizzButtons = {
 	GameTimeFrame = L["Calendar"],
 	MiniMapTracking = L["Tracking Button"],
+	MinimapZoneTextButton = L["Zone Text"],
 	MinimapZoomIn = L["Zoom In Button"],
 	MinimapZoomOut = L["Zoom Out Button"],
 	MiniMapWorldMapButton = L["Map Button"],
@@ -23,8 +24,9 @@ local dynamicButtons = {
 	MiniMapRecordingButton = L["Video Recording Button (Mac OSX Only, When Available)"],
 	MiniMapVoiceChatFrame = L["Voice Chat Button (When Available)"],
 	QueueStatusMinimapButton = L["Queue Status Button (When Available)"],
-	MiniMapLFGFrame = "LFG", -- XXX mop temp
+
 	MiniMapBattlefieldFrame = "PVP", -- XXX mop temp
+	MiniMapLFGFrame = "LFG", -- XXX mop temp
 }
 
 local options = {
