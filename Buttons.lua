@@ -285,7 +285,9 @@ do
 
 				-- These two frames are parented to MinimapCluster, if the map scale is changed they won't drag properly, so we parent to Minimap
 				if n == "MiniMapInstanceDifficulty" or n == "GuildInstanceDifficulty" then
+					f:ClearAllPoints()
 					f:SetParent(Minimap)
+					f:SetPoint("CENTER", Minimap, "CENTER", -60, 55)
 				end
 
 				-- Configure dragging
