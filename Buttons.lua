@@ -334,13 +334,6 @@ do
 	end
 
 	local setPosition = function(frame, angle)
-		if not angle then
-			local x, y = GetCursorPosition()
-			x, y = x / Minimap:GetEffectiveScale(), y / Minimap:GetEffectiveScale()
-			angle = getCurrentAngle(frame, x, y)
-			db.dragPositions[frame:GetName()] = angle
-		end
-
 		local radius = (Minimap:GetWidth() / 2) + db.radius
 		local bx, by = Shape:GetPosition(angle, radius)
 
@@ -349,7 +342,11 @@ do
 	end
 
 	local updatePosition = function()
-		setPosition(moving)
+		local x, y = GetCursorPosition()
+		x, y = x / Minimap:GetEffectiveScale(), y / Minimap:GetEffectiveScale()
+		local angle = getCurrentAngle(moving, x, y)
+		db.dragPositions[moving:GetName()] = angle
+		setPosition(moving, angle)
 	end
 
 	local OnDragStart = function(frame)
@@ -385,15 +382,13 @@ do
 		if not db.allowDragging then return end
 
 		if frame and type(frame) == "table" then -- Type check because we have a callback sending a string on shape change
-			local x, y = frame:GetCenter()
-			local angle = db.dragPositions[frame:GetName()] or getCurrentAngle(frame, x, y)
+			local angle = db.dragPositions[frame:GetName()]
 			if angle then
 				setPosition(frame, angle)
 			end
 		else
 			for _,f in pairs(animFrames) do
-				local x, y = f:GetCenter()
-				local angle = db.dragPositions[f:GetName()] or getCurrentAngle(f, x, y)
+				local angle = db.dragPositions[f:GetName()]
 				if angle then
 					setPosition(f, angle)
 				end

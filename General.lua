@@ -136,8 +136,8 @@ function mod:OnInitialize()
 		local c = CreateFrame"Frame"
 		local t = GetTime()
 		c:SetScript("OnUpdate", function()
-			if GetTime()-t > 6 then
-				ChatFrame1:AddMessage("SexyMapTrackerButtonFix: I'm no longer needed, please remove me.", 0, 0.3, 1)
+			if GetTime()-t > 12 then
+				ChatFrame1:AddMessage("SexyMapTrackerButtonFix: I'm no longer needed, please remove this addon.", 0, 0.3, 1)
 				c:SetScript("OnUpdate", nil)
 			end
 		end)
