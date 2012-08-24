@@ -172,7 +172,7 @@ function mod:OnEnable()
 	-- Make sure the various minimap buttons follow the minimap
 	MinimapBackdrop:ClearAllPoints()
 	MinimapBackdrop:SetParent(Minimap)
-	MinimapBackdrop:SetPoint("CENTER", Minimap, "CENTER")
+	MinimapBackdrop:SetPoint("CENTER", Minimap, "CENTER", -8, -23)
 
 	MinimapBorderTop:Hide()
 	Minimap:RegisterForDrag("LeftButton")

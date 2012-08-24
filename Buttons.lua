@@ -175,7 +175,7 @@ end
 function mod:OnInitialize()
 	local defaults = {
 		profile = {
-			radius = 2,
+			radius = 10,
 			dragPositions = {},
 			visibilitySettings = {
 				MinimapZoomIn = "never",
