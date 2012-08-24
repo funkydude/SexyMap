@@ -266,7 +266,7 @@ do
 	function mod:SexyMap_NewFrame(_, f)
 		local n, w, h = f:GetName(), f:GetWidth(), f:GetHeight()
 		-- Always allow Blizz frames, skip ignored frames, dynamically try to skip frames that may not be minimap buttons by checking size
-		if (blizzButtons[n] or dynamicButtons[n]) or (not fadeIgnore[n] and w > 20 and h < 35) then
+		if (blizzButtons[n] or dynamicButtons[n]) or (not fadeIgnore[n] and w > 26 and h < 35) then
 			-- Create the animations
 			f.smAnimGroup = f:CreateAnimationGroup()
 			f.smAlphaAnim = f.smAnimGroup:CreateAnimation("Alpha")
@@ -323,8 +323,8 @@ do
 
 	local dragFrame = CreateFrame("Frame")
 
-	local getCurrentAngle = function(f, bx, by)
-		local mx, my = Minimap:GetCenter()
+	local getCurrentAngle = function(parent, bx, by)
+		local mx, my = parent:GetCenter()
 		if not mx or not my or not bx or not by then return 0 end
 		local h, w = (by - my), (bx - mx)
 		if w == 0 then w = 0.001 end -- Prevent /0
@@ -346,7 +346,7 @@ do
 	local updatePosition = function()
 		local x, y = GetCursorPosition()
 		x, y = x / Minimap:GetEffectiveScale(), y / Minimap:GetEffectiveScale()
-		local angle = getCurrentAngle(moving, x, y)
+		local angle = getCurrentAngle(Minimap, x, y)
 		db.dragPositions[moving:GetName()] = angle
 		setPosition(moving, angle)
 	end
@@ -384,13 +384,15 @@ do
 		if not db.allowDragging then return end
 
 		if frame and type(frame) == "table" then -- Type check because we have a callback sending a string on shape change
-			local angle = db.dragPositions[frame:GetName()]
+			local x, y = frame:GetCenter()
+			local angle = db.dragPositions[frame:GetName()] or getCurrentAngle(frame:GetParent(), x, y)
 			if angle then
 				setPosition(frame, angle)
 			end
 		else
 			for _,f in pairs(animFrames) do
-				local angle = db.dragPositions[f:GetName()]
+				local x, y = f:GetCenter()
+				local angle = db.dragPositions[f:GetName()] or getCurrentAngle(f:GetParent(), x, y)
 				if angle then
 					setPosition(f, angle)
 				end
