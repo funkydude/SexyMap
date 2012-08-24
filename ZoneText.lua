@@ -39,7 +39,17 @@ local options = {
 			order = 1,
 			dialogControl = "LSM30_Font",
 			values = AceGUIWidgetLSMlists.font,
-			get = function() return mod.db.profile.font end,
+			get = function()
+				local font = nil
+				local curFont = MinimapZoneText:GetFont()
+				for k,v in pairs(AceGUIWidgetLSMlists.font) do
+					if v == curFont then
+						font = k
+						break
+					end
+				end
+				return mod.db.profile.font or font
+			end,
 			set = function(info, v)
 				mod.db.profile.font = v
 				updateLayout()
