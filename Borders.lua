@@ -882,14 +882,12 @@ local inc = 0
 function mod:CreateBorderFromParams(t)
 	inc = inc + 1
 	local tex = tremove(texturePool) or Minimap:CreateTexture()
-	tex:SetWidth(t.width or defaultSize)
-	tex:SetHeight(t.height or defaultSize)
 	tex:SetTexture(t.texture)
 	tex:SetBlendMode(t.blendMode or "ADD")
 	tex:SetVertexColor(t.r or 1, t.g or 1, t.b or 1, t.a or 1)
 	tex:SetPoint("CENTER", Minimap, "CENTER", t.hNudge or 0, t.vNudge or 0)
-	tex:SetWidth(defaultSize * (t.scale or 1))
-	tex:SetHeight(defaultSize * (t.scale or 1))
+	tex:SetWidth((t.width or defaultSize) * (t.scale or 1))
+	tex:SetHeight((t.height or defaultSize) * (t.scale or 1))
 	tex:SetDrawLayer(t.drawLayer or "ARTWORK")
 
 	tex.rotSpeed = t.rotSpeed or 0
