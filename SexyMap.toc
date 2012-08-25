@@ -1,5 +1,5 @@
 ## Interface: 40300
-## Version: 1.8.4
+## Version: 1.8.5
 ## Title: SexyMap
 ## Notes: Spice up your minimap with some sexy options.
 ## Notes-deDE: Spice up your minimap with some sexy options.

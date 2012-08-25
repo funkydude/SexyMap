@@ -186,6 +186,7 @@ L["Font"] = "Font"
 L["Horizontal Position"] = "Horizontal Position"
 L["Vertical Position"] = "Vertical Position"
 L["Background Color"] = "Background Color"
+L["(Requires button visibility control in the Buttons menu)"] = "(Requires button visibility control in the Buttons menu)"
 
 L["Zone Text"] = "Zone Text"
 

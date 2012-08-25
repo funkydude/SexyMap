@@ -136,7 +136,14 @@ local options = {
 		},
 		fade = {
 			type = "multiselect",
-			name = L["Show %s:"]:format(L["Zone Text"]),
+			name = function()
+				local btn = parent:GetModule("Buttons")
+				if btn.db.profile.controlVisibility then
+					return L["Show %s:"]:format(L["Zone Text"])
+				else
+					return L["Show %s:"]:format(L["Zone Text"]) .. " |cFF0276FD" .. L["(Requires button visibility control in the Buttons menu)"] .. "|r"
+				end
+			end,
 			values = {
 				["always"] = L["Always"],
 				["never"] = L["Never"],
@@ -150,6 +157,10 @@ local options = {
 				local btn = parent:GetModule("Buttons")
 				btn.db.profile.visibilitySettings.MinimapZoneTextButton = v
 				btn:ChangeFrameVisibility(MinimapZoneTextButton, v)
+			end,
+			disabled = function()
+				local btn = parent:GetModule("Buttons")
+				return not btn.db.profile.controlVisibility
 			end,
 		}
 	}
