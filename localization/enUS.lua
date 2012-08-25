@@ -98,6 +98,7 @@ L["Allow SexyMap to assume drag ownership for buttons attached to the minimap. T
 L["Let SexyMap control button visibility"] = "Let SexyMap control button visibility"
 L["Turn this off if you want another mod to handle which buttons are visible on the minimap."] = "Turn this off if you want another mod to handle which buttons are visible on the minimap."
 L["Drag Radius"] = "Drag Radius"
+L["Visibility"] = "Visibility"
 
 L["Always"] = "Always"
 L["Never"] = "Never"
