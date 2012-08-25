@@ -25,10 +25,52 @@ local options = {
 	type = "group",
 	name = modName,
 	args = {
+		xOffset = {
+			type = "range",
+			name = L["Horizontal Position"],
+			order = 1,
+			min = -250,
+			max = 250,
+			step = 1,
+			bigStep = 5,
+			get = function() return mod.db.profile.xOffset end,
+			set = function(info, v) mod.db.profile.xOffset = v updateLayout() end
+		},
+		yOffset = {
+			type = "range",
+			name = L["Vertical Position"],
+			order = 2,
+			min = -250,
+			max = 250,
+			step = 1,
+			bigStep = 5,
+			get = function() return mod.db.profile.yOffset end,
+			set = function(info, v) mod.db.profile.yOffset = v updateLayout() end
+		},
+		spacer1 = {
+			order = 3,
+			type = "description",
+			width = "normal",
+			name = "",
+		},
+		fontSize = {
+			type = "range",
+			name = L["Font Size"],
+			order = 4,
+			min = 4,
+			max = 30,
+			step = 1,
+			bigStep = 1,
+			get = function() return mod.db.profile.fontsize or select(2, TimeManagerClockTicker:GetFont()) end,
+			set = function(info, v)
+				mod.db.profile.fontsize = v
+				updateLayout()
+			end
+		},
 		font = {
 			type = "select",
 			name = L["Font"],
-			order = 1,
+			order = 5,
 			dialogControl = "LSM30_Font",
 			values = AceGUIWidgetLSMlists.font,
 			get = function()
@@ -47,24 +89,16 @@ local options = {
 				updateLayout()
 			end
 		},
-		fontSize = {
-			type = "range",
-			name = L["Font Size"],
-			order = 2,
-			min = 4,
-			max = 30,
-			step = 1,
-			bigStep = 1,
-			get = function() return mod.db.profile.fontsize or select(2, TimeManagerClockTicker:GetFont()) end,
-			set = function(info, v)
-				mod.db.profile.fontsize = v
-				updateLayout()
-			end
+		spacer2 = {
+			order = 6,
+			type = "description",
+			width = "normal",
+			name = "",
 		},
 		fontColor = {
 			type = "color",
 			name = L["Font Color"],
-			order = 3,
+			order = 7,
 			hasAlpha = true,
 			get = function()
 				if mod.db.profile.fontColor.r then
@@ -78,32 +112,10 @@ local options = {
 				updateLayout()
 			end
 		},
-		xOffset = {
-			type = "range",
-			name = L["Horizontal Position"],
-			order = 6,
-			min = -250,
-			max = 250,
-			step = 1,
-			bigStep = 5,
-			get = function() return mod.db.profile.xOffset end,
-			set = function(info, v) mod.db.profile.xOffset = v updateLayout() end
-		},
-		yOffset = {
-			type = "range",
-			name = L["Vertical Position"],
-			order = 6,
-			min = -250,
-			max = 250,
-			step = 1,
-			bigStep = 5,
-			get = function() return mod.db.profile.yOffset end,
-			set = function(info, v) mod.db.profile.yOffset = v updateLayout() end
-		},
 		bgColor = {
 			type = "color",
 			name = L["Background Color"],
-			order = 7,
+			order = 8,
 			hasAlpha = true,
 			get = function()
 				return mod.db.profile.bgColor.r, mod.db.profile.bgColor.g, mod.db.profile.bgColor.b, mod.db.profile.bgColor.a
@@ -116,7 +128,7 @@ local options = {
 		borderColor = {
 			type = "color",
 			name = L["Border Color"],
-			order = 8,
+			order = 9,
 			hasAlpha = true,
 			get = function()
 				return mod.db.profile.borderColor.r, mod.db.profile.borderColor.g, mod.db.profile.borderColor.b, mod.db.profile.borderColor.a
@@ -136,6 +148,7 @@ local options = {
 					return L["Show %s:"]:format(L["Clock"]) .. " |cFF0276FD" .. L["(Requires button visibility control in the Buttons menu)"] .. "|r"
 				end
 			end,
+			order = 10,
 			values = {
 				["always"] = L["Always"],
 				["never"] = L["Never"],

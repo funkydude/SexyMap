@@ -32,34 +32,18 @@ local options = {
 			type = "toggle",
 			name = L["Lock Coordinates"],
 			order = 2,
+			width = "double",
 			get = function()
 				return mod.db.profile.locked
 			end,
 			set = function(info, v)
 				mod.db.profile.locked = v
 			end,
-			width = "full",
-		},
-		fontSize = {
-			type = "range",
-			name = L["Font Size"],
-			order = 3,
-			min = 8,
-			max = 30,
-			step = 1,
-			bigStep = 1,
-			get = function()
-				return mod.db.profile.fontSize or 12
-			end,
-			set = function(info, v)
-				mod.db.profile.fontSize = v
-				mod:Update()
-			end
 		},
 		fontColor = {
 			type = "color",
 			name = L["Font Color"],
-			order = 4,
+			order = 3,
 			hasAlpha = true,
 			get = function()
 				local c = mod.db.profile.fontColor
@@ -75,7 +59,7 @@ local options = {
 		backgroundColor = {
 			type = "color",
 			name = L["Backdrop Color"],
-			order = 5,
+			order = 4,
 			hasAlpha = true,
 			get = function()
 				local c = mod.db.profile.backgroundColor
@@ -104,10 +88,33 @@ local options = {
 				mod:Update()
 			end
 		},
+		fontSize = {
+			type = "range",
+			name = L["Font Size"],
+			order = 6,
+			min = 8,
+			max = 30,
+			step = 1,
+			bigStep = 1,
+			get = function()
+				return mod.db.profile.fontSize or 12
+			end,
+			set = function(info, v)
+				mod.db.profile.fontSize = v
+				mod:Update()
+			end
+		},
+		spacer = {
+			order = 7,
+			type = "description",
+			width = "normal",
+			name = "",
+			width = "double",
+		},
 		reset = {
 			type = "execute",
 			name = L["Reset Position"],
-			order = 6,
+			order = 8,
 			func = function()
 				mod:ResetPosition()
 			end,

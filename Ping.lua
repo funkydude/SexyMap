@@ -29,28 +29,21 @@ local options = {
 			end,
 			disabled = false,
 		},
-		showChat = {
-			type = "toggle",
+		fade = {
+			type = "multiselect",
+			name = "",
 			order = 2,
-			name = L["Show inside chat"],
+			values = {
+				["chat"] = L["Show inside chat"],
+				["map"] = L["Show on minimap"],
+			},
+			get = function(info, v)
+				return mod.db.profile.showAt == v
+			end,
 			set = function(info, v)
-				mod.db.profile.showAt = "chat"
+				mod.db.profile.showAt = v
 			end,
-			get = function(info)
-				return mod.db.profile.showAt == "chat" and true or false
-			end,
-		},
-		showMap = {
-			type = "toggle",
-			order = 3,
-			name = L["Show on minimap"],
-			set = function(info, v)
-				mod.db.profile.showAt = "map"
-			end,
-			get = function(info)
-				return mod.db.profile.showAt == "map" and true or false
-			end,
-		},
+		}
 	}
 }
 
