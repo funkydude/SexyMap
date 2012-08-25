@@ -48,6 +48,7 @@ Shapes.lua
 Buttons.lua
 BorderPresets.lua
 Borders.lua
+Clock.lua
 Coordinates.lua
 Fader.lua
 HudMap.xml

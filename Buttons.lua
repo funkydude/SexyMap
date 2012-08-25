@@ -280,7 +280,8 @@ do
 				self:ChangeFrameVisibility(f, db.visibilitySettings[n] or "hover")
 			end
 
-			if n ~= "MinimapZoneTextButton" then -- Don't add config or moving capability to the Zone Text frame, handled in the Zone Text module
+			-- Don't add config or moving capability to the Zone Text and Clock buttons, handled in their own modules
+			if n ~= "MinimapZoneTextButton" and n ~= "TimeManagerClockButton" then
 				self:AddButtonOptions(n, blizzButtons[n], dynamicButtons[n])
 
 				-- These two frames are parented to MinimapCluster, if the map scale is changed they won't drag properly, so we parent to Minimap
