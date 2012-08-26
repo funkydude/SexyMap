@@ -35,7 +35,7 @@ addon.SexyMap.borderPresets = {
 		},
 		shape = "Textures\\MinimapMask"
 	},
-	["Diablo by zork"] = {
+	["Diablo by Zork"] = {
 		borders = {
 			{
 				["name"] = "Ring",
@@ -63,6 +63,7 @@ addon.SexyMap.borderPresets = {
 				["disableRotation"] = true,
 				["texture"] = "INTERFACE\\ADDONS\\SEXYMAP\\MEDIA\\MAP_INNERSHADOW.BLP",
 				["blendMode"] = "BLEND",
+				["drawLayer"] = "OVERLAY",
 				["r"] = 0,
 				["g"] = 0,
 				["b"] = 0,
@@ -70,8 +71,8 @@ addon.SexyMap.borderPresets = {
 			},
 			{
 				["name"] = "Cogwheel",
-				["scale"] = 1.40,
-				["rotSpeed"] = -60,
+				["scale"] = 1.37,
+				["rotSpeed"] = 60,
 				["blendMode"] = "BLEND",
 				["texture"] = "INTERFACE\\ADDONS\\SEXYMAP\\MEDIA\\ZAHNRAD.BLP",
 				["drawLayer"] = "BACKGROUND",
