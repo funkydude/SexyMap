@@ -35,6 +35,54 @@ addon.SexyMap.borderPresets = {
 		},
 		shape = "Textures\\MinimapMask"
 	},
+	["Diablo by zork"] = {
+		borders = {
+			{
+				["name"] = "Ring",
+				["scale"] = 1.45,
+				["rotation"] = 225,
+				["texture"] = "INTERFACE\\ADDONS\\SEXYMAP\\MEDIA\\MAP_OVERLAY.BLP",
+				["blendMode"] = "BLEND",
+				["width"] = 364,
+				["height"] = 182,
+			},
+			{
+				["name"] = "Gloss",
+				["scale"] = 0.84,
+				["disableRotation"] = true,
+				["texture"] = "INTERFACE\\ADDONS\\SEXYMAP\\MEDIA\\MAP_GLOSS.BLP",
+				["blendMode"] = "ADD",
+				["r"] = 0.9,
+				["g"] = 0.95,
+				["b"] = 1,
+				["a"] = 1,
+			},
+			{
+				["name"] = "Inner Shadow",
+				["scale"] = 0.84,
+				["disableRotation"] = true,
+				["texture"] = "INTERFACE\\ADDONS\\SEXYMAP\\MEDIA\\MAP_INNERSHADOW.BLP",
+				["blendMode"] = "BLEND",
+				["r"] = 0,
+				["g"] = 0,
+				["b"] = 0,
+				["a"] = 1,
+			},
+			{
+				["name"] = "Cogwheel",
+				["scale"] = 1.40,
+				["rotSpeed"] = -60,
+				["blendMode"] = "BLEND",
+				["texture"] = "INTERFACE\\ADDONS\\SEXYMAP\\MEDIA\\ZAHNRAD.BLP",
+				["drawLayer"] = "BACKGROUND",
+				["r"] = 0.18823529411765,
+				["g"] = 0.17254901960784,
+				["b"] = 0.13725490196078,
+				["a"] = 0.95,
+			},
+		},
+		shape = "Textures\\MinimapMask"
+	},
 	["Blue Rune Diamond"] = {
 		borders = {
 			{
