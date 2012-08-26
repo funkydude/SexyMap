@@ -1,6 +1,6 @@
 
 local _, addon = ...
-addon.SexyMap.borderPresets = {
+addon.borderPresets = {
 	["Blue Rune Circles"] = {
 		borders = {
 			{

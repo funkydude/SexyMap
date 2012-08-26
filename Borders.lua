@@ -841,7 +841,7 @@ function mod:RebuildPresets()
 		userPresets[k] = k
 		presets[k] = k
 	end
-	for k, v in pairs(parent.borderPresets) do
+	for k, v in pairs(addon.borderPresets) do
 		presets[k] = k
 	end
 end
@@ -854,7 +854,7 @@ function mod:Clear()
 end
 
 function mod:ApplyPreset(preset)
-	local preset = self.db.global.userPresets[preset] or parent.borderPresets[preset]
+	local preset = self.db.global.userPresets[preset] or addon.borderPresets[preset]
 
 	db.borders = deepCopyHash(preset.borders)
 	db.backdrop = preset.backdrop and deepCopyHash(preset.backdrop) or deepCopyHash(defaults.profile.backdrop)
