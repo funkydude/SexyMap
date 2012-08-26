@@ -189,7 +189,8 @@ function mod:OnEnable()
 
 	if db.point then
 		Minimap:ClearAllPoints()
-		Minimap:SetPoint(db.point, nil, db.relpoint, db.x, db.y)
+		Minimap:SetParent(UIParent)
+		Minimap:SetPoint(db.point, UIParent, db.relpoint, db.x, db.y)
 	end
 end
 

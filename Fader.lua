@@ -92,7 +92,7 @@ do
 	animGroup:SetScript("OnFinished", function()
 		-- Minimap or Minimap icons including nil checks to compensate for other addons
 		local focus = GetMouseFocus()
-		if focus and focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap") then
+		if focus and ((focus:GetName() == "Minimap") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
 			Minimap:SetAlpha(db.hoverOpacity)
 		else
 			Minimap:SetAlpha(db.normalOpacity)
@@ -116,7 +116,7 @@ do
 	local OnLeave = function()
 		if db.enabled then
 			local focus = GetMouseFocus() -- Minimap or Minimap icons including nil checks to compensate for other addons
-			if focus and focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap") then
+			if focus and ((focus:GetName() == "Minimap") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
 				fadeStop = true
 				return
 			end

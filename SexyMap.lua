@@ -88,8 +88,7 @@ do
 		updateTimer:SetLooping("REPEAT")
 		updateTimer:Play()
 
-		grabFrames(MinimapCluster:GetChildren()) -- Minimap & Icons
-		grabFrames(MiniMapTrackingButton, MinimapBackdrop:GetChildren()) -- More Icons
+		grabFrames(MinimapZoneTextButton, Minimap, MiniMapTrackingButton, MinimapBackdrop:GetChildren()) -- More Icons
 
 		f:UnregisterEvent("PLAYER_LOGIN")
 		f:SetScript("OnEvent", nil)
