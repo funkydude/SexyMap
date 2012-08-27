@@ -323,9 +323,8 @@ do
 		updateTimer:Play()
 
 		-- Grab Icons
-		grabFrames(MinimapZoneTextButton, Minimap, MiniMapTrackingButton,
-			MiniMapInstanceDifficulty, GuildInstanceDifficulty, MinimapBackdrop:GetChildren()
-		)
+		grabFrames(MinimapZoneTextButton, Minimap, MiniMapTrackingButton, TimeManagerClockButton, MinimapBackdrop:GetChildren())
+		grabFrames(MinimapCluster:GetChildren())
 		self.StartFrameGrab = nil
 	end
 end
