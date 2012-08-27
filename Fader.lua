@@ -2,7 +2,6 @@
 local _, sm = ...
 sm.fader = {}
 
-local parent = sm.core
 local mod = sm.fader
 local L = sm.L
 local db
@@ -73,12 +72,12 @@ function mod:OnInitialize()
 			normalOpacity = 1
 		}
 	}
-	self.db = parent.db:RegisterNamespace("Fader", defaults)
+	self.db = sm.core.db:RegisterNamespace("Fader", defaults)
 	db = self.db.profile
 end
 
 function mod:OnEnable()
-	parent:RegisterModuleOptions("Fader", options, L["Fader"])
+	sm.core:RegisterModuleOptions("Fader", options, L["Fader"])
 
 	if db.enabled then
 		Minimap:SetAlpha(db.normalOpacity)

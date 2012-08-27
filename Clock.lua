@@ -2,7 +2,6 @@
 local _, sm = ...
 sm.clock = {}
 
-local parent = sm.core
 local mod = sm.clock
 local L = sm.L
 
@@ -165,12 +164,12 @@ function mod:OnInitialize()
 			fontColor = {},
 		}
 	}
-	self.db = parent.db:RegisterNamespace("Clock", defaults)
+	self.db = sm.core.db:RegisterNamespace("Clock", defaults)
 	db = self.db.profile
 end
 
 function mod:OnEnable()
-	parent:RegisterModuleOptions("Clock", options, L["Clock"])
+	sm.core:RegisterModuleOptions("Clock", options, L["Clock"])
 
 	TimeManagerClockTicker:ClearAllPoints()
 	TimeManagerClockTicker:SetAllPoints()

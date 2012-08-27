@@ -2,7 +2,6 @@
 local _, sm = ...
 sm.buttons = {}
 
-local parent = sm.core
 local mod = sm.buttons
 local L = sm.L
 
@@ -196,12 +195,12 @@ function mod:OnInitialize()
 			controlVisibility = true
 		}
 	}
-	self.db = parent.db:RegisterNamespace("Buttons", defaults)
+	self.db = sm.core.db:RegisterNamespace("Buttons", defaults)
 	db = self.db.profile
 end
 
 function mod:OnEnable()
-	parent:RegisterModuleOptions("Buttons", options, L["Buttons"])
+	sm.core:RegisterModuleOptions("Buttons", options, L["Buttons"])
 end
 
 --------------------------------------------------------------------------------

@@ -2,7 +2,6 @@
 local _, sm = ...
 sm.ping = {}
 
-local parent = sm.core
 local mod = sm.ping
 local L = sm.L
 
@@ -56,12 +55,12 @@ function mod:OnInitialize()
 			showAt = "map"
 		}
 	}
-	self.db = parent.db:RegisterNamespace("Ping", defaults)
+	self.db = sm.core.db:RegisterNamespace("Ping", defaults)
 	db = self.db.profile
 end
 
 function mod:OnEnable()
-	parent:RegisterModuleOptions("Ping", options, L["Ping"])
+	sm.core:RegisterModuleOptions("Ping", options, L["Ping"])
 
 	pingFrame = CreateFrame("Frame", "SexyMapPingFrame", Minimap)
 	pingFrame:SetBackdrop(sm.backdrop)

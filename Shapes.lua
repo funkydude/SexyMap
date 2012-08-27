@@ -2,7 +2,6 @@
 local _, sm = ...
 sm.shapes = {}
 
-local parent = sm.core
 local mod = sm.shapes
 local L = sm.L
 local db
@@ -255,7 +254,7 @@ local shapeOptions = {
 }
 
 function mod:OnInitialize()
-	self.db = parent.db:RegisterNamespace("Shapes", defaults)
+	self.db = sm.core.db:RegisterNamespace("Shapes", defaults)
 	db = self.db.profile
 end
 

@@ -2,7 +2,6 @@
 local _, sm = ...
 sm.borders = {}
 
-local parent = sm.core
 local mod = sm.borders
 local L = sm.L
 local db
@@ -796,12 +795,12 @@ local defaults = {
 }
 
 function mod:OnInitialize()
-	self.db = parent.db:RegisterNamespace("Borders", defaults)
+	self.db = sm.core.db:RegisterNamespace("Borders", defaults)
 	db = self.db.profile
 end
 
 function mod:OnEnable()
-	parent:RegisterModuleOptions("Borders", options, L["Borders"])
+	sm.core:RegisterModuleOptions("Borders", options, L["Borders"])
 
 	local args = sm.general.options.args
 	args.presets = deepCopyHash(options.args.presets.args.preset)

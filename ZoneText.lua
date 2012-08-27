@@ -2,7 +2,6 @@
 local _, sm = ...
 sm.zonetext = {}
 
-local parent = sm.core
 local mod = sm.zonetext
 local L = sm.L
 
@@ -170,12 +169,12 @@ function mod:OnInitialize()
 			fontColor = {},
 		}
 	}
-	self.db = parent.db:RegisterNamespace("ZoneText", defaults)
+	self.db = sm.core.db:RegisterNamespace("ZoneText", defaults)
 	db = self.db.profile
 end
 
 function mod:OnEnable()
-	parent:RegisterModuleOptions("ZoneText", options, L["Zone Text"])
+	sm.core:RegisterModuleOptions("ZoneText", options, L["Zone Text"])
 
 	MinimapZoneText:ClearAllPoints()
 	MinimapZoneText:SetAllPoints()

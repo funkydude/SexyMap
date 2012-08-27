@@ -2,7 +2,6 @@
 local _, sm = ...
 sm.movers = {}
 
-local parent = sm.core
 local mod = sm.movers
 local L = sm.L
 
@@ -62,12 +61,12 @@ function mod:OnInitialize()
 				framePositions = {},
 			}
 		}
-	self.db = parent.db:RegisterNamespace("Movers", defaults)
+	self.db = sm.core.db:RegisterNamespace("Movers", defaults)
 	db = self.db.profile
 end
 
 function mod:OnEnable()
-	parent:RegisterModuleOptions("Movers", options, L["Movers"])
+	sm.core:RegisterModuleOptions("Movers", options, L["Movers"])
 	if db.enabled then
 		self:SetMovers()
 		self:Start()

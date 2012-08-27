@@ -2,7 +2,6 @@
 local _, sm = ...
 sm.coordinates = {}
 
-local parent = sm.core
 local mod = sm.coordinates
 local L = sm.L
 
@@ -137,12 +136,12 @@ function mod:OnInitialize()
 			enabled = false
 		}
 	}
-	self.db = parent.db:RegisterNamespace("Coordinates", defaults)
+	self.db = sm.core.db:RegisterNamespace("Coordinates", defaults)
 	db = self.db.profile
 end
 
 function mod:OnEnable()
-	parent:RegisterModuleOptions("Coordinates", options, L["Coordinates"])
+	sm.core:RegisterModuleOptions("Coordinates", options, L["Coordinates"])
 
 	if db.enabled then
 		self:CreateFrame()

@@ -117,10 +117,10 @@ local options = {
 			step = 1,
 			bigStep = 1,
 			get = function()
-				return mod.db.profile.autoZoom
+				return db.autoZoom
 			end,
 			set = function(info, v)
-				mod.db.profile.autoZoom = v
+				db.autoZoom = v
 			end,
 		},
 		presetSpacer = {

@@ -2,7 +2,6 @@
 local _, sm = ...
 sm.hudmap = {}
 
-local parent = sm.core
 local mod = sm.hudmap
 local L = sm.L
 local db
@@ -235,7 +234,7 @@ local defaults = {
 		useRoutes = true,
 		hudColor = {},
 		textColor = {r = 0.5, g = 1, b = 0.5, a = 1},
-		scale = 8,
+		scale = 1.4,
 		alpha = 0.7
 	}
 }
@@ -262,16 +261,12 @@ do
 end
 
 function mod:OnInitialize()
-	self.db = parent.db:RegisterNamespace("HudMap", defaults)
+	self.db = sm.core.db:RegisterNamespace("HudMap", defaults)
 	db = self.db.profile
 end
 
 function mod:OnEnable()
-	-- Upgrade thingie for 3.1
-	if not db.setNewScale then
-		db.scale = 1.4
-		db.setNewScale = true
-	end
+	sm.core:RegisterModuleOptions("HudMap", options, "HudMap")
 
 	local HudMapCluster = CreateFrame("Frame", "HudMapCluster", UIParent)
 	HudMapCluster:SetWidth(140)
@@ -337,7 +332,6 @@ function mod:OnEnable()
 	HudMapCluster:SetScript("OnHide", onHide)
 	Minimap:HookScript("OnShow", self.Minimap_OnShow)
 
-	parent:RegisterModuleOptions("HudMap", options, "HudMap")
 	self:UpdateColors()
 	self:SetScales()
 
