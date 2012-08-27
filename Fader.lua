@@ -1,9 +1,9 @@
 
 local _, sm = ...
-sm.Fader = {}
+sm.fader = {}
 
-local parent = sm.Core
-local mod = sm.Fader
+local parent = sm.core
+local mod = sm.fader
 local L = sm.L
 local db
 
@@ -65,7 +65,7 @@ local options = {
 	}
 }
 
-function mod:OnEnable()
+function mod:OnInitialize()
 	local defaults = {
 		profile = {
 			enabled = false,
@@ -74,8 +74,11 @@ function mod:OnEnable()
 		}
 	}
 	self.db = parent.db:RegisterNamespace("Fader", defaults)
-	parent:RegisterModuleOptions("Fader", options, L["Fader"])
 	db = self.db.profile
+end
+
+function mod:OnEnable()
+	parent:RegisterModuleOptions("Fader", options, L["Fader"])
 
 	if db.enabled then
 		Minimap:SetAlpha(db.normalOpacity)
@@ -125,11 +128,9 @@ do
 		end
 	end
 
-	function mod:SexyMap_NewFrame(_, f)
+	function mod:NewFrame(f)
 		f:HookScript("OnEnter", OnEnter)
 		f:HookScript("OnLeave", OnLeave)
 	end
 end
-
-parent.RegisterCallback(mod, "SexyMap_NewFrame")
 

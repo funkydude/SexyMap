@@ -1,28 +1,28 @@
 
 local _, sm = ...
-sm.Coordinates = {}
+sm.coordinates = {}
 
-local parent = sm.Core
-local mod = sm.Coordinates
+local parent = sm.core
+local mod = sm.coordinates
 local L = sm.L
 
-local coordFrame, coordsText
+local coordFrame, coordsText, db
 
 local options = {
 	type = "group",
 	name = L["Coordinates"],
 	childGroups = "tab",
-	disabled = function() return not mod.db.profile.enabled end,
+	disabled = function() return not db.enabled end,
 	args = {
 		enable = {
 			type = "toggle",
 			name = L["Enable Coordinates"],
 			order = 1,
 			get = function()
-				return mod.db.profile.enabled
+				return db.enabled
 			end,
 			set = function(info, v)
-				mod.db.profile.enabled = v
+				db.enabled = v
 				if v then
 					mod:CreateFrame()
 				else
@@ -39,10 +39,10 @@ local options = {
 			order = 2,
 			width = "double",
 			get = function()
-				return mod.db.profile.locked
+				return db.locked
 			end,
 			set = function(info, v)
-				mod.db.profile.locked = v
+				db.locked = v
 			end,
 		},
 		fontColor = {
@@ -51,12 +51,12 @@ local options = {
 			order = 3,
 			hasAlpha = true,
 			get = function()
-				local c = mod.db.profile.fontColor
+				local c = db.fontColor
 				local r, g, b, a = c.r or 0, c.g or 0, c.b or 0, c.a or 1
 				return r, g, b, a
 			end,
 			set = function(info, r, g, b, a)
-				local c = mod.db.profile.fontColor
+				local c = db.fontColor
 				c.r, c.g, c.b, c.a = r, g, b, a
 				mod:Update()
 			end
@@ -67,12 +67,12 @@ local options = {
 			order = 4,
 			hasAlpha = true,
 			get = function()
-				local c = mod.db.profile.backgroundColor
+				local c = db.backgroundColor
 				local r, g, b, a = c.r or 0, c.g or 0, c.b or 0, c.a or 1
 				return r, g, b, a
 			end,
 			set = function(info, r, g, b, a)
-				local c = mod.db.profile.backgroundColor
+				local c = db.backgroundColor
 				c.r, c.g, c.b, c.a = r, g, b, a
 				mod:Update()
 			end
@@ -83,12 +83,12 @@ local options = {
 			order = 5,
 			hasAlpha = true,
 			get = function()
-				local c = mod.db.profile.borderColor
+				local c = db.borderColor
 				local r, g, b, a = c.r or 0, c.g or 0, c.b or 0, c.a or 1
 				return r, g, b, a
 			end,
 			set = function(info, r, g, b, a)
-				local c = mod.db.profile.borderColor
+				local c = db.borderColor
 				c.r, c.g, c.b, c.a = r, g, b, a
 				mod:Update()
 			end
@@ -102,10 +102,10 @@ local options = {
 			step = 1,
 			bigStep = 1,
 			get = function()
-				return mod.db.profile.fontSize or 12
+				return db.fontSize or 12
 			end,
 			set = function(info, v)
-				mod.db.profile.fontSize = v
+				db.fontSize = v
 				mod:Update()
 			end
 		},
@@ -127,7 +127,7 @@ local options = {
 	}
 }
 
-function mod:OnEnable()
+function mod:OnInitialize()
 	local defaults = {
 		profile = {
 			borderColor = {},
@@ -138,9 +138,13 @@ function mod:OnEnable()
 		}
 	}
 	self.db = parent.db:RegisterNamespace("Coordinates", defaults)
+	db = self.db.profile
+end
+
+function mod:OnEnable()
 	parent:RegisterModuleOptions("Coordinates", options, L["Coordinates"])
 
-	if self.db.profile.enabled then
+	if db.enabled then
 		self:CreateFrame()
 	end
 end
@@ -159,7 +163,7 @@ function mod:CreateFrame()
 		coordFrame.sexyMapIgnore = true
 
 		coordFrame:SetScript("OnMouseDown", function(self)
-			if not mod.db.profile.locked then
+			if not db.locked then
 				self:StartMoving()
 				self.moving = true
 			end
@@ -173,8 +177,8 @@ function mod:CreateFrame()
 				local dx, dy = mx - x, my - y
 				self:ClearAllPoints()
 				self:SetPoint("CENTER", Minimap, "CENTER", -dx, -dy)
-				mod.db.profile.x = dx
-				mod.db.profile.y = dy
+				db.x = dx
+				db.y = dy
 			end
 		end)
 
@@ -190,9 +194,9 @@ function mod:CreateFrame()
 		animgroup:SetLooping("REPEAT")
 		animgroup:Play()
 	end
-	if self.db.profile.x then
+	if db.x then
 		coordFrame:ClearAllPoints()
-		coordFrame:SetPoint("CENTER", Minimap, "CENTER", -self.db.profile.x, -self.db.profile.y)
+		coordFrame:SetPoint("CENTER", Minimap, "CENTER", -db.x, -db.y)
 	else
 		coordFrame:SetPoint("CENTER", Minimap, "BOTTOM", 0, 10)
 	end
@@ -202,24 +206,24 @@ function mod:CreateFrame()
 end
 
 function mod:Update()
-	if self.db.profile.borderColor then
-		local c = self.db.profile.borderColor
+	if db.borderColor then
+		local c = db.borderColor
 		coordFrame:SetBackdropBorderColor(c.r or 0, c.g or 0, c.b or 0, c.a or 1)
 	end
 
-	if self.db.profile.backgroundColor then
-		local c = self.db.profile.backgroundColor
+	if db.backgroundColor then
+		local c = db.backgroundColor
 		coordFrame:SetBackdropColor(c.r or 0, c.g or 0, c.b or 0, c.a or 1)
 	end
 
-	if self.db.profile.fontColor then
-		local c = self.db.profile.fontColor
+	if db.fontColor then
+		local c = db.fontColor
 		coordsText:SetTextColor(c.r or 1, c.g or 1, c.b or 1, c.a or 1)
 	end
 
-	if self.db.profile.fontSize then
+	if db.fontSize then
 		local f, s, flags = coordsText:GetFont()
-		coordsText:SetFont(f, self.db.profile.fontSize, flags)
+		coordsText:SetFont(f, db.fontSize, flags)
 	end
 
 	coordFrame:SetWidth(coordsText:GetStringWidth() * 1.2)
@@ -229,6 +233,6 @@ end
 function mod:ResetPosition()
 	coordFrame:ClearAllPoints()
 	coordFrame:SetPoint("CENTER", Minimap, "BOTTOM")
-	self.db.profile.x, self.db.profile.y = nil, nil
+	db.x, db.y = nil, nil
 end
 

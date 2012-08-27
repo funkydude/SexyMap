@@ -38,9 +38,6 @@ localization\ptBR.lua
 # Core
 SexyMap.lua
 
-# Comes first, has default option set
-General.lua
-
 # Utility, doesn't actually have menu options
 Shapes.lua
 

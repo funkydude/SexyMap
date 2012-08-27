@@ -1,9 +1,9 @@
 
 local _, sm = ...
-sm.Borders = {}
+sm.borders = {}
 
-local parent = sm.Core
-local mod = sm.Borders
+local parent = sm.core
+local mod = sm.borders
 local L = sm.L
 local db
 
@@ -13,7 +13,6 @@ local rotateTextures = {}
 local defaultSize = 180
 local customBackdrop
 local media = LibStub("LibSharedMedia-3.0")
-local Shape = parent:GetModule("Shapes")
 
 local layers = {
 	BACKGROUND = L["1. Background"],
@@ -84,7 +83,7 @@ local options = {
 			type = "group",
 			name = L["Current Borders"],
 			args = {
-				shape = parent:GetModule("Shapes"):GetShapeOptions(),
+				shape = sm.shapes:GetShapeOptions(),
 				newDesc = {
 					type = "description",
 					name = L["Enter a name to create a new border. The name can be anything you like to help you identify that border."],
@@ -796,12 +795,15 @@ local defaults = {
 	}
 }
 
-function mod:OnEnable()
+function mod:OnInitialize()
 	self.db = parent.db:RegisterNamespace("Borders", defaults)
 	db = self.db.profile
+end
+
+function mod:OnEnable()
 	parent:RegisterModuleOptions("Borders", options, L["Borders"])
 
-	local args = parent:GetModule("General").options.args
+	local args = sm.general.options.args
 	args.presets = deepCopyHash(options.args.presets.args.preset)
 	if args.presets then
 		args.presets.order = 110
@@ -868,7 +870,7 @@ function mod:SavePresetAs(name)
 	self.db.global.userPresets[name] = {
 		borders = deepCopyHash(db.borders),
 		backdrop = deepCopyHash(db.backdrop),
-		shape = Shape:GetShape()
+		shape = sm.shapes:GetShape()
 	}
 	self:RebuildPresets()
 end
@@ -974,7 +976,7 @@ function mod:ApplySettings()
 	self:ClearWidgets()
 
 	if db.shape then
-		Shape:ApplyShape(db.shape)
+		sm.shapes:ApplyShape(db.shape)
 	end
 
 	for _, v in ipairs(db.borders) do

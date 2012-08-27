@@ -1,9 +1,9 @@
 
 local _, sm = ...
-sm.Buttons = {}
+sm.buttons = {}
 
-local parent = sm.Core
-local mod = sm.Buttons
+local parent = sm.core
+local mod = sm.buttons
 local L = sm.L
 
 local Shape, db, moving, ButtonFadeOut
@@ -178,7 +178,7 @@ do
 	end
 end
 
-function mod:OnEnable()
+function mod:OnInitialize()
 	local defaults = {
 		profile = {
 			radius = 10,
@@ -198,9 +198,10 @@ function mod:OnEnable()
 	}
 	self.db = parent.db:RegisterNamespace("Buttons", defaults)
 	db = self.db.profile
-	parent:RegisterModuleOptions("Buttons", options, L["Buttons"])
+end
 
-	parent:GetModule("Shapes").RegisterCallback(self, "SexyMap_ShapeChanged", "UpdateDraggables")
+function mod:OnEnable()
+	parent:RegisterModuleOptions("Buttons", options, L["Buttons"])
 end
 
 --------------------------------------------------------------------------------
@@ -262,7 +263,7 @@ do
 		end
 	end
 
-	function mod:SexyMap_NewFrame(_, f)
+	function mod:NewFrame(f)
 		local n, w, h = f:GetName(), f:GetWidth(), f:GetHeight()
 		-- Always allow Blizz frames, skip ignored frames, dynamically try to skip frames that may not be minimap buttons by checking size
 		if (blizzButtons[n] or dynamicButtons[n]) or (not fadeIgnore[n] and w > 26 and w < 35 and h > 26 and h < 35) then
@@ -339,7 +340,7 @@ do
 
 	local setPosition = function(frame, angle)
 		local radius = (Minimap:GetWidth() / 2) + db.radius
-		local bx, by = parent:GetModule("Shapes"):GetPosition(angle, radius)
+		local bx, by = sm.shapes:GetPosition(angle, radius)
 
 		frame:ClearAllPoints()
 		frame:SetPoint("CENTER", Minimap, "CENTER", bx, by)
@@ -385,7 +386,7 @@ do
 	function mod:UpdateDraggables(frame)
 		if not db.allowDragging then return end
 
-		if frame and type(frame) == "table" then -- Type check because we have a callback sending a string on shape change
+		if frame then
 			local x, y = frame:GetCenter()
 			local angle = db.dragPositions[frame:GetName()] or getCurrentAngle(frame:GetParent(), x, y)
 			if angle then
@@ -402,6 +403,4 @@ do
 		end
 	end
 end
-
-parent.RegisterCallback(mod, "SexyMap_NewFrame")
 

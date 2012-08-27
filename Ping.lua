@@ -1,17 +1,17 @@
 
 local _, sm = ...
-sm.Ping = {}
+sm.ping = {}
 
-local parent = sm.Core
-local mod = sm.Ping
+local parent = sm.core
+local mod = sm.ping
 local L = sm.L
 
-local pingFrame
+local pingFrame, db
 
 local options = {
 	type = "group",
 	name = L["Ping"],
-	disabled = function() return not mod.db.profile.showPing end,
+	disabled = function() return not db.showPing end,
 	args = {
 		show = {
 			type = "toggle",
@@ -19,10 +19,10 @@ local options = {
 			name = L["Show who pinged"],
 			width = "full",
 			get = function()
-				return mod.db.profile.showPing
+				return db.showPing
 			end,
 			set = function(info, v)
-				mod.db.profile.showPing = v
+				db.showPing = v
 				if v then
 					pingFrame:RegisterEvent("MINIMAP_PING")
 				else
@@ -40,16 +40,16 @@ local options = {
 				["map"] = L["Show on minimap"],
 			},
 			get = function(info, v)
-				return mod.db.profile.showAt == v
+				return db.showAt == v
 			end,
 			set = function(info, v)
-				mod.db.profile.showAt = v
+				db.showAt = v
 			end,
 		}
 	}
 }
 
-function mod:OnEnable()
+function mod:OnInitialize()
 	local defaults = {
 		profile = {
 			showPing = true,
@@ -57,6 +57,10 @@ function mod:OnEnable()
 		}
 	}
 	self.db = parent.db:RegisterNamespace("Ping", defaults)
+	db = self.db.profile
+end
+
+function mod:OnEnable()
 	parent:RegisterModuleOptions("Ping", options, L["Ping"])
 
 	pingFrame = CreateFrame("Frame", "SexyMapPingFrame", Minimap)
@@ -82,7 +86,7 @@ function mod:OnEnable()
 	pingFrame:SetScript("OnEvent", function(_, _, unit)
 		local class = select(2, UnitClass(unit))
 		local color = CUSTOM_CLASS_COLORS and CUSTOM_CLASS_COLORS[class] or RAID_CLASS_COLORS[class] or GRAY_FONT_COLOR
-		if mod.db.profile.showAt == "chat" then
+		if db.showAt == "chat" then
 			DEFAULT_CHAT_FRAME:AddMessage(("Ping: |cFF%02x%02x%02x%s|r"):format(color.r * 255, color.g * 255, color.b * 255, UnitName(unit)))
 		else
 			pingFrame.name:SetFormattedText("|cFF%02x%02x%02x%s|r", color.r * 255, color.g * 255, color.b * 255, UnitName(unit))
@@ -94,7 +98,7 @@ function mod:OnEnable()
 		end
 	end)
 
-	if self.db.profile.showPing then
+	if db.showPing then
 		pingFrame:RegisterEvent("MINIMAP_PING")
 	end
 end

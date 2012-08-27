@@ -1,9 +1,9 @@
 
 local _, sm = ...
-sm.Movers = {}
+sm.movers = {}
 
-local parent = sm.Core
-local mod = sm.Movers
+local parent = sm.core
+local mod = sm.movers
 local L = sm.L
 
 local db
@@ -54,7 +54,7 @@ local movables = {
 }
 local movers = {}
 
-function mod:OnEnable()
+function mod:OnInitialize()
 	local defaults = {
 			profile = {
 				enabled = false,
@@ -64,8 +64,10 @@ function mod:OnEnable()
 		}
 	self.db = parent.db:RegisterNamespace("Movers", defaults)
 	db = self.db.profile
-	parent:RegisterModuleOptions("Movers", options, L["Movers"])
+end
 
+function mod:OnEnable()
+	parent:RegisterModuleOptions("Movers", options, L["Movers"])
 	if db.enabled then
 		self:SetMovers()
 		self:Start()

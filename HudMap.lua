@@ -1,9 +1,9 @@
 
 local _, sm = ...
-sm.HudMap = {}
+sm.hudmap = {}
 
-local parent = sm.Core
-local mod = sm.HudMap
+local parent = sm.core
+local mod = sm.hudmap
 local L = sm.L
 local db
 
@@ -261,10 +261,12 @@ do
 	end
 end
 
-function mod:OnEnable()
+function mod:OnInitialize()
 	self.db = parent.db:RegisterNamespace("HudMap", defaults)
 	db = self.db.profile
+end
 
+function mod:OnEnable()
 	-- Upgrade thingie for 3.1
 	if not db.setNewScale then
 		db.scale = 1.4
