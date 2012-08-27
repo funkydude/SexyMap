@@ -1,14 +1,15 @@
 
-local _, addon = ...
-local parent = addon.SexyMap
-local modName = "Fader"
-local mod = addon.SexyMap:NewModule(modName)
-local L = addon.L
+local _, sm = ...
+sm.Fader = {}
+
+local parent = sm.Core
+local mod = sm.Fader
+local L = sm.L
 local db
 
 local options = {
 	type = "group",
-	name = modName,
+	name = L["Fader"],
 	childGroups = "tab",
 	disabled = function() return not db.enabled end,
 	args = {
@@ -21,10 +22,9 @@ local options = {
 			set = function(info, v)
 				db.enabled = v
 				if v then
-					mod:Enable()
+					Minimap:SetAlpha(db.normalOpacity)
 				else
 					Minimap:SetAlpha(1)
-					mod:Disable()
 				end
 			end,
 			disabled = false,
@@ -65,7 +65,7 @@ local options = {
 	}
 }
 
-function mod:OnInitialize()
+function mod:OnEnable()
 	local defaults = {
 		profile = {
 			enabled = false,
@@ -73,17 +73,13 @@ function mod:OnInitialize()
 			normalOpacity = 1
 		}
 	}
-	self.db = parent.db:RegisterNamespace(modName, defaults)
-	parent:RegisterModuleOptions(modName, options, L["Fader"])
+	self.db = parent.db:RegisterNamespace("Fader", defaults)
+	parent:RegisterModuleOptions("Fader", options, L["Fader"])
 	db = self.db.profile
-	self:SetEnabledState(db.enabled)
 
-	parent.RegisterCallback(self, "SexyMap_NewFrame")
-end
-
-function mod:OnEnable()
-	db = self.db.profile
-	Minimap:SetAlpha(db.normalOpacity)
+	if db.enabled then
+		Minimap:SetAlpha(db.normalOpacity)
+	end
 end
 
 do
@@ -134,4 +130,6 @@ do
 		f:HookScript("OnLeave", OnLeave)
 	end
 end
+
+parent.RegisterCallback(mod, "SexyMap_NewFrame")
 

@@ -1,10 +1,12 @@
 
-local _, addon = ...
-local parent = addon.SexyMap
-local modName = "Clock"
+local _, sm = ...
+sm.Clock = {}
+
+local parent = sm.Core
+local mod = sm.Clock
+local L = sm.L
+
 local media = LibStub("LibSharedMedia-3.0")
-local mod = addon.SexyMap:NewModule(modName)
-local L = addon.L
 
 local updateLayout = function()
 	TimeManagerClockButton:ClearAllPoints()
@@ -23,7 +25,7 @@ end
 
 local options = {
 	type = "group",
-	name = modName,
+	name = L["Clock"],
 	args = {
 		xOffset = {
 			type = "range",
@@ -171,7 +173,7 @@ local options = {
 	}
 }
 
-function mod:OnInitialize()
+function mod:OnEnable()
 	local defaults = {
 		profile = {
 			xOffset = 0,
@@ -182,15 +184,13 @@ function mod:OnInitialize()
 		}
 	}
 
-	self.db = parent.db:RegisterNamespace(modName, defaults)
-	parent:RegisterModuleOptions(modName, options, L["Clock"])
-end
+	self.db = parent.db:RegisterNamespace("Clock", defaults)
+	parent:RegisterModuleOptions("Clock", options, L["Clock"])
 
-function mod:OnEnable()
 	TimeManagerClockTicker:ClearAllPoints()
 	TimeManagerClockTicker:SetAllPoints()
 	TimeManagerClockButton:GetRegions():Hide() -- Hide the border
-	TimeManagerClockButton:SetBackdrop(addon.backdrop)
+	TimeManagerClockButton:SetBackdrop(sm.backdrop)
 
 	updateLayout()
 end

@@ -1,9 +1,11 @@
 
-local _, addon = ...
-local parent = addon.SexyMap
-local modName = "Buttons"
-local mod = addon.SexyMap:NewModule(modName)
-local L = addon.L
+local _, sm = ...
+sm.Buttons = {}
+
+local parent = sm.Core
+local mod = sm.Buttons
+local L = sm.L
+
 local Shape, db, moving, ButtonFadeOut
 
 local animFrames = {}
@@ -31,7 +33,7 @@ local dynamicButtons = {
 
 local options = {
 	type = "group",
-	name = modName,
+	name = L["Buttons"],
 	childGroups = "tab",
 	args = {
 		custom = {
@@ -176,7 +178,7 @@ do
 	end
 end
 
-function mod:OnInitialize()
+function mod:OnEnable()
 	local defaults = {
 		profile = {
 			radius = 10,
@@ -194,18 +196,11 @@ function mod:OnInitialize()
 			controlVisibility = true
 		}
 	}
-	self.db = parent.db:RegisterNamespace(modName, defaults)
+	self.db = parent.db:RegisterNamespace("Buttons", defaults)
 	db = self.db.profile
-	parent:RegisterModuleOptions(modName, options, L["Buttons"])
+	parent:RegisterModuleOptions("Buttons", options, L["Buttons"])
 
-	Shape = parent:GetModule("Shapes")
-	Shape.RegisterCallback(self, "SexyMap_ShapeChanged", "UpdateDraggables")
-
-	parent.RegisterCallback(self, "SexyMap_NewFrame")
-end
-
-function mod:OnEnable()
-	db = self.db.profile
+	parent:GetModule("Shapes").RegisterCallback(self, "SexyMap_ShapeChanged", "UpdateDraggables")
 end
 
 --------------------------------------------------------------------------------
@@ -270,7 +265,7 @@ do
 	function mod:SexyMap_NewFrame(_, f)
 		local n, w, h = f:GetName(), f:GetWidth(), f:GetHeight()
 		-- Always allow Blizz frames, skip ignored frames, dynamically try to skip frames that may not be minimap buttons by checking size
-		if (blizzButtons[n] or dynamicButtons[n]) or (not fadeIgnore[n] and w > 26 and h < 35) then
+		if (blizzButtons[n] or dynamicButtons[n]) or (not fadeIgnore[n] and w > 26 and w < 35 and h > 26 and h < 35) then
 			-- Create the animations
 			f.smAnimGroup = f:CreateAnimationGroup()
 			f.smAlphaAnim = f.smAnimGroup:CreateAnimation("Alpha")
@@ -344,7 +339,7 @@ do
 
 	local setPosition = function(frame, angle)
 		local radius = (Minimap:GetWidth() / 2) + db.radius
-		local bx, by = Shape:GetPosition(angle, radius)
+		local bx, by = parent:GetModule("Shapes"):GetPosition(angle, radius)
 
 		frame:ClearAllPoints()
 		frame:SetPoint("CENTER", Minimap, "CENTER", bx, by)
@@ -407,4 +402,6 @@ do
 		end
 	end
 end
+
+parent.RegisterCallback(mod, "SexyMap_NewFrame")
 

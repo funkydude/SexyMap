@@ -1,9 +1,10 @@
 
-local _, addon = ...
-local parent = addon.SexyMap
-local modName = "HudMap"
-local mod = addon.SexyMap:NewModule(modName)
-local L = addon.L
+local _, sm = ...
+sm.HudMap = {}
+
+local parent = sm.Core
+local mod = sm.HudMap
+local L = sm.L
 local db
 
 local updateFrame = CreateFrame("Frame")
@@ -64,7 +65,7 @@ end
 
 local options = {
 	type = "group",
-	name = modName,
+	name = "HudMap",
 	args = {
 		desc = {
 			type = "description",
@@ -242,8 +243,25 @@ local coloredTextures = {}
 local gatherCircle, gatherLine
 local indicators = {"N", "NE", "E", "SE", "S", "SW", "W", "NW"}
 
-function mod:OnInitialize()
-	self.db = parent.db:RegisterNamespace(modName, defaults)
+do
+	local target = 1 / 90
+	local total = 0
+
+	function updateRotations(self, t)
+		total = total + t
+		if total < target then return end
+		while total > target do total = total - target end
+		local bearing = GetPlayerFacing()
+		for k, v in ipairs(directions) do
+			local x, y = math.sin(v.rad + bearing), math.cos(v.rad + bearing)
+			v:ClearAllPoints()
+			v:SetPoint("CENTER", HudMapCluster, "CENTER", x * v.radius, y * v.radius)
+		end
+	end
+end
+
+function mod:OnEnable()
+	self.db = parent.db:RegisterNamespace("HudMap", defaults)
 	db = self.db.profile
 
 	-- Upgrade thingie for 3.1
@@ -308,7 +326,7 @@ function mod:OnInitialize()
 	HudMapCluster:SetScript("OnHide", onHide)
 	Minimap:HookScript("OnShow", self.Minimap_OnShow)
 
-	parent:RegisterModuleOptions(modName, options, modName)
+	parent:RegisterModuleOptions("HudMap", options, "HudMap")
 	self:UpdateColors()
 	self:SetScales()
 
@@ -316,27 +334,7 @@ function mod:OnInitialize()
 	HudMapCluster.GetScale = function()
 		return 1
 	end
-end
 
-do
-	local target = 1 / 90
-	local total = 0
-
-	function updateRotations(self, t)
-		total = total + t
-		if total < target then return end
-		while total > target do total = total - target end
-		local bearing = GetPlayerFacing()
-		for k, v in ipairs(directions) do
-			local x, y = math.sin(v.rad + bearing), math.cos(v.rad + bearing)
-			v:ClearAllPoints()
-			v:SetPoint("CENTER", HudMapCluster, "CENTER", x * v.radius, y * v.radius)
-		end
-	end
-end
-
-function mod:OnEnable()
-	db = self.db.profile
 	updateFrame:RegisterEvent("PLAYER_LOGOUT")
 end
 

@@ -1,17 +1,19 @@
 
-local _, addon = ...
-local parent = addon.SexyMap
-local modName = "Borders"
-local mod = addon.SexyMap:NewModule(modName)
-local L = addon.L
+local _, sm = ...
+sm.Borders = {}
+
+local parent = sm.Core
+local mod = sm.Borders
+local L = sm.L
 local db
+
 local textures = {}
 local texturePool = {}
 local rotateTextures = {}
 local defaultSize = 180
 local customBackdrop
 local media = LibStub("LibSharedMedia-3.0")
-local Shape
+local Shape = parent:GetModule("Shapes")
 
 local layers = {
 	BACKGROUND = L["1. Background"],
@@ -27,8 +29,6 @@ local blendModes = {
 	MOD = L["Mod Blend (modulative)"],
 	ADD = L["Add Blend (additive)"],
 }
-
-local Minimap, MinimapCluster, MinimapBorder = Minimap, MinimapCluster, MinimapBorder
 
 local presets, userPresets = {}, {}
 
@@ -796,12 +796,11 @@ local defaults = {
 	}
 }
 
-function mod:OnInitialize()
-	Shape = parent:GetModule("Shapes")
-
-	self.db = parent.db:RegisterNamespace(modName, defaults)
+function mod:OnEnable()
+	self.db = parent.db:RegisterNamespace("Borders", defaults)
 	db = self.db.profile
-	parent:RegisterModuleOptions(modName, options, L["Borders"])
+	parent:RegisterModuleOptions("Borders", options, L["Borders"])
+
 	local args = parent:GetModule("General").options.args
 	args.presets = deepCopyHash(options.args.presets.args.preset)
 	if args.presets then
@@ -816,10 +815,6 @@ function mod:OnInitialize()
 	customBackdrop:SetPoint("CENTER")
 	customBackdrop:SetWidth(Minimap:GetWidth())
 	customBackdrop:SetHeight(Minimap:GetHeight())
-end
-
-function mod:OnEnable()
-	db = self.db.profile
 
 	self:RebuildPresets()
 
@@ -841,7 +836,7 @@ function mod:RebuildPresets()
 		userPresets[k] = k
 		presets[k] = k
 	end
-	for k, v in pairs(addon.borderPresets) do
+	for k, v in pairs(sm.borderPresets) do
 		presets[k] = k
 	end
 end
@@ -854,7 +849,7 @@ function mod:Clear()
 end
 
 function mod:ApplyPreset(preset)
-	local preset = self.db.global.userPresets[preset] or addon.borderPresets[preset]
+	local preset = self.db.global.userPresets[preset] or sm.borderPresets[preset]
 
 	db.borders = deepCopyHash(preset.borders)
 	db.backdrop = preset.backdrop and deepCopyHash(preset.backdrop) or deepCopyHash(defaults.profile.backdrop)

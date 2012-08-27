@@ -1,13 +1,15 @@
 
-local _, addon = ...
-local parent = addon.SexyMap
-local mod = addon.SexyMap:NewModule("Movers")
-local L = addon.L
+local _, sm = ...
+sm.Movers = {}
+
+local parent = sm.Core
+local mod = sm.Movers
+local L = sm.L
 
 local db
 local options = {
 	type = "group",
-	name = "Movers",
+	name = L["Movers"],
 	args = {
 		desc = {
 			order = 0.5,
@@ -23,12 +25,10 @@ local options = {
 			end,
 			set = function(info, v)
 				db.enabled = v
-				if v then
-					mod:Enable()
-				else
-					mod:Disable()
-				end
 				mod:SetMovers()
+				if v then
+					mod:Start()
+				end
 			end,
 		},
 		lock = {
@@ -54,55 +54,29 @@ local movables = {
 }
 local movers = {}
 
-function mod:OnInitialize()
+function mod:OnEnable()
 	local defaults = {
-		profile = {
-			enabled = false,
-			lock = false,
-			framePositions = {},
+			profile = {
+				enabled = false,
+				lock = false,
+				framePositions = {},
+			}
 		}
-	}
 	self.db = parent.db:RegisterNamespace("Movers", defaults)
 	db = self.db.profile
 	parent:RegisterModuleOptions("Movers", options, L["Movers"])
+
+	if db.enabled then
+		self:SetMovers()
+		self:Start()
+	end
 end
 
 do
-	--[[local reanchorWatchFrame = function()
-		local mx, my = MinimapCluster:GetCenter()
-		local sx, sy = UIParent:GetCenter()
-		local change, from, to, side = false, nil, nil, nil
-		if my < sy then
-			from = "BOTTOM"
-			to = "TOP"
-			side = to
-		else
-			from = "TOP"
-			to = "BOTTOM"
-			side = to
-		end
-		if mx < sx then
-			from = from .. "LEFT"
-			to = to .. "LEFT"
-		else
-			from = from .. "RIGHT"
-			to = to .. "RIGHT"
-		end
-		WatchFrame:ClearAllPoints()
-		WatchFrame:SetPoint(from, MinimapCluster, to)
-		-- WatchFrame:SetHeight(1000)
-		WatchFrame:SetPoint(side, UIParent, side)
-	end]]
-
-	local hooked
-	function mod:OnEnable()
-		db = self.db.profile
-		if not db.enabled then self:Disable() return end
-
-		self:SetMovers()
-
-		if hooked then return end
-		hooked = true
+	local started = nil
+	function mod:Start()
+		if started then return end
+		started = true
 
 		if updateContainerFrameAnchors then --XXX MoP compat
 			hooksecurefunc("updateContainerFrameAnchors", self.CreateMoversAndSetMovables)
@@ -128,15 +102,8 @@ do
 			movables["VehicleSeatIndicator"] = L["Vehicle Seat"]
 		end
 		self:CreateMoversAndSetMovables()
-		--[[hooksecurefunc("WatchFrame_Update", function()
-			if not WatchFrame:IsUserPlaced() then
-				reanchorWatchFrame()
-			end
-		end)]]
 	end
 end
-
-mod.movables = movables
 
 do
 	local function start(self)
@@ -177,7 +144,7 @@ do
 					f:SetScript("OnLeave", stop)
 					l:SetText(("%s mover"):format(text))
 					l:SetPoint("BOTTOM", f, "TOP")
-					f:SetBackdrop(addon.backdrop)
+					f:SetBackdrop(sm.backdrop)
 					f:SetBackdropColor(0, 0.6, 0, 1)
 				end
 

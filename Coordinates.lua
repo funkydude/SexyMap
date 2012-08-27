@@ -1,9 +1,12 @@
 
-local _, addon = ...
-local parent = addon.SexyMap
-local modName = "Coordinates"
-local mod = addon.SexyMap:NewModule(modName)
-local L = addon.L
+local _, sm = ...
+sm.Coordinates = {}
+
+local parent = sm.Core
+local mod = sm.Coordinates
+local L = sm.L
+
+local coordFrame, coordsText
 
 local options = {
 	type = "group",
@@ -21,9 +24,11 @@ local options = {
 			set = function(info, v)
 				mod.db.profile.enabled = v
 				if v then
-					parent:EnableModule(modName)
+					mod:CreateFrame()
 				else
-					parent:DisableModule(modName)
+					if coordFrame then
+						coordFrame:Hide()
+					end
 				end
 			end,
 			disabled = false,
@@ -122,7 +127,7 @@ local options = {
 	}
 }
 
-function mod:OnInitialize()
+function mod:OnEnable()
 	local defaults = {
 		profile = {
 			borderColor = {},
@@ -132,20 +137,18 @@ function mod:OnInitialize()
 			enabled = false
 		}
 	}
-	self.db = parent.db:RegisterNamespace(modName, defaults)
-	parent:RegisterModuleOptions(modName, options, L["Coordinates"])
+	self.db = parent.db:RegisterNamespace("Coordinates", defaults)
+	parent:RegisterModuleOptions("Coordinates", options, L["Coordinates"])
+
+	if self.db.profile.enabled then
+		self:CreateFrame()
+	end
 end
 
-local coordFrame, coordsText
-function mod:OnEnable()
-	if not self.db.profile.enabled then
-		parent:DisableModule(modName)
-		return
-	end
-
+function mod:CreateFrame()
 	if not coordFrame then
 		coordFrame = CreateFrame("Frame", "SexyMapCoordFrame", Minimap)
-		coordFrame:SetBackdrop(addon.backdrop)
+		coordFrame:SetBackdrop(sm.backdrop)
 		coordsText = coordFrame:CreateFontString(nil, nil, "GameFontNormalSmall")
 		coordsText:SetPoint("CENTER", coordFrame, "CENTER")
 		coordsText:SetJustifyH("CENTER")
@@ -191,17 +194,11 @@ function mod:OnEnable()
 		coordFrame:ClearAllPoints()
 		coordFrame:SetPoint("CENTER", Minimap, "CENTER", -self.db.profile.x, -self.db.profile.y)
 	else
-		coordFrame:SetPoint("CENTER", Minimap, "BOTTOM")
+		coordFrame:SetPoint("CENTER", Minimap, "BOTTOM", 0, 10)
 	end
 
 	coordFrame:Show()
 	self:Update()
-end
-
-function mod:OnDisable()
-	if coordFrame then
-		coordFrame:Hide()
-	end
 end
 
 function mod:Update()

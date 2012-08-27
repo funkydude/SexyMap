@@ -1,8 +1,10 @@
 
-local _, addon = ...
-local parent = addon.SexyMap
-local mod = addon.SexyMap:NewModule("General")
-local L = addon.L
+local _, sm = ...
+sm.General = {}
+
+local parent = sm.Core
+local mod = sm.General
+local L = sm.L
 
 local db
 local options = {
@@ -105,8 +107,16 @@ local options = {
 
 mod.options = options
 
+-- Make sure the various minimap buttons follow the minimap
+-- We do this before login to prevent button placement issues
+MinimapBackdrop:ClearAllPoints()
+MinimapBackdrop:SetParent(Minimap)
+MinimapBackdrop:SetPoint("CENTER", Minimap, "CENTER", -8, -23)
+
 local animGroup, anim
-function mod:OnInitialize()
+function mod:OnGeneralEnable()
+	local Minimap = Minimap
+
 	local defaults = {
 		profile = {
 			lock = true,
@@ -136,18 +146,12 @@ function mod:OnInitialize()
 		local c = CreateFrame"Frame"
 		local t = GetTime()
 		c:SetScript("OnUpdate", function()
-			if GetTime()-t > 12 then
+			if GetTime()-t > 7 then
 				ChatFrame1:AddMessage("SexyMapTrackerButtonFix: I'm no longer needed, please remove this addon.", 0, 0.3, 1)
 				c:SetScript("OnUpdate", nil)
 			end
 		end)
 	end
-end
-
-function mod:OnEnable()
-	db = self.db.profile
-
-	local Minimap = Minimap
 
 	--[[ MouseWheel Zoom ]]--
 	Minimap:EnableMouseWheel(true)
@@ -168,11 +172,6 @@ function mod:OnEnable()
 	end
 
 	MinimapCluster:EnableMouse(false) -- Don't leave an invisible dead zone
-
-	-- Make sure the various minimap buttons follow the minimap
-	MinimapBackdrop:ClearAllPoints()
-	MinimapBackdrop:SetParent(Minimap)
-	MinimapBackdrop:SetPoint("CENTER", Minimap, "CENTER", -8, -23)
 
 	MinimapBorderTop:Hide()
 	Minimap:RegisterForDrag("LeftButton")
