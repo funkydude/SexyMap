@@ -33,6 +33,7 @@ local onShow = function(self)
 		Astrolabe.processingFrame:SetParent(HudMapCluster)
 	end
 
+	mod:SetScales()
 	updateFrame:SetScript("OnUpdate", updateRotations)
 	Minimap:Hide()
 end
@@ -270,8 +271,16 @@ function mod:OnEnable()
 		db.setNewScale = true
 	end
 
-	SexyMapHudMap.module = self
-	SexyMapHudMap:SetPoint("CENTER", UIParent, "CENTER")
+	local HudMapCluster = CreateFrame("Frame", "HudMapCluster", UIParent)
+	HudMapCluster:SetWidth(140)
+	HudMapCluster:SetHeight(140)
+	HudMapCluster:SetPoint("CENTER", UIParent, "CENTER")
+
+	local SexyMapHudMap = CreateFrame("Minimap", "SexyMapHudMap", HudMapCluster)
+	SexyMapHudMap:SetWidth(140)
+	SexyMapHudMap:SetHeight(140)
+	SexyMapHudMap:SetPoint("CENTER", HudMapCluster, "CENTER")
+
 	HudMapCluster:SetFrameStrata("BACKGROUND")
 	HudMapCluster:SetAlpha(db.alpha)
 	SexyMapHudMap:SetAlpha(0)
@@ -349,20 +358,10 @@ function mod:Minimap_OnShow()
 end
 
 function mod:Toggle(flag)
-	if flag == nil then
-		if HudMapCluster:IsVisible() then
-			HudMapCluster:Hide()
-		else
-			HudMapCluster:Show()
-			mod:SetScales()
-		end
+	if flag then
+		HudMapCluster:Show()
 	else
-		if flag then
-			HudMapCluster:Show()
-			mod:SetScales()
-		else
-			HudMapCluster:Hide()
-		end
+		HudMapCluster:Hide()
 	end
 end
 

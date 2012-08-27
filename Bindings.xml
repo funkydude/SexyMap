@@ -1,5 +1,9 @@
 <Bindings>
 	<Binding name="TOGGLESEXYMAPGATHERMAP" header="SexyMap">
-		SexyMapHudMap.module:Toggle()
+		if HudMapCluster:IsVisible() then
+			HudMapCluster:Hide()
+		else
+			HudMapCluster:Show()
+		end
 	</Binding>
 </Bindings>

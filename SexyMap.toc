@@ -51,7 +51,6 @@ Borders.lua
 Clock.lua
 Coordinates.lua
 Fader.lua
-HudMap.xml
 HudMap.lua
 Movers.lua
 Ping.lua
