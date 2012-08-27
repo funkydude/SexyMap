@@ -29,6 +29,9 @@ local dynamicButtons = {
 	MiniMapBattlefieldFrame = "PVP", -- XXX mop temp
 	MiniMapLFGFrame = "LFG", -- XXX mop temp
 }
+local addonButtons = { -- For the rare addons that don't use LibDBIcon for some reason :(
+	EnxMiniMapIcon = "Enchantrix",
+}
 
 local options = {
 	type = "group",
@@ -169,7 +172,7 @@ do
 		end
 		p[name] = {
 			type = "multiselect",
-			name = L["Show %s:"]:format(blizzButtons[name] or dynamicButtons[name] or name:gsub("LibDBIcon10_", "")),
+			name = L["Show %s:"]:format(blizzButtons[name] or dynamicButtons[name] or addonButtons[name] or name:gsub("LibDBIcon10_", "")),
 			values = dynamic and dynamicValues or hideValues,
 			get = hideGet,
 			set = hideSet,
@@ -208,15 +211,6 @@ end
 --
 
 do
-	local fadeIgnore = {
-		Minimap = true,
-		MinimapBackdrop = true,
-		SexyMapPingFrame = true,
-		SexyMapCustomBackdrop = true,
-		SexyMapCoordFrame = true,
-		MiniMapTrackingButton = true, -- Child of MiniMapTracking which is faded
-	}
-
 	local OnFinished = function(anim)
 		-- Minimap or Minimap icons including nil checks to compensate for other addons
 		local f, focus = anim:GetParent(), GetMouseFocus()
@@ -263,9 +257,9 @@ do
 	end
 
 	function mod:NewFrame(f)
-		local n, w, h = f:GetName(), f:GetWidth(), f:GetHeight()
+		local n = f:GetName()
 		-- Always allow Blizz frames, skip ignored frames, dynamically try to skip frames that may not be minimap buttons by checking size
-		if (blizzButtons[n] or dynamicButtons[n]) or (not fadeIgnore[n] and w > 26 and w < 35 and h > 26 and h < 35) then
+		if blizzButtons[n] or dynamicButtons[n] or addonButtons[n] or n:find("LibDBIcon") then
 			-- Create the animations
 			f.smAnimGroup = f:CreateAnimationGroup()
 			f.smAlphaAnim = f.smAnimGroup:CreateAnimation("Alpha")
