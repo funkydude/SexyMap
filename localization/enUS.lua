@@ -129,6 +129,7 @@ L["Right Click Configure"] = "Right Click Configure"
 L["Right clicking the map will open the SexyMap options"] = "Right clicking the map will open the SexyMap options"
 L["Auto Zoom-Out Delay"] = "Auto Zoom-Out Delay"
 L["If you zoom into the map, this feature will automatically zoom out after the selected period of time (seconds)"] = "If you zoom into the map, this feature will automatically zoom out after the selected period of time (seconds)"
+L["Show North Tag"] = "Show North Tag"
 
 -- ./HudMap.lua
 L["Enable a HUD minimap. This is very useful for gathering resources, but for technical reasons, the HUD map and the normal minimap can't be shown at the same time. Showing the HUD map will turn off the normal minimap."] = "Enable a HUD minimap. This is very useful for gathering resources, but for technical reasons, the HUD map and the normal minimap can't be shown at the same time. Showing the HUD map will turn off the normal minimap."

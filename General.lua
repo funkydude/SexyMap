@@ -75,19 +75,34 @@ local options = {
 				Minimap:SetScale(v)
 			end,
 		},
-		zoomSpacer = {
+		northTag = {
 			order = 6,
-			type = "header",
-			name = "",
+			type = "toggle",
+			name = L["Show North Tag"],
+			get = function()
+				return db.northTag
+			end,
+			set = function(info, v)
+				if v then
+					MinimapNorthTag.Show = MinimapNorthTag.oldShow
+					MinimapNorthTag.oldShow = nil
+					MinimapNorthTag:Show()
+				else
+					MinimapNorthTag:Hide()
+					MinimapNorthTag.oldShow = MinimapNorthTag.Show
+					MinimapNorthTag.Show = MinimapNorthTag.Hide
+				end
+				db.northTag = v
+			end,
 		},
 		zoom = {
 			order = 7,
 			type = "range",
 			name = L["Auto Zoom-Out Delay"],
 			desc = L["If you zoom into the map, this feature will automatically zoom out after the selected period of time (seconds)"],
+			width = "double",
 			min = 0,
-			width = "full",
-			max = 60,
+			max = 30,
 			step = 1,
 			bigStep = 1,
 			get = function()
@@ -97,10 +112,10 @@ local options = {
 				mod.db.profile.autoZoom = v
 			end,
 		},
-		spacer = {
+		presetSpacer = {
 			order = 8,
 			type = "header",
-			name = "",
+			name = L["Preset"],
 		},
 	}
 }
@@ -123,6 +138,7 @@ function mod:OnGeneralEnable()
 			clamp = true,
 			rightClickToConfig = true,
 			autoZoom = 5,
+			northTag = true,
 		}
 	}
 	self.db = parent.db:RegisterNamespace("General", defaults)
@@ -172,6 +188,12 @@ function mod:OnGeneralEnable()
 	end
 
 	MinimapCluster:EnableMouse(false) -- Don't leave an invisible dead zone
+
+	if not db.northTag then
+		MinimapNorthTag:Hide()
+		MinimapNorthTag.oldShow = MinimapNorthTag.Show
+		MinimapNorthTag.Show = MinimapNorthTag.Hide
+	end
 
 	MinimapBorderTop:Hide()
 	Minimap:RegisterForDrag("LeftButton")

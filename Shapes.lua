@@ -261,6 +261,14 @@ function mod:OnShapesEnable()
 	db = self.db.profile
 	db.shape = db.shape or parent:GetModule("General").db.profile.shape or "Textures\\MinimapMask"
 	self:ApplyShape()
+
+	GetMinimapShape = function()
+		if HudMapCluster and HudMapCluster:IsShown() then -- HudMap module compat
+			return "ROUND"
+		else
+			return shapes[db.shape] and shapes[db.shape].shape or "ROUND"
+		end
+	end
 end
 
 function mod:GetPosition(angle, radius)
@@ -294,13 +302,5 @@ function mod:ApplyShape(shape)
 		Minimap:SetMaskTexture(db.shape)
 	end
 	self.callbacks:Fire("SexyMap_ShapeChanged")
-end
-
-function GetMinimapShape()
-	if HudMapCluster and HudMapCluster:IsShown() then -- HudMap module compat
-		return "ROUND"
-	else
-		return shapes[db.shape] and shapes[db.shape].shape or "ROUND"
-	end
 end
 
