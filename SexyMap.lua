@@ -322,7 +322,10 @@ do
 		updateTimer:SetLooping("REPEAT")
 		updateTimer:Play()
 
-		grabFrames(MinimapZoneTextButton, Minimap, MiniMapTrackingButton, MinimapBackdrop:GetChildren()) -- More Icons
+		-- Grab Icons
+		grabFrames(MinimapZoneTextButton, Minimap, MiniMapTrackingButton,
+			MiniMapInstanceDifficulty, GuildInstanceDifficulty, MinimapBackdrop:GetChildren()
+		)
 		self.StartFrameGrab = nil
 	end
 end
