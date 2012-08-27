@@ -286,7 +286,7 @@ function mod:OnEnable()
 	setmetatable(HudMapCluster, { __index = SexyMapHudMap })
 
 	BINDING_HEADER_SexyMap = "SexyMap"
-	BINDING_NAME_TOGGLESEXYMAPGATHERMAP = "Toggle HudMap On/Off"
+	BINDING_NAME_TOGGLESEXYMAPGATHERMAP = L["Toggle HudMap On/Off"]
 	gatherCircle = HudMapCluster:CreateTexture()
 	gatherCircle:SetTexture([[SPELLS\CIRCLE.BLP]])
 	gatherCircle:SetBlendMode("ADD")
