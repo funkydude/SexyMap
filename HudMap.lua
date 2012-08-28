@@ -7,7 +7,7 @@ local L = sm.L
 local db
 
 local updateFrame = CreateFrame("Frame")
-local updateRotations
+local updateRotations, HudMapCluster, SexyMapHudMap
 
 local onShow = function(self)
 	self.rotSettings = GetCVar("rotateMinimap")
@@ -268,12 +268,12 @@ end
 function mod:OnEnable()
 	sm.core:RegisterModuleOptions("HudMap", options, "HudMap")
 
-	local HudMapCluster = CreateFrame("Frame", "HudMapCluster", UIParent)
+	HudMapCluster = CreateFrame("Frame", "HudMapCluster", UIParent)
 	HudMapCluster:SetWidth(140)
 	HudMapCluster:SetHeight(140)
 	HudMapCluster:SetPoint("CENTER", UIParent, "CENTER")
 
-	local SexyMapHudMap = CreateFrame("Minimap", "SexyMapHudMap", HudMapCluster)
+	SexyMapHudMap = CreateFrame("Minimap", "SexyMapHudMap", HudMapCluster)
 	SexyMapHudMap:SetWidth(140)
 	SexyMapHudMap:SetHeight(140)
 	SexyMapHudMap:SetPoint("CENTER", HudMapCluster, "CENTER")
