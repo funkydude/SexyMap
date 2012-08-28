@@ -116,6 +116,7 @@ local options = {
 			dialogControl = "LSM30_Font",
 			values = AceGUIWidgetLSMlists.font,
 			get = function()
+				if not coordsText then return end
 				local font = nil
 				local curFont = coordsText:GetFont()
 				for k,v in pairs(AceGUIWidgetLSMlists.font) do
@@ -180,7 +181,6 @@ function mod:CreateFrame()
 
 		coordFrame:SetMovable(true)
 		coordFrame:EnableMouse()
-		coordFrame.sexyMapIgnore = true
 
 		coordFrame:SetScript("OnMouseDown", function(self)
 			if not mod.db.locked then
