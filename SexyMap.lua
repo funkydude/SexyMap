@@ -269,10 +269,6 @@ function mod:PLAYER_LOGIN()
 		end
 	end)
 
-	--mod.db.RegisterCallback(mod, "OnProfileChanged", ReloadUI)
-	--mod.db.RegisterCallback(mod, "OnProfileCopied", ReloadUI)
-	--mod.db.RegisterCallback(mod, "OnProfileReset", ReloadUI)
-
 	mod:SetupMap()
 
 	-- Load the modules in alphabetical order
@@ -285,8 +281,6 @@ function mod:PLAYER_LOGIN()
 	mod.loadModules = nil
 
 	mod:StartFrameGrab()
-
-	--mod:RegisterModuleOptions("Profiles", LibStub("AceDBOptions-3.0"):GetOptionsTable(mod.db), L["Profiles"])
 
 	mod.frame:UnregisterEvent("PLAYER_LOGIN")
 	mod.PLAYER_LOGIN = nil

@@ -29,19 +29,6 @@ local blendModes = {
 
 local presets, userPresets = {}, {}
 
-local function deepCopyHash(t)
-	if t == nil then return nil end
-	local nt = {}
-	for k, v in pairs(t) do
-		if type(v) == "table" then
-			nt[k] = deepCopyHash(v)
-		else
-			nt[k] = v
-		end
-	end
-	return nt
-end
-
 local function RotateTexture(self, inc, set)
 	if type(inc) == "string" then
 		local bearing = GetPlayerFacing()
@@ -824,7 +811,7 @@ function mod:OnEnable()
 	sm.core:RegisterModuleOptions("Borders", options, L["Borders"])
 
 	local args = sm.core.options.args
-	args.presets = deepCopyHash(options.args.presets.args.preset)
+	args.presets = sm.core.deepCopyHash(options.args.presets.args.preset)
 	if args.presets then
 		args.presets.order = 110
 		args.presets.width = nil
@@ -866,15 +853,15 @@ end
 function mod:Clear()
 	sm.core.db.shape = "Textures\\MinimapMask"
 	mod.db.borders = {} -- leaky
-	mod.db.backdrop = deepCopyHash(defaults.backdrop) -- leaky
+	mod.db.backdrop = sm.core.deepCopyHash(defaults.backdrop) -- leaky
 	return self:ApplySettings()
 end
 
 function mod:ApplyPreset(preset)
 	local preset = self.presets[preset] or sm.borderPresets[preset]
 
-	mod.db.borders = deepCopyHash(preset.borders)
-	mod.db.backdrop = preset.backdrop and deepCopyHash(preset.backdrop) or deepCopyHash(defaults.backdrop)
+	mod.db.borders = sm.core.deepCopyHash(preset.borders)
+	mod.db.backdrop = preset.backdrop and sm.core.deepCopyHash(preset.backdrop) or sm.core.deepCopyHash(defaults.backdrop)
 	sm.core.db.shape = preset.shape
 
 	return self:ApplySettings()
@@ -888,8 +875,8 @@ end
 
 function mod:SavePresetAs(name)
 	self.presets[name] = {
-		borders = deepCopyHash(mod.db.borders),
-		backdrop = deepCopyHash(mod.db.backdrop),
+		borders = sm.core.deepCopyHash(mod.db.borders),
+		backdrop = sm.core.deepCopyHash(mod.db.backdrop),
 		shape = sm.shapes:GetShape()
 	}
 	self:RebuildPresets()
