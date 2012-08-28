@@ -26,7 +26,7 @@ sm.core.deepCopyHash = function(t)
 	return nt
 end
 
-local options = {
+mod.options = {
 	type = "group",
 	name = name,
 	args = {
@@ -192,18 +192,18 @@ local options = {
 				return true
 			end,
 		},
-	reset = {
-		type = "execute",
-		name = L["Reset Current Profile"],
-		confirm = true,
-		confirmText = L["Resetting this profile will reload your UI, are you sure?"],
-		order = 11,
-		func = function()
-			local var = UnitName("player").."-"..GetRealmName()
-			SexyMap2DB[var] = nil
-			ReloadUI()
-		end,
-	},
+		reset = {
+			type = "execute",
+			name = L["Reset Current Profile"],
+			confirm = true,
+			confirmText = L["Resetting this profile will reload your UI, are you sure?"],
+			order = 11,
+			func = function()
+				local var = UnitName("player").."-"..GetRealmName()
+				SexyMap2DB[var] = nil
+				ReloadUI()
+			end,
+		},
 		presetSpacer = {
 			order = 12,
 			type = "header",
@@ -211,8 +211,6 @@ local options = {
 		},
 	}
 }
-
-mod.options = options
 
 function mod:ADDON_LOADED(addon)
 	if addon == "SexyMap" then
@@ -252,7 +250,7 @@ end
 
 function mod:PLAYER_LOGIN()
 	-- Setup config
-	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(name, options)
+	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(name, mod.options)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(name)
 
 	-- Configure slash handler

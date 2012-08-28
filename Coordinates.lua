@@ -5,6 +5,7 @@ sm.coordinates = {}
 local mod = sm.coordinates
 local L = sm.L
 
+local media = LibStub("LibSharedMedia-3.0")
 local coordFrame, coordsText
 
 local options = {
@@ -108,17 +109,38 @@ local options = {
 				mod:Update()
 			end
 		},
-		spacer = {
+		font = {
+			type = "select",
+			name = L["Font"],
 			order = 7,
+			dialogControl = "LSM30_Font",
+			values = AceGUIWidgetLSMlists.font,
+			get = function()
+				local font = nil
+				local curFont = coordsText:GetFont()
+				for k,v in pairs(AceGUIWidgetLSMlists.font) do
+					if v == curFont then
+						font = k
+						break
+					end
+				end
+				return mod.db.font or font
+			end,
+			set = function(info, v)
+				mod.db.font = v
+				mod:Update()
+			end
+		},
+		spacer = {
+			order = 8,
 			type = "description",
 			width = "normal",
 			name = "",
-			width = "double",
 		},
 		reset = {
 			type = "execute",
 			name = L["Reset Position"],
-			order = 8,
+			order = 9,
 			func = function()
 				mod:ResetPosition()
 			end,
@@ -133,7 +155,7 @@ function mod:OnInitialize(profile)
 			backgroundColor = {},
 			locked = false,
 			fontColor = {},
-			enabled = false
+			enabled = false,
 		}
 	end
 	self.db = profile.coordinates
@@ -219,10 +241,8 @@ function mod:Update()
 		coordsText:SetTextColor(c.r or 1, c.g or 1, c.b or 1, c.a or 1)
 	end
 
-	if mod.db.fontSize then
-		local f, s, flags = coordsText:GetFont()
-		coordsText:SetFont(f, mod.db.fontSize, flags)
-	end
+	local a, b, c = coordsText:GetFont()
+	coordsText:SetFont(mod.db.font and media:Fetch("font", mod.db.font) or a, mod.db.fontSize or b, c)
 
 	coordFrame:SetWidth(coordsText:GetStringWidth() * 1.2)
 	coordFrame:SetHeight(coordsText:GetStringHeight() + 10)
