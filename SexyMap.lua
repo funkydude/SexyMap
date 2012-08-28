@@ -1,7 +1,6 @@
 
 local name, sm = ...
 sm.core = {}
-sm.core.frame = CreateFrame("Frame")
 
 local mod = sm.core
 local L = sm.L
@@ -14,11 +13,12 @@ sm.backdrop = {
 	tile = true,
 }
 
-sm.core.deepCopyHash = function(t)
+mod.frame = CreateFrame("Frame")
+mod.deepCopyHash = function(t)
 	local nt = {}
 	for k, v in pairs(t) do
 		if type(v) == "table" then
-			nt[k] = sm.core.deepCopyHash(v)
+			nt[k] = mod.deepCopyHash(v)
 		else
 			nt[k] = v
 		end
@@ -153,7 +153,7 @@ mod.options = {
 			end,
 			set = function(info, v)
 				local var = (UnitName("player").."-"..GetRealmName())
-				SexyMap2DB[var] = sm.core.deepCopyHash(SexyMap2DB[v])
+				SexyMap2DB[var] = mod.deepCopyHash(SexyMap2DB[v])
 				ReloadUI()
 			end,
 			disabled = function()
@@ -362,8 +362,8 @@ function mod:SetupMap()
 	end
 end
 
-sm.core.frame:RegisterEvent("ADDON_LOADED")
-sm.core.frame:SetScript("OnEvent", function(_, event, ...)
+mod.frame:RegisterEvent("ADDON_LOADED")
+mod.frame:SetScript("OnEvent", function(_, event, ...)
 	mod[event](sm, ...)
 end)
 
@@ -389,7 +389,7 @@ do
 	function mod:StartFrameGrab()
 		-- Try to capture new frames periodically
 		-- We'd use ADDON_LOADED but it's too early, some addons load a minimap icon afterwards
-		local updateTimer = sm.core.frame:CreateAnimationGroup()
+		local updateTimer = mod.frame:CreateAnimationGroup()
 		local anim = updateTimer:CreateAnimation()
 		updateTimer:SetScript("OnLoop", function() grabFrames(Minimap:GetChildren()) end)
 		anim:SetOrder(1)
