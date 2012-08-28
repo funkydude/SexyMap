@@ -34,6 +34,7 @@ local addonButtons = { -- For the rare addons that don't use LibDBIcon for some 
 	["FuBarPluginBig BrotherFrameMinimapButton"] = "Big Brother",
 	RA_MinimapButton = "RaidAchievement",
 	DBMMinimapButton = "Deadly Boss Mods",
+	XPerl_MinimapButton_Frame = "X-Perl",
 }
 
 local options = {
