@@ -14,7 +14,7 @@
 ## Notes-ptBR: Spice up your minimap with some sexy options.
 ## Author: Antiarc, Funkydude
 ## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, Blizzard_TimeManager, TomTom
-## SavedVariables: SexyMapDB
+## SavedVariables: SexyMap2DB
 
 # Libraries, etc
 #@no-lib-strip@

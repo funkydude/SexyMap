@@ -5,7 +5,7 @@ sm.buttons = {}
 local mod = sm.buttons
 local L = sm.L
 
-local Shape, db, moving, ButtonFadeOut
+local Shape, moving, ButtonFadeOut
 
 local animFrames = {}
 local blizzButtons = {
@@ -46,7 +46,7 @@ local options = {
 			type = "group",
 			name = L["Addon Buttons"],
 			disabled = function()
-				return not db.controlVisibility
+				return not mod.db.controlVisibility
 			end,
 			args = {},
 			order = 3,
@@ -55,7 +55,7 @@ local options = {
 			type = "group",
 			name = L["Dynamic Buttons"],
 			disabled = function()
-				return not db.controlVisibility
+				return not mod.db.controlVisibility
 			end,
 			args = {},
 			order = 2,
@@ -63,7 +63,7 @@ local options = {
 		stock = {
 			type = "group",
 			disabled = function()
-				return not db.controlVisibility
+				return not mod.db.controlVisibility
 			end,
 			name = L["Standard Buttons"],
 			args = {},
@@ -76,10 +76,10 @@ local options = {
 			width = "double",
 			order = 101,
 			get = function()
-				return db.allowDragging
+				return mod.db.allowDragging
 			end,
 			set = function(info, v)
-				db.allowDragging = v
+				mod.db.allowDragging = v
 				if v then mod:UpdateDraggables() end
 			end
 		},
@@ -88,13 +88,13 @@ local options = {
 			name = L["Lock Button Dragging"],
 			order = 102,
 			disabled = function()
-				return not db.allowDragging
+				return not mod.db.allowDragging
 			end,
 			get = function()
-				return db.lockDragging
+				return mod.db.lockDragging
 			end,
 			set = function(info, v)
-				db.lockDragging = v
+				mod.db.lockDragging = v
 			end
 		},
 		dragRadius = {
@@ -106,13 +106,13 @@ local options = {
 			bigStep = 1,
 			order = 103,
 			disabled = function()
-				return not db.allowDragging
+				return not mod.db.allowDragging
 			end,
 			get = function()
-				return db.radius
+				return mod.db.radius
 			end,
 			set = function(info, v)
-				db.radius = v
+				mod.db.radius = v
 				mod:UpdateDraggables()
 			end
 		},
@@ -128,15 +128,15 @@ local options = {
 			width = "full",
 			order = 105,
 			get = function()
-				return db.controlVisibility
+				return mod.db.controlVisibility
 			end,
 			set = function(info, v)
-				db.controlVisibility = v
+				mod.db.controlVisibility = v
 				for _,f in pairs(animFrames) do
 					if not v then
 						mod:ChangeFrameVisibility(f, "always")
 					else
-						mod:ChangeFrameVisibility(f, db.visibilitySettings[f:GetName()] or "hover")
+						mod:ChangeFrameVisibility(f, mod.db.visibilitySettings[f:GetName()] or "hover")
 					end
 				end
 			end
@@ -156,12 +156,12 @@ do
 	}
 
 	local function hideGet(info, v)
-		return (db.visibilitySettings[info[#info]] or "hover") == v
+		return (mod.db.visibilitySettings[info[#info]] or "hover") == v
 	end
 
 	local function hideSet(info, v)
 		local name = info[#info]
-		db.visibilitySettings[name] = v
+		mod.db.visibilitySettings[name] = v
 		mod:ChangeFrameVisibility(_G[name], v)
 	end
 
@@ -184,9 +184,9 @@ do
 	end
 end
 
-function mod:OnInitialize()
-	local defaults = {
-		profile = {
+function mod:OnInitialize(profile)
+	if type(profile.buttons) ~= "table" then
+		profile.buttons = {
 			radius = 10,
 			dragPositions = {},
 			visibilitySettings = {
@@ -201,9 +201,8 @@ function mod:OnInitialize()
 			lockDragging = false,
 			controlVisibility = true
 		}
-	}
-	self.db = sm.core.db:RegisterNamespace("Buttons", defaults)
-	db = self.db.profile
+	end
+	self.db = profile.buttons
 end
 
 function mod:OnEnable()
@@ -228,11 +227,11 @@ do
 	local fadeStop -- Use a variable to prevent fadeout/in when moving the mouse around minimap/icons
 
 	local OnEnter = function()
-		if not db.controlVisibility or fadeStop or moving then return end
+		if not mod.db.controlVisibility or fadeStop or moving then return end
 
 		for _,f in pairs(animFrames) do
 			local n = f:GetName()
-			if not db.visibilitySettings[n] or db.visibilitySettings[n] == "hover" then
+			if not mod.db.visibilitySettings[n] or mod.db.visibilitySettings[n] == "hover" then
 				local delayed = f.smAlphaAnim:IsDelaying()
 				f.smAnimGroup:Stop()
 				if not delayed then
@@ -245,7 +244,7 @@ do
 		end
 	end
 	local OnLeave = function()
-		if not db.controlVisibility or moving then return end
+		if not mod.db.controlVisibility or moving then return end
 		local focus = GetMouseFocus() -- Minimap or Minimap icons including nil checks to compensate for other addons
 		if focus and ((focus:GetName() == "Minimap") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
 			fadeStop = true
@@ -255,7 +254,7 @@ do
 
 		for _,f in pairs(animFrames) do
 			local n = f:GetName()
-			if not db.visibilitySettings[n] or db.visibilitySettings[n] == "hover" then
+			if not mod.db.visibilitySettings[n] or mod.db.visibilitySettings[n] == "hover" then
 				f.smAnimGroup:Stop()
 				f:SetAlpha(1)
 				f.smAlphaAnim:SetStartDelay(1)
@@ -278,8 +277,8 @@ do
 			tinsert(animFrames, f)
 
 			-- Configure fading
-			if db.controlVisibility then
-				self:ChangeFrameVisibility(f, db.visibilitySettings[n] or "hover")
+			if mod.db.controlVisibility then
+				self:ChangeFrameVisibility(f, mod.db.visibilitySettings[n] or "hover")
 			end
 
 			-- Don't add config or moving capability to the Zone Text and Clock buttons, handled in their own modules
@@ -341,7 +340,7 @@ do
 	end
 
 	local setPosition = function(frame, angle)
-		local radius = (Minimap:GetWidth() / 2) + db.radius
+		local radius = (Minimap:GetWidth() / 2) + mod.db.radius
 		local bx, by = sm.shapes:GetPosition(angle, radius)
 
 		frame:ClearAllPoints()
@@ -352,12 +351,12 @@ do
 		local x, y = GetCursorPosition()
 		x, y = x / Minimap:GetEffectiveScale(), y / Minimap:GetEffectiveScale()
 		local angle = getCurrentAngle(Minimap, x, y)
-		db.dragPositions[moving:GetName()] = angle
+		mod.db.dragPositions[moving:GetName()] = angle
 		setPosition(moving, angle)
 	end
 
 	local OnDragStart = function(frame)
-		if db.lockDragging or not db.allowDragging then return end
+		if mod.db.lockDragging or not mod.db.allowDragging then return end
 
 		moving = frame
 		dragFrame:SetScript("OnUpdate", updatePosition)
@@ -373,7 +372,7 @@ do
 		frame:RegisterForDrag("LeftButton")
 		if tracking then
 			frame:SetScript("OnDragStart", function()
-				if db.lockDragging or not db.allowDragging then return end
+				if mod.db.lockDragging or not mod.db.allowDragging then return end
 
 				moving = tracking
 				dragFrame:SetScript("OnUpdate", updatePosition)
@@ -386,18 +385,18 @@ do
 	end
 
 	function mod:UpdateDraggables(frame)
-		if not db.allowDragging then return end
+		if not mod.db.allowDragging then return end
 
 		if frame then
 			local x, y = frame:GetCenter()
-			local angle = db.dragPositions[frame:GetName()] or getCurrentAngle(frame:GetParent(), x, y)
+			local angle = mod.db.dragPositions[frame:GetName()] or getCurrentAngle(frame:GetParent(), x, y)
 			if angle then
 				setPosition(frame, angle)
 			end
 		else
 			for _,f in pairs(animFrames) do
 				local x, y = f:GetCenter()
-				local angle = db.dragPositions[f:GetName()] or getCurrentAngle(f:GetParent(), x, y)
+				local angle = mod.db.dragPositions[f:GetName()] or getCurrentAngle(f:GetParent(), x, y)
 				if angle then
 					setPosition(f, angle)
 				end

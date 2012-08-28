@@ -5,12 +5,12 @@ sm.ping = {}
 local mod = sm.ping
 local L = sm.L
 
-local pingFrame, db
+local pingFrame
 
 local options = {
 	type = "group",
 	name = L["Ping"],
-	disabled = function() return not db.showPing end,
+	disabled = function() return not mod.db.showPing end,
 	args = {
 		show = {
 			type = "toggle",
@@ -18,10 +18,10 @@ local options = {
 			name = L["Show who pinged"],
 			width = "full",
 			get = function()
-				return db.showPing
+				return mod.db.showPing
 			end,
 			set = function(info, v)
-				db.showPing = v
+				mod.db.showPing = v
 				if v then
 					pingFrame:RegisterEvent("MINIMAP_PING")
 				else
@@ -39,24 +39,23 @@ local options = {
 				["map"] = L["Show on minimap"],
 			},
 			get = function(info, v)
-				return db.showAt == v
+				return mod.db.showAt == v
 			end,
 			set = function(info, v)
-				db.showAt = v
+				mod.db.showAt = v
 			end,
 		}
 	}
 }
 
-function mod:OnInitialize()
-	local defaults = {
-		profile = {
+function mod:OnInitialize(profile)
+	if type(profile.ping) ~= "table" then
+		profile.ping = {
 			showPing = true,
 			showAt = "map"
 		}
-	}
-	self.db = sm.core.db:RegisterNamespace("Ping", defaults)
-	db = self.db.profile
+	end
+	self.db = profile.ping
 end
 
 function mod:OnEnable()
@@ -85,7 +84,7 @@ function mod:OnEnable()
 	pingFrame:SetScript("OnEvent", function(_, _, unit)
 		local class = select(2, UnitClass(unit))
 		local color = CUSTOM_CLASS_COLORS and CUSTOM_CLASS_COLORS[class] or RAID_CLASS_COLORS[class] or GRAY_FONT_COLOR
-		if db.showAt == "chat" then
+		if mod.db.showAt == "chat" then
 			DEFAULT_CHAT_FRAME:AddMessage(("%s: |cFF%02x%02x%02x%s|r"):format(L["Ping"], color.r * 255, color.g * 255, color.b * 255, UnitName(unit)))
 		else
 			pingFrame.name:SetFormattedText("|cFF%02x%02x%02x%s|r", color.r * 255, color.g * 255, color.b * 255, UnitName(unit))
@@ -97,7 +96,7 @@ function mod:OnEnable()
 		end
 	end)
 
-	if db.showPing then
+	if mod.db.showPing then
 		pingFrame:RegisterEvent("MINIMAP_PING")
 	end
 end

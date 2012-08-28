@@ -5,7 +5,6 @@ sm.movers = {}
 local mod = sm.movers
 local L = sm.L
 
-local db
 local options = {
 	type = "group",
 	name = L["Movers"],
@@ -20,10 +19,10 @@ local options = {
 			name = L["Enable Movers"],
 			type = "toggle",
 			get = function()
-				return db.enabled
+				return mod.db.enabled
 			end,
 			set = function(info, v)
-				db.enabled = v
+				mod.db.enabled = v
 				mod:SetMovers()
 				if v then
 					mod:Start()
@@ -35,13 +34,13 @@ local options = {
 			name = L["Lock Movers"],
 			type = "toggle",
 			get = function()
-				return db.lock
+				return mod.db.lock
 			end,
 			set = function(info, v)
-				db.lock = v
+				mod.db.lock = v
 				mod:SetMovers()
 			end,
-			disabled = function() return not db.enabled end,
+			disabled = function() return not mod.db.enabled end,
 		},
 	},
 }
@@ -53,21 +52,20 @@ local movables = {
 }
 local movers = {}
 
-function mod:OnInitialize()
-	local defaults = {
-			profile = {
-				enabled = false,
-				lock = false,
-				framePositions = {},
-			}
+function mod:OnInitialize(profile)
+	if type(profile.movers) ~= "table" then
+		profile.movers = {
+			enabled = false,
+			lock = false,
+			framePositions = {},
 		}
-	self.db = sm.core.db:RegisterNamespace("Movers", defaults)
-	db = self.db.profile
+	end
+	self.db = profile.movers
 end
 
 function mod:OnEnable()
 	sm.core:RegisterModuleOptions("Movers", options, L["Movers"])
-	if db.enabled then
+	if mod.db.enabled then
 		self:SetMovers()
 		self:Start()
 	end
@@ -121,9 +119,9 @@ do
 		local x, y = f:GetLeft(), f:GetTop()
 		local n = f:GetName()
 
-		db.framePositions[n] = db.framePositions[n] or {}
-		db.framePositions[n].x = x
-		db.framePositions[n].y = y
+		mod.db.framePositions[n] = mod.db.framePositions[n] or {}
+		mod.db.framePositions[n].x = x
+		mod.db.framePositions[n].y = y
 		f:SetUserPlaced(true)
 	end
 
@@ -165,12 +163,12 @@ do
 					f:SetWidth(40)
 				end
 
-				if not db.lock then
+				if not mod.db.lock then
 					f:Hide()
 				end
 
-				if db.framePositions[frame] then
-					local x, y = db.framePositions[frame].x, db.framePositions[frame].y
+				if mod.db.framePositions[frame] then
+					local x, y = mod.db.framePositions[frame].x, mod.db.framePositions[frame].y
 					pf:ClearAllPoints()
 					pf:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", x, y)
 					pf:SetUserPlaced(true)
@@ -182,7 +180,7 @@ do
 end
 
 function mod:SetMovers()
-	local v = db.enabled and (not db.lock)
+	local v = mod.db.enabled and (not mod.db.lock)
 	if v then
 		for _, f in ipairs(movers) do
 			f.showParent = not not f:GetParent():IsVisible() -- convert nil -> false

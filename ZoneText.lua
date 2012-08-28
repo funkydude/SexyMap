@@ -6,7 +6,6 @@ local mod = sm.zonetext
 local L = sm.L
 
 local media = LibStub("LibSharedMedia-3.0")
-local db
 
 local options = {
 	type = "group",
@@ -20,8 +19,8 @@ local options = {
 			max = 250,
 			step = 1,
 			bigStep = 5,
-			get = function() return db.xOffset end,
-			set = function(info, v) db.xOffset = v mod:UpdateLayout() end
+			get = function() return mod.db.xOffset end,
+			set = function(info, v) mod.db.xOffset = v mod:UpdateLayout() end
 		},
 		yOffset = {
 			type = "range",
@@ -31,8 +30,8 @@ local options = {
 			max = 250,
 			step = 1,
 			bigStep = 5,
-			get = function() return db.yOffset end,
-			set = function(info, v) db.yOffset = v mod:UpdateLayout() end
+			get = function() return mod.db.yOffset end,
+			set = function(info, v) mod.db.yOffset = v mod:UpdateLayout() end
 		},
 		spacer1 = {
 			order = 3,
@@ -49,7 +48,7 @@ local options = {
 			step = 1,
 			bigStep = 4,
 			get = function() return MinimapZoneTextButton:GetWidth() end,
-			set = function(info, v) db.width = v mod:UpdateLayout() end
+			set = function(info, v) mod.db.width = v mod:UpdateLayout() end
 		},
 		font = {
 			type = "select",
@@ -66,10 +65,10 @@ local options = {
 						break
 					end
 				end
-				return db.font or font
+				return mod.db.font or font
 			end,
 			set = function(info, v)
-				db.font = v
+				mod.db.font = v
 				mod:UpdateLayout()
 			end
 		},
@@ -81,9 +80,9 @@ local options = {
 			max = 30,
 			step = 1,
 			bigStep = 1,
-			get = function() return db.fontsize or select(2, MinimapZoneText:GetFont()) end,
+			get = function() return mod.db.fontsize or select(2, MinimapZoneText:GetFont()) end,
 			set = function(info, v)
-				db.fontsize = v
+				mod.db.fontsize = v
 				mod:UpdateLayout()
 			end
 		},
@@ -93,14 +92,14 @@ local options = {
 			order = 7,
 			hasAlpha = true,
 			get = function()
-				if db.fontColor.r then
-					return db.fontColor.r, db.fontColor.g, db.fontColor.b, db.fontColor.a
+				if mod.db.fontColor.r then
+					return mod.db.fontColor.r, mod.db.fontColor.g, mod.db.fontColor.b, mod.db.fontColor.a
 				else
 					return MinimapZoneText:GetTextColor()
 				end
 			end,
 			set = function(info, r, g, b, a)
-				db.fontColor.r, db.fontColor.g, db.fontColor.b, db.fontColor.a = r, g, b, a
+				mod.db.fontColor.r, mod.db.fontColor.g, mod.db.fontColor.b, mod.db.fontColor.a = r, g, b, a
 				mod:UpdateLayout()
 			end
 		},
@@ -110,10 +109,10 @@ local options = {
 			order = 8,
 			hasAlpha = true,
 			get = function()
-				return db.bgColor.r, db.bgColor.g, db.bgColor.b, db.bgColor.a
+				return mod.db.bgColor.r, mod.db.bgColor.g, mod.db.bgColor.b, mod.db.bgColor.a
 			end,
 			set = function(info, r, g, b, a)
-				db.bgColor.r, db.bgColor.g, db.bgColor.b, db.bgColor.a = r, g, b, a
+				mod.db.bgColor.r, mod.db.bgColor.g, mod.db.bgColor.b, mod.db.bgColor.a = r, g, b, a
 				mod:UpdateLayout()
 			end
 		},
@@ -123,17 +122,17 @@ local options = {
 			order = 9,
 			hasAlpha = true,
 			get = function()
-				return db.borderColor.r, db.borderColor.g, db.borderColor.b, db.borderColor.a
+				return mod.db.borderColor.r, mod.db.borderColor.g, mod.db.borderColor.b, mod.db.borderColor.a
 			end,
 			set = function(info, r, g, b, a)
-				db.borderColor.r, db.borderColor.g, db.borderColor.b, db.borderColor.a = r, g, b, a
+				mod.db.borderColor.r, mod.db.borderColor.g, mod.db.borderColor.b, mod.db.borderColor.a = r, g, b, a
 				mod:UpdateLayout()
 			end
 		},
 		fade = {
 			type = "multiselect",
 			name = function()
-				if sm.buttons.db.profile.controlVisibility then
+				if sm.buttons.db.controlVisibility then
 					return L["Show %s:"]:format(L["Zone Text"])
 				else
 					return L["Show %s:"]:format(L["Zone Text"]) .. " |cFF0276FD" .. L["(Requires button visibility control in the Buttons menu)"] .. "|r"
@@ -146,31 +145,30 @@ local options = {
 				["hover"] = L["On Hover"],
 			},
 			get = function(info, v)
-				return (sm.buttons.db.profile.visibilitySettings.MinimapZoneTextButton or "hover") == v
+				return (sm.buttons.db.visibilitySettings.MinimapZoneTextButton or "hover") == v
 			end,
 			set = function(info, v)
-				sm.buttons.db.profile.visibilitySettings.MinimapZoneTextButton = v
+				sm.buttons.db.visibilitySettings.MinimapZoneTextButton = v
 				sm.buttons:ChangeFrameVisibility(MinimapZoneTextButton, v)
 			end,
 			disabled = function()
-				return not sm.buttons.db.profile.controlVisibility
+				return not sm.buttons.db.controlVisibility
 			end,
 		}
 	}
 }
 
-function mod:OnInitialize()
-	local defaults = {
-		profile = {
+function mod:OnInitialize(profile)
+	if type(profile.zonetext) ~= "table" then
+		profile.zonetext = {
 			xOffset = 0,
 			yOffset = 0,
 			bgColor = {r = 0, g = 0, b = 0, a = 1},
 			borderColor = {r = 0, g = 0, b = 0, a = 1},
 			fontColor = {},
 		}
-	}
-	self.db = sm.core.db:RegisterNamespace("ZoneText", defaults)
-	db = self.db.profile
+	end
+	self.db = profile.zonetext
 end
 
 function mod:OnEnable()
@@ -189,21 +187,21 @@ end
 function mod:UpdateLayout()
 	MinimapZoneTextButton:ClearAllPoints()
 	MinimapZoneTextButton:SetParent(Minimap)
-	MinimapZoneTextButton:SetPoint("BOTTOM", Minimap, "TOP", db.xOffset, db.yOffset)
-	MinimapZoneTextButton:SetBackdropColor(db.bgColor.r, db.bgColor.g, db.bgColor.b, db.bgColor.a)
-	MinimapZoneTextButton:SetBackdropBorderColor(db.borderColor.r, db.borderColor.g, db.borderColor.b, db.borderColor.a)
+	MinimapZoneTextButton:SetPoint("BOTTOM", Minimap, "TOP", mod.db.xOffset, mod.db.yOffset)
+	MinimapZoneTextButton:SetBackdropColor(mod.db.bgColor.r, mod.db.bgColor.g, mod.db.bgColor.b, mod.db.bgColor.a)
+	MinimapZoneTextButton:SetBackdropBorderColor(mod.db.borderColor.r, mod.db.borderColor.g, mod.db.borderColor.b, mod.db.borderColor.a)
 	local a, b, c = MinimapZoneText:GetFont()
-	MinimapZoneText:SetFont(db.font and media:Fetch("font", db.font) or a, db.fontsize or b, c)
+	MinimapZoneText:SetFont(mod.db.font and media:Fetch("font", mod.db.font) or a, mod.db.fontsize or b, c)
 
 	self:ZoneChanged()
 end
 
 function mod:ZoneChanged()
-	local width = max(MinimapZoneText:GetStringWidth() * 1.3, db.width or 0)
+	local width = max(MinimapZoneText:GetStringWidth() * 1.3, mod.db.width or 0)
 	MinimapZoneTextButton:SetHeight(MinimapZoneText:GetStringHeight() + 10)
 	MinimapZoneTextButton:SetWidth(width)
-	if db.fontColor.r then
-		MinimapZoneText:SetTextColor(db.fontColor.r, db.fontColor.g, db.fontColor.b, db.fontColor.a)
+	if mod.db.fontColor.r then
+		MinimapZoneText:SetTextColor(mod.db.fontColor.r, mod.db.fontColor.g, mod.db.fontColor.b, mod.db.fontColor.a)
 	end
 end
 

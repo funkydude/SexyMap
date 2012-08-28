@@ -11,13 +11,21 @@ sm.backdrop = {
 	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
 	insets = {left = 4, top = 4, right = 4, bottom = 4},
 	edgeSize = 16,
-	tile = true
+	tile = true,
 }
 
-sm.general = {}
-local gen = sm.general -- Temp hack to preserve settings
+sm.core.deepCopyHash = function(t)
+	local nt = {}
+	for k, v in pairs(t) do
+		if type(v) == "table" then
+			nt[k] = sm.core.deepCopyHash(v)
+		else
+			nt[k] = v
+		end
+	end
+	return nt
+end
 
-local db
 local options = {
 	type = "group",
 	name = name,
@@ -27,11 +35,11 @@ local options = {
 			name = L["Lock Minimap"],
 			type = "toggle",
 			get = function()
-				return db.lock
+				return mod.db.lock
 			end,
 			set = function(info, v)
-				db.lock = v
-				Minimap:SetMovable(not db.lock)
+				mod.db.lock = v
+				Minimap:SetMovable(not mod.db.lock)
 			end,
 		},
 		clamp = {
@@ -40,10 +48,10 @@ local options = {
 			name = L["Clamp to screen"],
 			desc = L["Prevent the minimap from being moved off the screen"],
 			get = function()
-				return db.clamp
+				return mod.db.clamp
 			end,
 			set = function(info, v)
-				db.clamp = v
+				mod.db.clamp = v
 				Minimap:SetClampedToScreen(v)
 			end,
 		},
@@ -63,10 +71,10 @@ local options = {
 			name = L["Right Click Configure"],
 			desc = L["Right clicking the map will open the SexyMap options"],
 			get = function()
-				return db.rightClickToConfig
+				return mod.db.rightClickToConfig
 			end,
 			set = function(info, v)
-				db.rightClickToConfig = v
+				mod.db.rightClickToConfig = v
 			end,
 		},
 		scale = {
@@ -79,10 +87,10 @@ local options = {
 			bigStep = 0.01,
 			width = "double",
 			get = function(info)
-				return db.scale or 1
+				return mod.db.scale or 1
 			end,
 			set = function(info, v)
-				db.scale = v
+				mod.db.scale = v
 				Minimap:SetScale(v)
 			end,
 		},
@@ -91,7 +99,7 @@ local options = {
 			type = "toggle",
 			name = L["Show North Tag"],
 			get = function()
-				return db.northTag
+				return mod.db.northTag
 			end,
 			set = function(info, v)
 				if v then
@@ -103,7 +111,7 @@ local options = {
 					MinimapNorthTag.oldShow = MinimapNorthTag.Show
 					MinimapNorthTag.Show = MinimapNorthTag.Hide
 				end
-				db.northTag = v
+				mod.db.northTag = v
 			end,
 		},
 		zoom = {
@@ -117,45 +125,121 @@ local options = {
 			step = 1,
 			bigStep = 1,
 			get = function()
-				return db.autoZoom
+				return mod.db.autoZoom
 			end,
 			set = function(info, v)
-				db.autoZoom = v
+				mod.db.autoZoom = v
 			end,
 		},
-		presetSpacer = {
+		profilesSpacer = {
 			order = 8,
+			type = "header",
+			name = L["Profiles"],
+		},
+		copy = {
+			type = "select",
+			name = "Copy a profile",
+			order = 9,
+			confirm = true,
+			confirmText = "This will reload your UI, are you sure?",
+			values = function()
+				local tbl = {}
+				for k,_ in pairs(SexyMap2DB) do
+					if k ~= "presets" and k ~= (UnitName("player").."-"..GetRealmName()) then
+						tbl[k]=k
+					end
+				end
+				return tbl
+			end,
+			set = function(info, v)
+				local var = (UnitName("player").."-"..GetRealmName())
+				SexyMap2DB[var] = sm.core.deepCopyHash(SexyMap2DB[v])
+				ReloadUI()
+			end,
+			disabled = function()
+				for k,_ in pairs(SexyMap2DB) do
+					if k ~= "presets" and k ~= (UnitName("player").."-"..GetRealmName()) then
+						return false
+					end
+				end
+				return true
+			end,
+		},
+		delete = {
+			type = "select",
+			name = "Delete a profile",
+			order = 10,
+			confirm = true,
+			confirmText = "Really delete this profile?",
+			values = function()
+				local tbl = {}
+				for k,_ in pairs(SexyMap2DB) do
+					if k ~= "presets" and k ~= (UnitName("player").."-"..GetRealmName()) then
+						tbl[k]=k
+					end
+				end
+				return tbl
+			end,
+			set = function(info, v)
+				print(v)
+				SexyMap2DB[v] = nil
+			end,
+			disabled = function()
+				for k,_ in pairs(SexyMap2DB) do
+					if k ~= "presets" and k ~= (UnitName("player").."-"..GetRealmName()) then
+						return false
+					end
+				end
+				return true
+			end,
+		},
+	reset = {
+		type = "execute",
+		name = "Reset your profile",
+		confirm = true,
+		confirmText = "This will reload your UI, are you sure?",
+		order = 11,
+		func = function()
+			local var = UnitName("player").."-"..GetRealmName()
+			SexyMap2DB[var] = nil
+			ReloadUI()
+		end,
+	},
+		presetSpacer = {
+			order = 12,
 			type = "header",
 			name = L["Preset"],
 		},
 	}
 }
 
-gen.options = options
+mod.options = options
 
 function mod:ADDON_LOADED(addon)
 	if addon == "SexyMap" then
-		local defaults = {
-			profile = {}
-		}
-		mod.db = LibStub("AceDB-3.0"):New("SexyMapDB", defaults)
-
-		local genDefaults = {  -- Temp hack to preserve settings
-			profile = {
+		if type(SexyMap2DB) ~= "table" then
+			SexyMap2DB = {}
+		end
+		local var = UnitName("player").."-"..GetRealmName()
+		if type(SexyMap2DB[var]) ~= "table" then
+			SexyMap2DB[var] = {}
+		end
+		if type(SexyMap2DB[var].core) ~= "table" then
+			SexyMap2DB[var].core = {
 				lock = true,
 				clamp = true,
 				rightClickToConfig = true,
 				autoZoom = 5,
 				northTag = true,
+				shape = "Textures\\MinimapMask",
 			}
-		}
-		gen.db = mod.db:RegisterNamespace("General", genDefaults)
-		db = gen.db.profile
+		end
+		mod.db = SexyMap2DB[var].core
 
 		mod.loadModules = {}
 		for k,v in pairs(sm) do
 			if v.OnInitialize then
-				v:OnInitialize()
+				v:OnInitialize(SexyMap2DB[var])
 				v.OnInitialize = nil
 				tinsert(mod.loadModules, k)
 			end
@@ -178,16 +262,16 @@ function mod:PLAYER_LOGIN()
 	SLASH_SexyMap2 = "/sexymap"
 
 	Minimap:SetScript("OnMouseUp", function(frame, button)
-		if button == "RightButton" and db.rightClickToConfig then
+		if button == "RightButton" and mod.db.rightClickToConfig then
 			InterfaceOptionsFrame_OpenToCategory(name)
 		else
 			Minimap_OnClick(frame, button)
 		end
 	end)
 
-	mod.db.RegisterCallback(mod, "OnProfileChanged", ReloadUI)
-	mod.db.RegisterCallback(mod, "OnProfileCopied", ReloadUI)
-	mod.db.RegisterCallback(mod, "OnProfileReset", ReloadUI)
+	--mod.db.RegisterCallback(mod, "OnProfileChanged", ReloadUI)
+	--mod.db.RegisterCallback(mod, "OnProfileCopied", ReloadUI)
+	--mod.db.RegisterCallback(mod, "OnProfileReset", ReloadUI)
 
 	mod:SetupMap()
 
@@ -202,7 +286,7 @@ function mod:PLAYER_LOGIN()
 
 	mod:StartFrameGrab()
 
-	mod:RegisterModuleOptions("Profiles", LibStub("AceDBOptions-3.0"):GetOptionsTable(mod.db), L["Profiles"])
+	--mod:RegisterModuleOptions("Profiles", LibStub("AceDBOptions-3.0"):GetOptionsTable(mod.db), L["Profiles"])
 
 	mod.frame:UnregisterEvent("PLAYER_LOGIN")
 	mod.PLAYER_LOGIN = nil
@@ -249,19 +333,19 @@ function mod:SetupMap()
 		elseif d < 0 then
 			MinimapZoomOut:Click()
 		end
-		if db.autoZoom > 0 then
+		if mod.db.autoZoom > 0 then
 			animGroup:Stop()
-			anim:SetDuration(db.autoZoom)
+			anim:SetDuration(mod.db.autoZoom)
 			animGroup:Play()
 		end
 	end)
-	if db.autoZoom > 0 then
+	if mod.db.autoZoom > 0 then
 		animGroup:Play()
 	end
 
 	MinimapCluster:EnableMouse(false) -- Don't leave an invisible dead zone
 
-	if not db.northTag then
+	if not mod.db.northTag then
 		MinimapNorthTag:Hide()
 		MinimapNorthTag.oldShow = MinimapNorthTag.Show
 		MinimapNorthTag.Show = MinimapNorthTag.Hide
@@ -269,21 +353,21 @@ function mod:SetupMap()
 
 	MinimapBorderTop:Hide()
 	Minimap:RegisterForDrag("LeftButton")
-	Minimap:SetClampedToScreen(db.clamp)
-	Minimap:SetScale(db.scale or 1)
-	Minimap:SetMovable(not db.lock)
+	Minimap:SetClampedToScreen(mod.db.clamp)
+	Minimap:SetScale(mod.db.scale or 1)
+	Minimap:SetMovable(not mod.db.lock)
 
 	Minimap:SetScript("OnDragStart", function(self) if self:IsMovable() then self:StartMoving() end end)
 	Minimap:SetScript("OnDragStop", function(self)
 		self:StopMovingOrSizing()
 		local p, _, rp, x, y = Minimap:GetPoint()
-		db.point, db.relpoint, db.x, db.y = p, rp, x, y
+		mod.db.point, mod.db.relpoint, mod.db.x, mod.db.y = p, rp, x, y
 	end)
 
-	if db.point then
+	if mod.db.point then
 		Minimap:ClearAllPoints()
 		Minimap:SetParent(UIParent)
-		Minimap:SetPoint(db.point, UIParent, db.relpoint, db.x, db.y)
+		Minimap:SetPoint(mod.db.point, UIParent, mod.db.relpoint, mod.db.x, mod.db.y)
 	end
 end
 

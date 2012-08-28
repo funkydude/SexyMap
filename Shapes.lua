@@ -4,7 +4,6 @@ sm.shapes = {}
 
 local mod = sm.shapes
 local L = sm.L
-local db
 
 local keys = {}
 local function interpolate(points, angle)
@@ -253,9 +252,8 @@ local shapeOptions = {
 	end
 }
 
-function mod:OnInitialize()
-	self.db = sm.core.db:RegisterNamespace("Shapes", defaults)
-	db = self.db.profile
+function mod:OnInitialize(profile)
+	db = profile.core
 end
 
 function mod:OnEnable()
@@ -287,7 +285,6 @@ function mod:ApplyShape(shape)
 	local dbShape = db.shape and legacyMappings[db.shape] or db.shape
 	if shape or dbShape then
 		db.shape = shape or dbShape or "Textures\\MinimapMask"
-		sm.borders.db.profile.shape = db.shape
 		Minimap:SetMaskTexture(db.shape)
 	end
 	sm.buttons:UpdateDraggables()
