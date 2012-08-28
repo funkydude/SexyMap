@@ -233,10 +233,14 @@ do
 		for _,f in pairs(animFrames) do
 			local n = f:GetName()
 			if not db.visibilitySettings[n] or db.visibilitySettings[n] == "hover" then
+				local delayed = f.smAlphaAnim:IsDelaying()
 				f.smAnimGroup:Stop()
-				f:SetAlpha(0)
-				f.smAlphaAnim:SetChange(1)
-				f.smAnimGroup:Play()
+				if not delayed then
+					f:SetAlpha(0)
+					f.smAlphaAnim:SetStartDelay(0)
+					f.smAlphaAnim:SetChange(1)
+					f.smAnimGroup:Play()
+				end
 			end
 		end
 	end
@@ -254,6 +258,7 @@ do
 			if not db.visibilitySettings[n] or db.visibilitySettings[n] == "hover" then
 				f.smAnimGroup:Stop()
 				f:SetAlpha(1)
+				f.smAlphaAnim:SetStartDelay(1)
 				f.smAlphaAnim:SetChange(-1)
 				f.smAnimGroup:Play()
 			end
@@ -268,7 +273,7 @@ do
 			f.smAnimGroup = f:CreateAnimationGroup()
 			f.smAlphaAnim = f.smAnimGroup:CreateAnimation("Alpha")
 			f.smAlphaAnim:SetOrder(1)
-			f.smAlphaAnim:SetDuration(0.5)
+			f.smAlphaAnim:SetDuration(0.3)
 			f.smAnimGroup:SetScript("OnFinished", OnFinished)
 			tinsert(animFrames, f)
 

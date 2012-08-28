@@ -97,7 +97,7 @@ do
 		end
 	end)
 	anim:SetOrder(1)
-	anim:SetDuration(0.5)
+	anim:SetDuration(0.3)
 
 	local fadeStop -- Use a variable to prevent fadeout/in when moving the mouse around minimap/icons
 
@@ -105,10 +105,14 @@ do
 		if db.enabled then
 			if fadeStop then return end
 
+			local delayed = anim:IsDelaying()
 			animGroup:Stop()
-			Minimap:SetAlpha(db.normalOpacity)
-			anim:SetChange(db.hoverOpacity-db.normalOpacity)
-			animGroup:Play()
+			if not delayed then
+				Minimap:SetAlpha(db.normalOpacity)
+				anim:SetStartDelay(0)
+				anim:SetChange(db.hoverOpacity-db.normalOpacity)
+				animGroup:Play()
+			end
 		end
 	end
 	local OnLeave = function()
@@ -122,6 +126,7 @@ do
 
 			animGroup:Stop()
 			Minimap:SetAlpha(db.hoverOpacity)
+			anim:SetStartDelay(1)
 			anim:SetChange(db.normalOpacity-db.hoverOpacity)
 			animGroup:Play()
 		end
