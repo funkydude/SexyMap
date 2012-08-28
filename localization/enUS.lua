@@ -121,16 +121,6 @@ L["Normal Opacity"] = "Normal Opacity"
 L["Hover Opacity"] = "Hover Opacity"
 L["Fader"] = "Fader"
 
--- ./General.lua
-L["Lock Minimap"] = "Lock Minimap"
-L["Clamp to screen"] = "Clamp to screen"
-L["Prevent the minimap from being moved off the screen"] = "Prevent the minimap from being moved off the screen"
-L["Right Click Configure"] = "Right Click Configure"
-L["Right clicking the map will open the SexyMap options"] = "Right clicking the map will open the SexyMap options"
-L["Auto Zoom-Out Delay"] = "Auto Zoom-Out Delay"
-L["If you zoom into the map, this feature will automatically zoom out after the selected period of time (seconds)"] = "If you zoom into the map, this feature will automatically zoom out after the selected period of time (seconds)"
-L["Show North Tag"] = "Show North Tag"
-
 -- ./HudMap.lua
 L["Enable a HUD minimap. This is very useful for gathering resources, but for technical reasons, the HUD map and the normal minimap can't be shown at the same time. Showing the HUD map will turn off the normal minimap."] = "Enable a HUD minimap. This is very useful for gathering resources, but for technical reasons, the HUD map and the normal minimap can't be shown at the same time. Showing the HUD map will turn off the normal minimap."
 L["Enable Hudmap"] = "Enable Hudmap"
@@ -162,7 +152,21 @@ L["Show on minimap"] = "Show on minimap"
 L["Ping"] = "Ping"
 
 -- ./SexyMap.lua
+L["Lock Minimap"] = "Lock Minimap"
+L["Clamp to screen"] = "Clamp to screen"
+L["Prevent the minimap from being moved off the screen"] = "Prevent the minimap from being moved off the screen"
+L["Right Click Configure"] = "Right Click Configure"
+L["Right clicking the map will open the SexyMap options"] = "Right clicking the map will open the SexyMap options"
+L["Auto Zoom-Out Delay"] = "Auto Zoom-Out Delay"
+L["If you zoom into the map, this feature will automatically zoom out after the selected period of time (seconds)"] = "If you zoom into the map, this feature will automatically zoom out after the selected period of time (seconds)"
+L["Show North Tag"] = "Show North Tag"
 L["Profiles"] = "Profiles"
+L["Copy a Profile"] = "Copy a Profile"
+L["Copying this profile will reload your UI, are you sure?"] = "Copying this profile will reload your UI, are you sure?"
+L["Delete a Profile"] = "Delete a Profile"
+L["Really delete this profile?"] = "Really delete this profile?"
+L["Reset Current Profile"] = "Reset Current Profile"
+L["Resetting this profile will reload your UI, are you sure?"] = "Resetting this profile will reload your UI, are you sure?"
 
 -- ./Shapes.lua
 L["Circle"] = "Circle"

@@ -138,10 +138,10 @@ local options = {
 		},
 		copy = {
 			type = "select",
-			name = "Copy a profile",
+			name = L["Copy a Profile"],
 			order = 9,
 			confirm = true,
-			confirmText = "This will reload your UI, are you sure?",
+			confirmText = L["Copying this profile will reload your UI, are you sure?"],
 			values = function()
 				local tbl = {}
 				for k,_ in pairs(SexyMap2DB) do
@@ -167,10 +167,10 @@ local options = {
 		},
 		delete = {
 			type = "select",
-			name = "Delete a profile",
+			name = L["Delete a Profile"],
 			order = 10,
 			confirm = true,
-			confirmText = "Really delete this profile?",
+			confirmText = L["Really delete this profile?"],
 			values = function()
 				local tbl = {}
 				for k,_ in pairs(SexyMap2DB) do
@@ -181,7 +181,6 @@ local options = {
 				return tbl
 			end,
 			set = function(info, v)
-				print(v)
 				SexyMap2DB[v] = nil
 			end,
 			disabled = function()
@@ -195,9 +194,9 @@ local options = {
 		},
 	reset = {
 		type = "execute",
-		name = "Reset your profile",
+		name = L["Reset Current Profile"],
 		confirm = true,
-		confirmText = "This will reload your UI, are you sure?",
+		confirmText = L["Resetting this profile will reload your UI, are you sure?"],
 		order = 11,
 		func = function()
 			local var = UnitName("player").."-"..GetRealmName()
