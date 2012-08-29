@@ -146,7 +146,7 @@ mod.options = {
 			order = 10,
 			type = "description",
 			width = "full",
-			name = "\n",
+			name = L["Quickly change the look of your minimap by using a minimap preset."].."\n",
 		},
 		spacer3 = {
 			order = 12,
@@ -169,42 +169,65 @@ mod.options = {
 			order = 16,
 			type = "description",
 			width = "full",
-			name = "\n",
+			name = L["Use a global profile if you want the same look on every character, or use character-specific profiles for a different look on every character."].."\n",
+		},
+		globalProf = {
+			order = 17,
+			type = "toggle",
+			name = L["Global Profile"],
+			width = "full",
+			confirm = true,
+			confirmText = L["If no global profile exists, your current profile will be copied over and used.\n\nIf one already exists, your current profile will be erased and you'll be moved over to the global profile.\n\nThis will also reload your UI, are you sure?"],
+			get = function()
+				local char = (UnitName("player").."-"..GetRealmName())
+				return type(SexyMap2DB[char]) == "string"
+			end,
+			set = function(info, v)
+				local char = (UnitName("player").."-"..GetRealmName())
+				if v then
+					if not SexyMap2DB.global then
+						SexyMap2DB.global = mod.deepCopyHash(SexyMap2DB[char])
+					end
+					SexyMap2DB[char] = "global"
+					ReloadUI()
+				else
+					SexyMap2DB[char] = nil
+					ReloadUI()
+				end
+			end,
 		},
 		copy = {
 			type = "select",
 			name = L["Copy a Profile"],
-			order = 17,
+			order = 18,
 			confirm = true,
 			confirmText = L["Copying this profile will reload your UI, are you sure?"],
 			values = function()
 				local tbl = {}
-				for k,_ in pairs(SexyMap2DB) do
-					if k ~= "presets" and k ~= (UnitName("player").."-"..GetRealmName()) then
+				for k,v in pairs(SexyMap2DB) do
+					if k ~= "presets" and k ~= "global" and k ~= (UnitName("player").."-"..GetRealmName()) and type(v) == "table" then
 						tbl[k]=k
 					end
 				end
 				return tbl
 			end,
 			set = function(info, v)
-				local var = (UnitName("player").."-"..GetRealmName())
-				SexyMap2DB[var] = mod.deepCopyHash(SexyMap2DB[v])
+				local char = (UnitName("player").."-"..GetRealmName())
+				SexyMap2DB[char] = mod.deepCopyHash(SexyMap2DB[v])
 				ReloadUI()
 			end,
 			disabled = function()
-				for k,_ in pairs(SexyMap2DB) do
-					if k ~= "presets" and k ~= (UnitName("player").."-"..GetRealmName()) then
+				local char = (UnitName("player").."-"..GetRealmName())
+				if type(SexyMap2DB[char]) == "string" then
+					return true
+				end
+				for k,v in pairs(SexyMap2DB) do
+					if k ~= "presets" and k ~= "global" and k ~= char and type(v) == "table" then
 						return false
 					end
 				end
 				return true
 			end,
-		},
-		spacer6 = {
-			order = 18,
-			type = "description",
-			width = "half",
-			name = "",
 		},
 		delete = {
 			type = "select",
@@ -214,8 +237,8 @@ mod.options = {
 			confirmText = L["Really delete this profile?"],
 			values = function()
 				local tbl = {}
-				for k,_ in pairs(SexyMap2DB) do
-					if k ~= "presets" and k ~= (UnitName("player").."-"..GetRealmName()) then
+				for k,v in pairs(SexyMap2DB) do
+					if k ~= "presets" and k ~= "global" and k ~= (UnitName("player").."-"..GetRealmName()) and type(v) == "table" then
 						tbl[k]=k
 					end
 				end
@@ -225,36 +248,34 @@ mod.options = {
 				SexyMap2DB[v] = nil
 			end,
 			disabled = function()
-				for k,_ in pairs(SexyMap2DB) do
-					if k ~= "presets" and k ~= (UnitName("player").."-"..GetRealmName()) then
+				local char = (UnitName("player").."-"..GetRealmName())
+				if type(SexyMap2DB[char]) == "string" then
+					return true
+				end
+				for k,v in pairs(SexyMap2DB) do
+					if k ~= "presets" and k ~= "global" and k ~= char and type(v) == "table" then
 						return false
 					end
 				end
 				return true
 			end,
 		},
-		spacer7 = {
-			order = 20,
-			type = "description",
-			width = "half",
-			name = "",
-		},
-		spacer8 = {
-			order = 21,
-			type = "description",
-			width = "full",
-			name = "\n",
-		},
 		reset = {
 			type = "execute",
 			name = L["Reset Current Profile"],
 			confirm = true,
 			confirmText = L["Resetting this profile will reload your UI, are you sure?"],
-			order = 22,
+			order = 20,
 			func = function()
-				local var = UnitName("player").."-"..GetRealmName()
-				SexyMap2DB[var] = nil
+				local char = UnitName("player").."-"..GetRealmName()
+				SexyMap2DB[char] = nil
 				ReloadUI()
+			end,
+			disabled = function()
+				local char = (UnitName("player").."-"..GetRealmName())
+				if type(SexyMap2DB[char]) == "string" then
+					return true
+				end
 			end,
 		},
 	}
@@ -262,15 +283,27 @@ mod.options = {
 
 function mod:ADDON_LOADED(addon)
 	if addon == "SexyMap" then
-		if type(SexyMap2DB) ~= "table" then
+		if not SexyMap2DB then
 			SexyMap2DB = {}
 		end
-		local var = UnitName("player").."-"..GetRealmName()
-		if type(SexyMap2DB[var]) ~= "table" then
-			SexyMap2DB[var] = {}
+
+		local char = UnitName("player").."-"..GetRealmName()
+		if not SexyMap2DB[char] then
+			SexyMap2DB[char] = {}
 		end
-		if type(SexyMap2DB[var].core) ~= "table" then
-			SexyMap2DB[var].core = {
+
+		local dbToDispatch
+		if type(SexyMap2DB[char]) == "string" then
+			if not SexyMap2DB.global then
+				SexyMap2DB.global = {}
+			end
+			dbToDispatch = SexyMap2DB.global
+		else
+			dbToDispatch = SexyMap2DB[char]
+		end
+
+		if not dbToDispatch.core then
+			dbToDispatch.core = {
 				lock = true,
 				clamp = true,
 				rightClickToConfig = true,
@@ -279,12 +312,12 @@ function mod:ADDON_LOADED(addon)
 				shape = "Textures\\MinimapMask",
 			}
 		end
-		mod.db = SexyMap2DB[var].core
+		mod.db = dbToDispatch.core
 
 		mod.loadModules = {}
 		for k,v in pairs(sm) do
 			if v.OnInitialize then
-				v:OnInitialize(SexyMap2DB[var])
+				v:OnInitialize(dbToDispatch)
 				v.OnInitialize = nil
 				tinsert(mod.loadModules, k)
 			end
