@@ -72,6 +72,9 @@ L["Blend Mode"] = "Blend Mode"
 L["Disable Rotation"] = "Disable Rotation"
 L["Force a square texture. Fixed distortion on square textures."] = "Force a square texture. Fixed distortion on square textures."
 
+L["Default Presets"] = "Default Presets"
+L["User-Submitted Presets"] = "User-Submitted Presets"
+
 -- ./Buttons.lua
 L["Calendar"] = "Calendar"
 L["Tracking Button"] = "Tracking Button"

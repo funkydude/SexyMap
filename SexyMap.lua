@@ -131,15 +131,50 @@ mod.options = {
 				mod.db.autoZoom = v
 			end,
 		},
-		profilesSpacer = {
+		spacer1 = {
 			order = 8,
+			type = "description",
+			width = "full",
+			name = "\n\n",
+		},
+		presetHeader = {
+			order = 9,
+			type = "header",
+			name = L["Preset"],
+		},
+		spacer2 = {
+			order = 10,
+			type = "description",
+			width = "full",
+			name = "\n",
+		},
+		spacer3 = {
+			order = 12,
+			type = "description",
+			width = "half",
+			name = "",
+		},
+		spacer4 = {
+			order = 14,
+			type = "description",
+			width = "full",
+			name = "\n",
+		},
+		profilesHeader = {
+			order = 15,
 			type = "header",
 			name = L["Profiles"],
+		},
+		spacer5 = {
+			order = 16,
+			type = "description",
+			width = "full",
+			name = "\n",
 		},
 		copy = {
 			type = "select",
 			name = L["Copy a Profile"],
-			order = 9,
+			order = 17,
 			confirm = true,
 			confirmText = L["Copying this profile will reload your UI, are you sure?"],
 			values = function()
@@ -165,10 +200,16 @@ mod.options = {
 				return true
 			end,
 		},
+		spacer6 = {
+			order = 18,
+			type = "description",
+			width = "half",
+			name = "",
+		},
 		delete = {
 			type = "select",
 			name = L["Delete a Profile"],
-			order = 10,
+			order = 19,
 			confirm = true,
 			confirmText = L["Really delete this profile?"],
 			values = function()
@@ -192,22 +233,29 @@ mod.options = {
 				return true
 			end,
 		},
+		spacer7 = {
+			order = 20,
+			type = "description",
+			width = "half",
+			name = "",
+		},
+		spacer8 = {
+			order = 21,
+			type = "description",
+			width = "full",
+			name = "\n",
+		},
 		reset = {
 			type = "execute",
 			name = L["Reset Current Profile"],
 			confirm = true,
 			confirmText = L["Resetting this profile will reload your UI, are you sure?"],
-			order = 11,
+			order = 22,
 			func = function()
 				local var = UnitName("player").."-"..GetRealmName()
 				SexyMap2DB[var] = nil
 				ReloadUI()
 			end,
-		},
-		presetSpacer = {
-			order = 12,
-			type = "header",
-			name = L["Preset"],
 		},
 	}
 }

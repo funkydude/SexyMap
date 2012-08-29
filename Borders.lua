@@ -811,11 +811,35 @@ function mod:OnEnable()
 	sm.core:RegisterModuleOptions("Borders", options, L["Borders"])
 
 	local args = sm.core.options.args
-	args.presets = sm.core.deepCopyHash(options.args.presets.args.preset)
-	if args.presets then
-		args.presets.order = 110
-		args.presets.width = nil
-		args.presets.values = presets
+	args.defaultPresets = sm.core.deepCopyHash(options.args.presets.args.preset)
+	if args.defaultPresets then
+		args.defaultPresets.name = L["Default Presets"]
+		args.defaultPresets.order = 11
+		args.defaultPresets.width = nil
+		args.defaultPresets.values = function()
+			local tbl = {}
+			for k,v in pairs(presets) do
+				if not k:find("by") then
+					tbl[k]=k
+				end
+			end
+			return tbl
+		end
+	end
+	args.userPresets = sm.core.deepCopyHash(options.args.presets.args.preset)
+	if args.userPresets then
+		args.userPresets.name = L["User-Submitted Presets"]
+		args.userPresets.order = 13
+		args.userPresets.width = nil
+		args.userPresets.values = function()
+			local tbl = {}
+			for k,v in pairs(presets) do
+				if k:find("by") then
+					tbl[k]=k
+				end
+			end
+			return tbl
+		end
 	end
 
 	customBackdrop = CreateFrame("Frame", "SexyMapCustomBackdrop", Minimap)
