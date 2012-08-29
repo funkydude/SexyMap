@@ -33,9 +33,11 @@ local addonButtons = { -- For the rare addons that don't use LibDBIcon for some 
 	EnxMiniMapIcon = "Enchantrix",
 	["FuBarPluginBig BrotherFrameMinimapButton"] = "Big Brother",
 	RA_MinimapButton = "RaidAchievement",
-	DBMMinimapButton = "Deadly Boss Mods",
+	DBMMinimapButton = "DBM (Deadly Boss Mods)",
 	XPerl_MinimapButton_Frame = "X-Perl",
 	WIM3MinimapButton = "WIM (WoW Instant Messenger)",
+	VuhDoMinimapButton = "VuhDo",
+	AltoholicMinimapButton = "Altoholic",
 }
 
 local options = {
