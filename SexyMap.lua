@@ -309,7 +309,7 @@ function mod:ADDON_LOADED(addon)
 				rightClickToConfig = true,
 				autoZoom = 5,
 				northTag = true,
-				shape = "Textures\\MinimapMask",
+				shape = "Interface\\AddOns\\SexyMap\\shapes\\circle.tga",
 			}
 		end
 		mod.db = dbToDispatch.core
