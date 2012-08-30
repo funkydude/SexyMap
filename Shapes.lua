@@ -153,12 +153,9 @@ end
   Master Shapes table
 ------------------------------------------------------------------------
 ]]--
-local legacyMappings = {
-	["Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy"] = "SPELLS\\T_VFX_BORDER"
-}
 
 local shapes = {
-	["Textures\\MinimapMask"] = {
+	["Interface\\AddOns\\SexyMap\\shapes\\circle.tga"] = {
 		name = L["Circle"],
 		geometry = circle
 	},
@@ -169,11 +166,6 @@ local shapes = {
 	["Interface\\AddOns\\SexyMap\\shapes\\largecircle"] = {
 		name = L["Faded Circle (Large)"],
 		geometry = circle
-	},
-	["Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy"] = {
-		name = L["Faded Square"],
-		geometry = "square",
-		shape = "SQUARE"
 	},
 	["SPELLS\\T_VFX_BORDER"] = {
 		name = L["Faded Square"],
@@ -231,10 +223,6 @@ local shapes = {
 	},
 }
 
-local defaults = {
-	profile = {}
-}
-
 local shapeList = {}
 for k, v in pairs(shapes) do
 	shapeList[k] = v.name
@@ -245,7 +233,7 @@ local shapeOptions = {
 	name = L["Minimap shape"],
 	values = shapeList,
 	get = function()
-		return legacyMappings[db.shape] or db.shape or "Textures\\MinimapMask"
+		return db.shape
 	end,
 	set = function(info, v)
 		mod:ApplyShape(v)
@@ -281,10 +269,8 @@ function mod:GetShape()
 end
 
 function mod:ApplyShape(shape)
-	shape = legacyMappings[shape] or shape
-	local dbShape = db.shape and legacyMappings[db.shape] or db.shape
-	if shape or dbShape then
-		db.shape = shape or dbShape or "Textures\\MinimapMask"
+	if shape or db.shape then
+		db.shape = shape or db.shape
 		Minimap:SetMaskTexture(db.shape)
 	end
 	sm.buttons:UpdateDraggables()

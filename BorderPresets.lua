@@ -33,7 +33,7 @@ addon.borderPresets = {
 				["texture"] = "SPELLS\\T_VFX_HERO_CIRCLE.BLP",
 			},
 		},
-		shape = "Textures\\MinimapMask"
+		shape = "Interface\\AddOns\\SexyMap\\shapes\\circle.tga"
 	},
 	["Diablo by Zork"] = {
 		borders = {
@@ -82,7 +82,7 @@ addon.borderPresets = {
 				["a"] = 0.95,
 			},
 		},
-		shape = "Textures\\MinimapMask"
+		shape = "Interface\\AddOns\\SexyMap\\shapes\\circle.tga"
 	},
 	["Faded Square by Renaitre"] = {
 		["borders"] = {
@@ -186,7 +186,7 @@ addon.borderPresets = {
 				["texture"] = "SPELLS\\T_VFX_HERO_CIRCLE.BLP",
 			},
 		},
-		shape = "Textures\\MinimapMask"
+		shape = "Interface\\AddOns\\SexyMap\\shapes\\circle.tga"
 	},
 	["Jewels"] = {
 		borders = {
@@ -219,7 +219,7 @@ addon.borderPresets = {
 				["texture"] = "Interface\\Minimap\\Ping\\ping5.blp",
 			},
 		},
-		shape = "Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy"
+		shape = "SPELLS\\T_VFX_BORDER"
 	},
 	["Blue Square Glow"] = {
 		borders = {
@@ -326,10 +326,10 @@ addon.borderPresets = {
 				["texture"] = "Interface\\AchievementFrame\\UI-Achievement-Parchment-Horizontal.blp",
 			},
 		},
-		shape = "Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy"
+		shape = "SPELLS\\T_VFX_BORDER"
 	},
 	["Stargate"] = {
-		["shape"] = "Textures\\MinimapMask",
+		["shape"] = "Interface\\AddOns\\SexyMap\\shapes\\circle.tga",
 		["borders"] = {
 			{
 				["a"] = 1,
@@ -442,7 +442,7 @@ addon.borderPresets = {
 			},
 			["scale"] = 1,
 		},
-		["shape"] = "Textures\\MinimapMask",
+		["shape"] = "Interface\\AddOns\\SexyMap\\shapes\\circle.tga",
 	},
 	["Ruins"] = {
 		["borders"] = {
@@ -475,7 +475,7 @@ addon.borderPresets = {
 			},
 			["scale"] = 1.42,
 		},
-		["shape"] = "Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy",
+		["shape"] = "SPELLS\\T_VFX_BORDER",
 	},
 	["Wood Framed"] = {
 		["borders"] = {
@@ -508,7 +508,7 @@ addon.borderPresets = {
 			},
 			["scale"] = 1.17,
 		},
-		["shape"] = "Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy",
+		["shape"] = "SPELLS\\T_VFX_BORDER",
 	},
 	["Emerald Portal by Korryna"] = {
 		["borders"] = {
@@ -677,7 +677,7 @@ addon.borderPresets = {
 			["borderColor"] = {},
 			["scale"] = 1,
 		},
-		["shape"] = "Textures\\MinimapMask",
+		["shape"] = "Interface\\AddOns\\SexyMap\\shapes\\circle.tga",
 	},
 	["Shamanism by Jaygoody"] = {
 		["borders"] = {
@@ -832,7 +832,7 @@ addon.borderPresets = {
 			},
 			["scale"] = 1,
 		},
-		["shape"] = "Textures\\MinimapMask",
+		["shape"] = "Interface\\AddOns\\SexyMap\\shapes\\circle.tga",
 	},
 }
 

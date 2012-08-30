@@ -314,6 +314,13 @@ function mod:ADDON_LOADED(addon)
 		end
 		mod.db = dbToDispatch.core
 
+		-- XXX temp
+		if mod.db.shape == "Textures\\MinimapMask" then
+			mod.db.shape = "Interface\\AddOns\\SexyMap\\shapes\\circle.tga"
+		elseif mod.db.shape == "Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy" then
+			mod.db.shape = "SPELLS\\T_VFX_BORDER"
+		end
+
 		mod.loadModules = {}
 		for k,v in pairs(sm) do
 			if v.OnInitialize then
