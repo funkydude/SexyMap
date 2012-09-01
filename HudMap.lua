@@ -27,17 +27,19 @@ local onShow = function(self)
 
 	if TomTom and TomTom.ReparentMinimap then
 		TomTom:ReparentMinimap(HudMapCluster)
-		local Astrolabe = DongleStub("TTAstrolabe-1.0") -- Astrolabe is bundled with TomTom (it's not packaged with SexyMap)
+		local Astrolabe = DongleStub("Astrolabe-1.0") -- Astrolabe is bundled with TomTom (it's not packaged with SexyMap)
 		Astrolabe.processingFrame:SetParent(HudMapCluster)
 	end
 
-	mod:SetScales()
 	updateFrame:SetScript("OnUpdate", updateRotations)
 	Minimap:Hide()
+	mod:SetScales()
 end
 
 local onHide = function(self, force)
+	updateFrame:SetScript("OnUpdate", nil)
 	SetCVar("rotateMinimap", self.rotSettings)
+
 	if (mod.db.useGatherMate or force) and GatherMate2 then
 		GatherMate2:GetModule("Display"):ReparentMinimapPins(Minimap)
 		GatherMate2:GetModule("Display"):ChangedVars(nil, "ROTATE_MINIMAP", self.rotSettings)
@@ -54,11 +56,10 @@ local onHide = function(self, force)
 
 	if TomTom and TomTom.ReparentMinimap then
 		TomTom:ReparentMinimap(Minimap)
-		local Astrolabe = DongleStub("TTAstrolabe-1.0") -- Astrolabe is bundled with TomTom (it's not packaged with SexyMap)
+		local Astrolabe = DongleStub("Astrolabe-1.0") -- Astrolabe is bundled with TomTom (it's not packaged with SexyMap)
 		Astrolabe.processingFrame:SetParent(Minimap)
 	end
 
-	updateFrame:SetScript("OnUpdate", nil)
 	Minimap:Show()
 end
 
@@ -237,6 +238,12 @@ do
 	function updateRotations(self, t)
 		total = total + t
 		if total < target then return end
+
+		-- Sometimes, somehow, rotating gets turned off, so force it on when HudMap is on
+		if GetCVar("rotateMinimap") == "0" then
+			SetCVar("rotateMinimap", "1")
+		end
+
 		while total > target do total = total - target end
 		local bearing = GetPlayerFacing()
 		for k, v in ipairs(directions) do
