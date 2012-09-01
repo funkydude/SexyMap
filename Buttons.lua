@@ -289,6 +289,13 @@ do
 				self:ChangeFrameVisibility(f, mod.db.visibilitySettings[n] or "hover")
 			end
 
+			-- Some non-LibDBIcon addon buttons don't set the strata properly and can appear behind things
+			-- LibDBIcon sets the strata to MEDIUM and the frame level to 8, so we do the same to other buttons
+			if addonButtons[n] then
+				f:SetFrameStrata("MEDIUM")
+				f:SetFrameLevel(8)
+			end
+
 			-- Don't add config or moving capability to the Zone Text and Clock buttons, handled in their own modules
 			if n ~= "MinimapZoneTextButton" and n ~= "TimeManagerClockButton" then
 				self:AddButtonOptions(n, blizzButtons[n], dynamicButtons[n])
