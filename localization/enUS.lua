@@ -71,6 +71,8 @@ L["Layer"] = "Layer"
 L["Blend Mode"] = "Blend Mode"
 L["Disable Rotation"] = "Disable Rotation"
 L["Force a square texture. Fixed distortion on square textures."] = "Force a square texture. Fixed distortion on square textures."
+L["Width"] = "Width"
+L["Height"] = "Height"
 
 L["Default Presets"] = "Default Presets"
 L["User-Submitted Presets"] = "User-Submitted Presets"

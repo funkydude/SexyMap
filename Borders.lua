@@ -702,6 +702,44 @@ local borderOptions = {
 			tex:SetPoint("CENTER", Minimap, "CENTER", tex.settings.hNudge or 0, tex.settings.vNudge or 0)
 		end
 	},
+	width = {
+		type = "range",
+		name = L["Width"],
+		min = 0,
+		max = 450,
+		step = 1,
+		bigStep = 1,
+		order = 151,
+		width = "full",
+		get = function(info)
+			local tex = getTextureAndDB(info)
+			return tex.settings.width or 0
+		end,
+		set = function(info, v)
+			local tex = getTextureAndDB(info)
+			tex.settings.width = v
+			tex:SetWidth(v)
+		end
+	},
+	height = {
+		type = "range",
+		name = L["Height"],
+		min = 0,
+		max = 450,
+		step = 1,
+		bigStep = 1,
+		order = 152,
+		width = "full",
+		get = function(info)
+			local tex = getTextureAndDB(info)
+			return tex.settings.height or 0
+		end,
+		set = function(info, v)
+			local tex = getTextureAndDB(info)
+			tex.settings.height = v
+			tex:SetHeight(v)
+		end
+	},
 	layer = {
 		type = "select",
 		name = L["Layer"],
