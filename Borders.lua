@@ -844,7 +844,6 @@ function mod:OnEnable()
 
 	customBackdrop = CreateFrame("Frame", "SexyMapCustomBackdrop", Minimap)
 	customBackdrop:SetFrameStrata("BACKGROUND")
-	customBackdrop:SetFrameLevel(customBackdrop:GetFrameLevel() - 1)
 	customBackdrop:SetPoint("CENTER")
 	customBackdrop:SetWidth(Minimap:GetWidth())
 	customBackdrop:SetHeight(Minimap:GetHeight())

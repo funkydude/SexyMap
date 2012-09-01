@@ -448,6 +448,7 @@ function mod:SetupMap()
 		Minimap:SetParent(UIParent)
 		Minimap:SetPoint(mod.db.point, UIParent, mod.db.relpoint, mod.db.x, mod.db.y)
 	end
+	self.SetupMap = nil
 end
 
 mod.frame:RegisterEvent("ADDON_LOADED")
