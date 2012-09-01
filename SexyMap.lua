@@ -489,6 +489,9 @@ do
 		-- Grab Icons
 		grabFrames(MinimapZoneTextButton, Minimap, MiniMapTrackingButton, TimeManagerClockButton, MinimapBackdrop:GetChildren())
 		grabFrames(MinimapCluster:GetChildren())
+		if FishingBuddyMinimapButton then -- XXX Let's try get the author to make a better icon
+			grabFrames(FishingBuddyMinimapButton)
+		end
 		self.StartFrameGrab = nil
 	end
 end

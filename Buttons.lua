@@ -38,6 +38,11 @@ local addonButtons = { -- For the rare addons that don't use LibDBIcon for some 
 	WIM3MinimapButton = "WIM (WoW Instant Messenger)",
 	VuhDoMinimapButton = "VuhDo",
 	AltoholicMinimapButton = "Altoholic",
+	DominosMinimapButton = "Dominos",
+	Gatherer_MinimapOptionsButton = "Gatherer",
+	FishingBuddyMinimapFrame = "Fishing Buddy", -- FishingBuddyMinimapButton = "Fishing Buddy", -- Button parented to a frame, parented to the minimap, facepalm
+	DroodFocusMinimapButton = "Drood Focus",
+	["FuBarPluginElkano's BuffBarsFrameMinimapButton"] = "EBB (Elkano's Buff Bars)",
 }
 
 local options = {
@@ -298,6 +303,8 @@ do
 				-- Configure dragging
 				if n == "MiniMapTracking" then
 					self:MakeMovable(MiniMapTrackingButton, f)
+				elseif n == "FishingBuddyMinimapFrame" then  -- XXX Let's try get the author to make a better icon
+					self:MakeMovable(FishingBuddyMinimapButton, f)
 				else
 					self:MakeMovable(f)
 				end
@@ -370,21 +377,21 @@ do
 		ButtonFadeOut() -- Call the fade out function
 	end
 
-	function mod:MakeMovable(frame, tracking)
+	function mod:MakeMovable(frame, altFrame)
 		frame:EnableMouse(true)
 		frame:RegisterForDrag("LeftButton")
-		if tracking then
+		if altFrame then
 			frame:SetScript("OnDragStart", function()
 				if mod.db.lockDragging or not mod.db.allowDragging then return end
 
-				moving = tracking
+				moving = altFrame
 				dragFrame:SetScript("OnUpdate", updatePosition)
 			end)
 		else
 			frame:SetScript("OnDragStart", OnDragStart)
 		end
 		frame:SetScript("OnDragStop", OnDragStop)
-		self:UpdateDraggables(tracking or frame)
+		self:UpdateDraggables(altFrame or frame)
 	end
 
 	function mod:UpdateDraggables(frame)
