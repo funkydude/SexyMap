@@ -123,6 +123,42 @@ addon.borderPresets = {
 		},
 		["shape"] = "Interface\\BUTTONS\\WHITE8X8",
 	},
+	--["Electric"] = {
+	--	["borders"] = {
+	--			{
+	--				["hNudge"] = -38,
+	--				["scale"] = 0.42,
+	--				["vNudge"] = 40,
+	--				["rotation"] = 178,
+	--				["name"] = "LightningNW",
+	--				["texture"] = "Spells\\lightning_new.blp",
+	--			},
+	--			{
+	--				["hNudge"] = 36,
+	--				["scale"] = 0.42,
+	--				["vNudge"] = 40,
+	--				["rotation"] = 269,
+	--				["name"] = "LightningNE",
+	--				["texture"] = "Spells\\lightning_new.blp",
+	--			},
+	--			{
+	--				["rotation"] = 89,
+	--				["hNudge"] = -38,
+	--				["name"] = "LightningSW",
+	--				["scale"] = 0.42,
+	--				["vNudge"] = -35,
+	--				["texture"] = "Spells\\lightning_new.blp",
+	--			},
+	--			{
+	--				["hNudge"] = 36,
+	--				["scale"] = 0.42,
+	--				["vNudge"] = -35,
+	--				["name"] = "LightningSE",
+	--				["texture"] = "Spells\\lightning_new.blp",
+	--			},
+	--	},
+	--	["shape"] = "Interface\\AddOns\\SexyMap\\shapes\\diamond",
+	--},
 	["Blue Rune Diamond"] = {
 		borders = {
 			{
@@ -422,26 +458,6 @@ addon.borderPresets = {
 				["texture"] = "SPELLS\\White-Circle.blp",
 			},
 		},
-		["backdrop"] = {
-			["show"] = false,
-			["textureColor"] = {
-			},
-			["settings"] = {
-				["bgFile"] = "Interface\\Tooltips\\UI-Tooltip-Background",
-				["edgeFile"] = "Interface\\Tooltips\\UI-Tooltip-Border",
-				["tile"] = false,
-				["edgeSize"] = 16,
-				["insets"] = {
-					["top"] = 4,
-					["right"] = 4,
-					["left"] = 4,
-					["bottom"] = 4,
-				},
-			},
-			["borderColor"] = {
-			},
-			["scale"] = 1,
-		},
 		["shape"] = "Interface\\AddOns\\SexyMap\\shapes\\circle.tga",
 	},
 	["Ruins"] = {
@@ -658,25 +674,6 @@ addon.borderPresets = {
 				["texture"] = "SPELLS\\TREANTLEAVES.BLP",
 			},
 		},
-		["backdrop"] = {
-			["show"] = false,
-			["textureColor"] = {
-			},
-			["settings"] = {
-				["bgFile"] = "Interface\\Tooltips\\UI-Tooltip-Background",
-				["edgeFile"] = "Interface\\Tooltips\\UI-Tooltip-Border",
-				["tile"] = false,
-				["edgeSize"] = 16,
-				["insets"] = {
-					["top"] = 4,
-					["right"] = 4,
-					["left"] = 4,
-					["bottom"] = 4,
-				},
-			},
-			["borderColor"] = {},
-			["scale"] = 1,
-		},
 		["shape"] = "Interface\\AddOns\\SexyMap\\shapes\\circle.tga",
 	},
 	["Shamanism by Jaygoody"] = {
@@ -811,26 +808,6 @@ addon.borderPresets = {
 				["r"] = 0.2588235294117647,
 				["texture"] = "SPELLS\\GENERICGLOW64.BLP",
 			},
-		},
-		["backdrop"] = {
-			["show"] = false,
-			["textureColor"] = {
-			},
-			["settings"] = {
-				["bgFile"] = "Interface\\Tooltips\\UI-Tooltip-Background",
-				["edgeFile"] = "Interface\\Tooltips\\UI-Tooltip-Border",
-				["tile"] = false,
-				["edgeSize"] = 16,
-				["insets"] = {
-					["top"] = 4,
-					["right"] = 4,
-					["left"] = 4,
-					["bottom"] = 4,
-				},
-			},
-			["borderColor"] = {
-			},
-			["scale"] = 1,
 		},
 		["shape"] = "Interface\\AddOns\\SexyMap\\shapes\\circle.tga",
 	},
