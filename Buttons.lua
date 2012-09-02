@@ -265,7 +265,7 @@ do
 			if not mod.db.visibilitySettings[n] or mod.db.visibilitySettings[n] == "hover" then
 				f.smAnimGroup:Stop()
 				f:SetAlpha(1)
-				f.smAlphaAnim:SetStartDelay(1)
+				f.smAlphaAnim:SetStartDelay(0.5)
 				f.smAlphaAnim:SetChange(-1)
 				f.smAnimGroup:Play()
 			end

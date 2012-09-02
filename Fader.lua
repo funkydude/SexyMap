@@ -124,7 +124,7 @@ do
 
 			animGroup:Stop()
 			Minimap:SetAlpha(mod.db.hoverOpacity)
-			anim:SetStartDelay(1)
+			anim:SetStartDelay(0.5)
 			anim:SetChange(mod.db.normalOpacity-mod.db.hoverOpacity)
 			animGroup:Play()
 		end
