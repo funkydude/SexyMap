@@ -412,10 +412,14 @@ do
 			end
 		else
 			for _,f in pairs(animFrames) do
-				local x, y = f:GetCenter()
-				local angle = mod.db.dragPositions[f:GetName()] or getCurrentAngle(f:GetParent(), x, y)
-				if angle then
-					setPosition(f, angle)
+				local n = f:GetName()
+				-- Don't move the Clock or Zone Text when changing shape/preset
+				if n ~= "MinimapZoneTextButton" and n ~= "TimeManagerClockButton" then
+					local x, y = f:GetCenter()
+					local angle = mod.db.dragPositions[n] or getCurrentAngle(f:GetParent(), x, y)
+					if angle then
+						setPosition(f, angle)
+					end
 				end
 			end
 		end
