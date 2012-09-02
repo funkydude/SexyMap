@@ -560,8 +560,8 @@ local borderOptions = {
 		set = function(info, v)
 			local tex = getTextureAndDB(info)
 			tex.settings.scale = v
-			tex:SetWidth(defaultSize * v)
-			tex:SetHeight(defaultSize * v)
+			tex:SetWidth((tex.settings.width or defaultSize) * v)
+			tex:SetHeight((tex.settings.height or defaultSize) * v)
 		end
 	},
 	rotation = {
@@ -705,39 +705,39 @@ local borderOptions = {
 	width = {
 		type = "range",
 		name = L["Width"],
-		min = 0,
-		max = 450,
+		min = 1,
+		max = 500,
 		step = 1,
 		bigStep = 1,
 		order = 151,
 		width = "full",
 		get = function(info)
 			local tex = getTextureAndDB(info)
-			return tex.settings.width or 0
+			return tex.settings.width or 180
 		end,
 		set = function(info, v)
 			local tex = getTextureAndDB(info)
-			tex.settings.width = v
-			tex:SetWidth(v)
+			tex.settings.width = v ~= 180 and v or nil
+			tex:SetWidth(v * (tex.settings.scale or 1))
 		end
 	},
 	height = {
 		type = "range",
 		name = L["Height"],
-		min = 0,
-		max = 450,
+		min = 1,
+		max = 500,
 		step = 1,
 		bigStep = 1,
 		order = 152,
 		width = "full",
 		get = function(info)
 			local tex = getTextureAndDB(info)
-			return tex.settings.height or 0
+			return tex.settings.height or 180
 		end,
 		set = function(info, v)
 			local tex = getTextureAndDB(info)
-			tex.settings.height = v
-			tex:SetHeight(v)
+			tex.settings.height = v ~= 180 and v or nil
+			tex:SetHeight(v * (tex.settings.scale or 1))
 		end
 	},
 	layer = {
