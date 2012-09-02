@@ -4,6 +4,7 @@ sm.shapes = {}
 
 local mod = sm.shapes
 local L = sm.L
+local db
 
 local keys = {}
 local function interpolate(points, angle)
