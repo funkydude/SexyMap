@@ -178,8 +178,15 @@ mod.options = {
 			type = "toggle",
 			name = L["Use Global Profile"],
 			width = "full",
-			confirm = true,
-			confirmText = L["If no global profile exists, your current profile will be copied over and used.\n\nIf one already exists, your current profile will be erased and you'll be moved over to the global profile.\n\nThis will also reload your UI, are you sure?"],
+			confirm = function(info, v)
+				if v and SexyMap2DB.global then
+					return L["A global profile already exists. You will be switched over to it and your UI will be reloaded, are you sure?"]
+				elseif v and not SexyMap2DB.global then
+					return L["No global profile exists. Your current profile will be copied over and used as the global profile, are you sure? This will also reload your UI."]
+				elseif not v then
+					return L["Are you sure you want to switch back to using a character specific profile? This will reload your UI."]
+				end
+			end,
 			get = function()
 				local char = (UnitName("player").."-"..GetRealmName())
 				return type(SexyMap2DB[char]) == "string"

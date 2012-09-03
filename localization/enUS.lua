@@ -175,7 +175,9 @@ L["Resetting this profile will reload your UI, are you sure?"] = "Resetting this
 L["Quickly change the look of your minimap by using a minimap preset."] = "Quickly change the look of your minimap by using a minimap preset."
 L["Use the global profile if you want the same look on every character, or use a character-specific profile for a unique look on each character."] = "Use the global profile if you want the same look on every character, or use a character-specific profile for a unique look on each character."
 L["Use Global Profile"] = "Use Global Profile"
-L["If no global profile exists, your current profile will be copied over and used.\n\nIf one already exists, your current profile will be erased and you'll be moved over to the global profile.\n\nThis will also reload your UI, are you sure?"] = "If no global profile exists, your current profile will be copied over and used.\n\nIf one already exists, your current profile will be erased and you'll be moved over to the global profile.\n\nThis will also reload your UI, are you sure?"
+L["A global profile already exists. You will be switched over to it and your UI will be reloaded, are you sure?"] = "A global profile already exists. You will be switched over to it and your UI will be reloaded, are you sure?"
+L["No global profile exists. Your current profile will be copied over and used as the global profile, are you sure? This will also reload your UI."] = "No global profile exists. Your current profile will be copied over and used as the global profile, are you sure? This will also reload your UI."
+L["Are you sure you want to switch back to using a character specific profile? This will reload your UI."] = "Are you sure you want to switch back to using a character specific profile? This will reload your UI."
 
 -- ./Shapes.lua
 L["Circle"] = "Circle"
