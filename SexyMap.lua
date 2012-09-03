@@ -61,9 +61,11 @@ mod.options = {
 			name = ROTATE_MINIMAP,
 			desc = OPTION_TOOLTIP_ROTATE_MINIMAP,
 			get = function()
-				return GetCVar("rotateMinimap") == "1"
+				return InterfaceOptionsDisplayPanelRotateMinimap:GetValue() == "1" and true
 			end,
-			set = ToggleMiniMapRotation,
+			set = function()
+				InterfaceOptionsDisplayPanelRotateMinimap:Click()
+			end,
 		},
 		rightClickToConfig = {
 			order = 4,
