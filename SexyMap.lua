@@ -493,6 +493,9 @@ do
 		if FishingBuddyMinimapButton then -- XXX Let's try get the author to make a better icon
 			grabFrames(FishingBuddyMinimapButton)
 		end
+		if AtlasButton then -- XXX Let's try get the author to make a better icon
+			grabFrames(AtlasButton)
+		end
 		self.StartFrameGrab = nil
 	end
 end

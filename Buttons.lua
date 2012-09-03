@@ -43,6 +43,7 @@ local addonButtons = { -- For the rare addons that don't use LibDBIcon for some 
 	FishingBuddyMinimapFrame = "Fishing Buddy", -- FishingBuddyMinimapButton = "Fishing Buddy", -- Button parented to a frame, parented to the minimap, facepalm
 	DroodFocusMinimapButton = "Drood Focus",
 	["FuBarPluginElkano's BuffBarsFrameMinimapButton"] = "EBB (Elkano's Buff Bars)",
+	AtlasButtonFrame = "Atlas", -- AtlasButton = "Atlas", -- Button parented to a frame, parented to the minimap, facepalm
 }
 
 local options = {
@@ -225,7 +226,7 @@ do
 	local OnFinished = function(anim)
 		-- Minimap or Minimap icons including nil checks to compensate for other addons
 		local f, focus = anim:GetParent(), GetMouseFocus()
-		if focus and ((focus:GetName() == "Minimap") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
+		if focus and ((focus:GetName() == "Minimap" or focus:GetName() == "AtlasButton") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
 			f:SetAlpha(1)
 		else
 			f:SetAlpha(0)
@@ -254,7 +255,7 @@ do
 	local OnLeave = function()
 		if not mod.db.controlVisibility or moving then return end
 		local focus = GetMouseFocus() -- Minimap or Minimap icons including nil checks to compensate for other addons
-		if focus and ((focus:GetName() == "Minimap") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
+		if focus and ((focus:GetName() == "Minimap" or focus:GetName() == "AtlasButton") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
 			fadeStop = true
 			return
 		end
@@ -310,8 +311,10 @@ do
 				-- Configure dragging
 				if n == "MiniMapTracking" then
 					self:MakeMovable(MiniMapTrackingButton, f)
-				elseif n == "FishingBuddyMinimapFrame" then  -- XXX Let's try get the author to make a better icon
+				elseif n == "FishingBuddyMinimapFrame" then -- XXX Let's try get the author to make a better icon
 					self:MakeMovable(FishingBuddyMinimapButton, f)
+				elseif n == "AtlasButtonFrame" then -- XXX Let's try get the author to make a better icon
+					self:MakeMovable(AtlasButton, f)
 				else
 					self:MakeMovable(f)
 				end
