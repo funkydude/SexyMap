@@ -253,7 +253,6 @@ addon.borderPresets = {
 		["backdrop"] = {
 			["show"] = true,
 			["textureColor"] = {
-				["a"] = 1,
 				["r"] = 1,
 				["g"] = 0.9215686274509803,
 				["b"] = 0.6627450980392157,
@@ -271,8 +270,6 @@ addon.borderPresets = {
 				},
 			},
 			["borderColor"] = {
-				["a"] = 1,
-				["r"] = 1,
 				["g"] = 0.7607843137254902,
 				["b"] = 0.7176470588235294,
 			},
@@ -357,6 +354,9 @@ addon.borderPresets = {
 		["backdrop"] = {
 			["show"] = true,
 			["textureColor"] = {
+				["r"] = 0,
+				["g"] = 0,
+				["b"] = 0,
 			},
 			["settings"] = {
 				["edgeSize"] = 17,
@@ -405,7 +405,6 @@ addon.borderPresets = {
 		["backdrop"] = {
 			["show"] = true,
 			["textureColor"] = {
-				["a"] = 1,
 				["b"] = 1,
 				["g"] = 1,
 				["r"] = 1,
@@ -423,10 +422,8 @@ addon.borderPresets = {
 				},
 			},
 			["borderColor"] = {
-				["a"] = 1,
 				["b"] = 0.7254901960784314,
 				["g"] = 0.8627450980392157,
-				["r"] = 1,
 			},
 			["scale"] = 1.42,
 		},
@@ -438,7 +435,6 @@ addon.borderPresets = {
 		["backdrop"] = {
 			["show"] = true,
 			["textureColor"] = {
-				["a"] = 1,
 				["b"] = 1,
 				["g"] = 1,
 				["r"] = 1,
@@ -456,10 +452,8 @@ addon.borderPresets = {
 				},
 			},
 			["borderColor"] = {
-				["a"] = 1,
 				["b"] = 0.7254901960784314,
 				["g"] = 0.8627450980392157,
-				["r"] = 1,
 			},
 			["scale"] = 1.17,
 		},

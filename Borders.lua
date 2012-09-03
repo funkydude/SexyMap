@@ -348,7 +348,7 @@ local options = {
 											hasAlpha = true,
 											get = function()
 												local c = mod.db.backdrop.borderColor
-												local r, g, b, a = c.r or 0, c.g or 0, c.b or 0, c.a or 1
+												local r, g, b, a = c.r or 1, c.g or 1, c.b or 1, c.a or 1
 												return r, g, b, a
 											end,
 											set = function(info, r, g, b, a)
@@ -1068,7 +1068,6 @@ end
 function mod:UpdateBackdrop()
 	if mod.db.backdrop.show then
 		customBackdrop:Show()
-		customBackdrop:SetFrameStrata("BACKGROUND")
 		customBackdrop:SetScale(mod.db.backdrop.scale or 1)
 		customBackdrop:SetAlpha(mod.db.backdrop.alpha or 1)
 		customBackdrop:SetBackdrop(mod.db.backdrop.settings)
