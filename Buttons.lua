@@ -44,6 +44,7 @@ local addonButtons = { -- For the rare addons that don't use LibDBIcon for some 
 	DroodFocusMinimapButton = "Drood Focus",
 	["FuBarPluginElkano's BuffBarsFrameMinimapButton"] = "EBB (Elkano's Buff Bars)",
 	AtlasButtonFrame = "Atlas", -- AtlasButton = "Atlas", -- Button parented to a frame, parented to the minimap, facepalm
+	D32MiniMapButton = "Mistra's Diablo Orbs",
 }
 
 local options = {
