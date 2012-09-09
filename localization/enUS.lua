@@ -149,6 +149,7 @@ L["Boss Frames"] = "Boss Frames"
 L["Vehicle Seat"] = "Vehicle Seat"
 L["Capture Bars"] = "Capture Bars"
 L["Movers"] = "Movers"
+L["Disabling the movers will make them reset next time you relog, are you sure?"] = "Disabling the movers will make them reset next time you relog, are you sure?"
 
 -- ./Ping.lua
 L["Show who pinged"] = "Show who pinged"

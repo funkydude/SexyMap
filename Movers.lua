@@ -18,6 +18,11 @@ local options = {
 			order = 1,
 			name = L["Enable Movers"],
 			type = "toggle",
+			confirm = function(info, v)
+				if not v then
+					return L["Disabling the movers will make them reset next time you relog, are you sure?"]
+				end
+			end,
 			get = function()
 				return mod.db.enabled
 			end,

@@ -45,6 +45,7 @@ local addonButtons = { -- For the rare addons that don't use LibDBIcon for some 
 	["FuBarPluginElkano's BuffBarsFrameMinimapButton"] = "EBB (Elkano's Buff Bars)",
 	AtlasButtonFrame = "Atlas", -- AtlasButton = "Atlas", -- Button parented to a frame, parented to the minimap, facepalm
 	D32MiniMapButton = "Mistra's Diablo Orbs",
+	--["504 2082MapIcon"] = "DKP - Bidder", -- Will add support when the author gives it a sane name
 }
 
 local options = {
