@@ -246,7 +246,6 @@ function mod:OnInitialize(profile)
 end
 
 function mod:OnEnable()
-	db.shape = db.shape or "Textures\\MinimapMask"
 	self:ApplyShape()
 end
 
