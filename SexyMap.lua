@@ -499,12 +499,19 @@ do
 		-- Grab Icons
 		grabFrames(MinimapZoneTextButton, Minimap, MiniMapTrackingButton, TimeManagerClockButton, MinimapBackdrop:GetChildren())
 		grabFrames(MinimapCluster:GetChildren())
-		if FishingBuddyMinimapButton then -- XXX Let's try get the author to make a better icon
+
+		-- Special section for badly coded addons
+		-- Let's try get the authors to make better icons
+		if FishingBuddyMinimapButton then
 			grabFrames(FishingBuddyMinimapButton)
 		end
-		if AtlasButton then -- XXX Let's try get the author to make a better icon
+		if AtlasButton then
 			grabFrames(AtlasButton)
 		end
+		if HealBot_MMButton then
+			grabFrames(HealBot_MMButton)
+		end
+
 		self.StartFrameGrab = nil
 	end
 end
