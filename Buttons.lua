@@ -277,7 +277,7 @@ do
 
 	function mod:NewFrame(f)
 		local n = f:GetName()
-		-- Always allow Blizz frames, skip ignored frames, dynamically try to skip frames that may not be minimap buttons by checking size
+		-- Only add Blizz buttons, addon buttons & LibDBIcon buttons
 		if blizzButtons[n] or dynamicButtons[n] or addonButtons[n] or n:find("LibDBIcon") then
 			-- Create the animations
 			f.smAnimGroup = f:CreateAnimationGroup()

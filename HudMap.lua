@@ -31,6 +31,10 @@ local onShow = function(self)
 		Astrolabe.processingFrame:SetParent(HudMapCluster)
 	end
 
+	if _NPCScan and _NPCScan.Overlay and _NPCScan.Overlay.Modules.List["Minimap"] then
+		_NPCScan.Overlay.Modules.List["Minimap"]:SetMinimapFrame(HudMapCluster)
+	end
+
 	updateFrame:SetScript("OnUpdate", updateRotations)
 	Minimap:Hide()
 	mod:SetScales()
@@ -58,6 +62,10 @@ local onHide = function(self, force)
 		TomTom:ReparentMinimap(Minimap)
 		local Astrolabe = DongleStub("Astrolabe-1.0") -- Astrolabe is bundled with TomTom (it's not packaged with SexyMap)
 		Astrolabe.processingFrame:SetParent(Minimap)
+	end
+
+	if _NPCScan and _NPCScan.Overlay and _NPCScan.Overlay.Modules.List["Minimap"] then
+		_NPCScan.Overlay.Modules.List["Minimap"]:SetMinimapFrame(Minimap)
 	end
 
 	Minimap:Show()
