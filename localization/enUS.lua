@@ -132,12 +132,8 @@ L["Enable Hudmap"] = "Enable Hudmap"
 L["Keybinding"] = "Keybinding"
 L["HUD Color"] = "HUD Color"
 L["Text Color"] = "Text Color"
-L["GatherMate is a resource gathering helper mod. Installing it allows you to have resource pins on your HudMap."] = "GatherMate is a resource gathering helper mod. Installing it allows you to have resource pins on your HudMap."
-L["Use GatherMate pins"] = "Use GatherMate pins"
-L["Use QuestHelper pins"] = "Use QuestHelper pins"
-L["Routes plots the shortest distance between resource nodes. Install it to show farming routes on your HudMap."] = "Routes plots the shortest distance between resource nodes. Install it to show farming routes on your HudMap."
-L["Use Routes"] = "Use Routes"
 L["Toggle HudMap On/Off"] = "Toggle HudMap On/Off"
+L["The HudMap supports several addons. If you have any of the addons below installed, they will be shown on the HudMap."] = "The HudMap supports several addons. If you have any of the addons below installed, they will be shown on the HudMap."
 
 -- ./Movers.lua
 L["Movers Warning"] = "WARNING: This feature is not officially supported, expect problems when using this feature such as taints, loss of quest tracker functionality, or boss frames jumping around. Blizzard frames like the quest tracker and boss health aren't designed to be moved, I suggest you use addons that replace these frames e.g. Unit Frames for boss health."

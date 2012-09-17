@@ -11,27 +11,28 @@ local updateRotations, HudMapCluster, SexyMapHudMap
 local onShow = function(self)
 	self.rotSettings = GetCVar("rotateMinimap")
 	SetCVar("rotateMinimap", "1")
-	if mod.db.useGatherMate and GatherMate2 then
+
+	if mod.db.useGatherMate ~= false and GatherMate2 then
 		GatherMate2:GetModule("Display"):ReparentMinimapPins(HudMapCluster)
 		GatherMate2:GetModule("Display"):ChangedVars(nil, "ROTATE_MINIMAP", "1")
 	end
 
-	if mod.db.useQuestHelper and QuestHelper and QuestHelper.SetMinimapObject then
+	if mod.db.useQuestHelper ~= false and QuestHelper then
 		QuestHelper:SetMinimapObject(HudMapCluster)
 	end
 
-	if mod.db.useRoutes and Routes and Routes.ReparentMinimap then
+	if mod.db.useRoutes ~= false and Routes then
 		Routes:ReparentMinimap(HudMapCluster)
 		Routes:CVAR_UPDATE(nil, "ROTATE_MINIMAP", "1")
 	end
 
-	if TomTom and TomTom.ReparentMinimap then
+	--[[if mod.db.useTomTom ~= false and TomTom then
 		TomTom:ReparentMinimap(HudMapCluster)
 		local Astrolabe = DongleStub("Astrolabe-1.0") -- Astrolabe is bundled with TomTom (it's not packaged with SexyMap)
 		Astrolabe.processingFrame:SetParent(HudMapCluster)
-	end
+	end]]
 
-	if _NPCScan and _NPCScan.Overlay and _NPCScan.Overlay.Modules.List["Minimap"] then
+	if mod.db.useNpcScan ~= false and _NPCScan and _NPCScan.Overlay then
 		_NPCScan.Overlay.Modules.List["Minimap"]:SetMinimapFrame(HudMapCluster)
 	end
 
@@ -44,27 +45,27 @@ local onHide = function(self, force)
 	updateFrame:SetScript("OnUpdate", nil)
 	SetCVar("rotateMinimap", self.rotSettings)
 
-	if (mod.db.useGatherMate or force) and GatherMate2 then
+	if (force or mod.db.useGatherMate ~= false) and GatherMate2 then
 		GatherMate2:GetModule("Display"):ReparentMinimapPins(Minimap)
 		GatherMate2:GetModule("Display"):ChangedVars(nil, "ROTATE_MINIMAP", self.rotSettings)
 	end
 
-	if mod.db.useQuestHelper and QuestHelper and QuestHelper.SetMinimapObject then
+	if (force or mod.db.useQuestHelper ~= false) and QuestHelper then
 		QuestHelper:SetMinimapObject(Minimap)
 	end
 
-	if (mod.db.useRoutes or force) and Routes and Routes.ReparentMinimap then
+	if (force or mod.db.useRoutes ~= false) and Routes then
 		Routes:ReparentMinimap(Minimap)
 		Routes:CVAR_UPDATE(nil, "ROTATE_MINIMAP", self.rotSettings)
 	end
 
-	if TomTom and TomTom.ReparentMinimap then
+	--[[if (force or mod.db.useTomTom ~= false) and TomTom then
 		TomTom:ReparentMinimap(Minimap)
 		local Astrolabe = DongleStub("Astrolabe-1.0") -- Astrolabe is bundled with TomTom (it's not packaged with SexyMap)
 		Astrolabe.processingFrame:SetParent(Minimap)
-	end
+	end]]
 
-	if _NPCScan and _NPCScan.Overlay and _NPCScan.Overlay.Modules.List["Minimap"] then
+	if (force or mod.db.useNpcScan ~= false) and _NPCScan and _NPCScan.Overlay then
 		_NPCScan.Overlay.Modules.List["Minimap"]:SetMinimapFrame(Minimap)
 	end
 
@@ -165,20 +166,45 @@ local options = {
 				HudMapCluster:SetAlpha(v)
 			end
 		},
-		gathermatedesc = {
+		addonsHeader = {
+			order = 7,
+			type = "header",
+			name = ADDONS,
+		},
+		addonDesc = {
 			type = "description",
-			name = L["GatherMate is a resource gathering helper mod. Installing it allows you to have resource pins on your HudMap."],
-			order = 104
+			name = L["The HudMap supports several addons. If you have any of the addons below installed, they will be shown on the HudMap."],
+			order = 8
+		},
+		npcscan = {
+			type = "toggle",
+			order = 100,
+			name = "_NPCScan.Overlay",
+			width = "full",
+			disabled = function()
+				return _NPCScan == nil or _NPCScan.Overlay == nil
+			end,
+			get = function()
+				return mod.db.useNpcScan ~= false
+			end,
+			set = function(info, v)
+				mod.db.useNpcScan = v
+				if HudMapCluster:IsVisible() then
+					onHide(HudMapCluster, true)
+					onShow(HudMapCluster)
+				end
+			end
 		},
 		gathermate = {
 			type = "toggle",
 			order = 105,
-			name = L["Use GatherMate pins"],
+			name = "Gathermate",
+			width = "full",
 			disabled = function()
 				return GatherMate2 == nil
 			end,
 			get = function()
-				return mod.db.useGatherMate
+				return mod.db.useGatherMate ~= false
 			end,
 			set = function(info, v)
 				mod.db.useGatherMate = v
@@ -191,12 +217,13 @@ local options = {
 		questhelper = {
 			type = "toggle",
 			order = 106,
-			name = L["Use QuestHelper pins"],
+			name = "QuestHelper",
+			width = "full",
 			disabled = function()
-				return QuestHelper == nil or QuestHelper.SetMinimapObject == nil
+				return QuestHelper == nil
 			end,
 			get = function()
-				return mod.db.useQuestHelper
+				return mod.db.useQuestHelper ~= false
 			end,
 			set = function(info, v)
 				mod.db.useQuestHelper = v
@@ -206,23 +233,38 @@ local options = {
 				end
 			end
 		},
-		routesdesc = {
-			type = "description",
-			name = L["Routes plots the shortest distance between resource nodes. Install it to show farming routes on your HudMap."],
-			order = 109,
-		},
 		routes = {
 			type = "toggle",
-			name = L["Use Routes"],
+			name = "Routes",
+			width = "full",
 			order = 110,
 			disabled = function()
-				return Routes == nil or Routes.ReparentMinimap == nil
+				return Routes == nil
 			end,
 			get = function()
-				return mod.db.useRoutes
+				return mod.db.useRoutes ~= false
 			end,
 			set = function(info, v)
 				mod.db.useRoutes = v
+				if HudMapCluster:IsVisible() then
+					onHide(HudMapCluster, true)
+					onShow(HudMapCluster)
+				end
+			end
+		},
+		tomtom = {
+			type = "toggle",
+			name = "TomTom",
+			width = "full",
+			order = 115,
+			disabled = function()
+				return true
+			end,
+			get = function()
+				return mod.db.useTomTom ~= false
+			end,
+			set = function(info, v)
+				mod.db.useTomTom = v
 				if HudMapCluster:IsVisible() then
 					onHide(HudMapCluster, true)
 					onShow(HudMapCluster)
