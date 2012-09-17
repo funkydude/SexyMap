@@ -505,9 +505,6 @@ do
 		if FishingBuddyMinimapButton then
 			grabFrames(FishingBuddyMinimapButton)
 		end
-		if AtlasButton then
-			grabFrames(AtlasButton)
-		end
 		if HealBot_MMButton then
 			grabFrames(HealBot_MMButton)
 		end

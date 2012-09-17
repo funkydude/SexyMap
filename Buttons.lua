@@ -43,7 +43,6 @@ local addonButtons = { -- For the rare addons that don't use LibDBIcon for some 
 	FishingBuddyMinimapFrame = "Fishing Buddy", -- FishingBuddyMinimapButton = "Fishing Buddy", -- Button parented to a frame, parented to the minimap, facepalm
 	DroodFocusMinimapButton = "Drood Focus",
 	["FuBarPluginElkano's BuffBarsFrameMinimapButton"] = "EBB (Elkano's Buff Bars)",
-	AtlasButtonFrame = "Atlas", -- AtlasButton = "Atlas", -- Button parented to a frame, parented to the minimap, facepalm
 	D32MiniMapButton = "Mistra's Diablo Orbs",
 	DKPBidderMapIcon = "DKP-Bidder",
 	HealiumMiniMap = "Healium",
@@ -215,6 +214,9 @@ function mod:OnInitialize(profile)
 			controlVisibility = true
 		}
 	end
+	if profile.buttons.dragPositions.AtlasButtonFrame then
+		profile.buttons.dragPositions.AtlasButtonFrame = nil -- XXX temp
+	end
 	self.db = profile.buttons
 end
 
@@ -230,7 +232,7 @@ do
 	local OnFinished = function(anim)
 		-- Minimap or Minimap icons including nil checks to compensate for other addons
 		local f, focus = anim:GetParent(), GetMouseFocus()
-		if focus and ((focus:GetName() == "Minimap" or focus:GetName() == "AtlasButton" or focus:GetName() == "HealBot_MMButton") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
+		if focus and ((focus:GetName() == "Minimap" or focus:GetName() == "HealBot_MMButton") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
 			f:SetAlpha(1)
 		else
 			f:SetAlpha(0)
@@ -259,7 +261,7 @@ do
 	local OnLeave = function()
 		if not mod.db.controlVisibility or moving then return end
 		local focus = GetMouseFocus() -- Minimap or Minimap icons including nil checks to compensate for other addons
-		if focus and ((focus:GetName() == "Minimap" or focus:GetName() == "AtlasButton" or focus:GetName() == "HealBot_MMButton") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
+		if focus and ((focus:GetName() == "Minimap" or focus:GetName() == "HealBot_MMButton") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
 			fadeStop = true
 			return
 		end
@@ -317,8 +319,6 @@ do
 					self:MakeMovable(MiniMapTrackingButton, f)
 				elseif n == "FishingBuddyMinimapFrame" then -- XXX Let's try get the author to make a better icon
 					self:MakeMovable(FishingBuddyMinimapButton, f)
-				elseif n == "AtlasButtonFrame" then -- XXX Let's try get the author to make a better icon
-					self:MakeMovable(AtlasButton, f)
 				elseif n == "HealBot_ButtonFrame" then -- XXX Let's try get the author to make a better icon
 					self:MakeMovable(HealBot_MMButton, f)
 				else
