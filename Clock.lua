@@ -187,8 +187,8 @@ function mod:UpdateLayout()
 	if mod.db.fontColor.r then
 		TimeManagerClockTicker:SetTextColor(mod.db.fontColor.r, mod.db.fontColor.g, mod.db.fontColor.b, mod.db.fontColor.a)
 	end
-	local width = max(TimeManagerClockTicker:GetStringWidth() * 1.3, 0)
+	TimeManagerClockTicker:SetText("44:44") -- Hopefully fix the clock sometimes being cut out with certain fonts
+	TimeManagerClockButton:SetWidth(TimeManagerClockTicker:GetStringWidth() + 5)
 	TimeManagerClockButton:SetHeight(TimeManagerClockTicker:GetStringHeight() + 10)
-	TimeManagerClockButton:SetWidth(width)
 end
 
