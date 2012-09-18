@@ -47,6 +47,7 @@ local addonButtons = { -- For the rare addons that don't use LibDBIcon for some 
 	DKPBidderMapIcon = "DKP-Bidder",
 	HealiumMiniMap = "Healium",
 	HealBot_ButtonFrame = "HealBot", -- HealBot_MMButton = "Healbot", -- Button parented to a frame, parented to the minimap, facepalm
+	IonMinimapButton = "Ion",
 }
 
 local options = {
@@ -177,11 +178,11 @@ do
 		mod:ChangeFrameVisibility(_G[name], v)
 	end
 
-	function mod:AddButtonOptions(name, blizzIcon, dynamic)
+	function mod:AddButtonOptions(name)
 		local p
-		if blizzIcon then
+		if blizzButtons[name] then
 			p = options.args.stock.args -- Blizz icon = stock section
-		elseif dynamic then
+		elseif dynamicButtons[name] then
 			p = options.args.dynamic.args -- Blizz dynamic (off by default) icon = dynamic section
 		else
 			p = options.args.custom.args -- Addon icon = custom section
@@ -305,7 +306,7 @@ do
 
 			-- Don't add config or moving capability to the Zone Text and Clock buttons, handled in their own modules
 			if n ~= "MinimapZoneTextButton" and n ~= "TimeManagerClockButton" then
-				self:AddButtonOptions(n, blizzButtons[n], dynamicButtons[n])
+				self:AddButtonOptions(n)
 
 				-- These two frames are parented to MinimapCluster, if the map scale is changed they won't drag properly, so we parent to Minimap
 				if n == "MiniMapInstanceDifficulty" or n == "GuildInstanceDifficulty" then
