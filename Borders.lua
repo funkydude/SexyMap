@@ -912,7 +912,7 @@ function mod:RebuildPresets()
 end
 
 function mod:Clear()
-	sm.core.db.shape = "Textures\\MinimapMask"
+	sm.core.db.shape = "Interface\\AddOns\\SexyMap\\shapes\\circle.tga"
 	mod.db.borders = {} -- leaky
 	mod.db.backdrop = sm.core.deepCopyHash(defaults.backdrop) -- leaky
 	return self:ApplySettings()
