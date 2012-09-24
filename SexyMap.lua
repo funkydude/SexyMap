@@ -502,9 +502,6 @@ do
 
 		-- Special section for badly coded addons
 		-- Let's try get the authors to make better icons
-		if FishingBuddyMinimapButton then
-			grabFrames(FishingBuddyMinimapButton)
-		end
 		if HealBot_MMButton then
 			grabFrames(HealBot_MMButton)
 		end

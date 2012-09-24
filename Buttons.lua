@@ -40,7 +40,6 @@ local addonButtons = { -- For the rare addons that don't use LibDBIcon for some 
 	AltoholicMinimapButton = "Altoholic",
 	DominosMinimapButton = "Dominos",
 	Gatherer_MinimapOptionsButton = "Gatherer",
-	FishingBuddyMinimapFrame = "Fishing Buddy", -- FishingBuddyMinimapButton = "Fishing Buddy", -- Button parented to a frame, parented to the minimap, facepalm
 	DroodFocusMinimapButton = "Drood Focus",
 	["FuBarPluginElkano's BuffBarsFrameMinimapButton"] = "EBB (Elkano's Buff Bars)",
 	D32MiniMapButton = "Mistra's Diablo Orbs",
@@ -48,6 +47,8 @@ local addonButtons = { -- For the rare addons that don't use LibDBIcon for some 
 	HealiumMiniMap = "Healium",
 	HealBot_ButtonFrame = "HealBot", -- HealBot_MMButton = "Healbot", -- Button parented to a frame, parented to the minimap, facepalm
 	IonMinimapButton = "Ion",
+	OutfitterMinimapButton = "Outfitter",
+	FlightMapEnhancedMinimapButton = "Flight Map Enhanced",
 }
 
 local options = {
@@ -218,6 +219,9 @@ function mod:OnInitialize(profile)
 	if profile.buttons.dragPositions.AtlasButtonFrame then
 		profile.buttons.dragPositions.AtlasButtonFrame = nil -- XXX temp
 	end
+	if profile.buttons.dragPositions.FishingBuddyMinimapFrame then
+		profile.buttons.dragPositions.FishingBuddyMinimapFrame = nil -- XXX temp
+	end
 	self.db = profile.buttons
 end
 
@@ -318,8 +322,6 @@ do
 				-- Configure dragging
 				if n == "MiniMapTracking" then
 					self:MakeMovable(MiniMapTrackingButton, f)
-				elseif n == "FishingBuddyMinimapFrame" then -- XXX Let's try get the author to make a better icon
-					self:MakeMovable(FishingBuddyMinimapButton, f)
 				elseif n == "HealBot_ButtonFrame" then -- XXX Let's try get the author to make a better icon
 					self:MakeMovable(HealBot_MMButton, f)
 				else
