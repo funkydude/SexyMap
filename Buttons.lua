@@ -226,6 +226,34 @@ function mod:OnInitialize(profile)
 end
 
 function mod:OnEnable()
+	-- Customize the world map: Defaults!
+	-- Interface\\minimap\\UI-Minimap-WorldMapSquare
+	-- MiniMapWorldMapButton:GetRegions():SetTexCoord(0,0,0,0.5,1,0,1,0.5) -- Normal
+	-- MiniMapWorldMapButton:GetRegions():SetTexCoord(0,0.5,0,1,1,0.5,1,1) -- Pushed
+
+	local overlay = MiniMapWorldMapButton:CreateTexture(nil, "OVERLAY")
+	overlay:SetSize(53,53)
+	overlay:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
+	overlay:SetPoint("TOPLEFT")
+	local background = MiniMapWorldMapButton:CreateTexture(nil, "BACKGROUND")
+	background:SetSize(25,25)
+	background:SetTexture("Interface\\Minimap\\UI-Minimap-Background")
+	background:SetPoint("TOPLEFT", MiniMapWorldMapButton, "TOPLEFT", 4, -2)
+
+	local icon, pushedIcon, highlight = MiniMapWorldMapButton:GetRegions()
+	icon:SetTexCoord(0.32,0,0.32,0.5,1,0,1,0.5)
+	icon:ClearAllPoints()
+	icon:SetPoint("BOTTOMRIGHT", MiniMapWorldMapButton, "BOTTOMRIGHT", -4, 2)
+	icon:SetSize(20,30)
+	pushedIcon:SetTexCoord(0.32,0.5,0.32,1,1,0.5,1,1)
+	pushedIcon:ClearAllPoints()
+	pushedIcon:SetPoint("BOTTOMRIGHT", MiniMapWorldMapButton, "BOTTOMRIGHT", -4, 2)
+	pushedIcon:SetSize(20,30)
+
+	MiniMapWorldMapButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight")
+	highlight:ClearAllPoints()
+	highlight:SetPoint("TOPLEFT", MiniMapWorldMapButton, "TOPLEFT", 2, -2)
+
 	sm.core:RegisterModuleOptions("Buttons", options, L["Buttons"])
 end
 
