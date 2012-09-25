@@ -49,6 +49,7 @@ local addonButtons = { -- For the rare addons that don't use LibDBIcon for some 
 	IonMinimapButton = "Ion",
 	OutfitterMinimapButton = "Outfitter",
 	FlightMapEnhancedMinimapButton = "Flight Map Enhanced",
+	NXMiniMapBut = "Carbonite",
 }
 
 local options = {
