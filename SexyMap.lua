@@ -387,7 +387,7 @@ MinimapBackdrop:SetParent(Minimap)
 MinimapBackdrop:SetPoint("CENTER", Minimap, "CENTER", -8, -23)
 
 function mod:SetupMap()
-	if FRAMELOCK_STATES then
+	if FRAMELOCK_STATES and FRAMELOCK_STATES.PETBATTLES then -- XXX mop temp
 		FRAMELOCK_STATES.PETBATTLES.Minimap = "hidden" -- Hide the Minimap during a pet battle
 	end
 

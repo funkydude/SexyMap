@@ -83,7 +83,12 @@ function mod:OnEnable()
 
 	pingFrame:SetScript("OnEvent", function(_, _, unit)
 		local class = select(2, UnitClass(unit))
-		local color = CUSTOM_CLASS_COLORS and CUSTOM_CLASS_COLORS[class] or RAID_CLASS_COLORS[class] or GRAY_FONT_COLOR
+		local color
+		if class then
+			color = CUSTOM_CLASS_COLORS and CUSTOM_CLASS_COLORS[class] or RAID_CLASS_COLORS[class]
+		else
+			color = GRAY_FONT_COLOR
+		end
 		if mod.db.showAt == "chat" then
 			DEFAULT_CHAT_FRAME:AddMessage(("%s: |cFF%02x%02x%02x%s|r"):format(L["Ping"], color.r * 255, color.g * 255, color.b * 255, UnitName(unit)))
 		else

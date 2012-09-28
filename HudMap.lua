@@ -307,9 +307,6 @@ end
 function mod:OnInitialize(profile)
 	if type(profile.hudmap) ~= "table" then
 		profile.hudmap = {
-			useGatherMate = true,
-			useQuestHelper = true,
-			useRoutes = true,
 			hudColor = {},
 			textColor = {r = 0.5, g = 1, b = 0.5, a = 1},
 			scale = 1.4,
