@@ -45,7 +45,7 @@ local addonButtons = { -- For the rare addons that don't use LibDBIcon for some 
 	D32MiniMapButton = "Mistra's Diablo Orbs",
 	DKPBidderMapIcon = "DKP-Bidder",
 	HealiumMiniMap = "Healium",
-	HealBot_ButtonFrame = "HealBot", -- HealBot_MMButton = "Healbot", -- Button parented to a frame, parented to the minimap, facepalm
+	HealBot_MMButton = "HealBot",
 	IonMinimapButton = "Ion",
 	OutfitterMinimapButton = "Outfitter",
 	FlightMapEnhancedMinimapButton = "Flight Map Enhanced",
@@ -217,12 +217,28 @@ function mod:OnInitialize(profile)
 			controlVisibility = true
 		}
 	end
+
 	if profile.buttons.dragPositions.AtlasButtonFrame then
 		profile.buttons.dragPositions.AtlasButtonFrame = nil -- XXX temp
 	end
+	if profile.buttons.visibilitySettings.AtlasButtonFrame then
+		profile.buttons.visibilitySettings.AtlasButtonFrame = nil -- XXX temp
+	end
+
 	if profile.buttons.dragPositions.FishingBuddyMinimapFrame then
 		profile.buttons.dragPositions.FishingBuddyMinimapFrame = nil -- XXX temp
 	end
+	if profile.buttons.visibilitySettings.FishingBuddyMinimapFrame then
+		profile.buttons.visibilitySettings.FishingBuddyMinimapFrame = nil -- XXX temp
+	end
+
+	if profile.buttons.dragPositions.HealBot_ButtonFrame then
+		profile.buttons.dragPositions.HealBot_ButtonFrame = nil -- XXX temp
+	end
+	if profile.buttons.visibilitySettings.HealBot_ButtonFrame then
+		profile.buttons.visibilitySettings.HealBot_ButtonFrame = nil -- XXX temp
+	end
+
 	self.db = profile.buttons
 end
 
@@ -266,7 +282,7 @@ do
 	local OnFinished = function(anim)
 		-- Minimap or Minimap icons including nil checks to compensate for other addons
 		local f, focus = anim:GetParent(), GetMouseFocus()
-		if focus and ((focus:GetName() == "Minimap" or focus:GetName() == "HealBot_MMButton") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
+		if focus and ((focus:GetName() == "Minimap") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
 			f:SetAlpha(1)
 		else
 			f:SetAlpha(0)
@@ -295,7 +311,7 @@ do
 	local OnLeave = function()
 		if not mod.db.controlVisibility or moving then return end
 		local focus = GetMouseFocus() -- Minimap or Minimap icons including nil checks to compensate for other addons
-		if focus and ((focus:GetName() == "Minimap" or focus:GetName() == "HealBot_MMButton") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
+		if focus and ((focus:GetName() == "Minimap") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
 			fadeStop = true
 			return
 		end
@@ -351,8 +367,6 @@ do
 				-- Configure dragging
 				if n == "MiniMapTracking" then
 					self:MakeMovable(MiniMapTrackingButton, f)
-				elseif n == "HealBot_ButtonFrame" then -- XXX Let's try get the author to make a better icon
-					self:MakeMovable(HealBot_MMButton, f)
 				else
 					self:MakeMovable(f)
 				end

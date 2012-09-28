@@ -504,12 +504,6 @@ do
 		grabFrames(MinimapZoneTextButton, Minimap, MiniMapTrackingButton, TimeManagerClockButton, MinimapBackdrop:GetChildren())
 		grabFrames(MinimapCluster:GetChildren())
 
-		-- Special section for badly coded addons
-		-- Let's try get the authors to make better icons
-		if HealBot_MMButton then
-			grabFrames(HealBot_MMButton)
-		end
-
 		self.StartFrameGrab = nil
 	end
 end
