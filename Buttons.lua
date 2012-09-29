@@ -50,6 +50,7 @@ local addonButtons = { -- For the rare addons that don't use LibDBIcon for some 
 	OutfitterMinimapButton = "Outfitter",
 	FlightMapEnhancedMinimapButton = "Flight Map Enhanced",
 	NXMiniMapBut = "Carbonite",
+	RaidTrackerAceMMI = "Raid Tracker",
 }
 
 local options = {
@@ -376,7 +377,15 @@ do
 		f:HookScript("OnLeave", OnLeave)
 	end
 
+	local forceHide = function(f)
+		if mod.db.visibilitySettings[f:GetName()] == "never" then
+			f:Hide()
+		end
+	end
+
 	function mod:ChangeFrameVisibility(frame, vis)
+		frame:HookScript("OnShow", forceHide)
+
 		if vis == "always" then
 			if not dynamicButtons[frame:GetName()] then frame:Show() end
 			frame:SetAlpha(1)
