@@ -31,7 +31,7 @@ addon.borderPresets = {
 		},
 		shape = "Interface\\AddOns\\SexyMap\\shapes\\circle.tga"
 	},
-	["Clouds by Koccs"] = {
+	["Clouds by koccs"] = {
 		["borders"] = {
 			{
 				["hNudge"] = 45,
