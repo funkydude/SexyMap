@@ -82,11 +82,7 @@ do
 		if started then return end
 		started = true
 
-		if updateContainerFrameAnchors then --XXX MoP compat
-			hooksecurefunc("updateContainerFrameAnchors", self.CreateMoversAndSetMovables)
-		else
-			hooksecurefunc("UpdateContainerFrameAnchors", self.CreateMoversAndSetMovables)
-		end
+		hooksecurefunc("UpdateContainerFrameAnchors", self.CreateMoversAndSetMovables)
 
 		if not select(4, GetAddOnInfo("Capping")) then
 			local f = CreateFrame("Frame")
