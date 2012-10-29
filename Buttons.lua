@@ -375,22 +375,45 @@ do
 		f:HookScript("OnLeave", OnLeave)
 	end
 
-	local forceHide = function(f)
-		if mod.db.visibilitySettings[f:GetName()] == "never" then
-			f:Hide()
-		end
-	end
+	-- Force buttons to stay hidden/shown to prevent other addons doing so which then makes people complain to me that the functionality isn't working.
+	local noop = function() end
 
 	function mod:ChangeFrameVisibility(frame, vis)
-		frame:HookScript("OnShow", forceHide)
-
 		if vis == "always" then
-			if not dynamicButtons[frame:GetName()] then frame:Show() end
+			if not dynamicButtons[frame:GetName()] then
+				if frame.oldShow then
+					frame.Show = frame.oldShow
+					frame.oldShow = nil
+				end
+				if not frame.oldHide then
+					frame.oldHide = frame.Hide
+					frame.Hide = noop
+				end
+				frame:Show()
+			end
 			frame:SetAlpha(1)
 		elseif vis == "never" then
+			if frame.oldHide then
+				frame.Hide = frame.oldHide
+				frame.oldHide = nil
+			end
+			if not frame.oldShow then
+				frame.oldShow = frame.Show
+				frame.Show = noop
+			end
 			frame:Hide()
 		else
-			if not dynamicButtons[frame:GetName()] then frame:Show() end
+			if not dynamicButtons[frame:GetName()] then
+				if frame.oldHide then
+					frame.Hide = frame.oldHide
+					frame.oldHide = nil
+				end
+				if frame.oldShow then
+					frame.Show = frame.oldShow
+					frame.oldShow = nil
+				end
+				frame:Show()
+			end
 			frame:SetAlpha(0)
 		end
 	end
