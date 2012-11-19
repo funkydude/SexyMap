@@ -375,7 +375,7 @@ do
 		f:HookScript("OnLeave", OnLeave)
 	end
 
-	-- Force buttons to stay hidden/shown to prevent other addons doing so which then makes people complain to me that the functionality isn't working.
+	-- Force buttons to stay hidden/shown to prevent other addons doing so, which then makes people complain to me that the functionality isn't working.
 	local noop = function() end
 
 	function mod:ChangeFrameVisibility(frame, vis)

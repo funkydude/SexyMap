@@ -387,9 +387,17 @@ MinimapBackdrop:SetParent(Minimap)
 MinimapBackdrop:SetPoint("CENTER", Minimap, "CENTER", -8, -23)
 
 function mod:SetupMap()
-	FRAMELOCK_STATES.PETBATTLES.Minimap = "hidden" -- Hide the Minimap during a pet battle
-
 	local Minimap = Minimap
+
+	-- Hide the Minimap during a pet battle
+	mod.frame:RegisterEvent("PET_BATTLE_OPENING_START")
+	mod.PET_BATTLE_OPENING_START = function()
+		Minimap:Hide()
+	end
+	mod.frame:RegisterEvent("PET_BATTLE_OVER")
+	mod.PET_BATTLE_OVER = function()
+		Minimap:Show()
+	end
 
 	--[[ Auto Zoom Out ]]--
 	local animGroup = Minimap:CreateAnimationGroup()
