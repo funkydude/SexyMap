@@ -164,10 +164,6 @@ do
 		["never"] = L["Never"],
 		["hover"] = L["On Hover"],
 	}
-	local dynamicValues = {
-		["always"] = L["Always"],
-		["hover"] = L["On Hover"],
-	}
 
 	local function hideGet(info, v)
 		return (mod.db.visibilitySettings[info[#info]] or "hover") == v
@@ -191,7 +187,7 @@ do
 		p[name] = {
 			type = "multiselect",
 			name = L["Show %s:"]:format(blizzButtons[name] or dynamicButtons[name] or addonButtons[name] or name:gsub("LibDBIcon10_", "")),
-			values = dynamic and dynamicValues or hideValues,
+			values = hideValues,
 			get = hideGet,
 			set = hideSet,
 		}
