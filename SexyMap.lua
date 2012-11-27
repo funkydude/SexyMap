@@ -394,8 +394,8 @@ function mod:SetupMap()
 	mod.PET_BATTLE_OPENING_START = function()
 		Minimap:Hide()
 	end
-	mod.frame:RegisterEvent("PET_BATTLE_OVER")
-	mod.PET_BATTLE_OVER = function()
+	mod.frame:RegisterEvent("PET_BATTLE_CLOSE")
+	mod.PET_BATTLE_CLOSE = function()
 		Minimap:Show()
 	end
 
