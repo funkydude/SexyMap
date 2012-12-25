@@ -7,6 +7,9 @@ local L = sm.L
 
 local moving, ButtonFadeOut
 
+local hideFrame = CreateFrame("Frame")
+hideFrame:Hide()
+
 local animFrames = {}
 local blizzButtons = {
 	GameTimeFrame = L["Calendar"],
@@ -213,27 +216,6 @@ function mod:OnInitialize(profile)
 		}
 	end
 
-	if profile.buttons.dragPositions.AtlasButtonFrame then
-		profile.buttons.dragPositions.AtlasButtonFrame = nil -- XXX temp
-	end
-	if profile.buttons.visibilitySettings.AtlasButtonFrame then
-		profile.buttons.visibilitySettings.AtlasButtonFrame = nil -- XXX temp
-	end
-
-	if profile.buttons.dragPositions.FishingBuddyMinimapFrame then
-		profile.buttons.dragPositions.FishingBuddyMinimapFrame = nil -- XXX temp
-	end
-	if profile.buttons.visibilitySettings.FishingBuddyMinimapFrame then
-		profile.buttons.visibilitySettings.FishingBuddyMinimapFrame = nil -- XXX temp
-	end
-
-	if profile.buttons.dragPositions.HealBot_ButtonFrame then
-		profile.buttons.dragPositions.HealBot_ButtonFrame = nil -- XXX temp
-	end
-	if profile.buttons.visibilitySettings.HealBot_ButtonFrame then
-		profile.buttons.visibilitySettings.HealBot_ButtonFrame = nil -- XXX temp
-	end
-
 	self.db = profile.buttons
 end
 
@@ -371,42 +353,26 @@ do
 		f:HookScript("OnLeave", OnLeave)
 	end
 
-	-- Force buttons to stay hidden/shown to prevent other addons doing so, which then makes people complain to me that the functionality isn't working.
-	local noop = function() end
-
 	function mod:ChangeFrameVisibility(frame, vis)
 		if vis == "always" then
 			if not dynamicButtons[frame:GetName()] then
-				if frame.oldShow then
-					frame.Show = frame.oldShow
-					frame.oldShow = nil
-				end
-				if not frame.oldHide then
-					frame.oldHide = frame.Hide
-					frame.Hide = noop
+				if frame.sexyMapParent then
+					frame:SetParent(frame.sexyMapParent)
+					frame.sexyMapParent = nil
 				end
 				frame:Show()
 			end
 			frame:SetAlpha(1)
 		elseif vis == "never" then
-			if frame.oldHide then
-				frame.Hide = frame.oldHide
-				frame.oldHide = nil
+			if not frame.sexyMapParent then
+				frame.sexyMapParent = frame:GetParent()
 			end
-			if not frame.oldShow then
-				frame.oldShow = frame.Show
-				frame.Show = noop
-			end
-			frame:Hide()
+			frame:SetParent(hideFrame)
 		else
 			if not dynamicButtons[frame:GetName()] then
-				if frame.oldHide then
-					frame.Hide = frame.oldHide
-					frame.oldHide = nil
-				end
-				if frame.oldShow then
-					frame.Show = frame.oldShow
-					frame.oldShow = nil
+				if frame.sexyMapParent then
+					frame:SetParent(frame.sexyMapParent)
+					frame.sexyMapParent = nil
 				end
 				frame:Show()
 			end
