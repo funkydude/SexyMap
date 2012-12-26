@@ -7,9 +7,6 @@ local L = sm.L
 
 local moving, ButtonFadeOut
 
-local hideFrame = CreateFrame("Frame")
-hideFrame:Hide()
-
 local animFrames = {}
 local blizzButtons = {
 	GameTimeFrame = L["Calendar"],
@@ -149,7 +146,8 @@ local options = {
 			end,
 			set = function(info, v)
 				mod.db.controlVisibility = v
-				for _,f in pairs(animFrames) do
+				for i = 1, #animFrames do
+					local f = animFrames[i]
 					if not v then
 						mod:ChangeFrameVisibility(f, "always")
 					else
@@ -272,7 +270,8 @@ do
 	local OnEnter = function()
 		if not mod.db.controlVisibility or fadeStop or moving then return end
 
-		for _,f in pairs(animFrames) do
+		for i = 1, #animFrames do
+			local f = animFrames[i]
 			local n = f:GetName()
 			if not mod.db.visibilitySettings[n] or mod.db.visibilitySettings[n] == "hover" then
 				local delayed = f.smAlphaAnim:IsDelaying()
@@ -295,7 +294,8 @@ do
 		end
 		fadeStop = nil
 
-		for _,f in pairs(animFrames) do
+		for i = 1, #animFrames do
+			local f = animFrames[i]
 			local n = f:GetName()
 			if not mod.db.visibilitySettings[n] or mod.db.visibilitySettings[n] == "hover" then
 				f.smAnimGroup:Stop()
@@ -317,7 +317,7 @@ do
 			f.smAlphaAnim:SetOrder(1)
 			f.smAlphaAnim:SetDuration(0.3)
 			f.smAnimGroup:SetScript("OnFinished", OnFinished)
-			tinsert(animFrames, f)
+			animFrames[#animFrames+1] = f
 
 			-- Configure fading
 			if mod.db.controlVisibility then
@@ -354,7 +354,9 @@ do
 		f:HookScript("OnLeave", OnLeave)
 	end
 
-	local frameParents = {}
+	local hideFrame = CreateFrame("Frame") -- Dummy frame we use for hiding buttons to prevent other addons re-showing them
+	hideFrame:Hide()
+	local frameParents = {} -- Store the original button parents for restoration
 	function mod:ChangeFrameVisibility(frame, vis)
 		if vis == "always" then
 			if frameParents[frame] then
@@ -454,8 +456,8 @@ do
 				setPosition(frame, angle)
 			end
 		else
-			for _,f in pairs(animFrames) do
-				local n = f:GetName()
+			for i = 1, #animFrames do
+				local f = animFrames[i]
 				-- Don't move the Clock or Zone Text when changing shape/preset
 				if n ~= "MinimapZoneTextButton" and n ~= "TimeManagerClockButton" then
 					local x, y = f:GetCenter()
