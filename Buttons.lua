@@ -360,7 +360,6 @@ do
 					frame:SetParent(frame.sexyMapParent)
 					frame.sexyMapParent = nil
 				end
-				frame:Show()
 			end
 			frame:SetAlpha(1)
 		elseif vis == "never" then
@@ -374,7 +373,6 @@ do
 					frame:SetParent(frame.sexyMapParent)
 					frame.sexyMapParent = nil
 				end
-				frame:Show()
 			end
 			frame:SetAlpha(0)
 		end
