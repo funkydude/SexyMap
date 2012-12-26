@@ -259,9 +259,10 @@ do
 	local OnFinished = function(anim)
 		-- Minimap or Minimap icons including nil checks to compensate for other addons
 		local f, focus = anim:GetParent(), GetMouseFocus()
+		local n = f:GetName()
 		if focus and ((focus:GetName() == "Minimap") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
 			f:SetAlpha(1)
-		else
+		elseif not mod.db.visibilitySettings[n] or mod.db.visibilitySettings[n] == "hover" then -- Check this again in case the user changed the setting to "visible" during fade
 			f:SetAlpha(0)
 		end
 	end
@@ -353,26 +354,23 @@ do
 		f:HookScript("OnLeave", OnLeave)
 	end
 
+	local frameParents = {}
 	function mod:ChangeFrameVisibility(frame, vis)
 		if vis == "always" then
-			if not dynamicButtons[frame:GetName()] then
-				if frame.sexyMapParent then
-					frame:SetParent(frame.sexyMapParent)
-					frame.sexyMapParent = nil
-				end
+			if frameParents[frame] then
+				frame:SetParent(frameParents[frame])
+				frameParents[frame] = nil
 			end
 			frame:SetAlpha(1)
 		elseif vis == "never" then
-			if not frame.sexyMapParent then
-				frame.sexyMapParent = frame:GetParent()
+			if not frameParents[frame] then
+				frameParents[frame] = frame:GetParent()
 			end
 			frame:SetParent(hideFrame)
 		else
-			if not dynamicButtons[frame:GetName()] then
-				if frame.sexyMapParent then
-					frame:SetParent(frame.sexyMapParent)
-					frame.sexyMapParent = nil
-				end
+			if frameParents[frame] then
+				frame:SetParent(frameParents[frame])
+				frameParents[frame] = nil
 			end
 			frame:SetAlpha(0)
 		end
