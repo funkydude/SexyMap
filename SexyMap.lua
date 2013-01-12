@@ -425,7 +425,7 @@ function mod:SetupMap()
 
 	--[[ MouseWheel Zoom ]]--
 	Minimap:EnableMouseWheel(true)
-	Minimap:SetScript("OnMouseWheel", function(frame, d)
+	Minimap:HookScript("OnMouseWheel", function(frame, d)
 		if d > 0 then
 			MinimapZoomIn:Click()
 		elseif d < 0 then
@@ -456,8 +456,8 @@ function mod:SetupMap()
 	Minimap:SetScale(mod.db.scale or 1)
 	Minimap:SetMovable(not mod.db.lock)
 
-	Minimap:SetScript("OnDragStart", function(self) if self:IsMovable() then self:StartMoving() end end)
-	Minimap:SetScript("OnDragStop", function(self)
+	Minimap:HookScript("OnDragStart", function(self) if self:IsMovable() then self:StartMoving() end end)
+	Minimap:HookScript("OnDragStop", function(self)
 		self:StopMovingOrSizing()
 		local p, _, rp, x, y = Minimap:GetPoint()
 		mod.db.point, mod.db.relpoint, mod.db.x, mod.db.y = p, rp, x, y
