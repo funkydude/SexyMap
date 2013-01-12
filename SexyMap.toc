@@ -4,10 +4,10 @@
 ## Notes: Spice up your minimap with some sexy options.
 ## Notes-deDE: Spice up your minimap with some sexy options.
 ## Notes-ruRU: Spice up your minimap with some sexy options.
-## Notes-esES: Spice up your minimap with some sexy options.
+## Notes-esES: Condimenta tu minimapa con unas cuantas opciones sexys.
 ## Notes-esMX: Spice up your minimap with some sexy options.
 ## Notes-frFR: Spice up your minimap with some sexy options.
-## Notes-itIT: Spice up your minimap with some sexy options.
+## Notes-itIT: Vivacizza la Minimappa con alcune opzioni sexy.
 ## Notes-koKR: 미니맵에 다양한 기능을 부가합니다.
 ## Notes-zhTW: Spice up your minimap with some sexy options.
 ## Notes-zhCN: 为你的小地图增趣添彩，并包含一些性感选项。
@@ -48,7 +48,6 @@ BorderPresets.lua
 Borders.lua
 Clock.lua
 Coordinates.lua
-Fader.lua
 HudMap.lua
 Movers.lua
 Ping.lua

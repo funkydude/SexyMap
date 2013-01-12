@@ -329,6 +329,7 @@ function mod:ADDON_LOADED(addon)
 		elseif mod.db.shape == "Interface\\AddOns\\SexyMap\\shapes\\squareFuzzy" then
 			mod.db.shape = "SPELLS\\T_VFX_BORDER"
 		end
+		dbToDispatch.fader = nil
 
 		mod.loadModules = {}
 		for k,v in pairs(sm) do
@@ -490,7 +491,6 @@ do
 			if n and not alreadyGrabbed[n] then
 				alreadyGrabbed[n] = true
 				sm.buttons:NewFrame(f)
-				sm.fader:NewFrame(f)
 			end
 		end
 	end
