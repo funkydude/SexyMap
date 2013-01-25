@@ -496,15 +496,18 @@ do
 		-- We'd use ADDON_LOADED but it's too early, some addons load a minimap icon afterwards
 		local updateTimer = sm.core.frame:CreateAnimationGroup()
 		local anim = updateTimer:CreateAnimation()
-		updateTimer:SetScript("OnLoop", function() grabFrames(Minimap:GetChildren()) end)
+		updateTimer:SetScript("OnLoop", function(frame)
+			grabFrames(MinimapZoneTextButton, Minimap, MiniMapTrackingButton, TimeManagerClockButton, MinimapBackdrop:GetChildren())
+			grabFrames(MinimapCluster:GetChildren())
+			grabFrames(Minimap:GetChildren())
+			frame:SetScript("OnLoop", function()
+				grabFrames(Minimap:GetChildren())
+			end)
+		end)
 		anim:SetOrder(1)
-		anim:SetDuration(1)
+		anim:SetDuration(2)
 		updateTimer:SetLooping("REPEAT")
 		updateTimer:Play()
-
-		-- Grab Icons
-		grabFrames(MinimapZoneTextButton, Minimap, MiniMapTrackingButton, TimeManagerClockButton, MinimapBackdrop:GetChildren())
-		grabFrames(MinimapCluster:GetChildren())
 
 		self.StartFrameGrab = nil
 	end
