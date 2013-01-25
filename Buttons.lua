@@ -248,6 +248,8 @@ function mod:OnEnable()
 	highlight:SetPoint("TOPLEFT", MiniMapWorldMapButton, "TOPLEFT", 2, -2)
 
 	sm.core:RegisterModuleOptions("Buttons", options, L["Buttons"])
+
+	mod:StartFrameGrab()
 end
 
 --------------------------------------------------------------------------------
@@ -469,6 +471,42 @@ do
 				end
 			end
 		end
+	end
+end
+
+--------------------------------------------------------------------------------
+-- Button grab
+--
+
+do
+	local alreadyGrabbed = {}
+	local grabFrames = function(...)
+		for i=1, select("#", ...) do
+			local f = select(i, ...)
+			local n = f:GetName()
+			if n and not alreadyGrabbed[n] then
+				alreadyGrabbed[n] = true
+				mod:NewFrame(f)
+			end
+		end
+	end
+
+	function mod:StartFrameGrab()
+		-- Try to capture new frames periodically
+		-- We'd use ADDON_LOADED but it's too early, some addons load a minimap icon afterwards
+		local updateTimer = sm.core.frame:CreateAnimationGroup()
+		local anim = updateTimer:CreateAnimation()
+		updateTimer:SetScript("OnLoop", function() grabFrames(Minimap:GetChildren()) end)
+		anim:SetOrder(1)
+		anim:SetDuration(1)
+		updateTimer:SetLooping("REPEAT")
+		updateTimer:Play()
+
+		-- Grab Icons
+		grabFrames(MinimapZoneTextButton, Minimap, MiniMapTrackingButton, TimeManagerClockButton, MinimapBackdrop:GetChildren())
+		grabFrames(MinimapCluster:GetChildren())
+
+		self.StartFrameGrab = nil
 	end
 end
 
