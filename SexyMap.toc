@@ -1,5 +1,5 @@
 ## Interface: 50100
-## Version: 2.4
+## Version: 2.4.2
 ## Title: SexyMap
 ## Notes: Spice up your minimap with some sexy options.
 ## Notes-deDE: Spice up your minimap with some sexy options.
@@ -11,7 +11,7 @@
 ## Notes-koKR: 미니맵에 다양한 기능을 부가합니다.
 ## Notes-zhTW: Spice up your minimap with some sexy options.
 ## Notes-zhCN: 为你的小地图增趣添彩，并包含一些性感选项。
-## Notes-ptBR: Spice up your minimap with some sexy options.
+## Notes-ptBR: Dê uma apimentada no seu minimapa com algumas opções sexy.
 ## Author: Funkydude
 ## X-Credits: Antiarc (Former Author)
 ## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, Blizzard_TimeManager, TomTom

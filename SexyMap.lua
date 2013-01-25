@@ -372,7 +372,6 @@ function mod:PLAYER_LOGIN()
 		sm[mod.loadModules[i]]:OnEnable()
 		sm[mod.loadModules[i]].OnEnable = nil
 	end
-	wipe(mod.loadModules)
 	mod.loadModules = nil
 
 	mod:StartFrameGrab()
