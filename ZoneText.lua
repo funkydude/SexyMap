@@ -181,6 +181,7 @@ function mod:OnEnable()
 	MinimapZoneTextButton:SetFrameStrata("MEDIUM")
 
 	self:UpdateLayout()
+	-- Hook Minimap.xml function "Minimap_Update", we let Blizz update the text and customize it afterwards.
 	MinimapCluster:HookScript("OnEvent", self.ZoneChanged)
 end
 

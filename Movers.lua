@@ -150,12 +150,12 @@ do
 
 				f:ClearAllPoints()
 				f:SetAllPoints()
-				if type(f:GetTop()) ~= "number" then
+				--[[if type(f:GetTop()) ~= "number" then
 					print("SexyMap: Mover [", f:GetName(), "] returned a nil Top, this shouldn't happen!")
 				end
 				if type(f:GetBottom()) ~= "number" then
 					print("SexyMap: Mover [", f:GetName(), "] returned a nil Bottom, this shouldn't happen!")
-				end
+				end]]
 				if f:GetTop() - f:GetBottom() < 30 then
 					f:ClearAllPoints()
 					f:SetPoint("TOPLEFT", pf, "TOPLEFT")

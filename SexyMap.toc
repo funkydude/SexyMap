@@ -1,5 +1,5 @@
 ## Interface: 50100
-## Version: 2.4.3
+## Version: 2.4.4
 ## Title: SexyMap
 ## Notes: Spice up your minimap with some sexy options.
 ## Notes-deDE: Spice up your minimap with some sexy options.
@@ -14,7 +14,8 @@
 ## Notes-ptBR: Dê uma apimentada no seu minimapa com algumas opções sexy.
 ## Author: Funkydude
 ## X-Credits: Antiarc (Former Author)
-## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, Blizzard_TimeManager, TomTom
+## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, LibChatAnims, CallbackHandler-1.0, LibStub, Blizzard_TimeManager
+## X-Embeds: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, LibChatAnims, CallbackHandler-1.0, LibStub
 ## SavedVariables: SexyMap2DB
 
 # Libraries, etc
