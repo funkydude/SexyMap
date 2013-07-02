@@ -1,5 +1,5 @@
 ## Interface: 50300
-## Version: 2.4.7
+## Version: 2.4.8
 ## Title: SexyMap
 ## Notes: Spice up your minimap with some sexy options.
 ## Notes-deDE: Spice up your minimap with some sexy options.
@@ -9,7 +9,7 @@
 ## Notes-frFR: Spice up your minimap with some sexy options.
 ## Notes-itIT: Vivacizza la Minimappa con alcune opzioni sexy.
 ## Notes-koKR: 미니맵에 다양한 기능을 부가합니다.
-## Notes-zhTW: Spice up your minimap with some sexy options.
+## Notes-zhTW: 讓你有更香豔的一些性感小地圖設定。
 ## Notes-zhCN: 为你的小地图增趣添彩，并包含一些性感选项。
 ## Notes-ptBR: Dê uma apimentada no seu minimapa com algumas opções sexy.
 ## Author: Funkydude
