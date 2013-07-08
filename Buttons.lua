@@ -51,6 +51,7 @@ local addonButtons = { -- For the rare addons that don't use LibDBIcon for some 
 	TellTrackAceMMI = "Tell Track",
 	TenTonHammer_MinimapButton = "PlayerScore",
 	ZygorGuidesViewerMapIcon = "Zygor",
+	RBSMinimapButton = "Raid Buff Status",
 }
 
 local options = {
