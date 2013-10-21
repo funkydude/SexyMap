@@ -14,6 +14,7 @@ sm.backdrop = {
 }
 
 mod.frame = CreateFrame("Frame")
+mod.frame:Show()
 mod.deepCopyHash = function(t)
 	local nt = {}
 	for k, v in pairs(t) do
@@ -352,13 +353,17 @@ function mod:PLAYER_LOGIN()
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(name)
 
 	-- Configure slash handler
-	SlashCmdList[name] = function() InterfaceOptionsFrame_OpenToCategory(name) InterfaceOptionsFrame_OpenToCategory(name) end -- Twice to work around a Blizz bug, opens to wrong panel on first try
+	SlashCmdList.SexyMap = function()
+		-- Twice to work around a Blizz bug, opens to wrong panel on first try
+		InterfaceOptionsFrame_OpenToCategory(name)
+		InterfaceOptionsFrame_OpenToCategory(name)
+	end
 	SLASH_SexyMap1 = "/minimap"
 	SLASH_SexyMap2 = "/sexymap"
 
 	Minimap:SetScript("OnMouseUp", function(frame, button)
 		if button == "RightButton" and mod.db.rightClickToConfig then
-			InterfaceOptionsFrame_OpenToCategory(name)
+			SlashCmdList.SexyMap()
 		else
 			Minimap_OnClick(frame, button)
 		end
@@ -407,19 +412,6 @@ function mod:SetupMap()
 	end)
 	anim:SetOrder(1)
 	anim:SetDuration(1)
-
-	-- XXX temp, kill the tracker fix addon
-	if select(2, GetAddOnInfo("SexyMapTrackerButtonFix")) then
-		DisableAddOn("SexyMapTrackerButtonFix")
-		local c = CreateFrame"Frame"
-		local t = GetTime()
-		c:SetScript("OnUpdate", function()
-			if GetTime()-t > 7 then
-				ChatFrame1:AddMessage("SexyMapTrackerButtonFix: I'm no longer needed, please remove this addon.", 0, 0.3, 1)
-				c:SetScript("OnUpdate", nil)
-			end
-		end)
-	end
 
 	--[[ MouseWheel Zoom ]]--
 	Minimap:EnableMouseWheel(true)
