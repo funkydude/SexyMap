@@ -352,7 +352,7 @@ function mod:PLAYER_LOGIN()
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(name)
 
 	-- Configure slash handler
-	SlashCmdList[name] = function() InterfaceOptionsFrame_OpenToCategory(name) end
+	SlashCmdList[name] = function() InterfaceOptionsFrame_OpenToCategory(name) InterfaceOptionsFrame_OpenToCategory(name) end -- Twice to work around a Blizz bug, opens to wrong panel on first try
 	SLASH_SexyMap1 = "/minimap"
 	SLASH_SexyMap2 = "/sexymap"
 
