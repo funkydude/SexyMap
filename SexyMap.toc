@@ -3,9 +3,9 @@
 ## Title: SexyMap
 ## Notes: Spice up your minimap with some sexy options.
 ## Notes-deDE: Spice up your minimap with some sexy options.
-## Notes-ruRU: Spice up your minimap with some sexy options.
+## Notes-ruRU: Придайте вашей миникарте потрясающий вид.
 ## Notes-esES: Condimenta tu minimapa con unas cuantas opciones sexys.
-## Notes-esMX: Spice up your minimap with some sexy options.
+## Notes-esMX: Condimenta tu minimapa con unas cuantas opciones sexys.
 ## Notes-frFR: Spice up your minimap with some sexy options.
 ## Notes-itIT: Vivacizza la Minimappa con alcune opzioni sexy.
 ## Notes-koKR: 미니맵에 다양한 기능을 부가합니다.
