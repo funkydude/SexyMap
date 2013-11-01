@@ -463,6 +463,7 @@ do
 		else
 			for i = 1, #animFrames do
 				local f = animFrames[i]
+				local n = f:GetName()
 				-- Don't move the Clock or Zone Text when changing shape/preset
 				if n ~= "MinimapZoneTextButton" and n ~= "TimeManagerClockButton" then
 					local x, y = f:GetCenter()
