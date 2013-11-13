@@ -175,6 +175,25 @@ function mod:OnEnable()
 	TimeManagerClockButton:SetBackdrop(sm.backdrop)
 
 	self:UpdateLayout()
+
+	-- For some reason PLAYER_LOGIN is too early for a rare subset of users (even when only using SexyMap)
+	-- which results in a clock width too small. Use this delayed repeater to try and fix the clock width for them.
+	local updateTimer = sm.core.frame:CreateAnimationGroup()
+	updateTimer.elapsed = 0
+	local anim = updateTimer:CreateAnimation()
+	updateTimer:SetScript("OnFinished", function(self)
+		self.elapsed = self.elapsed + 1
+		mod:UpdateLayout()
+		if self.elapsed > 3 then
+			self.elapsed = nil
+			self:SetScript("OnFinished", nil)
+		else
+			self:Play()
+		end
+	end)
+	anim:SetOrder(1)
+	anim:SetDuration(1)
+	updateTimer:Play()
 end
 
 function mod:UpdateLayout()
@@ -188,7 +207,7 @@ function mod:UpdateLayout()
 		TimeManagerClockTicker:SetTextColor(mod.db.fontColor.r, mod.db.fontColor.g, mod.db.fontColor.b, mod.db.fontColor.a)
 	end
 	TimeManagerClockTicker:SetText("44:44") -- Hopefully fix the clock sometimes being cut out with certain fonts
-	TimeManagerClockButton:SetWidth(TimeManagerClockTicker:GetStringWidth() + 17)
+	TimeManagerClockButton:SetWidth(TimeManagerClockTicker:GetStringWidth() + 15)
 	TimeManagerClockButton:SetHeight(TimeManagerClockTicker:GetStringHeight() + 10)
 end
 
