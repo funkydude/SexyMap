@@ -191,7 +191,7 @@ function mod:UpdateLayout()
 	MinimapZoneTextButton:SetPoint("BOTTOM", Minimap, "TOP", mod.db.xOffset, mod.db.yOffset)
 	MinimapZoneTextButton:SetBackdropColor(mod.db.bgColor.r, mod.db.bgColor.g, mod.db.bgColor.b, mod.db.bgColor.a)
 	MinimapZoneTextButton:SetBackdropBorderColor(mod.db.borderColor.r, mod.db.borderColor.g, mod.db.borderColor.b, mod.db.borderColor.a)
-	local a, b, c = MinimapZoneText:GetFont()
+	local a, b, c = GameFontNormal:GetFont()
 	MinimapZoneText:SetFont(mod.db.font and media:Fetch("font", mod.db.font) or a, mod.db.fontsize or b, c)
 
 	self:ZoneChanged()
