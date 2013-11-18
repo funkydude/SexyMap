@@ -174,7 +174,24 @@ function mod:OnEnable()
 	TimeManagerClockButton:GetRegions():Hide() -- Hide the border
 	TimeManagerClockButton:SetBackdrop(sm.backdrop)
 
-	self:UpdateLayout()
+	-- For some reason PLAYER_LOGIN is too early for a rare subset of users (even when only using SexyMap)
+	-- which results in a clock width too small. Use this delayed repeater to try and fix the clock width for them.
+	local updateTimer = sm.core.frame:CreateAnimationGroup()
+	updateTimer.elapsed = 0
+	local anim = updateTimer:CreateAnimation()
+	updateTimer:SetScript("OnFinished", function(self)
+		self.elapsed = self.elapsed + 1
+		mod:UpdateLayout()
+		if self.elapsed > 3 then
+			self.elapsed = nil
+			self:SetScript("OnFinished", nil)
+		else
+			self:Play()
+		end
+	end)
+	anim:SetOrder(1)
+	anim:SetDuration(1)
+	updateTimer:Play()
 end
 
 function mod:UpdateLayout()
@@ -182,8 +199,6 @@ function mod:UpdateLayout()
 	TimeManagerClockButton:SetPoint("TOP", Minimap, "BOTTOM", mod.db.xOffset, mod.db.yOffset)
 	TimeManagerClockButton:SetBackdropColor(mod.db.bgColor.r, mod.db.bgColor.g, mod.db.bgColor.b, mod.db.bgColor.a)
 	TimeManagerClockButton:SetBackdropBorderColor(mod.db.borderColor.r, mod.db.borderColor.g, mod.db.borderColor.b, mod.db.borderColor.a)
-	-- GameFontHighlightSmall is used on the clock. Grab the font from this rather than the FontString as Blizz is sometimes slow to SetFont the clock.
-	-- Fixes reports of the clock being cut out on login for some users (even when only using SexyMap).
 	local a, b, c = GameFontHighlightSmall:GetFont()
 	TimeManagerClockTicker:SetFont(mod.db.font and media:Fetch("font", mod.db.font) or a, mod.db.fontsize or b, c)
 	if mod.db.fontColor.r then

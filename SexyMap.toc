@@ -1,5 +1,5 @@
 ## Interface: 50400
-## Version: 2.4.13
+## Version: 2.4.14
 ## Title: SexyMap
 ## Notes: Spice up your minimap with some sexy options.
 ## Notes-deDE: Spice up your minimap with some sexy options.
