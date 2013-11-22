@@ -204,7 +204,8 @@ function mod:UpdateLayout()
 	if mod.db.fontColor.r then
 		TimeManagerClockTicker:SetTextColor(mod.db.fontColor.r, mod.db.fontColor.g, mod.db.fontColor.b, mod.db.fontColor.a)
 	end
-	TimeManagerClockButton:SetWidth(TimeManagerClockTicker:GetStringWidth() + 15)
+	TimeManagerClockTicker:SetText("44:44")
+	TimeManagerClockButton:SetWidth(TimeManagerClockTicker:GetStringWidth() + 16)
 	TimeManagerClockButton:SetHeight(TimeManagerClockTicker:GetStringHeight() + 10)
 end
 
