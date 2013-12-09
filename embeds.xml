@@ -5,8 +5,10 @@
 <Include file="Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml"/>
 <Include file="Libs\LibChatAnims\LibChatAnims.xml"/>
 <Include file="Libs\AceGUI-3.0\AceGUI-3.0.xml"/>
-<Include file="Libs\AceConfig-3.0\AceConfig-3.0.xml"/>
+<Include file="Libs\AceConfigRegistry-3.0\AceConfigRegistry-3.0.xml"/>
+<Include file="Libs\AceConfigDialog-3.0\AceConfigDialog-3.0.xml"/>
 <Include file="Libs\LibSharedMedia-3.0\lib.xml"/>
 <Include file="Libs\AceGUI-3.0-SharedMediaWidgets\widget.xml"/>
+
 </Ui>
 

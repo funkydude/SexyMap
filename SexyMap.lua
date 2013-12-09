@@ -341,7 +341,7 @@ end
 
 function mod:PLAYER_LOGIN()
 	-- Setup config
-	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(name, mod.options)
+	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(name, mod.options, true)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(name)
 
 	-- Configure slash handler
@@ -459,7 +459,7 @@ mod.frame:SetScript("OnEvent", function(_, event, ...)
 end)
 
 function mod:RegisterModuleOptions(modName, optionTbl, displayName)
-	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(name..modName, optionTbl)
+	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(name..modName, optionTbl, true)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(name..modName, displayName, name)
 end
 
