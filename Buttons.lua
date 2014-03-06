@@ -265,7 +265,7 @@ do
 		-- Minimap or Minimap icons including nil checks to compensate for other addons
 		local f, focus = anim:GetParent(), GetMouseFocus()
 		local n = f:GetName()
-		if focus and ((focus:GetName() == "Minimap") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
+		if focus and not focus:IsForbidden() and ((focus:GetName() == "Minimap") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
 			f:SetAlpha(1)
 		elseif not mod.db.visibilitySettings[n] or mod.db.visibilitySettings[n] == "hover" then -- Check this again in case the user changed the setting to "visible" during fade
 			f:SetAlpha(0)
@@ -295,7 +295,7 @@ do
 	local OnLeave = function()
 		if not mod.db.controlVisibility or moving then return end
 		local focus = GetMouseFocus() -- Minimap or Minimap icons including nil checks to compensate for other addons
-		if focus and ((focus:GetName() == "Minimap") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
+		if focus and not focus:IsForbidden() and ((focus:GetName() == "Minimap") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
 			fadeStop = true
 			return
 		end
