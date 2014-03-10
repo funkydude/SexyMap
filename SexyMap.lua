@@ -394,6 +394,16 @@ function mod:SetupMap()
 		Minimap:Show()
 	end
 
+	-- Hide the Minimap during combat. Remove the comments (--) to enable.
+	--mod.frame:RegisterEvent("PLAYER_REGEN_DISABLED")
+	--mod.PLAYER_REGEN_DISABLED = function()
+	--	Minimap:Hide()
+	--end
+	--mod.frame:RegisterEvent("PLAYER_REGEN_ENABLED")
+	--mod.PLAYER_REGEN_ENABLED = function()
+	--	Minimap:Show()
+	--end
+
 	--[[ Auto Zoom Out ]]--
 	local animGroup = Minimap:CreateAnimationGroup()
 	local anim = animGroup:CreateAnimation()
