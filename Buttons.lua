@@ -25,6 +25,7 @@ local dynamicButtons = {
 	MiniMapRecordingButton = L["Video Recording Button (Mac OSX Only, When Available)"],
 	MiniMapVoiceChatFrame = L["Voice Chat Button (When Available)"],
 	QueueStatusMinimapButton = L["Queue Status (PvP/LFG) Button (When Available)"],
+	GarrisonLandingPageMinimapButton = "Garrison Temp Button", -- XXX compat
 }
 local addonButtons = { -- For the rare addons that don't use LibDBIcon for some reason :(
 	EnxMiniMapIcon = "Enchantrix",
@@ -54,6 +55,9 @@ local addonButtons = { -- For the rare addons that don't use LibDBIcon for some 
 	RBSMinimapButton = "Raid Buff Status",
 	BankItems_MinimapButton = "BankItems",
 	OQ_MinimapButton = "oQueue",
+	ItemRackMinimapFrame = "ItemRack",
+	MageNug_MinimapFrame = "Mage Nuggets",
+	CraftBuster_MinimapFrame = "CraftBuster",
 }
 
 local options = {
@@ -352,6 +356,10 @@ do
 				-- Configure dragging
 				if n == "MiniMapTracking" then
 					self:MakeMovable(MiniMapTrackingButton, f)
+				elseif n == "CraftBuster_MinimapFrame" then
+					if CraftBuster_MinimapButtonButton then
+						self:MakeMovable(CraftBuster_MinimapButtonButton, f)
+					end
 				else
 					self:MakeMovable(f)
 				end
