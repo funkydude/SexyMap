@@ -58,6 +58,7 @@ local addonButtons = { -- For the rare addons that don't use LibDBIcon for some 
 	ItemRackMinimapFrame = "ItemRack",
 	MageNug_MinimapFrame = "Mage Nuggets",
 	CraftBuster_MinimapFrame = "CraftBuster",
+	wlMinimapButton = "Wowhead Looter",
 }
 
 local options = {
