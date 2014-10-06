@@ -892,8 +892,11 @@ function mod:OnEnable()
 		self:ApplyPreset(mod.db.applyPreset)
 		mod.db.applyPreset = false
 	else
-		if C_Timer then -- XXX hack due to Blizzard fucking up animation initialization. We seem to have to wait ~5 seconds after PLAYER_LOGIN or animation speed goes whack
-			C_Timer.After(4, function() self:ApplySettings() end)
+		-- XXX Hack due to Blizzard screwing up animation initialization on WoD.
+		-- XXX We seem to have to wait ~5 seconds after PLAYER_LOGIN or animation speed goes whack (blindingly fast rotation).
+		-- XXX This may be isolated to rotating animations, as it may be the call to set the rotation speed in specific that's broken.
+		if C_Timer then -- WoD only
+			C_Timer.After(5, function() self:ApplySettings() end)
 		else
 			self:ApplySettings()
 		end
