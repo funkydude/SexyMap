@@ -892,7 +892,11 @@ function mod:OnEnable()
 		self:ApplyPreset(mod.db.applyPreset)
 		mod.db.applyPreset = false
 	else
-		self:ApplySettings()
+		if C_Timer then -- XXX hack due to Blizzard fucking up animation initialization. We seem to have to wait ~5 seconds after PLAYER_LOGIN or animation speed goes whack
+			C_Timer.After(4, function() self:ApplySettings() end)
+		else
+			self:ApplySettings()
+		end
 	end
 
 end
