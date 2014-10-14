@@ -404,67 +404,35 @@ function mod:SetupMap()
 	--	Minimap:Show()
 	--end
 
-	-- XXX COMPAT
-	if C_Timer then -- WoD only
-		-- This is our method of cancelling timers, we only let the very last scheduled timer actually run the code.
-		-- We do this by using a simple counter, which saves on using the more expensive C_Timer.NewTimer API.
-		local started, current = 1, 0
-		--[[ Auto Zoom Out ]]--
-		local zoomOut = function()
-			current = current + 1
-			if started == current then
-				for i = 1, 5 do
-					MinimapZoomOut:Click()
-				end
-				started, current = 0, 0
-			end
-		end
-
-		--[[ MouseWheel Zoom ]]--
-		Minimap:EnableMouseWheel(true)
-		Minimap:SetScript("OnMouseWheel", function(frame, d)
-			if d > 0 then
-				MinimapZoomIn:Click()
-			elseif d < 0 then
-				MinimapZoomOut:Click()
-			end
-			if mod.db.autoZoom > 0 then
-				started = started + 1
-				C_Timer.After(mod.db.autoZoom, zoomOut)
-			end
-		end)
-		if mod.db.autoZoom > 0 then
-			zoomOut()
-		end
-	else
-		--[[ Auto Zoom Out ]]--
-		local animGroup = Minimap:CreateAnimationGroup()
-		local anim = animGroup:CreateAnimation()
-		animGroup:SetScript("OnFinished", function()
+	-- This is our method of cancelling timers, we only let the very last scheduled timer actually run the code.
+	-- We do this by using a simple counter, which saves us using the more expensive C_Timer.NewTimer API.
+	local started, current = 1, 0
+	--[[ Auto Zoom Out ]]--
+	local zoomOut = function()
+		current = current + 1
+		if started == current then
 			for i = 1, 5 do
 				MinimapZoomOut:Click()
 			end
-		end)
-		anim:SetOrder(1)
-		anim:SetDuration(1)
-
-		--[[ MouseWheel Zoom ]]--
-		Minimap:EnableMouseWheel(true)
-		Minimap:SetScript("OnMouseWheel", function(frame, d)
-			if d > 0 then
-				MinimapZoomIn:Click()
-			elseif d < 0 then
-				MinimapZoomOut:Click()
-			end
-			if mod.db.autoZoom > 0 then
-				animGroup:Stop()
-				anim:SetDuration(mod.db.autoZoom)
-				animGroup:Play()
-			end
-		end)
-		if mod.db.autoZoom > 0 then
-			animGroup:Play()
+			started, current = 0, 0
 		end
+	end
+
+	--[[ MouseWheel Zoom ]]--
+	Minimap:EnableMouseWheel(true)
+	Minimap:SetScript("OnMouseWheel", function(frame, d)
+		if d > 0 then
+			MinimapZoomIn:Click()
+		elseif d < 0 then
+			MinimapZoomOut:Click()
+		end
+		if mod.db.autoZoom > 0 then
+			started = started + 1
+			C_Timer.After(mod.db.autoZoom, zoomOut)
+		end
+	end)
+	if mod.db.autoZoom > 0 then
+		zoomOut()
 	end
 
 
