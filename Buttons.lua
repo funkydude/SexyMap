@@ -25,7 +25,7 @@ local dynamicButtons = {
 	MiniMapRecordingButton = L["Video Recording Button (Mac OSX Only, When Available)"],
 	MiniMapVoiceChatFrame = L["Voice Chat Button (When Available)"],
 	QueueStatusMinimapButton = L["Queue Status (PvP/LFG) Button (When Available)"],
-	GarrisonLandingPageMinimapButton = "Garrison Temp Button", -- XXX compat
+	GarrisonLandingPageMinimapButton = L["Garrison Button (When Available)"],
 }
 local addonButtons = { -- For the rare addons that don't use LibDBIcon for some reason :(
 	EnxMiniMapIcon = "Enchantrix",

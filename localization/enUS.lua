@@ -93,6 +93,7 @@ L["New Mail Indicator (When Available)"] = "New Mail Indicator (When Available)"
 L["Video Recording Button (Mac OSX Only, When Available)"] = "Video Recording Button (Mac OSX Only, When Available)"
 L["Voice Chat Button (When Available)"] = "Voice Chat Button (When Available)"
 L["Queue Status (PvP/LFG) Button (When Available)"] = "Queue Status (PvP/LFG) Button (When Available)"
+L["Garrison Button (When Available)"] = "Garrison Button (When Available)"
 
 L["Addon Buttons"] = "Addon Buttons"
 L["Dynamic Buttons"] = "Dynamic Buttons"
