@@ -52,7 +52,7 @@ local options = {
 
 local movables = {
 	["DurabilityFrame"] = L["Armored Man"],
-	["WatchFrame"] = L["Objectives Tracker"],
+	["ObjectiveTrackerFrame"] = L["Objectives Tracker"],
 	["Boss1TargetFrame"] = L["Boss Frames"],
 }
 local movers = {}
@@ -203,6 +203,6 @@ function mod:SetMovers()
 			f:Hide()
 		end
 	end
-	WatchFrame:SetPoint("BOTTOM", UIParent, "BOTTOM")
+	ObjectiveTrackerFrame:SetPoint("BOTTOM", UIParent, "BOTTOM")
 end
 
