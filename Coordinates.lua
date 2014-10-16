@@ -202,17 +202,14 @@ function mod:CreateFrame()
 			end
 		end)
 
-		local animgroup = coordFrame:CreateAnimationGroup()
-		local anim = animgroup:CreateAnimation()
 		local GetPlayerMapPosition = GetPlayerMapPosition
-		animgroup:SetScript("OnLoop", function(self)
+		local CTimerAfter = C_Timer.After
+		local function updateCoords()
+			CTimerAfter(0.1, updateCoords)
 			local x, y = GetPlayerMapPosition"player"
 			coordsText:SetFormattedText("%.1f, %.1f", x*100, y*100)
-		end)
-		anim:SetOrder(1)
-		anim:SetDuration(0.1)
-		animgroup:SetLooping("REPEAT")
-		animgroup:Play()
+		end
+		updateCoords()
 	end
 	if mod.db.x then
 		coordFrame:ClearAllPoints()

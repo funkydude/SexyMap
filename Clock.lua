@@ -176,22 +176,10 @@ function mod:OnEnable()
 
 	-- For some reason PLAYER_LOGIN is too early for a rare subset of users (even when only using SexyMap)
 	-- which results in a clock width too small. Use this delayed repeater to try and fix the clock width for them.
-	local updateTimer = sm.core.frame:CreateAnimationGroup()
-	updateTimer.elapsed = 0
-	local anim = updateTimer:CreateAnimation()
-	updateTimer:SetScript("OnFinished", function(self)
-		self.elapsed = self.elapsed + 1
-		mod:UpdateLayout()
-		if self.elapsed > 3 then
-			self.elapsed = nil
-			self:SetScript("OnFinished", nil)
-		else
-			self:Play()
-		end
-	end)
-	anim:SetOrder(1)
-	anim:SetDuration(1)
-	updateTimer:Play()
+	local CTimerAfter = C_Timer.After
+	for i = 1, 5 do
+		CTimerAfter(i, mod.UpdateLayout)
+	end
 end
 
 function mod:UpdateLayout()

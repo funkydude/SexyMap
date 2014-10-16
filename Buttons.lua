@@ -505,23 +505,21 @@ do
 		end
 	end
 
+	local CTimerAfter = C_Timer.After
 	function mod:StartFrameGrab()
 		-- Try to capture new frames periodically
 		-- We'd use ADDON_LOADED but it's too early, some addons load a minimap icon afterwards
-		local updateTimer = sm.core.frame:CreateAnimationGroup()
-		local anim = updateTimer:CreateAnimation()
-		updateTimer:SetScript("OnLoop", function(frame)
+		CTimerAfter(2, function()
 			grabFrames(MinimapZoneTextButton, Minimap, MiniMapTrackingButton, TimeManagerClockButton, MinimapBackdrop:GetChildren())
 			grabFrames(MinimapCluster:GetChildren())
 			grabFrames(Minimap:GetChildren())
-			frame:SetScript("OnLoop", function()
-				grabFrames(Minimap:GetChildren())
-			end)
 		end)
-		anim:SetOrder(1)
-		anim:SetDuration(2)
-		updateTimer:SetLooping("REPEAT")
-		updateTimer:Play()
+
+		local function frameGrabTimer()
+			CTimerAfter(2, frameGrabTimer)
+			grabFrames(Minimap:GetChildren())
+		end
+		CTimerAfter(4, frameGrabTimer)
 
 		self.StartFrameGrab = nil
 	end
