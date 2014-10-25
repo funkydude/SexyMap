@@ -9,11 +9,11 @@ local options = {
 	type = "group",
 	name = L["Movers"],
 	args = {
-		desc = {
-			order = 0.5,
-			name = L["Movers Warning"],
-			type = "description",
-		},
+		--desc = {
+		--	order = 0.5,
+		--	name = L["Movers Warning"],
+		--	type = "description",
+		--},
 		enable = {
 			order = 1,
 			name = L["Enable Movers"],
@@ -53,7 +53,8 @@ local options = {
 local movables = {
 	["DurabilityFrame"] = L["Armored Man"],
 	["ObjectiveTrackerFrame"] = L["Objectives Tracker"],
-	["Boss1TargetFrame"] = L["Boss Frames"],
+	["VehicleSeatIndicator"] = L["Vehicle Seat"],
+	--["Boss1TargetFrame"] = L["Boss Frames"],
 }
 local movers = {}
 
@@ -85,23 +86,6 @@ do
 
 		hooksecurefunc("UpdateContainerFrameAnchors", self.CreateMoversAndSetMovables)
 
-		if not select(4, GetAddOnInfo("Capping")) then
-			local f = CreateFrame("Frame")
-			f:RegisterEvent("UPDATE_WORLD_STATES")
-			local updateStates = function()
-				for i = 1, NUM_EXTENDED_UI_FRAMES do
-					local name = "WorldStateCaptureBar"..i
-					local f = _G[name]
-					if f and not movables[name] then
-						movables[name] = L["Capture Bars"]
-					end
-				end
-				mod:CreateMoversAndSetMovables()
-			end
-			f:SetScript("OnEvent", updateStates)
-			updateStates()
-			movables["VehicleSeatIndicator"] = L["Vehicle Seat"]
-		end
 		self:CreateMoversAndSetMovables()
 	end
 end
@@ -109,9 +93,7 @@ end
 do
 	local function start(self)
 		local f = self:GetParent()
-		local x, y = f:GetLeft(), f:GetBottom()
 		f:StartMoving()
-		f:SetClampedToScreen(false)
 	end
 
 	local function stop(self)
@@ -124,11 +106,9 @@ do
 		mod.db.framePositions[n] = mod.db.framePositions[n] or {}
 		mod.db.framePositions[n].x = x
 		mod.db.framePositions[n].y = y
-		f:SetUserPlaced(true)
 	end
 
 	function mod:CreateMoversAndSetMovables()
-		if InCombatLockdown() then return end
 		for frame, text in pairs(movables) do
 			local pf = _G[frame]
 			if pf then
@@ -160,6 +140,9 @@ do
 					local x, y = mod.db.framePositions[frame].x, mod.db.framePositions[frame].y
 					pf:ClearAllPoints()
 					pf:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", x, y)
+					if frame == "ObjectiveTrackerFrame" then
+						pf:SetPoint("BOTTOM", UIParent, "BOTTOM")
+					end
 				end
 			end
 		end
