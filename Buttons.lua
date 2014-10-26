@@ -39,7 +39,6 @@ local addonButtons = { -- For the rare addons that don't use LibDBIcon for some 
 	DominosMinimapButton = "Dominos",
 	Gatherer_MinimapOptionsButton = "Gatherer",
 	DroodFocusMinimapButton = "Drood Focus",
-	["FuBarPluginElkano's BuffBarsFrameMinimapButton"] = "EBB (Elkano's Buff Bars)",
 	D32MiniMapButton = "Mistra's Diablo Orbs",
 	DKPBidderMapIcon = "DKP-Bidder",
 	HealiumMiniMap = "Healium",
