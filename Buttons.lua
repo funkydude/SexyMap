@@ -216,6 +216,7 @@ function mod:OnInitialize(profile)
 				MinimapZoneTextButton = "always",
 				TimeManagerClockButton = "always",
 				MiniMapMailFrame = "always",
+				QueueStatusMinimapButton = "always",
 			},
 			allowDragging = true,
 			lockDragging = false,
