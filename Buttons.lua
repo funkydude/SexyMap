@@ -225,6 +225,11 @@ function mod:OnInitialize(profile)
 	end
 
 	self.db = profile.buttons
+	-- XXX temp
+	if not self.db.TEMP then
+		self.db.visibilitySettings.QueueStatusMinimapButton = "always"
+		self.db.TEMP = true
+	end
 end
 
 function mod:OnEnable()
