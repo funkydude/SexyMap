@@ -438,6 +438,12 @@ function mod:SetupMap()
 
 	MinimapCluster:EnableMouse(false) -- Don't leave an invisible dead zone
 
+	-- Removes the circular "waffle-like" texture that shows when using a non-circular minimap in the blue quest objective area.
+	Minimap:SetArchBlobRingScalar(0)
+	Minimap:SetArchBlobRingAlpha(0)
+	Minimap:SetQuestBlobRingScalar(0)
+	Minimap:SetQuestBlobRingAlpha(0)
+
 	if not mod.db.northTag then
 		MinimapNorthTag:Hide()
 		MinimapNorthTag.oldShow = MinimapNorthTag.Show
