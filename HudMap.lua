@@ -329,6 +329,12 @@ function mod:OnEnable()
 	SexyMapHudMap:SetHeight(140)
 	SexyMapHudMap:SetPoint("CENTER", HudMapCluster, "CENTER")
 
+	-- Removes the circular "waffle-like" texture that shows when using a non-circular minimap in the blue quest objective area.
+	SexyMapHudMap:SetArchBlobRingScalar(0)
+	SexyMapHudMap:SetArchBlobRingAlpha(0)
+	SexyMapHudMap:SetQuestBlobRingScalar(0)
+	SexyMapHudMap:SetQuestBlobRingAlpha(0)
+
 	HudMapCluster:SetFrameStrata("BACKGROUND")
 	HudMapCluster:SetAlpha(mod.db.alpha)
 	SexyMapHudMap:SetAlpha(0)
