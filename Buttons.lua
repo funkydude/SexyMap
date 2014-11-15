@@ -261,6 +261,9 @@ function mod:OnEnable()
 	highlight:ClearAllPoints()
 	highlight:SetPoint("TOPLEFT", MiniMapWorldMapButton, "TOPLEFT", 2, -2)
 
+	-- Shrink the Garrison button slightly
+	GarrisonLandingPageMinimapButton:SetSize(45, 45)
+
 	sm.core:RegisterModuleOptions("Buttons", options, L["Buttons"])
 
 	mod:StartFrameGrab()
