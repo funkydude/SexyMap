@@ -217,6 +217,7 @@ function mod:OnInitialize(profile)
 				TimeManagerClockButton = "always",
 				MiniMapMailFrame = "always",
 				QueueStatusMinimapButton = "always",
+				GarrisonLandingPageMinimapButton = "always",
 			},
 			allowDragging = true,
 			lockDragging = false,
@@ -229,6 +230,10 @@ function mod:OnInitialize(profile)
 	if not self.db.TEMP then
 		self.db.visibilitySettings.QueueStatusMinimapButton = "always"
 		self.db.TEMP = true
+	end
+	if not self.db.TEMP2 then
+		self.db.visibilitySettings.GarrisonLandingPageMinimapButton = "always"
+		self.db.TEMP2 = true
 	end
 end
 
@@ -274,18 +279,21 @@ end
 --
 
 do
+	local fadeStop = false -- Use a variable to prevent fadeout/in when moving the mouse around minimap/icons
+	local restoreGarrisonButtonHack = false
+	local restoreLFGButtonHack = false
+
 	local OnFinished = function(anim)
-		-- Minimap or Minimap icons including nil checks to compensate for other addons
-		local f, focus = anim:GetParent(), GetMouseFocus()
-		local n = f:GetName()
-		if focus and not focus:IsForbidden() and ((focus:GetName() == "Minimap") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
-			f:SetAlpha(1)
-		elseif not mod.db.visibilitySettings[n] or mod.db.visibilitySettings[n] == "hover" then -- Check this again in case the user changed the setting to "visible" during fade
-			f:SetAlpha(0)
+		-- Animation Haxx
+		if restoreGarrisonButtonHack and anim:GetParent():GetName() == "GarrisonLandingPageMinimapButton" then
+			anim:GetParent().MinimapLoopPulseAnim:Play()
+			restoreGarrisonButtonHack = false
+		end
+		if restoreLFGButtonHack and anim:GetParent():GetName() == "QueueStatusMinimapButton" then
+			anim:GetParent().EyeHighlightAnim:Play()
+			restoreLFGButtonHack = false
 		end
 	end
-
-	local fadeStop -- Use a variable to prevent fadeout/in when moving the mouse around minimap/icons
 
 	local OnEnter = function()
 		if not mod.db.controlVisibility or fadeStop or moving then return end
@@ -294,14 +302,20 @@ do
 			local f = animFrames[i]
 			local n = f:GetName()
 			if not mod.db.visibilitySettings[n] or mod.db.visibilitySettings[n] == "hover" then
-				local delayed = f.smAlphaAnim:IsDelaying()
-				f.smAnimGroup:Stop()
-				if not delayed then
-					f:SetAlpha(0)
-					f.smAlphaAnim:SetStartDelay(0)
-					f.smAlphaAnim:SetChange(1)
-					f.smAnimGroup:Play()
+				f.sexyMapFadeIn:Stop()
+				f.sexyMapFadeOut:Stop()
+
+				-- Animation Haxx
+				if n == "GarrisonLandingPageMinimapButton" and f.MinimapLoopPulseAnim:IsPlaying() then
+					restoreGarrisonButtonHack = true
+					f.MinimapLoopPulseAnim:Stop()
 				end
+				if n == "QueueStatusMinimapButton" and f.EyeHighlightAnim:IsPlaying() then
+					restoreLFGButtonHack = true
+					f.EyeHighlightAnim:Stop()
+				end
+
+				f.sexyMapFadeIn:Play()
 			end
 		end
 	end
@@ -312,17 +326,26 @@ do
 			fadeStop = true
 			return
 		end
-		fadeStop = nil
+		fadeStop = false
 
 		for i = 1, #animFrames do
 			local f = animFrames[i]
 			local n = f:GetName()
 			if not mod.db.visibilitySettings[n] or mod.db.visibilitySettings[n] == "hover" then
-				f.smAnimGroup:Stop()
-				f:SetAlpha(1)
-				f.smAlphaAnim:SetStartDelay(0.5)
-				f.smAlphaAnim:SetChange(-1)
-				f.smAnimGroup:Play()
+				f.sexyMapFadeIn:Stop()
+				f.sexyMapFadeOut:Stop()
+
+				-- Animation Haxx
+				if n == "GarrisonLandingPageMinimapButton" and f.MinimapLoopPulseAnim:IsPlaying() then
+					restoreGarrisonButtonHack = true
+					f.MinimapLoopPulseAnim:Stop()
+				end
+				if n == "QueueStatusMinimapButton" and f.EyeHighlightAnim:IsPlaying() then
+					restoreLFGButtonHack = true
+					f.EyeHighlightAnim:Stop()
+				end
+
+				f.sexyMapFadeOut:Play()
 			end
 		end
 	end
@@ -332,11 +355,28 @@ do
 		-- Only add Blizz buttons, addon buttons & LibDBIcon buttons
 		if blizzButtons[n] or dynamicButtons[n] or addonButtons[n] or n:find("LibDBIcon") then
 			-- Create the animations
-			f.smAnimGroup = f:CreateAnimationGroup()
-			f.smAlphaAnim = f.smAnimGroup:CreateAnimation("Alpha")
-			f.smAlphaAnim:SetOrder(1)
-			f.smAlphaAnim:SetDuration(0.3)
-			f.smAnimGroup:SetScript("OnFinished", OnFinished)
+			f.sexyMapFadeIn = f:CreateAnimationGroup()
+			local smAlphaAnimIn = f.sexyMapFadeIn:CreateAnimation("Alpha")
+			smAlphaAnimIn:SetOrder(1)
+			smAlphaAnimIn:SetDuration(0.2)
+			smAlphaAnimIn:SetFromAlpha(0)
+			smAlphaAnimIn:SetToAlpha(1)
+			f.sexyMapFadeIn:SetToFinalAlpha(true)
+
+			f.sexyMapFadeOut = f:CreateAnimationGroup()
+			local smAlphaAnimOut = f.sexyMapFadeOut:CreateAnimation("Alpha")
+			smAlphaAnimOut:SetOrder(1)
+			smAlphaAnimOut:SetDuration(0.2)
+			smAlphaAnimOut:SetFromAlpha(1)
+			smAlphaAnimOut:SetToAlpha(0)
+			smAlphaAnimOut:SetStartDelay(1)
+			f.sexyMapFadeOut:SetToFinalAlpha(true)
+
+			if n == "GarrisonLandingPageMinimapButton" or n == "QueueStatusMinimapButton" then -- Work around the fucked Blizz animation system for buttons that have Blizz pulse animations
+				f.sexyMapFadeIn:SetScript("OnFinished", OnFinished)
+				f.sexyMapFadeOut:SetScript("OnFinished", OnFinished)
+			end
+
 			animFrames[#animFrames+1] = f
 
 			-- Configure fading
