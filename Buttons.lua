@@ -266,8 +266,8 @@ function mod:OnEnable()
 	highlight:ClearAllPoints()
 	highlight:SetPoint("TOPLEFT", MiniMapWorldMapButton, "TOPLEFT", 2, -2)
 
-	-- Shrink the Garrison button slightly
-	GarrisonLandingPageMinimapButton:SetSize(45, 45)
+	-- Shrink the Garrison button
+	GarrisonLandingPageMinimapButton:SetSize(38, 38)
 
 	sm.core:RegisterModuleOptions("Buttons", options, L["Buttons"])
 
@@ -280,18 +280,18 @@ end
 
 do
 	local fadeStop = false -- Use a variable to prevent fadeout/in when moving the mouse around minimap/icons
-	local restoreGarrisonButtonHack = false
-	local restoreLFGButtonHack = false
+	local restoreGarrisonButtonAnimation = false
+	local restoreLFGButtonAnimation = false
 
 	local OnFinished = function(anim)
-		-- Animation Haxx
-		if restoreGarrisonButtonHack and anim:GetParent():GetName() == "GarrisonLandingPageMinimapButton" then
+		-- Work around issues with buttons that have a pulse/fade ring animation.
+		if restoreGarrisonButtonAnimation and anim:GetParent():GetName() == "GarrisonLandingPageMinimapButton" then
 			anim:GetParent().MinimapLoopPulseAnim:Play()
-			restoreGarrisonButtonHack = false
+			restoreGarrisonButtonAnimation = false
 		end
-		if restoreLFGButtonHack and anim:GetParent():GetName() == "QueueStatusMinimapButton" then
+		if restoreLFGButtonAnimation and anim:GetParent():GetName() == "QueueStatusMinimapButton" then
 			anim:GetParent().EyeHighlightAnim:Play()
-			restoreLFGButtonHack = false
+			restoreLFGButtonAnimation = false
 		end
 	end
 
@@ -305,15 +305,16 @@ do
 				f.sexyMapFadeIn:Stop()
 				f.sexyMapFadeOut:Stop()
 
-				-- Animation Haxx
+				-- Work around issues with buttons that have a pulse/fade ring animation.
 				if n == "GarrisonLandingPageMinimapButton" and f.MinimapLoopPulseAnim:IsPlaying() then
-					restoreGarrisonButtonHack = true
+					restoreGarrisonButtonAnimation = true
 					f.MinimapLoopPulseAnim:Stop()
 				end
 				if n == "QueueStatusMinimapButton" and f.EyeHighlightAnim:IsPlaying() then
-					restoreLFGButtonHack = true
+					restoreLFGButtonAnimation = true
 					f.EyeHighlightAnim:Stop()
 				end
+				--
 
 				f.sexyMapFadeIn:Play()
 			end
@@ -335,15 +336,16 @@ do
 				f.sexyMapFadeIn:Stop()
 				f.sexyMapFadeOut:Stop()
 
-				-- Animation Haxx
+				-- Work around issues with buttons that have a pulse/fade ring animation.
 				if n == "GarrisonLandingPageMinimapButton" and f.MinimapLoopPulseAnim:IsPlaying() then
-					restoreGarrisonButtonHack = true
+					restoreGarrisonButtonAnimation = true
 					f.MinimapLoopPulseAnim:Stop()
 				end
 				if n == "QueueStatusMinimapButton" and f.EyeHighlightAnim:IsPlaying() then
-					restoreLFGButtonHack = true
+					restoreLFGButtonAnimation = true
 					f.EyeHighlightAnim:Stop()
 				end
+				--
 
 				f.sexyMapFadeOut:Play()
 			end
@@ -372,7 +374,8 @@ do
 			smAlphaAnimOut:SetStartDelay(1)
 			f.sexyMapFadeOut:SetToFinalAlpha(true)
 
-			if n == "GarrisonLandingPageMinimapButton" or n == "QueueStatusMinimapButton" then -- Work around the fucked Blizz animation system for buttons that have Blizz pulse animations
+			-- Work around issues with buttons that have a pulse/fade ring animation.
+			if n == "GarrisonLandingPageMinimapButton" or n == "QueueStatusMinimapButton" then
 				f.sexyMapFadeIn:SetScript("OnFinished", OnFinished)
 				f.sexyMapFadeOut:SetScript("OnFinished", OnFinished)
 			end
