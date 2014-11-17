@@ -406,17 +406,27 @@ function mod:SetupMap()
 
 	-- This is our method of cancelling timers, we only let the very last scheduled timer actually run the code.
 	-- We do this by using a simple counter, which saves us using the more expensive C_Timer.NewTimer API.
-	local started, current = 1, 0
+	local started, current = 0, 0
 	--[[ Auto Zoom Out ]]--
 	local zoomOut = function()
 		current = current + 1
 		if started == current then
-			for i = 1, 5 do
-				MinimapZoomOut:Click()
+			for i = 1, Minimap:GetZoom() or 0 do
+				Minimap_ZoomOutClick() -- Call it directly so we don't run our own hook
 			end
 			started, current = 0, 0
 		end
 	end
+
+	local zoomBtnFunc = function()
+		if mod.db.autoZoom > 0 then
+			started = started + 1
+			C_Timer.After(mod.db.autoZoom, zoomOut)
+		end
+	end
+	zoomBtnFunc()
+	MinimapZoomIn:HookScript("OnClick", zoomBtnFunc)
+	MinimapZoomOut:HookScript("OnClick", zoomBtnFunc)
 
 	--[[ MouseWheel Zoom ]]--
 	Minimap:EnableMouseWheel(true)
@@ -426,15 +436,7 @@ function mod:SetupMap()
 		elseif d < 0 then
 			MinimapZoomOut:Click()
 		end
-		if mod.db.autoZoom > 0 then
-			started = started + 1
-			C_Timer.After(mod.db.autoZoom, zoomOut)
-		end
 	end)
-	if mod.db.autoZoom > 0 then
-		zoomOut()
-	end
-
 
 	MinimapCluster:EnableMouse(false) -- Don't leave an invisible dead zone
 
