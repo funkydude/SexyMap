@@ -452,10 +452,9 @@ end
 -- Dragging
 --
 
+local dragFrame = CreateFrame("Frame")
+
 do
-
-	local dragFrame = CreateFrame("Frame")
-
 	local getCurrentAngle = function(parent, bx, by)
 		local mx, my = parent:GetCenter()
 		if not mx or not my or not bx or not by then return 0 end
@@ -557,20 +556,24 @@ do
 	end
 
 	local CTimerAfter = C_Timer.After
-	function mod:StartFrameGrab()
-		-- Try to capture new frames periodically
-		-- We'd use ADDON_LOADED but it's too early, some addons load a minimap icon afterwards
-		CTimerAfter(2, function()
-			grabFrames(MinimapZoneTextButton, Minimap, MiniMapTrackingButton, TimeManagerClockButton, MinimapBackdrop:GetChildren())
-			grabFrames(MinimapCluster:GetChildren())
-			grabFrames(Minimap:GetChildren())
-		end)
+	local grabNewFrames = function()
+		grabFrames(Minimap:GetChildren())
+	end
+	dragFrame:SetScript("OnEvent", function()
+		CTimerAfter(2, grabNewFrames)
+	end)
 
-		local function frameGrabTimer()
-			CTimerAfter(2, frameGrabTimer)
-			grabFrames(Minimap:GetChildren())
-		end
-		CTimerAfter(4, frameGrabTimer)
+	function mod:StartFrameGrab()
+		-- We'd use ADDON_LOADED directly but it's too early, some addons load a minimap icon afterwards
+		CTimerAfter(2, function()
+			grabFrames(
+				Minimap, MiniMapTrackingButton, MinimapZoneTextButton, MiniMapTracking, TimeManagerClockButton, GameTimeFrame,
+				MinimapZoomIn, MinimapZoomOut, MiniMapWorldMapButton, GuildInstanceDifficulty, MiniMapChallengeMode, MiniMapInstanceDifficulty,
+				MiniMapMailFrame, MiniMapRecordingButton, MiniMapVoiceChatFrame, QueueStatusMinimapButton, GarrisonLandingPageMinimapButton
+			)
+			grabNewFrames()
+			dragFrame:RegisterEvent("ADDON_LOADED")
+		end)
 
 		self.StartFrameGrab = nil
 	end
