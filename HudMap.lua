@@ -1,6 +1,7 @@
 
 local _, sm = ...
 sm.hudmap = {}
+if sm then return end -- XXX disable for now
 
 local mod = sm.hudmap
 local L = sm.L
