@@ -246,11 +246,11 @@ function mod:OnEnable()
 
 	local overlay = MiniMapWorldMapButton:CreateTexture(nil, "OVERLAY")
 	overlay:SetSize(53,53)
-	overlay:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
+	overlay:SetTexture(136430) --"Interface\\Minimap\\MiniMap-TrackingBorder"
 	overlay:SetPoint("TOPLEFT")
 	local background = MiniMapWorldMapButton:CreateTexture(nil, "BACKGROUND")
 	background:SetSize(25,25)
-	background:SetTexture("Interface\\Minimap\\UI-Minimap-Background")
+	background:SetTexture(136467) --"Interface\\Minimap\\UI-Minimap-Background"
 	background:SetPoint("TOPLEFT", MiniMapWorldMapButton, "TOPLEFT", 4, -2)
 
 	local icon, pushedIcon, highlight = MiniMapWorldMapButton:GetRegions()

@@ -356,7 +356,7 @@ function mod:OnEnable()
 	tinsert(coloredTextures, gatherCircle)
 
 	gatherLine = HudMapCluster:CreateTexture("GatherLine")
-	gatherLine:SetTexture([[Interface\BUTTONS\WHITE8X8.BLP]])
+	gatherLine:SetTexture(130871) --Interface\\BUTTONS\\WHITE8X8
 	gatherLine:SetBlendMode("ADD")
 	local nudge = 0.65
 	gatherLine:SetPoint("BOTTOM", HudMapCluster, "CENTER", 0, nudge)
