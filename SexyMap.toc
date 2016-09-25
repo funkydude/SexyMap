@@ -1,5 +1,5 @@
 ## Interface: 70000
-## Version: 2.4.29
+## Version: @project-version@
 ## Title: SexyMap
 ## Notes: Spice up your minimap with some sexy options.
 ## Notes-deDE: Spice up your minimap with some sexy options.
@@ -14,17 +14,18 @@
 ## Notes-ptBR: Dê uma apimentada no seu minimapa com algumas opções sexy.
 ## Author: Funkydude
 ## X-Credits: Antiarc (Former Author)
-## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, LibChatAnims, CallbackHandler-1.0, LibStub, Blizzard_TimeManager
-## X-Embeds: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, LibChatAnims, CallbackHandler-1.0, LibStub
 ## SavedVariables: SexyMap2DB
 
-# Libraries, etc
-#@no-lib-strip@
+## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask us about anything else.
+## X-Curse-Project-ID: sexymap
+## X-WoWI-ID: 21538
+
+## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, LibChatAnims, Blizzard_TimeManager
+## X-Embeds: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, LibChatAnims, CallbackHandler-1.0, LibStub
+
+
 embeds.xml
-#@end-no-lib-strip@
 
-
-# Localization
 localization\enUS.lua
 localization\deDE.lua
 localization\ruRU.lua
@@ -37,13 +38,10 @@ localization\zhTW.lua
 localization\zhCN.lua
 localization\ptBR.lua
 
-# Core
 SexyMap.lua
 
-# Utility, doesn't actually have menu options
 Shapes.lua
 
-# Other modules
 Buttons.lua
 BorderPresets.lua
 Borders.lua
@@ -53,4 +51,3 @@ HudMap.lua
 Movers.lua
 Ping.lua
 ZoneText.lua
-

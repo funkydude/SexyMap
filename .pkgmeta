@@ -1,6 +1,7 @@
 package-as: SexyMap
+wowi-archive-previous: no
+
 externals:
-  Libs/CallbackHandler-1.0: svn://svn.wowace.com/wow/callbackhandler/mainline/trunk/CallbackHandler-1.0
   Libs/AceGUI-3.0: svn://svn.wowace.com/wow/ace3/mainline/trunk/AceGUI-3.0
   Libs/AceConfigDialog-3.0: svn://svn.wowace.com/wow/ace3/mainline/trunk/AceConfig-3.0/AceConfigDialog-3.0
   Libs/AceConfigRegistry-3.0: svn://svn.wowace.com/wow/ace3/mainline/trunk/AceConfig-3.0/AceConfigRegistry-3.0
@@ -8,3 +9,6 @@ externals:
   Libs/LibSharedMedia-3.0: svn://svn.wowace.com/wow/libsharedmedia-3-0/mainline/trunk/LibSharedMedia-3.0
   Libs/AceGUI-3.0-SharedMediaWidgets: svn://svn.wowace.com/wow/ace-gui-3-0-shared-media-widgets/mainline/trunk/AceGUI-3.0-SharedMediaWidgets
 
+ignore:
+  - .travis.yml
+  - README.md
