@@ -207,7 +207,7 @@ function mod:CreateFrame()
 		local function updateCoords()
 			CTimerAfter(0.1, updateCoords)
 			local x, y = GetPlayerMapPosition"player"
-			coordsText:SetFormattedText("%.1f, %.1f", x*100, y*100)
+			coordsText:SetFormattedText("%.1f, %.1f", x and x*100 or 0, y and y*100 or 0)
 		end
 		updateCoords()
 	end
