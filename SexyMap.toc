@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Version: @project-version@
 ## Title: SexyMap
 ## Notes: Spice up your minimap with some sexy options.
