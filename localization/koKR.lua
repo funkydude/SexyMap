@@ -164,7 +164,6 @@ L["Use the global profile if you want the same look on every character, or use a
 L["Vehicle Seat"] = "탈것 좌석" -- Needs review
 L["Vertical Nudge"] = "상하로 이동"
 L["Vertical Position"] = "세로 위치" -- Needs review
-L["Video Recording Button (Mac OSX Only, When Available)"] = "비디오 녹화 버튼 (Mac OSX 전용, 가능하다면)" -- Needs review
 L["Visibility"] = "보임" -- Needs review
 L["Voice Chat Button (When Available)"] = "음성 대화 버튼 (가능하다면)" -- Needs review
 L["Width"] = "너비" -- Needs review

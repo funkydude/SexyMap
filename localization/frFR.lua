@@ -164,7 +164,6 @@ L["Use the global profile if you want the same look on every character, or use a
 L["Vehicle Seat"] = "Boutton Véhicule (sortir)"
 L["Vertical Nudge"] = "Wizz Verticale(alerte)"
 L["Vertical Position"] = "Position Verticale"
-L["Video Recording Button (Mac OSX Only, When Available)"] = "Enregistrement Video (Mac OSX seulment, Quand Disponible)"
 L["Visibility"] = "Visibilité" -- Needs review
 L["Voice Chat Button (When Available)"] = "Chat audio (Quand Disponible)"
 L["Width"] = "Largeur"

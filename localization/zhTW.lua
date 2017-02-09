@@ -164,7 +164,6 @@ L["Use the global profile if you want the same look on every character, or use a
 L["Vehicle Seat"] = "載具座位"
 L["Vertical Nudge"] = "垂直輕移"
 L["Vertical Position"] = "垂直位置"
-L["Video Recording Button (Mac OSX Only, When Available)"] = "聲音紀錄按鈕(只有Mac OSX，當啟用時)"
 L["Visibility"] = "能見度"
 L["Voice Chat Button (When Available)"] = "聲音交談按鈕(當啟用時)"
 L["Width"] = "寬度"

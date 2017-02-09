@@ -22,7 +22,6 @@ local dynamicButtons = {
 	MiniMapChallengeMode = L["Challenge Mode Button (When Available)"],
 	MiniMapInstanceDifficulty = L["Dungeon Difficulty Indicator (When Available)"],
 	MiniMapMailFrame = L["New Mail Indicator (When Available)"],
-	MiniMapRecordingButton = L["Video Recording Button (Mac OSX Only, When Available)"],
 	MiniMapVoiceChatFrame = L["Voice Chat Button (When Available)"],
 	QueueStatusMinimapButton = L["Queue Status (PvP/LFG) Button (When Available)"],
 	GarrisonLandingPageMinimapButton = L["Garrison Button (When Available)"],
@@ -560,7 +559,7 @@ do
 			grabFrames(
 				Minimap, MiniMapTrackingButton, MinimapZoneTextButton, MiniMapTracking, TimeManagerClockButton, GameTimeFrame,
 				MinimapZoomIn, MinimapZoomOut, MiniMapWorldMapButton, GuildInstanceDifficulty, MiniMapChallengeMode, MiniMapInstanceDifficulty,
-				MiniMapMailFrame, MiniMapRecordingButton, MiniMapVoiceChatFrame, QueueStatusMinimapButton, GarrisonLandingPageMinimapButton
+				MiniMapMailFrame, MiniMapVoiceChatFrame, QueueStatusMinimapButton, GarrisonLandingPageMinimapButton
 			)
 			grabNewFrames()
 			dragFrame:RegisterEvent("ADDON_LOADED")

@@ -90,7 +90,6 @@ L["Guild Dungeon Difficulty Indicator (When Available)"] = "Guild Dungeon Diffic
 L["Challenge Mode Button (When Available)"] = "Challenge Mode Button (When Available)"
 L["Dungeon Difficulty Indicator (When Available)"] = "Dungeon Difficulty Indicator (When Available)"
 L["New Mail Indicator (When Available)"] = "New Mail Indicator (When Available)"
-L["Video Recording Button (Mac OSX Only, When Available)"] = "Video Recording Button (Mac OSX Only, When Available)"
 L["Voice Chat Button (When Available)"] = "Voice Chat Button (When Available)"
 L["Queue Status (PvP/LFG) Button (When Available)"] = "Queue Status (PvP/LFG) Button (When Available)"
 L["Garrison Button (When Available)"] = "Garrison Button (When Available)"
