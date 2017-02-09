@@ -27,36 +27,26 @@ local dynamicButtons = {
 	QueueStatusMinimapButton = L["Queue Status (PvP/LFG) Button (When Available)"],
 	GarrisonLandingPageMinimapButton = L["Garrison Button (When Available)"],
 }
-local addonButtons = { -- For the rare addons that don't use LibDBIcon for some reason :(
-	EnxMiniMapIcon = "Enchantrix",
-	["FuBarPluginBig BrotherFrameMinimapButton"] = "Big Brother",
-	RA_MinimapButton = "RaidAchievement",
+-- XXX Custom support for addons is now being phased out, this list will reduce over time.
+-- XXX Eventually we want all drag-handling code to be handled by the LibDBIcon library.
+-- XXX People should be free to use interesting shapes no matter what minimap addon they use.
+-- XXX Being forced to use SexyMap for this is silly. If someone creates a small minimap addon
+-- XXX with a cool custom shape, all buttons (created by LibDBIcon) should react accordingly! No need to replicate SexyMap code in their minimap addon!
+-- XXX People who whine about this should be redirected to authors of the individual addons to use LibDBIcon instead of creating custom minimap buttons.
+local addonButtons = {
 	DBMMinimapButton = "DBM (Deadly Boss Mods)",
-	XPerl_MinimapButton_Frame = "X-Perl",
 	WIM3MinimapButton = "WIM (WoW Instant Messenger)",
 	VuhDoMinimapButton = "VuhDo",
-	AltoholicMinimapButton = "Altoholic",
 	DominosMinimapButton = "Dominos",
 	Gatherer_MinimapOptionsButton = "Gatherer",
-	DroodFocusMinimapButton = "Drood Focus",
-	D32MiniMapButton = "Mistra's Diablo Orbs",
-	DKPBidderMapIcon = "DKP-Bidder",
 	HealiumMiniMap = "Healium",
 	HealBot_MMButton = "HealBot",
-	IonMinimapButton = "Ion",
 	OutfitterMinimapButton = "Outfitter",
-	FlightMapEnhancedMinimapButton = "Flight Map Enhanced",
 	NXMiniMapBut = "Carbonite",
-	RaidTrackerAceMMI = "Raid Tracker",
-	TellTrackAceMMI = "Tell Track",
-	TenTonHammer_MinimapButton = "PlayerScore",
 	ZygorGuidesViewerMapIcon = "Zygor",
-	RBSMinimapButton = "Raid Buff Status",
 	BankItems_MinimapButton = "BankItems",
-	OQ_MinimapButton = "oQueue",
 	ItemRackMinimapFrame = "ItemRack",
 	MageNug_MinimapFrame = "Mage Nuggets",
-	CraftBuster_MinimapFrame = "CraftBuster",
 	wlMinimapButton = "Wowhead Looter",
 	AtlasLoot_MiniMapButton = "AtlasLoot",
 }
