@@ -216,15 +216,9 @@ function mod:OnInitialize(profile)
 	end
 
 	self.db = profile.buttons
-	-- XXX temp
-	if not self.db.TEMP then
-		self.db.visibilitySettings.QueueStatusMinimapButton = "always"
-		self.db.TEMP = true
-	end
-	if not self.db.TEMP2 then
-		self.db.visibilitySettings.GarrisonLandingPageMinimapButton = "always"
-		self.db.TEMP2 = true
-	end
+	-- XXX temp [7.2.5]
+	self.db.TEMP = nil
+	self.db.TEMP2 = nil
 end
 
 function mod:OnEnable()

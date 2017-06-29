@@ -71,7 +71,6 @@ end
 
 function mod:OnEnable()
 	sm.core:RegisterModuleOptions("Movers", options, L["Movers"])
-	self.db.framePositions.WatchFrame = nil -- XXX temp
 	if self.db.enabled then
 		self:SetMovers()
 		self:Start()
