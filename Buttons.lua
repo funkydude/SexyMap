@@ -35,7 +35,6 @@ local dynamicButtons = {
 local addonButtons = {
 	DBMMinimapButton = "DBM (Deadly Boss Mods)",
 	WIM3MinimapButton = "WIM (WoW Instant Messenger)",
-	VuhDoMinimapButton = "VuhDo",
 	DominosMinimapButton = "Dominos",
 	Gatherer_MinimapOptionsButton = "Gatherer",
 	HealiumMiniMap = "Healium",
@@ -45,9 +44,7 @@ local addonButtons = {
 	ZygorGuidesViewerMapIcon = "Zygor",
 	BankItems_MinimapButton = "BankItems",
 	ItemRackMinimapFrame = "ItemRack",
-	MageNug_MinimapFrame = "Mage Nuggets",
 	wlMinimapButton = "Wowhead Looter",
-	AtlasLoot_MiniMapButton = "AtlasLoot",
 }
 
 local options = {
