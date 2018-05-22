@@ -171,3 +171,6 @@ L["Width"] = "Ancho"
 -- L["Zone Text"] = "Zone Text"
 L["Zoom In Button"] = "Botón de Acercar Zoom"
 L["Zoom Out Button"] = "Botón de Alejar Zoom"
+
+--L.updateRate = "Update Rate (seconds)"
+--L.updateRateDesc = "The lower the value, the faster the coordinates will update, but the more memory and CPU will be consumed due to asking the game for fresh coordinate data."

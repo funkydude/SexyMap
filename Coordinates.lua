@@ -45,6 +45,22 @@ local options = {
 				mod.db.locked = v
 			end,
 		},
+		updateRate = {
+			type = "range",
+			name = L.updateRate,
+			desc = L.updateRateDesc,
+			order = 2.1,
+			width = "full",
+			min = 0.1,
+			max = 1,
+			step = 0.1,
+			get = function()
+				return mod.db.updateRate
+			end,
+			set = function(info, v)
+				mod.db.updateRate = v
+			end
+		},
 		fontColor = {
 			type = "color",
 			name = L["Font Color"],
@@ -157,9 +173,14 @@ function mod:OnInitialize(profile)
 			locked = false,
 			fontColor = {},
 			enabled = false,
+			updateRate = 1,
 		}
 	end
 	self.db = profile.coordinates
+	-- XXX temp 7.3.5
+	if not profile.coordinates.updateRate then
+		profile.coordinates.updateRate = 1
+	end
 end
 
 function mod:OnEnable()
@@ -207,19 +228,22 @@ function mod:CreateFrame()
 		local CTimerAfter = C_Timer.After
 		if not GetBestMapForUnit then -- XXX 8.0
 			local function updateCoords()
-				CTimerAfter(0.1, updateCoords)
+				CTimerAfter(mod.db.updateRate, updateCoords)
 				local x, y = GetPlayerMapPosition"player"
 				coordsText:SetFormattedText("%.1f, %.1f", x and x*100 or 0, y and y*100 or 0)
 			end
 			updateCoords()
 		else
 			local function updateCoords()
-				CTimerAfter(0.5, updateCoords)
-				local tbl = GetPlayerMapPosition(GetBestMapForUnit("player"), "player")
-				if tbl then
-					coordsText:SetFormattedText("%.1f, %.1f", tbl.x*100, tbl.y*100)
-				else
-					coordsText:SetText("00.0, 00.0")
+				CTimerAfter(mod.db.updateRate, updateCoords)
+				local uiMapID = GetBestMapForUnit"player"
+				if uiMapID then
+					local tbl = GetPlayerMapPosition(uiMapID, "player")
+					if tbl then
+						coordsText:SetFormattedText("%.1f, %.1f", tbl.x*100, tbl.y*100)
+					else
+						coordsText:SetText("00.0, 00.0")
+					end
 				end
 			end
 			updateCoords()

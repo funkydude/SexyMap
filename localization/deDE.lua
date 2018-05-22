@@ -171,3 +171,6 @@ L["You can set a background and edge file for the minimap like you would with an
 L["Zone Text"] = "Zonentext"
 L["Zoom In Button"] = "Heranzoom-Knopf"
 L["Zoom Out Button"] = "Herauszoom-Knopf"
+
+--L.updateRate = "Update Rate (seconds)"
+--L.updateRateDesc = "The lower the value, the faster the coordinates will update, but the more memory and CPU will be consumed due to asking the game for fresh coordinate data."
