@@ -165,7 +165,6 @@ L["Vehicle Seat"] = "탈것 좌석" -- Needs review
 L["Vertical Nudge"] = "상하로 이동"
 L["Vertical Position"] = "세로 위치" -- Needs review
 L["Visibility"] = "보임" -- Needs review
-L["Voice Chat Button (When Available)"] = "음성 대화 버튼 (가능하다면)" -- Needs review
 L["Width"] = "너비" -- Needs review
 L["You can set a background and edge file for the minimap like you would with any frame. This is useful when you want to create static square backdrops for your minimap."] = "미니맵의 배경 및 테두리를 어떤 스타일로도 변경할 수 있습니다. 이 기능은 미니맵의 사각형 스타일 일때 배경을 만드는데 가장 유용합니다." -- Needs review
 L["Zone Text"] = "지역 글자" -- Needs review

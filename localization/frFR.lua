@@ -165,7 +165,6 @@ L["Vehicle Seat"] = "Boutton Véhicule (sortir)"
 L["Vertical Nudge"] = "Wizz Verticale(alerte)"
 L["Vertical Position"] = "Position Verticale"
 L["Visibility"] = "Visibilité" -- Needs review
-L["Voice Chat Button (When Available)"] = "Chat audio (Quand Disponible)"
 L["Width"] = "Largeur"
 L["You can set a background and edge file for the minimap like you would with any frame. This is useful when you want to create static square backdrops for your minimap."] = "Vous pouvez spécifier un arrière-plan et une bordure pour la mini-carte comme un cadre.  Cela est utile quand vous voulez créer des arrière-plans de carré statique pour votre mini-carte."
 L["Zone Text"] = "Zone de Texte"

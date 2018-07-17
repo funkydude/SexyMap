@@ -22,7 +22,6 @@ local dynamicButtons = {
 	MiniMapChallengeMode = L["Challenge Mode Button (When Available)"],
 	MiniMapInstanceDifficulty = L["Dungeon Difficulty Indicator (When Available)"],
 	MiniMapMailFrame = L["New Mail Indicator (When Available)"],
-	MiniMapVoiceChatFrame = L["Voice Chat Button (When Available)"], -- XXX 8.0
 	QueueStatusMinimapButton = L["Queue Status (PvP/LFG) Button (When Available)"],
 	GarrisonLandingPageMinimapButton = L["Garrison Button (When Available)"],
 }
@@ -35,14 +34,12 @@ local dynamicButtons = {
 local addonButtons = {
 	DBMMinimapButton = "DBM (Deadly Boss Mods)",
 	WIM3MinimapButton = "WIM (WoW Instant Messenger)",
-	DominosMinimapButton = "Dominos",
 	Gatherer_MinimapOptionsButton = "Gatherer",
 	HealiumMiniMap = "Healium",
 	HealBot_MMButton = "HealBot",
 	OutfitterMinimapButton = "Outfitter",
 	NXMiniMapBut = "Carbonite",
 	ZygorGuidesViewerMapIcon = "Zygor",
-	BankItems_MinimapButton = "BankItems",
 	ItemRackMinimapFrame = "ItemRack",
 	wlMinimapButton = "Wowhead Looter",
 }
@@ -552,9 +549,6 @@ do
 				MinimapZoomIn, MinimapZoomOut, MiniMapWorldMapButton, GuildInstanceDifficulty, MiniMapChallengeMode, MiniMapInstanceDifficulty,
 				MiniMapMailFrame, QueueStatusMinimapButton, GarrisonLandingPageMinimapButton
 			)
-			if MiniMapVoiceChatFrame then -- XXX 8.0
-				grabFrames(MiniMapVoiceChatFrame)
-			end
 			grabNewFrames()
 			dragFrame:RegisterEvent("ADDON_LOADED")
 		end)
