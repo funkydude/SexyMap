@@ -482,6 +482,7 @@ function mod:SetupMap()
 		Minimap:ClearAllPoints()
 		Minimap:SetParent(UIParent)
 		Minimap:SetPoint(mod.db.point, UIParent, mod.db.relpoint, mod.db.x, mod.db.y)
+		Minimap:SetFrameStrata("LOW")
 	end
 	self.SetupMap = nil
 end
