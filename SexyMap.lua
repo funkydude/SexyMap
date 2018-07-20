@@ -108,11 +108,20 @@ mod.options = {
 				if v then
 					MinimapNorthTag.Show = MinimapNorthTag.oldShow
 					MinimapNorthTag.oldShow = nil
-					MinimapNorthTag:Show()
+					MinimapCompassTexture.Show = MinimapCompassTexture.oldShow
+					MinimapCompassTexture.oldShow = nil
+					if InterfaceOptionsDisplayPanelRotateMinimap:GetValue() == "1" then
+						MinimapCompassTexture:Show()
+					else
+						MinimapNorthTag:Show()
+					end
 				else
 					MinimapNorthTag:Hide()
 					MinimapNorthTag.oldShow = MinimapNorthTag.Show
 					MinimapNorthTag.Show = MinimapNorthTag.Hide
+					MinimapCompassTexture:Hide()
+					MinimapCompassTexture.oldShow = MinimapCompassTexture.Show
+					MinimapCompassTexture.Show = MinimapCompassTexture.Hide
 				end
 				mod.db.northTag = v
 			end,
@@ -450,6 +459,9 @@ function mod:SetupMap()
 		MinimapNorthTag:Hide()
 		MinimapNorthTag.oldShow = MinimapNorthTag.Show
 		MinimapNorthTag.Show = MinimapNorthTag.Hide
+		MinimapCompassTexture:Hide()
+		MinimapCompassTexture.oldShow = MinimapCompassTexture.Show
+		MinimapCompassTexture.Show = MinimapCompassTexture.Hide
 	end
 
 	MinimapBorderTop:Hide()
