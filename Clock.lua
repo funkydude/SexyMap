@@ -173,6 +173,7 @@ function mod:OnEnable()
 	TimeManagerClockTicker:SetAllPoints()
 	TimeManagerClockButton:GetRegions():Hide() -- Hide the border
 	TimeManagerClockButton:SetBackdrop(sm.backdrop)
+	TimeManagerClockButton:SetClampedToScreen(true)
 
 	-- For some reason PLAYER_LOGIN is too early for a rare subset of users (even when only using SexyMap)
 	-- which results in a clock width too small. Use this delayed repeater to try and fix the clock width for them.
