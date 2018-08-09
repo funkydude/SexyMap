@@ -253,6 +253,20 @@ do
 		end
 	end
 
+	local function KillAnimation(n, f)
+		-- Work around issues with buttons that have a pulse/fade ring animation.
+		if n == "GarrisonLandingPageMinimapButton" and (f.MinimapLoopPulseAnim:IsPlaying() or restoreGarrisonButtonAnimation) then
+			restoreGarrisonButtonAnimation = true
+			f.MinimapLoopPulseAnim:Stop()
+			return f.MinimapLoopPulseAnim
+		end
+		if n == "QueueStatusMinimapButton" and (f.EyeHighlightAnim:IsPlaying() or restoreLFGButtonAnimation) then
+			restoreLFGButtonAnimation = true
+			f.EyeHighlightAnim:Stop()
+			return f.EyeHighlightAnim
+		end
+	end
+
 	local OnEnter = function()
 		if not mod.db.controlVisibility or fadeStop or moving then return end
 
@@ -260,21 +274,14 @@ do
 			local f = animFrames[i]
 			local n = f:GetName()
 			if not mod.db.visibilitySettings[n] or mod.db.visibilitySettings[n] == "hover" then
-				f.sexyMapFadeIn:Stop()
 				f.sexyMapFadeOut:Stop()
 
-				-- Work around issues with buttons that have a pulse/fade ring animation.
-				if n == "GarrisonLandingPageMinimapButton" and f.MinimapLoopPulseAnim:IsPlaying() then
-					restoreGarrisonButtonAnimation = true
-					f.MinimapLoopPulseAnim:Stop()
-				end
-				if n == "QueueStatusMinimapButton" and f.EyeHighlightAnim:IsPlaying() then
-					restoreLFGButtonAnimation = true
-					f.EyeHighlightAnim:Stop()
-				end
-				--
+				local anim = KillAnimation(n, f)
 
-				f.sexyMapFadeIn:Play()
+				f:SetAlpha(1)
+				if anim then
+					OnFinished(anim)
+				end
 			end
 		end
 	end
@@ -291,21 +298,9 @@ do
 			local f = animFrames[i]
 			local n = f:GetName()
 			if not mod.db.visibilitySettings[n] or mod.db.visibilitySettings[n] == "hover" then
-				f.sexyMapFadeIn:Stop()
-				f.sexyMapFadeOut:Stop()
-
-				-- Work around issues with buttons that have a pulse/fade ring animation.
-				if n == "GarrisonLandingPageMinimapButton" and f.MinimapLoopPulseAnim:IsPlaying() then
-					restoreGarrisonButtonAnimation = true
-					f.MinimapLoopPulseAnim:Stop()
-				end
-				if n == "QueueStatusMinimapButton" and f.EyeHighlightAnim:IsPlaying() then
-					restoreLFGButtonAnimation = true
-					f.EyeHighlightAnim:Stop()
-				end
-				--
-
 				f.sexyMapFadeOut:Play()
+
+				KillAnimation(n, f)
 			end
 		end
 	end
@@ -314,15 +309,7 @@ do
 		local n = f:GetName()
 		-- Only add Blizz buttons & LibDBIcon buttons
 		if blizzButtons[n] or dynamicButtons[n] or n:find("LibDBIcon") then
-			-- Create the animations
-			f.sexyMapFadeIn = f:CreateAnimationGroup()
-			local smAlphaAnimIn = f.sexyMapFadeIn:CreateAnimation("Alpha")
-			smAlphaAnimIn:SetOrder(1)
-			smAlphaAnimIn:SetDuration(0.2)
-			smAlphaAnimIn:SetFromAlpha(0)
-			smAlphaAnimIn:SetToAlpha(1)
-			f.sexyMapFadeIn:SetToFinalAlpha(true)
-
+			-- Create the animation
 			f.sexyMapFadeOut = f:CreateAnimationGroup()
 			local smAlphaAnimOut = f.sexyMapFadeOut:CreateAnimation("Alpha")
 			smAlphaAnimOut:SetOrder(1)
@@ -334,7 +321,6 @@ do
 
 			-- Work around issues with buttons that have a pulse/fade ring animation.
 			if n == "GarrisonLandingPageMinimapButton" or n == "QueueStatusMinimapButton" then
-				f.sexyMapFadeIn:SetScript("OnFinished", OnFinished)
 				f.sexyMapFadeOut:SetScript("OnFinished", OnFinished)
 			end
 
@@ -377,7 +363,13 @@ do
 				frame:SetParent(frameParents[frame])
 				frameParents[frame] = nil
 			end
-			frame:SetAlpha(1)
+			if frame.MinimapLoopPulseAnim or frame.EyeHighlightAnim then
+				KillAnimation(frame:GetName(), frame)
+				frame:SetAlpha(1)
+				OnFinished(frame.MinimapLoopPulseAnim or frame.EyeHighlightAnim)
+			else
+				frame:SetAlpha(1)
+			end
 		elseif vis == "never" then
 			if not frameParents[frame] then
 				frameParents[frame] = frame:GetParent()
@@ -388,7 +380,13 @@ do
 				frame:SetParent(frameParents[frame])
 				frameParents[frame] = nil
 			end
-			frame:SetAlpha(0)
+			if frame.MinimapLoopPulseAnim or frame.EyeHighlightAnim then
+				KillAnimation(frame:GetName(), frame)
+				frame:SetAlpha(0)
+				OnFinished(frame.MinimapLoopPulseAnim or frame.EyeHighlightAnim)
+			else
+				frame:SetAlpha(0)
+			end
 		end
 	end
 
