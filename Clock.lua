@@ -36,8 +36,8 @@ local options = {
 		spacer1 = {
 			order = 3,
 			type = "description",
-			width = "normal",
-			name = "",
+			name = " ",
+			width = "full",
 		},
 		fontSize = {
 			type = "range",
@@ -57,29 +57,25 @@ local options = {
 			type = "select",
 			name = L["Font"],
 			order = 5,
-			dialogControl = "LSM30_Font",
-			values = AceGUIWidgetLSMlists.font,
+			values = media:List("font"),
+			itemControl = "DDI-Font",
 			get = function()
-				local font = nil
-				local curFont = TimeManagerClockTicker:GetFont()
-				for k,v in pairs(AceGUIWidgetLSMlists.font) do
-					if v == curFont then
-						font = k
-						break
-					end
+				for i, v in next, media:List("font") do
+					if v == mod.db.font then return i end
 				end
-				return mod.db.font or font
 			end,
-			set = function(info, v)
-				mod.db.font = v
+			set = function(_, value)
+				local list = media:List("font")
+				local font = list[value]
+				mod.db.font = font
 				mod:UpdateLayout()
-			end
+			end,
 		},
 		spacer2 = {
 			order = 6,
 			type = "description",
-			width = "normal",
-			name = "",
+			name = " ",
+			width = "full",
 		},
 		fontColor = {
 			type = "color",
@@ -161,9 +157,14 @@ function mod:OnInitialize(profile)
 			bgColor = {r = 0, g = 0, b = 0, a = 1},
 			borderColor = {r = 0, g = 0, b = 0, a = 1},
 			fontColor = {},
+			font = media:GetDefault("font"),
 		}
 	end
 	self.db = profile.clock
+	-- XXX temp 8.0.1
+	if not profile.clock.font then
+		profile.clock.font = media:GetDefault("font")
+	end
 end
 
 function mod:OnEnable()

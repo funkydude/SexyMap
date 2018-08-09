@@ -10,6 +10,7 @@
 <Include file="Libs\AceConfigDialog-3.0\AceConfigDialog-3.0.xml"/>
 <Include file="Libs\LibSharedMedia-3.0\lib.xml"/>
 <Include file="Libs\AceGUI-3.0-SharedMediaWidgets\widget.xml"/>
+<Include file="Libs\LibDDI-1.0\lib.xml"/>
 <!--@end-no-lib-strip@-->
 
 </Ui>

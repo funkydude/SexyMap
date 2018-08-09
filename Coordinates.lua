@@ -82,24 +82,19 @@ local options = {
 			type = "select",
 			name = L["Font"],
 			order = 6,
-			dialogControl = "LSM30_Font",
-			values = AceGUIWidgetLSMlists.font,
+			values = media:List("font"),
+			itemControl = "DDI-Font",
 			get = function()
-				if not coordsText then return end
-				local font = nil
-				local curFont = coordsText:GetFont()
-				for k,v in pairs(AceGUIWidgetLSMlists.font) do
-					if v == curFont then
-						font = k
-						break
-					end
+				for i, v in next, media:List("font") do
+					if v == mod.db.font then return i end
 				end
-				return mod.db.font or font
 			end,
-			set = function(info, v)
-				mod.db.font = v
+			set = function(_, value)
+				local list = media:List("font")
+				local font = list[value]
+				mod.db.font = font
 				mod:Update()
-			end
+			end,
 		},
 		spacer2 = {
 			order = 7,
@@ -184,6 +179,7 @@ function mod:OnInitialize(profile)
 			updateRate = 1,
 			xOffset = 0,
 			yOffset = 10,
+			font = media:GetDefault("font"),
 		}
 	end
 	self.db = profile.coordinates
@@ -192,13 +188,16 @@ function mod:OnInitialize(profile)
 		profile.coordinates.updateRate = 1
 	end
 	-- XXX temp 8.0.1
-	--if not profile.coordinates.xOffset then
+	if not profile.coordinates.xOffset then
 		profile.coordinates.xOffset = 0
 		profile.coordinates.yOffset = 10
 		profile.coordinates.x = nil
 		profile.coordinates.y = nil
 		profile.coordinates.locked = nil
-	--end
+	end
+	if not profile.coordinates.font then
+		profile.coordinates.font = media:GetDefault("font")
+	end
 end
 
 function mod:OnEnable()
@@ -259,8 +258,8 @@ function mod:Update()
 		coordsText:SetTextColor(c.r or 1, c.g or 1, c.b or 1, c.a or 1)
 	end
 
-	local a, b, c = coordsText:GetFont()
-	coordsText:SetFont(mod.db.font and media:Fetch("font", mod.db.font) or a, mod.db.fontSize or b, c)
+	local _, b, c = coordsText:GetFont()
+	coordsText:SetFont(media:Fetch("font", mod.db.font), mod.db.fontSize or b, c)
 
 	coordFrame:SetWidth(coordsText:GetStringWidth() * 1.2)
 	coordFrame:SetHeight(coordsText:GetStringHeight() + 10)
