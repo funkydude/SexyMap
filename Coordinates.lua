@@ -18,6 +18,7 @@ local options = {
 			type = "toggle",
 			name = L["Enable Coordinates"],
 			order = 1,
+			width = "full",
 			get = function()
 				return mod.db.enabled
 			end,
@@ -33,86 +34,38 @@ local options = {
 			end,
 			disabled = false,
 		},
-		lock = {
-			type = "toggle",
-			name = L["Lock Coordinates"],
-			order = 2,
-			width = "double",
-			get = function()
-				return mod.db.locked
-			end,
-			set = function(info, v)
-				mod.db.locked = v
-			end,
-		},
-		updateRate = {
+		xOffset = {
 			type = "range",
-			name = L.updateRate,
-			desc = L.updateRateDesc,
-			order = 2.1,
-			width = "full",
-			min = 0.1,
-			max = 1,
-			step = 0.1,
-			get = function()
-				return mod.db.updateRate
-			end,
-			set = function(info, v)
-				mod.db.updateRate = v
-			end
+			name = L["Horizontal Position"],
+			order = 2,
+			min = -250,
+			max = 250,
+			step = 1,
+			bigStep = 5,
+			get = function() return mod.db.xOffset end,
+			set = function(info, v) mod.db.xOffset = v mod:Update() end
 		},
-		fontColor = {
-			type = "color",
-			name = L["Font Color"],
+		yOffset = {
+			type = "range",
+			name = L["Vertical Position"],
 			order = 3,
-			hasAlpha = true,
-			get = function()
-				local c = mod.db.fontColor
-				local r, g, b, a = c.r or 0, c.g or 0, c.b or 0, c.a or 1
-				return r, g, b, a
-			end,
-			set = function(info, r, g, b, a)
-				local c = mod.db.fontColor
-				c.r, c.g, c.b, c.a = r, g, b, a
-				mod:Update()
-			end
+			min = -250,
+			max = 250,
+			step = 1,
+			bigStep = 5,
+			get = function() return mod.db.yOffset end,
+			set = function(info, v) mod.db.yOffset = v mod:Update() end
 		},
-		backgroundColor = {
-			type = "color",
-			name = L["Backdrop Color"],
+		spacer1 = {
 			order = 4,
-			hasAlpha = true,
-			get = function()
-				local c = mod.db.backgroundColor
-				local r, g, b, a = c.r or 0, c.g or 0, c.b or 0, c.a or 1
-				return r, g, b, a
-			end,
-			set = function(info, r, g, b, a)
-				local c = mod.db.backgroundColor
-				c.r, c.g, c.b, c.a = r, g, b, a
-				mod:Update()
-			end
-		},
-		borderColor = {
-			type = "color",
-			name = L["Border Color"],
-			order = 5,
-			hasAlpha = true,
-			get = function()
-				local c = mod.db.borderColor
-				local r, g, b, a = c.r or 0, c.g or 0, c.b or 0, c.a or 1
-				return r, g, b, a
-			end,
-			set = function(info, r, g, b, a)
-				local c = mod.db.borderColor
-				c.r, c.g, c.b, c.a = r, g, b, a
-				mod:Update()
-			end
+			type = "description",
+			width = "normal",
+			name = " ",
 		},
 		fontSize = {
 			type = "range",
 			name = L["Font Size"],
-			order = 6,
+			order = 5,
 			min = 8,
 			max = 30,
 			step = 1,
@@ -128,7 +81,7 @@ local options = {
 		font = {
 			type = "select",
 			name = L["Font"],
-			order = 7,
+			order = 6,
 			dialogControl = "LSM30_Font",
 			values = AceGUIWidgetLSMlists.font,
 			get = function()
@@ -148,19 +101,75 @@ local options = {
 				mod:Update()
 			end
 		},
-		spacer = {
-			order = 8,
+		spacer2 = {
+			order = 7,
 			type = "description",
 			width = "normal",
-			name = "",
+			name = " ",
 		},
-		reset = {
-			type = "execute",
-			name = L["Reset Position"],
-			order = 9,
-			func = function()
-				mod:ResetPosition()
+		fontColor = {
+			type = "color",
+			name = L["Font Color"],
+			order = 8,
+			hasAlpha = true,
+			get = function()
+				local c = mod.db.fontColor
+				local r, g, b, a = c.r or 1, c.g or 1, c.b or 1, c.a or 1
+				return r, g, b, a
 			end,
+			set = function(info, r, g, b, a)
+				local c = mod.db.fontColor
+				c.r, c.g, c.b, c.a = r, g, b, a
+				mod:Update()
+			end
+		},
+		backgroundColor = {
+			type = "color",
+			name = L["Backdrop Color"],
+			order = 9,
+			hasAlpha = true,
+			get = function()
+				local c = mod.db.backgroundColor
+				local r, g, b, a = c.r or 0, c.g or 0, c.b or 0, c.a or 1
+				return r, g, b, a
+			end,
+			set = function(info, r, g, b, a)
+				local c = mod.db.backgroundColor
+				c.r, c.g, c.b, c.a = r, g, b, a
+				mod:Update()
+			end
+		},
+		borderColor = {
+			type = "color",
+			name = L["Border Color"],
+			order = 10,
+			hasAlpha = true,
+			get = function()
+				local c = mod.db.borderColor
+				local r, g, b, a = c.r or 0, c.g or 0, c.b or 0, c.a or 1
+				return r, g, b, a
+			end,
+			set = function(info, r, g, b, a)
+				local c = mod.db.borderColor
+				c.r, c.g, c.b, c.a = r, g, b, a
+				mod:Update()
+			end
+		},
+		updateRate = {
+			type = "range",
+			name = L.updateRate,
+			desc = L.updateRateDesc,
+			order = 11,
+			width = "full",
+			min = 0.1,
+			max = 1,
+			step = 0.1,
+			get = function()
+				return mod.db.updateRate
+			end,
+			set = function(info, v)
+				mod.db.updateRate = v
+			end
 		},
 	}
 }
@@ -170,10 +179,11 @@ function mod:OnInitialize(profile)
 		profile.coordinates = {
 			borderColor = {},
 			backgroundColor = {},
-			locked = false,
 			fontColor = {},
 			enabled = false,
 			updateRate = 1,
+			xOffset = 0,
+			yOffset = 10,
 		}
 	end
 	self.db = profile.coordinates
@@ -181,6 +191,14 @@ function mod:OnInitialize(profile)
 	if not profile.coordinates.updateRate then
 		profile.coordinates.updateRate = 1
 	end
+	-- XXX temp 8.0.1
+	--if not profile.coordinates.xOffset then
+		profile.coordinates.xOffset = 0
+		profile.coordinates.yOffset = 10
+		profile.coordinates.x = nil
+		profile.coordinates.y = nil
+		profile.coordinates.locked = nil
+	--end
 end
 
 function mod:OnEnable()
@@ -199,29 +217,7 @@ function mod:CreateFrame()
 		coordsText:SetPoint("CENTER", coordFrame, "CENTER")
 		coordsText:SetJustifyH("CENTER")
 		coordsText:SetText("00.0, 00.0")
-
-		coordFrame:SetMovable(true)
-		coordFrame:EnableMouse()
-
-		coordFrame:SetScript("OnMouseDown", function(self)
-			if not mod.db.locked then
-				self:StartMoving()
-				self.moving = true
-			end
-		end)
-		coordFrame:SetScript("OnMouseUp", function(self)
-			if self.moving then
-				self.moving = nil
-				self:StopMovingOrSizing()
-				local x, y = self:GetCenter()
-				local mx, my = Minimap:GetCenter()
-				local dx, dy = mx - x, my - y
-				self:ClearAllPoints()
-				self:SetPoint("CENTER", Minimap, "CENTER", -dx, -dy)
-				mod.db.x = dx
-				mod.db.y = dy
-			end
-		end)
+		coordFrame:SetClampedToScreen(true)
 
 		local GetPlayerMapPosition = C_Map.GetPlayerMapPosition
 		local GetBestMapForUnit = C_Map.GetBestMapForUnit
@@ -240,18 +236,14 @@ function mod:CreateFrame()
 		end
 		updateCoords()
 	end
-	if mod.db.x then
-		coordFrame:ClearAllPoints()
-		coordFrame:SetPoint("CENTER", Minimap, "CENTER", -mod.db.x, -mod.db.y)
-	else
-		coordFrame:SetPoint("CENTER", Minimap, "BOTTOM", 0, 10)
-	end
 
 	coordFrame:Show()
 	self:Update()
 end
 
 function mod:Update()
+	coordFrame:SetPoint("CENTER", Minimap, "BOTTOM", mod.db.xOffset, mod.db.yOffset)
+
 	if mod.db.borderColor then
 		local c = mod.db.borderColor
 		coordFrame:SetBackdropBorderColor(c.r or 0, c.g or 0, c.b or 0, c.a or 1)
@@ -272,11 +264,5 @@ function mod:Update()
 
 	coordFrame:SetWidth(coordsText:GetStringWidth() * 1.2)
 	coordFrame:SetHeight(coordsText:GetStringHeight() + 10)
-end
-
-function mod:ResetPosition()
-	coordFrame:ClearAllPoints()
-	coordFrame:SetPoint("CENTER", Minimap, "BOTTOM")
-	mod.db.x, mod.db.y = nil, nil
 end
 

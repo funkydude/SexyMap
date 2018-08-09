@@ -114,10 +114,8 @@ L["Buttons"] = "Buttons"
 -- ./Coordinates.lua
 L["Coordinates"] = "Coordinates"
 L["Enable Coordinates"] = "Enable Coordinates"
-L["Lock Coordinates"] = "Lock Coordinates"
 L["Font Size"] = "Font Size"
 L["Font Color"] = "Font Color"
-L["Reset Position"] = "Reset Position"
 L.updateRate = "Update Rate (seconds)"
 L.updateRateDesc = "The lower the value, the faster the coordinates will update, but the more memory and CPU will be consumed due to asking the game for fresh coordinate data."
 
