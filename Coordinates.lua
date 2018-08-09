@@ -215,7 +215,7 @@ function mod:CreateFrame()
 		coordsText = coordFrame:CreateFontString(nil, nil, "GameFontNormalSmall")
 		coordsText:SetPoint("CENTER", coordFrame, "CENTER")
 		coordsText:SetJustifyH("CENTER")
-		coordsText:SetText("00.0, 00.0")
+		coordsText:SetText("0.0, 0.0")
 		coordFrame:SetClampedToScreen(true)
 
 		local GetPlayerMapPosition = C_Map.GetPlayerMapPosition
@@ -229,7 +229,7 @@ function mod:CreateFrame()
 				if tbl then
 					coordsText:SetFormattedText("%.1f, %.1f", tbl.x*100, tbl.y*100)
 				else
-					coordsText:SetText("00.0, 00.0")
+					coordsText:SetText("0.0, 0.0")
 				end
 			end
 		end
@@ -261,6 +261,7 @@ function mod:Update()
 	local _, b, c = coordsText:GetFont()
 	coordsText:SetFont(media:Fetch("font", mod.db.font), mod.db.fontSize or b, c)
 
+	coordsText:SetText("99.9, 99.9")
 	coordFrame:SetWidth(coordsText:GetStringWidth() * 1.2)
 	coordFrame:SetHeight(coordsText:GetStringHeight() + 10)
 end
