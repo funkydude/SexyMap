@@ -188,7 +188,6 @@ end
 
 function mod:UpdateLayout()
 	MinimapZoneTextButton:ClearAllPoints()
-	MinimapZoneTextButton:SetParent(Minimap)
 	MinimapZoneTextButton:SetPoint("BOTTOM", Minimap, "TOP", mod.db.xOffset, mod.db.yOffset)
 	MinimapZoneTextButton:SetBackdropColor(mod.db.bgColor.r, mod.db.bgColor.g, mod.db.bgColor.b, mod.db.bgColor.a)
 	MinimapZoneTextButton:SetBackdropBorderColor(mod.db.borderColor.r, mod.db.borderColor.g, mod.db.borderColor.b, mod.db.borderColor.a)
