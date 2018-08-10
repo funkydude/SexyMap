@@ -329,6 +329,10 @@ do
 				f:SetParent(Minimap)
 				f:SetPoint("CENTER", Minimap, "CENTER", -60, 55)
 			end
+			-- Parented to MinimapCluster
+			if n == "MinimapZoneTextButton" then
+				f:SetParent(Minimap)
+			end
 
 			animFrames[#animFrames+1] = f
 
