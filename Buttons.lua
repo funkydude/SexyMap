@@ -323,6 +323,12 @@ do
 			if n == "GarrisonLandingPageMinimapButton" or n == "QueueStatusMinimapButton" then
 				f.sexyMapFadeOut:SetScript("OnFinished", OnFinished)
 			end
+			-- These frames are parented to MinimapCluster, if the map scale is changed they won't drag properly, so we parent to Minimap
+			if n == "MiniMapInstanceDifficulty" or n == "GuildInstanceDifficulty" or n == "MiniMapChallengeMode" then
+				f:ClearAllPoints()
+				f:SetParent(Minimap)
+				f:SetPoint("CENTER", Minimap, "CENTER", -60, 55)
+			end
 
 			animFrames[#animFrames+1] = f
 
@@ -334,13 +340,6 @@ do
 			-- Don't add config or moving capability to the Zone Text and Clock buttons, handled in their own modules
 			if n ~= "MinimapZoneTextButton" and n ~= "TimeManagerClockButton" then
 				self:AddButtonOptions(n)
-
-				-- These two frames are parented to MinimapCluster, if the map scale is changed they won't drag properly, so we parent to Minimap
-				if n == "MiniMapInstanceDifficulty" or n == "GuildInstanceDifficulty" then
-					f:ClearAllPoints()
-					f:SetParent(Minimap)
-					f:SetPoint("CENTER", Minimap, "CENTER", -60, 55)
-				end
 
 				-- Configure dragging
 				if n == "MiniMapTracking" then
