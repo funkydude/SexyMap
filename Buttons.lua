@@ -229,7 +229,7 @@ function mod:OnEnable()
 
 	sm.core:RegisterModuleOptions("Buttons", options, L["Buttons"])
 
-	mod:StartFrameGrab()
+	C_Timer.After(1, mod.StartFrameGrab)
 end
 
 --------------------------------------------------------------------------------
@@ -497,22 +497,22 @@ do
 		MiniMapMailFrame, QueueStatusMinimapButton, GarrisonLandingPageMinimapButton
 	}
 
-	function mod:AddButtons(_, button)
+	function mod:AddButton(_, button)
 		self:NewFrame(button)
 	end
 
 	function mod:StartFrameGrab()
 		for i = 1, #tbl do
-			self:NewFrame(tbl[i])
+			mod:NewFrame(tbl[i])
 		end
 
 		local ldbiTbl = ldbi:GetButtonList()
 		for i = 1, #ldbiTbl do
-			self:NewFrame(ldbi:GetMinimapButton(ldbiTbl[i]))
+			mod:NewFrame(ldbi:GetMinimapButton(ldbiTbl[i]))
 		end
-		ldbi.RegisterCallback(self, "LibDBIcon_IconCreated", "AddButtons")
+		ldbi.RegisterCallback(mod, "LibDBIcon_IconCreated", "AddButton")
 
-		self.StartFrameGrab = nil
+		mod.StartFrameGrab = nil
 	end
 end
 
