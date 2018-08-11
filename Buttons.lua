@@ -236,12 +236,13 @@ end
 -- Fading
 --
 
+local OnFinished, KillAnimation
 do
 	local fadeStop = false -- Use a variable to prevent fadeout/in when moving the mouse around minimap/icons
 	local restoreGarrisonButtonAnimation = false
 	local restoreLFGButtonAnimation = false
 
-	local OnFinished = function(anim)
+	OnFinished = function(anim)
 		-- Work around issues with buttons that have a pulse/fade ring animation.
 		if restoreGarrisonButtonAnimation and anim:GetParent():GetName() == "GarrisonLandingPageMinimapButton" then
 			anim:GetParent().MinimapLoopPulseAnim:Play()
@@ -253,7 +254,7 @@ do
 		end
 	end
 
-	local function KillAnimation(n, f)
+	KillAnimation = function(n, f)
 		-- Work around issues with buttons that have a pulse/fade ring animation.
 		if n == "GarrisonLandingPageMinimapButton" and (f.MinimapLoopPulseAnim:IsPlaying() or restoreGarrisonButtonAnimation) then
 			restoreGarrisonButtonAnimation = true
@@ -435,11 +436,27 @@ do
 		if mod.db.lockDragging or not mod.db.allowDragging then return end
 
 		moving = frame
+		fadeStop = true
+		for i = 1, #animFrames do
+			local f = animFrames[i]
+			local n = f:GetName()
+			if not mod.db.visibilitySettings[n] or mod.db.visibilitySettings[n] == "hover" then
+				f.sexyMapFadeOut:Stop()
+
+				local anim = KillAnimation(n, f)
+
+				f:SetAlpha(1)
+				if anim then
+					OnFinished(anim)
+				end
+			end
+		end
 		dragFrame:SetScript("OnUpdate", updatePosition)
 	end
 	local OnDragStop = function()
 		dragFrame:SetScript("OnUpdate", nil)
 		moving = nil
+		fadeStop = false
 		ButtonFadeOut() -- Call the fade out function
 	end
 
