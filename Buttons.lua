@@ -224,7 +224,8 @@ function mod:OnEnable()
 	highlight:ClearAllPoints()
 	highlight:SetPoint("TOPLEFT", MiniMapWorldMapButton, "TOPLEFT", 2, -2)
 
-	-- We now need to hook this as Blizz likes to fiddle with its size
+	GarrisonLandingPageMinimapButton:SetSize(36, 36) -- Shrink the missions button
+	-- We also need to hook this as Blizz likes to fiddle with its size
 	hooksecurefunc(GarrisonLandingPageMinimapButton, "SetSize", function()
 		sm.core.frame.SetSize(GarrisonLandingPageMinimapButton, 36, 36)
 	end)
