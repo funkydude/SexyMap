@@ -342,6 +342,9 @@ function mod:ADDON_LOADED(addon)
 			end
 		end
 
+		BINDING_HEADER_SEXYMAP = "SexyMap"
+		BINDING_NAME_TOGGLESEXYMAPGATHERMAP = L["Toggle HudMap On/Off"]
+
 		mod.frame:UnregisterEvent("ADDON_LOADED")
 		mod.frame:RegisterEvent("PLAYER_LOGIN")
 		mod.ADDON_LOADED = nil

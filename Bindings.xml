@@ -1,5 +1,5 @@
 <Bindings>
-	<Binding name="TOGGLESEXYMAPGATHERMAP" header="SexyMap" category="ADDONS">
+	<Binding name="TOGGLESEXYMAPGATHERMAP" header="SEXYMAP" category="ADDONS">
 		if HudMapCluster:IsVisible() then
 			HudMapCluster:Hide()
 		else
