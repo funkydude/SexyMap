@@ -280,21 +280,21 @@ local shapes = {
 		shape = "CORNER-BOTTOMRIGHT"
 	},
 	["Interface\\AddOns\\SexyMap\\shapes\\left"] = {
-		name = L["Rounded - Left"],
+		name = "Rounded - Left",	--need localization
 		geometry = "left"
 	},
 	["Interface\\AddOns\\SexyMap\\shapes\\bottom"] = {
-		name = L["Rounded - Bottom"],
+		name = "Rounded - Bottom",	--need localization
 		geometry = "bottom"
 	},
 	["Interface\\AddOns\\SexyMap\\shapes\\right"] = {
-		name = L["Rounded - Right"],
+		name = "Rounded - Right",	--need localization
 		geometry = "right"
 	},
 	["Interface\\AddOns\\SexyMap\\shapes\\top"] = {
-		name = L["Rounded - Top"],
+		name = "Rounded - Top",	--need localization
 		geometry = "top"
-	},
+	}
 }
 
 local shapeList = {}
