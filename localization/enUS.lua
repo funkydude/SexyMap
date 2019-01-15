@@ -191,6 +191,10 @@ L["Rounded - Bottom Right"] = "Rounded - Bottom Right"
 L["Rounded - Bottom Left"] = "Rounded - Bottom Left"
 L["Rounded - Top Right"] = "Rounded - Top Right"
 L["Rounded - Top Left"] = "Rounded - Top Left"
+L["Rounded - Top"] = "Rounded - Top"
+L["Rounded - Bottom"] = "Rounded - Bottom"
+L["Rounded - Right"] = "Rounded - Right"
+L["Rounded - Left"] = "Rounded - Left"
 
 L["Minimap shape"] = "Minimap shape"
 
