@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 local _, sm = ...
 sm.shapes = {}
@@ -359,6 +360,8 @@ GetMinimapShape = function()
 end
 
 =======
+=======
+>>>>>>> parent of fac242d... added new basic shapes
 
 local _, sm = ...
 sm.shapes = {}
@@ -646,4 +649,7 @@ GetMinimapShape = function()
 	end
 end
 
+<<<<<<< HEAD
+>>>>>>> parent of fac242d... added new basic shapes
+=======
 >>>>>>> parent of fac242d... added new basic shapes
