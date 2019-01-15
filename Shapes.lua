@@ -181,7 +181,7 @@ end
 }
 
  for i = 0, 180, 5 do
-	shapePoints.bottom[i%360] = { cos(i), sin(i) }
+	shapePoints.bottom[i] = { cos(i), sin(i) }
 end
 
 
