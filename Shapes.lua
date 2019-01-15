@@ -143,6 +143,30 @@ for i = 181, 269, 5 do
 	shapePoints.topRight[i] = { cos(i), sin(i) }
 end
 
+shapePoints.top = {
+	[0]   = {1, 0},
+	[45]  = {1, 1},
+	[135] = {-1, 1},
+	[225] = {-1, -1},
+	[315] = {1, -1},
+	[360] = {1, 0},
+}
+for i = 180, 360, 5 do
+	shapePoints.top[i] = { cos(i), sin(i) }
+end
+
+shapePoints.bottom = {
+	[0]   = {1, 0},
+	[45]  = {1, 1},
+	[135] = {-1, 1},
+	[225] = {-1, -1},
+	[315] = {1, -1},
+	[360] = {1, 0},
+}
+for i = 0, 180, 5 do
+	shapePoints.bottom[i] = { cos(i), sin(i) }
+end
+
 shapePoints.left = {
 	[0]   = {1, 0},
 	[45]  = {1, 1},
@@ -151,13 +175,11 @@ shapePoints.left = {
 	[315] = {1, -1},
 	[360] = {1, 0},
 }
-
- for i = 270, 450, 5 do
+for i = 270, 450, 5 do
 	shapePoints.left[i%360] = { cos(i), sin(i) }
 end
 
-
- shapePoints.right = {
+shapePoints.right = {
 	[0]   = {1, 0},
 	[45]  = {1, 1},
 	[135] = {-1, 1},
@@ -165,37 +187,8 @@ end
 	[315] = {1, -1},
 	[360] = {1, 0},
 }
-
- for i = 90, 270, 5 do
+for i = 90, 270, 5 do
 	shapePoints.right[i] = { cos(i), sin(i) }
-end
-
-
- shapePoints.bottom = {
-	[0]   = {1, 0},
-	[45]  = {1, 1},
-	[135] = {-1, 1},
-	[225] = {-1, -1},
-	[315] = {1, -1},
-	[360] = {1, 0},
-}
-
- for i = 0, 180, 5 do
-	shapePoints.bottom[i] = { cos(i), sin(i) }
-end
-
-
- shapePoints.top = {
-	[0]   = {1, 0},
-	[45]  = {1, 1},
-	[135] = {-1, 1},
-	[225] = {-1, -1},
-	[315] = {1, -1},
-	[360] = {1, 0},
-}
-
- for i = 180, 360, 5 do
-	shapePoints.top[i] = { cos(i), sin(i) }
 end
 
 
@@ -281,14 +274,15 @@ local shapes = {
 		name = L["Rounded - Top"],
 		geometry = "top"
 	},
-	["Interface\\AddOns\\SexyMap\\shapes\\left"] = {
-		name = L["Rounded - Left"],
-		geometry = "left"
-	},
 	["Interface\\AddOns\\SexyMap\\shapes\\bottom"] = {
 		name = L["Rounded - Bottom"],
 		geometry = "bottom"
 	},
+	["Interface\\AddOns\\SexyMap\\shapes\\left"] = {
+		name = L["Rounded - Left"],
+		geometry = "left"
+	},
+	
 	["Interface\\AddOns\\SexyMap\\shapes\\right"] = {
 		name = L["Rounded - Right"],
 		geometry = "right"
