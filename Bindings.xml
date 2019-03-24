@@ -1,3 +1,4 @@
+<!--
 <Bindings>
 	<Binding name="TOGGLESEXYMAPGATHERMAP" header="SexyMap" category="ADDONS">
 		if HudMapCluster:IsVisible() then
@@ -7,3 +8,4 @@
 		end
 	</Binding>
 </Bindings>
+-->
