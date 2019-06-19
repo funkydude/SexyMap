@@ -302,8 +302,78 @@ mod.options = {
 
 function mod:ADDON_LOADED(addon)
 	if addon == "SexyMap" then
-		if not SexyMap2DB then
+		if type(SexyMap2DB) ~= "table" then
 			SexyMap2DB = {}
+		end
+		if type(SexyMap82) ~= "table" then -- XXX 8.2
+			SexyMap82 = {}
+			SexyMap82.backup = SexyMap2DB
+			SexyMap82.convert = {}
+		end
+
+		if C_RaidLocks then -- XXX 8.2
+			
+		else
+			for character, tbl in next, SexyMap2DB do
+				if tbl.borders and tbl.borders.borders then
+					for i = 1, #tbl.borders.borders do
+						local tex = tbl.borders.borders[i].texture
+						if type(tex) == "string" then
+							local id = GetFileIDFromPath(tex)
+							if id and not SexyMap82.convert[tex] then
+								SexyMap82.convert[tex] = id
+							end
+						end
+					end
+				end
+				if tbl.borders and tbl.borders.backdrop and tbl.borders.backdrop.settings then
+					local tex = tbl.borders.backdrop.settings.bgFile
+					if type(tex) == "string" then
+						local id = GetFileIDFromPath(tex)
+						if id and not SexyMap82.convert[tex] then
+							SexyMap82.convert[tex] = id
+						end
+					end
+					local tex = tbl.borders.backdrop.settings.edgeFile
+					if type(tex) == "string" then
+						local id = GetFileIDFromPath(tex)
+						if id and not SexyMap82.convert[tex] then
+							SexyMap82.convert[tex] = id
+						end
+					end
+				end
+			end
+			if SexyMap2DB.presets then
+				for name, tbl in next, SexyMap2DB.presets do
+					if tbl.borders then
+						for i = 1, #tbl.borders do
+							local tex = tbl.borders[i].texture
+							if type(tex) == "string" then
+								local id = GetFileIDFromPath(tex)
+								if id and not SexyMap82.convert[tex] then
+									SexyMap82.convert[tex] = id
+								end
+							end
+						end
+					end
+					if tbl.backdrop and tbl.backdrop.settings then
+						local tex = tbl.backdrop.settings.bgFile
+						if type(tex) == "string" then
+							local id = GetFileIDFromPath(tex)
+							if id and not SexyMap82.convert[tex] then
+								SexyMap82.convert[tex] = id
+							end
+						end
+						local tex = tbl.backdrop.settings.edgeFile
+						if type(tex) == "string" then
+							local id = GetFileIDFromPath(tex)
+							if id and not SexyMap82.convert[tex] then
+								SexyMap82.convert[tex] = id
+							end
+						end
+					end
+				end
+			end
 		end
 
 		local char = UnitName("player").."-"..GetRealmName()

@@ -9,7 +9,7 @@ addon.borderPresets = {
 				["scale"] = 1.4,
 				["rotSpeed"] = -30,
 				["g"] = 0.4784313725490196,
-				["texture"] = "SPELLS\\AURARUNE256.BLP",
+				["texture"] = C_RaidLocks and 165630 or "SPELLS\\AURARUNE256.BLP",
 			},
 			{
 				["a"] = 0.3799999952316284,
@@ -18,7 +18,7 @@ addon.borderPresets = {
 				["scale"] = 2.1,
 				["name"] = "Rune 2",
 				["g"] = 0.2901960784313725,
-				["texture"] = "SPELLS\\AuraRune_A.blp",
+				["texture"] = C_RaidLocks and 165638 or "SPELLS\\AuraRune_A.blp",
 			},
 			{
 				["a"] = 0.3,
@@ -26,7 +26,7 @@ addon.borderPresets = {
 				["scale"] = 1.6,
 				["r"] = 0,
 				["g"] = 0.2235294117647059,
-				["texture"] = "SPELLS\\T_VFX_HERO_CIRCLE.BLP",
+				["texture"] = C_RaidLocks and 167062 or "SPELLS\\T_VFX_HERO_CIRCLE.BLP",
 			},
 		},
 		shape = "Interface\\AddOns\\SexyMap\\shapes\\circle.tga"
@@ -41,7 +41,7 @@ addon.borderPresets = {
 				["drawLayer"] = "OVERLAY",
 				["name"] = "Vortex",
 				["blendMode"] = "BLEND",
-				["texture"] = "ENVIRONMENTS\\STARS\\AUCHINDOUN_VORTEXCLOUD01.BLP",
+				["texture"] = C_RaidLocks and 130444 or "ENVIRONMENTS\\STARS\\AUCHINDOUN_VORTEXCLOUD01.BLP",
 			},
 			{
 				["name"] = "Border Cloud",
@@ -49,7 +49,7 @@ addon.borderPresets = {
 				["drawLayer"] = "BACKGROUND",
 				["scale"] = 1.64,
 				["rotSpeed"] = 30,
-				["texture"] = "ENVIRONMENTS\\STARS\\DEATHWINGFIGHTSKY_CLOUDSMASK03.BLP",
+				["texture"] = C_RaidLocks and 527512 or "ENVIRONMENTS\\STARS\\DEATHWINGFIGHTSKY_CLOUDSMASK03.BLP",
 			},
 			{
 				["b"] = 0.5686274509803921,
@@ -61,7 +61,7 @@ addon.borderPresets = {
 				["r"] = 0.4901960784313725,
 				["height"] = 190,
 				["rotation"] = 45,
-				["texture"] = "ENVIRONMENTS\\STARS\\ICECROWN_CLOUDSA02_MASK02.BLP",
+				["texture"] = C_RaidLocks and 130540 or "ENVIRONMENTS\\STARS\\ICECROWN_CLOUDSA02_MASK02.BLP",
 			},
 			{
 				["hNudge"] = -42,
@@ -71,7 +71,7 @@ addon.borderPresets = {
 				["drawLayer"] = "BACKGROUND",
 				["blendMode"] = "BLEND",
 				["name"] = "Effect Cloud 1",
-				["texture"] = "ENVIRONMENTS\\STARS\\DEATHWINGFIGHTSKY_PARTICLECLOUD.BLP",
+				["texture"] = C_RaidLocks and 536776 or "ENVIRONMENTS\\STARS\\DEATHWINGFIGHTSKY_PARTICLECLOUD.BLP",
 			},
 			{
 				["drawLayer"] = "BACKGROUND",
@@ -81,7 +81,7 @@ addon.borderPresets = {
 				["scale"] = 0.8500000000000001,
 				["rotSpeed"] = 45,
 				["name"] = "Effect Cloud 2",
-				["texture"] = "ENVIRONMENTS\\STARS\\DEATHWINGFIGHTSKY_PARTICLECLOUD.BLP",
+				["texture"] = C_RaidLocks and 536776 or "ENVIRONMENTS\\STARS\\DEATHWINGFIGHTSKY_PARTICLECLOUD.BLP",
 			},
 			{
 				["a"] = 0.800000011920929,
@@ -91,7 +91,7 @@ addon.borderPresets = {
 				["vNudge"] = -65,
 				["blendMode"] = "BLEND",
 				["name"] = "Effect Cloud 3",
-				["texture"] = "ENVIRONMENTS\\STARS\\ICECROWN_CLOUDSA02_MASK01.BLP",
+				["texture"] = C_RaidLocks and 130539 or "ENVIRONMENTS\\STARS\\ICECROWN_CLOUDSA02_MASK01.BLP",
 			},
 			{
 				["hNudge"] = -45,
@@ -99,7 +99,7 @@ addon.borderPresets = {
 				["vNudge"] = -28,
 				["drawLayer"] = "BACKGROUND",
 				["name"] = "Effect Cloud 4",
-				["texture"] = "ENVIRONMENTS\\STARS\\WINTERGRASP_CLOUDMASK01.BLP",
+				["texture"] = C_RaidLocks and 235378 or "ENVIRONMENTS\\STARS\\WINTERGRASP_CLOUDMASK01.BLP",
 			},
 			{
 				["hNudge"] = 65,
@@ -107,7 +107,7 @@ addon.borderPresets = {
 				["vNudge"] = 31,
 				["rotSpeed"] = -70,
 				["name"] = "Effect Cloud 5",
-				["texture"] = "INTERFACE\\GLUES\\MODELS\\UI_WORGEN\\UI_WORGENCLOUDS01.BLP",
+				["texture"] = C_RaidLocks and 313249 or "INTERFACE\\GLUES\\MODELS\\UI_WORGEN\\UI_WORGENCLOUDS01.BLP",
 			},
 			{
 				["drawLayer"] = "BACKGROUND",
@@ -117,7 +117,7 @@ addon.borderPresets = {
 				["scale"] = 0.65,
 				["rotSpeed"] = 90,
 				["name"] = "Effect Cloud 6",
-				["texture"] = "INTERFACE\\GLUES\\MODELS\\UI_WORGEN\\UI_WORGENCLOUDS01.BLP",
+				["texture"] = C_RaidLocks and 313249 or "INTERFACE\\GLUES\\MODELS\\UI_WORGEN\\UI_WORGENCLOUDS01.BLP",
 			},
 		},
 		["shape"] = "Interface\\AddOns\\SexyMap\\shapes\\largecircle",
@@ -197,7 +197,7 @@ addon.borderPresets = {
 				["texture"] = "Interface\\Addons\\SexyMap\\media\\RenaitreFadeGloss",
 			},
 		},
-		["shape"] = "Interface\\BUTTONS\\WHITE8X8",
+		["shape"] = C_RaidLocks and 130871 or "Interface\\BUTTONS\\WHITE8X8",
 	},
 	["Electric"] = {
 		["borders"] = {
@@ -207,7 +207,7 @@ addon.borderPresets = {
 					["vNudge"] = 40,
 					["rotation"] = 180,
 					["name"] = "LightningNW",
-					["texture"] = "Spells\\lightning_new.blp",
+					["texture"] = C_RaidLocks and 240948 or "Spells\\lightning_new.blp",
 				},
 				{
 					["hNudge"] = 36,
@@ -215,7 +215,7 @@ addon.borderPresets = {
 					["vNudge"] = 40,
 					["rotation"] = 270,
 					["name"] = "LightningNE",
-					["texture"] = "Spells\\lightning_new.blp",
+					["texture"] = C_RaidLocks and 240948 or "Spells\\lightning_new.blp",
 				},
 				{
 					["rotation"] = 90,
@@ -223,14 +223,14 @@ addon.borderPresets = {
 					["name"] = "LightningSW",
 					["scale"] = 0.42,
 					["vNudge"] = -35,
-					["texture"] = "Spells\\lightning_new.blp",
+					["texture"] = C_RaidLocks and 240948 or "Spells\\lightning_new.blp",
 				},
 				{
 					["hNudge"] = 36,
 					["scale"] = 0.42,
 					["vNudge"] = -35,
 					["name"] = "LightningSE",
-					["texture"] = "Spells\\lightning_new.blp",
+					["texture"] = C_RaidLocks and 240948 or "Spells\\lightning_new.blp",
 				},
 		},
 		["shape"] = "Interface\\AddOns\\SexyMap\\shapes\\diamond",
@@ -243,7 +243,7 @@ addon.borderPresets = {
 				["scale"] = 1.6,
 				["drawLayer"] = "BACKGROUND",
 				["name"] = "Galaxy",
-				["texture"] = "environments\\stars\\deepholmsky_nebula01.blp",
+				["texture"] = C_RaidLocks and 378269 or "environments\\stars\\deepholmsky_nebula01.blp",
 			},
 			{
 				["a"] = 0.7800000011920929,
@@ -253,7 +253,7 @@ addon.borderPresets = {
 				["vNudge"] = 65,
 				["name"] = "Star",
 				["blendMode"] = "BLEND",
-				["texture"] = "environments\\stars\\galaxy_02.blp",
+				["texture"] = C_RaidLocks and 130505 or "environments\\stars\\galaxy_02.blp",
 			},
 			{
 				["a"] = 0.6400000154972076,
@@ -263,7 +263,7 @@ addon.borderPresets = {
 				["vNudge"] = -65,
 				["blendMode"] = "BLEND",
 				["name"] = "Planet 1",
-				["texture"] = "environments\\stars\\hellfireplanet_blue01.blp",
+				["texture"] = C_RaidLocks and 130521 or "environments\\stars\\hellfireplanet_blue01.blp",
 			},
 			{
 				["hNudge"] = -80,
@@ -271,7 +271,7 @@ addon.borderPresets = {
 				["scale"] = 0.3,
 				["blendMode"] = "BLEND",
 				["name"] = "Planet 2",
-				["texture"] = "environments\\stars\\hellfireplanet_red01.blp",
+				["texture"] = C_RaidLocks and 130523 or "environments\\stars\\hellfireplanet_red01.blp",
 			},
 			{
 				["a"] = 0.9200000017881393,
@@ -281,7 +281,7 @@ addon.borderPresets = {
 				["blendMode"] = "BLEND",
 				["rotation"] = 179,
 				["name"] = "Planet 3",
-				["texture"] = "environments\\stars\\bladesedgeplanet04.blp",
+				["texture"] = C_RaidLocks and 130472 or "environments\\stars\\bladesedgeplanet04.blp",
 			},
 			{
 				["a"] = 0.75,
@@ -290,7 +290,7 @@ addon.borderPresets = {
 				["scale"] = 0.4,
 				["vNudge"] = -65,
 				["name"] = "Vortex",
-				["texture"] = "environments\\stars\\deathsky_vortexcloud01",
+				["texture"] = C_RaidLocks and 235312 or "environments\\stars\\deathsky_vortexcloud01",
 			},
 			{
 				["hNudge"] = 45,
@@ -299,7 +299,7 @@ addon.borderPresets = {
 				["vNudge"] = 65,
 				["rotation"] = 0,
 				["name"] = "Planet 4",
-				["texture"] = "environments\\stars\\hellfireplanet03.blp",
+				["texture"] = C_RaidLocks and 130518 or "environments\\stars\\hellfireplanet03.blp",
 			},
 		},
 		["shape"] = "Interface\\AddOns\\SexyMap\\shapes\\largecircle",
@@ -312,7 +312,7 @@ addon.borderPresets = {
 				["name"] = "Rune",
 				["drawLayer"] = "BACKGROUND",
 				["r"] = 0,
-				["texture"] = "SPELLS\\AuraRune256b.blp",
+				["texture"] = C_RaidLocks and 165631 or "SPELLS\\AuraRune256b.blp",
 			},
 			{
 				["a"] = 0.06999999284744263,
@@ -321,7 +321,7 @@ addon.borderPresets = {
 				["g"] = 0.5333333333333333,
 				["name"] = "Inner Circle",
 				["disableRotation"] = true,
-				["texture"] = "Interface\\GLUES\\MODELS\\UI_Tauren\\gradientCircle.blp",
+				["texture"] = C_RaidLocks and 132039 or "Interface\\GLUES\\MODELS\\UI_Tauren\\gradientCircle.blp",
 			},
 		},
 		shape = "Interface\\AddOns\\SexyMap\\shapes\\diamond"
@@ -334,7 +334,7 @@ addon.borderPresets = {
 				["scale"] = 1.82,
 				["rotSpeed"] = 21,
 				["g"] = 0.2901960784313725,
-				["texture"] = "PARTICLES\\GENERICGLOW5.BLP",
+				["texture"] = C_RaidLocks and 165423 or "PARTICLES\\GENERICGLOW5.BLP",
 			},
 			{
 				["b"] = 0.3529411764705882,
@@ -342,7 +342,7 @@ addon.borderPresets = {
 				["scale"] = 1.62,
 				["rotSpeed"] = -18,
 				["g"] = 0.8705882352941177,
-				["texture"] = "PARTICLES\\GENERICGLOW5.BLP",
+				["texture"] = C_RaidLocks and 165423 or "PARTICLES\\GENERICGLOW5.BLP",
 			},
 			{
 				["a"] = 0.449999988079071,
@@ -350,7 +350,7 @@ addon.borderPresets = {
 				["b"] = 0.3254901960784314,
 				["scale"] = 1.35,
 				["g"] = 0.6705882352941176,
-				["texture"] = "SPELLS\\T_VFX_HERO_CIRCLE.BLP",
+				["texture"] = C_RaidLocks and 167062 or "SPELLS\\T_VFX_HERO_CIRCLE.BLP",
 			},
 		},
 		shape = "Interface\\AddOns\\SexyMap\\shapes\\circle.tga"
@@ -366,7 +366,7 @@ addon.borderPresets = {
 				["blendMode"] = "BLEND",
 				["drawLayer"] = "BACKGROUND",
 				["r"] = 0.615686274509804,
-				["texture"] = "TILESET\\EXPANSION01\\EVERSONG\\SwathSmallStones.blp",
+				["texture"] = C_RaidLocks and 187303 or "TILESET\\EXPANSION01\\EVERSONG\\SwathSmallStones.blp",
 			},
 			{
 				["rotSpeed"] = 118,
@@ -377,10 +377,10 @@ addon.borderPresets = {
 				["name"] = "Square Glow",
 				["rotation"] = 66,
 				["drawLayer"] = "BORDER",
-				["texture"] = "Interface\\Minimap\\Ping\\ping5.blp",
+				["texture"] = C_RaidLocks and 136439 or "Interface\\Minimap\\Ping\\ping5.blp",
 			},
 		},
-		shape = "SPELLS\\T_VFX_BORDER"
+		shape = C_RaidLocks and 167013 or "SPELLS\\T_VFX_BORDER"
 	},
 	["Blue Square Glow"] = {
 		borders = {
@@ -392,7 +392,7 @@ addon.borderPresets = {
 				["disableRotation"] = true,
 				["name"] = "Square Overlay",
 				["rotation"] = 66,
-				["texture"] = "World\\GENERIC\\ACTIVEDOODADS\\WORLDTREEPORTALS\\TWISTEDNETHER8.BLP",
+				["texture"] = C_RaidLocks and 197067 or "World\\GENERIC\\ACTIVEDOODADS\\WORLDTREEPORTALS\\TWISTEDNETHER8.BLP",
 			},
 			{
 				["rotSpeed"] = -14,
@@ -402,10 +402,10 @@ addon.borderPresets = {
 				["name"] = "Circle 2",
 				["drawLayer"] = "BACKGROUND",
 				["r"] = 0.3607843137254902,
-				["texture"] = "World\\GENERIC\\ACTIVEDOODADS\\INSTANCEPORTAL\\GENERICGLOW2.BLP",
+				["texture"] = C_RaidLocks and 197006 or "World\\GENERIC\\ACTIVEDOODADS\\INSTANCEPORTAL\\GENERICGLOW2.BLP",
 			},
 		},
-		shape = "Interface\\BUTTONS\\WHITE8X8"
+		shape = C_RaidLocks and 130871 or "Interface\\BUTTONS\\WHITE8X8"
 	},
 	["Rustic"] = {
 		["borders"] = {
@@ -419,9 +419,9 @@ addon.borderPresets = {
 			},
 			["settings"] = {
 				["edgeSize"] = 28,
-				["edgeFile"] = "Interface\\LFGFrame\\LFGBorder.blp",
+				["edgeFile"] = "Interface\\LFGFrame\\LFGBorder.blp", -- 253462
 				["tile"] = false,
-				["bgFile"] = "World\\EXPANSION02\\DOODADS\\Ulduar\\UL_SpinningRoomRings_Ring07.blp",
+				["bgFile"] = "World\\EXPANSION02\\DOODADS\\Ulduar\\UL_SpinningRoomRings_Ring07.blp", -- 249644
 				["insets"] = {
 					["top"] = 9,
 					["right"] = 9,
@@ -435,7 +435,7 @@ addon.borderPresets = {
 			},
 			["scale"] = 1.25,
 		},
-		["shape"] = "SPELLS\\T_VFX_BORDER",
+		["shape"] = C_RaidLocks and 167013 or "SPELLS\\T_VFX_BORDER",
 	},
 	Parchment = {
 		borders = {
@@ -445,7 +445,7 @@ addon.borderPresets = {
 				["blendMode"] = "BLEND",
 				["drawLayer"] = "BACKGROUND",
 				["name"] = "Parchment",
-				["texture"] = "Interface\\AchievementFrame\\UI-Achievement-Parchment.blp",
+				["texture"] = C_RaidLocks and 130662 or "Interface\\AchievementFrame\\UI-Achievement-Parchment.blp",
 			},
 			{
 				["a"] = 0.3799999952316284,
@@ -456,7 +456,7 @@ addon.borderPresets = {
 				["name"] = "Tint",
 				["blendMode"] = "BLEND",
 				["b"] = 0,
-				["texture"] = "Interface\\BUTTONS\\WHITE8X8.BLP",
+				["texture"] = C_RaidLocks and 130871 or "Interface\\BUTTONS\\WHITE8X8.BLP",
 			},
 			{
 				["disableRotation"] = true,
@@ -465,10 +465,10 @@ addon.borderPresets = {
 				["b"] = 0.6313725490196078,
 				["scale"] = 0.8200000000000001,
 				["g"] = 0.6313725490196078,
-				["texture"] = "Interface\\AchievementFrame\\UI-Achievement-Parchment-Horizontal.blp",
+				["texture"] = C_RaidLocks and 130661 or "Interface\\AchievementFrame\\UI-Achievement-Parchment-Horizontal.blp",
 			},
 		},
-		shape = "SPELLS\\T_VFX_BORDER"
+		shape = C_RaidLocks and 167013 or "SPELLS\\T_VFX_BORDER"
 	},
 	["Stargate"] = {
 		["shape"] = "Interface\\AddOns\\SexyMap\\shapes\\circle.tga",
@@ -478,7 +478,7 @@ addon.borderPresets = {
 				["g"] = 0.6862745098039216,
 				["name"] = "Rune 1",
 				["r"] = 0.5764705882352941,
-				["texture"] = "SPELLS\\AURARUNE256.BLP",
+				["texture"] = C_RaidLocks and 165630 or "SPELLS\\AURARUNE256.BLP",
 			},
 			{
 				["a"] = 0.3799999952316284,
@@ -487,7 +487,7 @@ addon.borderPresets = {
 				["name"] = "Rune 2",
 				["scale"] = 2.05,
 				["r"] = 0.2823529411764706,
-				["texture"] = "SPELLS\\AuraRune_A.blp",
+				["texture"] = C_RaidLocks and 165638 or "SPELLS\\AuraRune_A.blp",
 			},
 			{
 				["a"] = 0.3,
@@ -495,7 +495,7 @@ addon.borderPresets = {
 				["scale"] = 1.6,
 				["r"] = 0,
 				["g"] = 0.2235294117647059,
-				["texture"] = "SPELLS\\T_VFX_HERO_CIRCLE.BLP",
+				["texture"] = C_RaidLocks and 167062 or "SPELLS\\T_VFX_HERO_CIRCLE.BLP",
 			},
 			{
 				["rotSpeed"] = -120,
@@ -504,7 +504,7 @@ addon.borderPresets = {
 				["scale"] = 1.65,
 				["r"] = 0.1137254901960784,
 				["g"] = 0.1686274509803922,
-				["texture"] = "SPELLS\\AuraRune_B.blp",
+				["texture"] = C_RaidLocks and 165639 or "SPELLS\\AuraRune_B.blp",
 			},
 		},
 	},
@@ -520,8 +520,8 @@ addon.borderPresets = {
 			},
 			["settings"] = {
 				["edgeSize"] = 17,
-				["edgeFile"] = "Interface\\Tooltips\\UI-Tooltip-Border",
-				["bgFile"] = "Interface\\Tooltips\\UI-Tooltip-Background",
+				["edgeFile"] = "Interface\\Tooltips\\UI-Tooltip-Border", -- 137057
+				["bgFile"] = "Interface\\Tooltips\\UI-Tooltip-Background", -- 137056
 				["tile"] = false,
 				["insets"] = {
 					["top"] = 4,
@@ -534,7 +534,7 @@ addon.borderPresets = {
 			},
 			["scale"] = 1.07,
 		},
-		["shape"] = "Interface\\BUTTONS\\WHITE8X8",
+		["shape"] = C_RaidLocks and 130871 or "Interface\\BUTTONS\\WHITE8X8",
 	},
 	["Rogue"] = {
 		["borders"] = {
@@ -545,7 +545,7 @@ addon.borderPresets = {
 				["scale"] = 2.13,
 				["r"] = 0.1450980392156863,
 				["g"] = 0.00392156862745098,
-				["texture"] = "SPELLS\\RogueRune2.blp",
+				["texture"] = C_RaidLocks and 241004 or "SPELLS\\RogueRune2.blp",
 			},
 			{
 				["r"] = 0.6,
@@ -554,7 +554,7 @@ addon.borderPresets = {
 				["disableRotation"] = true,
 				["name"] = "Glow",
 				["b"] = 0.09411764705882353,
-				["texture"] = "SPELLS\\White-Circle.blp",
+				["texture"] = C_RaidLocks and 167203 or "SPELLS\\White-Circle.blp",
 			},
 		},
 		["shape"] = "Interface\\AddOns\\SexyMap\\shapes\\circle.tga",
@@ -570,8 +570,8 @@ addon.borderPresets = {
 				["r"] = 1,
 			},
 			["settings"] = {
-				["bgFile"] = "World\\ENVIRONMENT\\DOODAD\\STRANGLETHORN\\TROLLRUINS\\TEX\\GARY\\GP_SNKNTMP_ATARBORDER.blp",
-				["edgeFile"] = "Interface\\Tooltips\\UI-Tooltip-Border.blp",
+				["bgFile"] = "World\\ENVIRONMENT\\DOODAD\\STRANGLETHORN\\TROLLRUINS\\TEX\\GARY\\GP_SNKNTMP_ATARBORDER.blp", --191258
+				["edgeFile"] = "Interface\\Tooltips\\UI-Tooltip-Border.blp", -- 137057
 				["tile"] = false,
 				["edgeSize"] = 23,
 				["insets"] = {
@@ -587,7 +587,7 @@ addon.borderPresets = {
 			},
 			["scale"] = 1.42,
 		},
-		["shape"] = "SPELLS\\T_VFX_BORDER",
+		["shape"] = C_RaidLocks and 167013 or "SPELLS\\T_VFX_BORDER",
 	},
 	["Wood Framed"] = {
 		["borders"] = {
@@ -600,8 +600,8 @@ addon.borderPresets = {
 				["r"] = 1,
 			},
 			["settings"] = {
-				["bgFile"] = "Interface\\AchievementFrame\\UI-Achievement-StatsBackground.blp",
-				["edgeFile"] = "Interface\\AchievementFrame\\UI-Achievement-WoodBorder.blp",
+				["bgFile"] = "Interface\\AchievementFrame\\UI-Achievement-StatsBackground.blp", -- 235412
+				["edgeFile"] = "Interface\\AchievementFrame\\UI-Achievement-WoodBorder.blp", -- 130672
 				["tile"] = false,
 				["edgeSize"] = 28,
 				["insets"] = {
@@ -617,7 +617,7 @@ addon.borderPresets = {
 			},
 			["scale"] = 1.17,
 		},
-		["shape"] = "SPELLS\\T_VFX_BORDER",
+		["shape"] = C_RaidLocks and 167013 or "SPELLS\\T_VFX_BORDER",
 	},
 	["Emerald Portal by Korryna"] = {
 		["borders"] = {
@@ -630,7 +630,7 @@ addon.borderPresets = {
 				["vNudge"] = -1,
 				["name"] = "Moss Ring CW",
 				["b"] = 0.01568627450980392,
-				["texture"] = "XTEXTURES\\splash\\splash.blp",
+				["texture"] = C_RaidLocks and 220021 or "XTEXTURES\\splash\\splash.blp",
 			},
 			{
 				["scale"] = 1.6,
@@ -638,7 +638,7 @@ addon.borderPresets = {
 				["drawLayer"] = "BACKGROUND",
 				["name"] = "Outer Glow",
 				["b"] = 0.3490196078431372,
-				["texture"] = "Textures\\moonglare.blp",
+				["texture"] = C_RaidLocks and 186182 or "Textures\\moonglare.blp",
 			},
 			{
 				["a"] = 0.09000003337860107,
@@ -646,7 +646,7 @@ addon.borderPresets = {
 				["b"] = 0.4431372549019608,
 				["scale"] = 1.07,
 				["r"] = 0.807843137254902,
-				["texture"] = "Textures\\Moon02Glare.blp",
+				["texture"] = C_RaidLocks and 186181 or "Textures\\Moon02Glare.blp",
 			},
 			{
 				["a"] = 0.7199999988079071,
@@ -660,7 +660,7 @@ addon.borderPresets = {
 				["disableRotation"] = false,
 				["r"] = 0.1725490196078431,
 				["name"] = "Glare UR",
-				["texture"] = "SPELLS\\AURA_01.blp",
+				["texture"] = C_RaidLocks and 165623 or "SPELLS\\AURA_01.blp",
 			},
 			{
 				["a"] = 0.2599999904632568,
@@ -672,7 +672,7 @@ addon.borderPresets = {
 				["vNudge"] = 32,
 				["r"] = 0,
 				["name"] = "Nature Rune UL",
-				["texture"] = "SPELLS\\Nature_Rune_128.blp",
+				["texture"] = C_RaidLocks and 166606 or "SPELLS\\Nature_Rune_128.blp",
 			},
 			{
 				["a"] = 0.1800000071525574,
@@ -684,7 +684,7 @@ addon.borderPresets = {
 				["vNudge"] = -45,
 				["name"] = "Nature Rune LR",
 				["r"] = 0.4823529411764706,
-				["texture"] = "SPELLS\\Nature_Rune_128.blp",
+				["texture"] = C_RaidLocks and 166606 or "SPELLS\\Nature_Rune_128.blp",
 			},
 			{
 				["a"] = 0.1200000047683716,
@@ -695,7 +695,7 @@ addon.borderPresets = {
 				["vNudge"] = 39,
 				["name"] = "Nature Rune UR",
 				["r"] = 0.2941176470588235,
-				["texture"] = "SPELLS\\Nature_Rune_128.blp",
+				["texture"] = C_RaidLocks and 166606 or "SPELLS\\Nature_Rune_128.blp",
 			},
 			{
 				["a"] = 0.09000003337860107,
@@ -706,7 +706,7 @@ addon.borderPresets = {
 				["vNudge"] = -45,
 				["name"] = "Nature Rune LL",
 				["r"] = 0.7607843137254902,
-				["texture"] = "SPELLS\\Nature_Rune_128.blp",
+				["texture"] = C_RaidLocks and 166606 or "SPELLS\\Nature_Rune_128.blp",
 			},
 			{
 				["a"] = 0.14000004529953,
@@ -716,7 +716,7 @@ addon.borderPresets = {
 				["scale"] = 1.81,
 				["r"] = 0.09019607843137255,
 				["g"] = 0.3372549019607843,
-				["texture"] = "SPELLS\\Nature_Rune_128.blp",
+				["texture"] = C_RaidLocks and 166606 or "SPELLS\\Nature_Rune_128.blp",
 			},
 			{
 				["a"] = 0.6599999964237213,
@@ -728,7 +728,7 @@ addon.borderPresets = {
 				["blendMode"] = "BLEND",
 				["r"] = 0,
 				["name"] = "Edge Shimmer CCW",
-				["texture"] = "SPELLS\\SHOCKWAVE_INVERTGREY.BLP",
+				["texture"] = C_RaidLocks and 166870 or "SPELLS\\SHOCKWAVE_INVERTGREY.BLP",
 			},
 			{
 				["a"] = 0.5800000131130219,
@@ -739,7 +739,7 @@ addon.borderPresets = {
 				["drawLayer"] = "BORDER",
 				["name"] = "Edge Shimmer CW",
 				["r"] = 0.02352941176470588,
-				["texture"] = "SPELLS\\SHOCKWAVE_INVERTGREY.BLP",
+				["texture"] = C_RaidLocks and 166870 or "SPELLS\\SHOCKWAVE_INVERTGREY.BLP",
 			},
 			{
 				["a"] = 0.5,
@@ -748,7 +748,7 @@ addon.borderPresets = {
 				["blendMode"] = "BLEND",
 				["drawLayer"] = "BACKGROUND",
 				["name"] = "Background Leaves",
-				["texture"] = "SPELLS\\TREANTLEAVES.BLP",
+				["texture"] = C_RaidLocks and 167138 or "SPELLS\\TREANTLEAVES.BLP",
 			},
 		},
 		["shape"] = "Interface\\AddOns\\SexyMap\\shapes\\circle.tga",
@@ -761,14 +761,14 @@ addon.borderPresets = {
 				["vNudge"] = 65,
 				["disableRotation"] = true,
 				["name"] = "Rune Earth",
-				["texture"] = "World\\GENERIC\\PASSIVEDOODADS\\ShamanStone\\SHAMANSTONEEARTH.blp",
+				["texture"] = C_RaidLocks and 200026 or "World\\GENERIC\\PASSIVEDOODADS\\ShamanStone\\SHAMANSTONEEARTH.blp",
 			},
 			{
 				["disableRotation"] = true,
 				["hNudge"] = -65,
 				["name"] = "Rune Air",
 				["scale"] = 0.35,
-				["texture"] = "World\\GENERIC\\PASSIVEDOODADS\\ShamanStone\\ShamanStoneAir.blp",
+				["texture"] = C_RaidLocks and 200025 or "World\\GENERIC\\PASSIVEDOODADS\\ShamanStone\\ShamanStoneAir.blp",
 				["vNudge"] = -65,
 			},
 			{
@@ -779,7 +779,7 @@ addon.borderPresets = {
 				["disableRotation"] = true,
 				["name"] = "Rune Water",
 				["r"] = 0.4392156862745098,
-				["texture"] = "World\\GENERIC\\PASSIVEDOODADS\\ShamanStone\\ShamanStoneWater.blp",
+				["texture"] = C_RaidLocks and 200029 or "World\\GENERIC\\PASSIVEDOODADS\\ShamanStone\\ShamanStoneWater.blp",
 			},
 			{
 				["hNudge"] = -65,
@@ -787,7 +787,7 @@ addon.borderPresets = {
 				["vNudge"] = 65,
 				["disableRotation"] = true,
 				["name"] = "Rune Fire",
-				["texture"] = "World\\GENERIC\\PASSIVEDOODADS\\ShamanStone\\ShamanStoneFlame.blp",
+				["texture"] = C_RaidLocks and 200027 or "World\\GENERIC\\PASSIVEDOODADS\\ShamanStone\\ShamanStoneFlame.blp",
 			},
 			{
 				["rotSpeed"] = 60,
@@ -796,7 +796,7 @@ addon.borderPresets = {
 				["name"] = "Outer Rings",
 				["disableRotation"] = false,
 				["rotation"] = 184,
-				["texture"] = "SPELLS\\Shockwave4.blp",
+				["texture"] = C_RaidLocks and 166863 or "SPELLS\\Shockwave4.blp",
 			},
 			{
 				["a"] = 0.75,
@@ -807,7 +807,7 @@ addon.borderPresets = {
 				["name"] = "Outer Glow",
 				["disableRotation"] = true,
 				["r"] = 0,
-				["texture"] = "World\\ENVIRONMENT\\DOODAD\\GENERALDOODADS\\ELEMENTALRIFTS\\Shockwave_blue.blp",
+				["texture"] = C_RaidLocks and 191091 or "World\\ENVIRONMENT\\DOODAD\\GENERALDOODADS\\ELEMENTALRIFTS\\Shockwave_blue.blp",
 			},
 			{
 				["a"] = 0.3700000047683716,
@@ -816,7 +816,7 @@ addon.borderPresets = {
 				["b"] = 0,
 				["scale"] = 1.49,
 				["g"] = 0.6313725490196078,
-				["texture"] = "SPELLS\\SHOCKWAVE_INVERTGREY.BLP",
+				["texture"] = C_RaidLocks and 166870 or "SPELLS\\SHOCKWAVE_INVERTGREY.BLP",
 			},
 			{
 				["a"] = 0.5,
@@ -827,7 +827,7 @@ addon.borderPresets = {
 				["drawLayer"] = "BACKGROUND",
 				["name"] = "Glow Fire",
 				["disableRotation"] = true,
-				["texture"] = "SPELLS\\GENERICGLOW64.BLP",
+				["texture"] = C_RaidLocks and 166232 or "SPELLS\\GENERICGLOW64.BLP",
 			},
 			{
 				["a"] = 0.4700000286102295,
@@ -839,7 +839,7 @@ addon.borderPresets = {
 				["drawLayer"] = "BACKGROUND",
 				["name"] = "Glow Air",
 				["disableRotation"] = false,
-				["texture"] = "SPELLS\\GENERICGLOW64.BLP",
+				["texture"] = C_RaidLocks and 166232 or "SPELLS\\GENERICGLOW64.BLP",
 			},
 			{
 				["a"] = 0.5100000202655792,
@@ -850,7 +850,7 @@ addon.borderPresets = {
 				["vNudge"] = -65,
 				["drawLayer"] = "BACKGROUND",
 				["name"] = "Glow Water",
-				["texture"] = "SPELLS\\GENERICGLOW64.BLP",
+				["texture"] = C_RaidLocks and 166232 or "SPELLS\\GENERICGLOW64.BLP",
 			},
 			{
 				["a"] = 0.4000000357627869,
@@ -861,7 +861,7 @@ addon.borderPresets = {
 				["drawLayer"] = "BACKGROUND",
 				["name"] = "Glow Earth",
 				["r"] = 0.2588235294117647,
-				["texture"] = "SPELLS\\GENERICGLOW64.BLP",
+				["texture"] = C_RaidLocks and 166232 or "SPELLS\\GENERICGLOW64.BLP",
 			},
 		},
 		["shape"] = "Interface\\AddOns\\SexyMap\\shapes\\circle.tga",
