@@ -1,7 +1,7 @@
 # SexyMap
 
 ## Download
-https://mods.curse.com/addons/wow/sexymap
+https://www.curseforge.com/wow/addons/sexymap
 
 ## Introduction
 Make your minimap ubersexah! SexyMap is a minimap mod, supporting:
