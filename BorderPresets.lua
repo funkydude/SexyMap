@@ -421,7 +421,7 @@ addon.borderPresets = {
 				["edgeSize"] = 28,
 				["edgeFile"] = "Interface\\LFGFrame\\LFGBorder.blp", -- 253462
 				["tile"] = false,
-				["bgFile"] = "World\\EXPANSION02\\DOODADS\\Ulduar\\UL_SpinningRoomRings_Ring07.blp", -- 249644
+				["bgFile"] = "Interface\\Addons\\SexyMap\\media\\rusticbg", --"World\\EXPANSION02\\DOODADS\\Ulduar\\UL_SpinningRoomRings_Ring07.blp", -- 249644
 				["insets"] = {
 					["top"] = 9,
 					["right"] = 9,
@@ -570,7 +570,7 @@ addon.borderPresets = {
 				["r"] = 1,
 			},
 			["settings"] = {
-				["bgFile"] = "World\\ENVIRONMENT\\DOODAD\\STRANGLETHORN\\TROLLRUINS\\TEX\\GARY\\GP_SNKNTMP_ATARBORDER.blp", --191258
+				["bgFile"] = "Interface\\Addons\\SexyMap\\media\\ruinsbg", --"World\\ENVIRONMENT\\DOODAD\\STRANGLETHORN\\TROLLRUINS\\TEX\\GARY\\GP_SNKNTMP_ATARBORDER.blp", --191258
 				["edgeFile"] = "Interface\\Tooltips\\UI-Tooltip-Border.blp", -- 137057
 				["tile"] = false,
 				["edgeSize"] = 23,
