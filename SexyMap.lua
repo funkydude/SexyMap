@@ -376,25 +376,25 @@ function mod:ADDON_LOADED(addon)
 					end
 				end
 				if tbl.core and type(tbl.core.shape) == "string" and upgradeTBL[tbl.core.shape] then
-					print(tbl.core.shape, upgradeTBL[tbl.core.shape])
 					tbl.core.shape = upgradeTBL[tbl.core.shape]
 				end
-				--if tbl.borders and tbl.borders.backdrop and tbl.borders.backdrop.settings then
-				--	local tex = tbl.borders.backdrop.settings.bgFile
-				--	if type(tex) == "string" then
-				--		local id = GetFileIDFromPath(tex)
-				--		if id and not SexyMap82.convert[tex] then
-				--			SexyMap82.convert[tex] = id
-				--		end
-				--	end
-				--	local tex = tbl.borders.backdrop.settings.edgeFile
-				--	if type(tex) == "string" then
-				--		local id = GetFileIDFromPath(tex)
-				--		if id and not SexyMap82.convert[tex] then
-				--			SexyMap82.convert[tex] = id
-				--		end
-				--	end
-				--end
+				if tbl.borders and tbl.borders.backdrop and tbl.borders.backdrop.settings then
+					local tex = tbl.borders.backdrop.settings.bgFile
+					if type(tex) == "string" then
+						if tex == "World\\EXPANSION02\\DOODADS\\Ulduar\\UL_SpinningRoomRings_Ring07.blp" then
+							tbl.borders.backdrop.settings.bgFile = "Interface\\Addons\\SexyMap\\media\\rusticbg"
+						elseif tex == "World\\ENVIRONMENT\\DOODAD\\STRANGLETHORN\\TROLLRUINS\\TEX\\GARY\\GP_SNKNTMP_ATARBORDER.blp" then
+							tbl.borders.backdrop.settings.bgFile = "Interface\\Addons\\SexyMap\\media\\ruinsbg"
+						end
+					end
+					--local tex = tbl.borders.backdrop.settings.edgeFile
+					--if type(tex) == "string" then
+					--	local id = GetFileIDFromPath(tex)
+					--	if id and not SexyMap82.convert[tex] then
+					--		SexyMap82.convert[tex] = id
+					--	end
+					--end
+				end
 			end
 			if SexyMap2DB.presets then
 				for name, tbl in next, SexyMap2DB.presets do
@@ -412,25 +412,25 @@ function mod:ADDON_LOADED(addon)
 						end
 					end
 					if type(tbl.shape) == "string" and upgradeTBL[tbl.shape] then
-						print(tbl.shape, upgradeTBL[tbl.shape], "preset")
 						tbl.shape = upgradeTBL[tbl.shape]
 					end
-					--if tbl.backdrop and tbl.backdrop.settings then
-					--	local tex = tbl.backdrop.settings.bgFile
-					--	if type(tex) == "string" then
-					--		local id = GetFileIDFromPath(tex)
-					--		if id and not SexyMap82.convert[tex] then
-					--			SexyMap82.convert[tex] = id
-					--		end
-					--	end
-					--	local tex = tbl.backdrop.settings.edgeFile
-					--	if type(tex) == "string" then
-					--		local id = GetFileIDFromPath(tex)
-					--		if id and not SexyMap82.convert[tex] then
-					--			SexyMap82.convert[tex] = id
-					--		end
-					--	end
-					--end
+					if tbl.backdrop and tbl.backdrop.settings then
+						local tex = tbl.backdrop.settings.bgFile
+						if type(tex) == "string" then
+							if tex == "World\\EXPANSION02\\DOODADS\\Ulduar\\UL_SpinningRoomRings_Ring07.blp" then
+								tbl.backdrop.settings.bgFile = "Interface\\Addons\\SexyMap\\media\\rusticbg"
+							elseif tex == "World\\ENVIRONMENT\\DOODAD\\STRANGLETHORN\\TROLLRUINS\\TEX\\GARY\\GP_SNKNTMP_ATARBORDER.blp" then
+								tbl.backdrop.settings.bgFile = "Interface\\Addons\\SexyMap\\media\\ruinsbg"
+							end
+						end
+						--local tex = tbl.backdrop.settings.edgeFile
+						--if type(tex) == "string" then
+						--	local id = GetFileIDFromPath(tex)
+						--	if id and not SexyMap82.convert[tex] then
+						--		SexyMap82.convert[tex] = id
+						--	end
+						--end
+					end
 				end
 			end
 		else
