@@ -543,14 +543,6 @@ function mod:PLAYER_LOGIN()
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(name, mod.options, true)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(name)
 
-	-- XXX temp 8.2
-	if C_RaidLocks then
-		C_Timer.After(10, function()
-			print("|cFF33FF99SexyMap patch 8.2 WARNING:|r If your SexyMap style looks broken, try re-selecting your preset in the main menu. The default preset is 'Blue Rune Circles'.")
-		end)
-	end
-	-- XXX end temp
-
 	-- Configure slash handler
 	SlashCmdList.SexyMap = function()
 		-- Twice to work around a Blizz bug, opens to wrong panel on first try
