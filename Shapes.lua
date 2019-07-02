@@ -270,20 +270,20 @@ local shapes = {
 		geometry = "topLeft",
 		shape = "CORNER-BOTTOMRIGHT"
 	},
-	["Interface\\AddOns\\SexyMap\\shapes\\top"] = {
+	["Interface\\AddOns\\SexyMap\\shapes\\top.tga"] = {
 		name = L["Rounded - Top"],
 		geometry = "top"
 	},
-	["Interface\\AddOns\\SexyMap\\shapes\\bottom"] = {
+	["Interface\\AddOns\\SexyMap\\shapes\\bottom.tga"] = {
 		name = L["Rounded - Bottom"],
 		geometry = "bottom"
 	},
-	["Interface\\AddOns\\SexyMap\\shapes\\left"] = {
+	["Interface\\AddOns\\SexyMap\\shapes\\left.tga"] = {
 		name = L["Rounded - Left"],
 		geometry = "left"
 	},
 	
-	["Interface\\AddOns\\SexyMap\\shapes\\right"] = {
+	["Interface\\AddOns\\SexyMap\\shapes\\right.tga"] = {
 		name = L["Rounded - Right"],
 		geometry = "right"
 	},
