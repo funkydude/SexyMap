@@ -176,7 +176,7 @@ function mod:OnEnable()
 	sm.core:RegisterModuleOptions("ZoneText", options, L["Zone Text"])
 
 	MinimapZoneText:ClearAllPoints()
-	MinimapZoneText:SetAllPoints()
+	MinimapZoneText:SetAllPoints(MinimapZoneTextButton)
 	MinimapZoneTextButton:SetHeight(26)
 	MinimapZoneTextButton:SetBackdrop(sm.backdrop)
 	MinimapZoneTextButton:SetFrameStrata("MEDIUM")
