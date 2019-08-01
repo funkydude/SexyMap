@@ -59,7 +59,6 @@ local options = {
 		spacer1 = {
 			order = 4,
 			type = "description",
-			width = "normal",
 			name = " ",
 		},
 		fontSize = {
@@ -99,7 +98,6 @@ local options = {
 		spacer2 = {
 			order = 7,
 			type = "description",
-			width = "normal",
 			name = " ",
 		},
 		fontColor = {

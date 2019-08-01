@@ -88,7 +88,7 @@ mod.options = {
 			max = 3.0,
 			step = 0.01,
 			bigStep = 0.01,
-			width = "double",
+			width = 2,
 			get = function(info)
 				return mod.db.scale or 1
 			end,
@@ -131,7 +131,7 @@ mod.options = {
 			type = "range",
 			name = L["Auto Zoom-Out Delay"],
 			desc = L["If you zoom into the map, this feature will automatically zoom out after the selected period of time (seconds). Using a value of 0 will disable Auto Zoom-Out."],
-			width = "double",
+			width = 2,
 			min = 0,
 			max = 30,
 			step = 1,
@@ -163,7 +163,7 @@ mod.options = {
 		spacer3 = {
 			order = 12,
 			type = "description",
-			width = "half",
+			width = 0.5,
 			name = "",
 		},
 		spacer4 = {

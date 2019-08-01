@@ -63,7 +63,7 @@ local options = {
 			type = "toggle",
 			name = L["Let SexyMap handle button dragging"],
 			desc = L["Allow SexyMap to assume drag ownership for buttons attached to the minimap. Turn this off if you have another mod that you want to use to position your minimap buttons."],
-			width = "double",
+			width = 2,
 			order = 101,
 			get = function()
 				return mod.db.allowDragging

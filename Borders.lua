@@ -168,7 +168,7 @@ local options = {
 											type = "input",
 											name = L["Texture"],
 											order = 10,
-											width = "double",
+											width = 2,
 											get = function()
 												return mod.db.backdrop.settings.bgFile
 											end,
@@ -270,7 +270,7 @@ local options = {
 											max = 20,
 											step = 1,
 											bigStep = 1,
-											width = "double",
+											width = 2,
 											get = function()
 												return mod.db.backdrop.settings.insets.left
 											end,
@@ -365,7 +365,7 @@ local options = {
 											max = 48,
 											step = 1,
 											bigStep = 1,
-											width = "double",
+											width = 2,
 											get = function()
 												return mod.db.backdrop.settings.edgeSize
 											end,

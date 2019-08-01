@@ -36,7 +36,6 @@ local options = {
 		spacer1 = {
 			order = 3,
 			type = "description",
-			width = "normal",
 			name = "",
 		},
 		width = {
