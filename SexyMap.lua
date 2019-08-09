@@ -194,9 +194,9 @@ mod.options = {
 			name = L["Use Global Profile"],
 			width = "full",
 			confirm = function(info, v)
-				if v and SexyMap2DB.global then
+				if v and SexyMapClassicDB.global then
 					return L["A global profile already exists. You will be switched over to it and your UI will be reloaded, are you sure?"]
-				elseif v and not SexyMap2DB.global then
+				elseif v and not SexyMapClassicDB.global then
 					return L["No global profile exists. Your current profile will be copied over and used as the global profile, are you sure? This will also reload your UI."]
 				elseif not v then
 					return L["Are you sure you want to switch back to using a character specific profile? This will reload your UI."]
@@ -204,18 +204,18 @@ mod.options = {
 			end,
 			get = function()
 				local char = (UnitName("player").."-"..GetRealmName())
-				return type(SexyMap2DB[char]) == "string"
+				return type(SexyMapClassicDB[char]) == "string"
 			end,
 			set = function(info, v)
 				local char = (UnitName("player").."-"..GetRealmName())
 				if v then
-					if not SexyMap2DB.global then
-						SexyMap2DB.global = mod.deepCopyHash(SexyMap2DB[char])
+					if not SexyMapClassicDB.global then
+						SexyMapClassicDB.global = mod.deepCopyHash(SexyMapClassicDB[char])
 					end
-					SexyMap2DB[char] = "global"
+					SexyMapClassicDB[char] = "global"
 					ReloadUI()
 				else
-					SexyMap2DB[char] = nil
+					SexyMapClassicDB[char] = nil
 					ReloadUI()
 				end
 			end,
@@ -228,7 +228,7 @@ mod.options = {
 			confirmText = L["Copying this profile will reload your UI, are you sure?"],
 			values = function()
 				local tbl = {}
-				for k,v in pairs(SexyMap2DB) do
+				for k,v in pairs(SexyMapClassicDB) do
 					if k ~= "presets" and k ~= "global" and k ~= (UnitName("player").."-"..GetRealmName()) and type(v) == "table" then
 						tbl[k]=k
 					end
@@ -237,15 +237,15 @@ mod.options = {
 			end,
 			set = function(info, v)
 				local char = (UnitName("player").."-"..GetRealmName())
-				SexyMap2DB[char] = mod.deepCopyHash(SexyMap2DB[v])
+				SexyMapClassicDB[char] = mod.deepCopyHash(SexyMapClassicDB[v])
 				ReloadUI()
 			end,
 			disabled = function()
 				local char = (UnitName("player").."-"..GetRealmName())
-				if type(SexyMap2DB[char]) == "string" then
+				if type(SexyMapClassicDB[char]) == "string" then
 					return true
 				end
-				for k,v in pairs(SexyMap2DB) do
+				for k,v in pairs(SexyMapClassicDB) do
 					if k ~= "presets" and k ~= "global" and k ~= char and type(v) == "table" then
 						return false
 					end
@@ -261,7 +261,7 @@ mod.options = {
 			confirmText = L["Really delete this profile?"],
 			values = function()
 				local tbl = {}
-				for k,v in pairs(SexyMap2DB) do
+				for k,v in pairs(SexyMapClassicDB) do
 					if k ~= "presets" and k ~= "global" and k ~= (UnitName("player").."-"..GetRealmName()) and type(v) == "table" then
 						tbl[k]=k
 					end
@@ -269,14 +269,14 @@ mod.options = {
 				return tbl
 			end,
 			set = function(info, v)
-				SexyMap2DB[v] = nil
+				SexyMapClassicDB[v] = nil
 			end,
 			disabled = function()
 				local char = (UnitName("player").."-"..GetRealmName())
-				if type(SexyMap2DB[char]) == "string" then
+				if type(SexyMapClassicDB[char]) == "string" then
 					return true
 				end
-				for k,v in pairs(SexyMap2DB) do
+				for k,v in pairs(SexyMapClassicDB) do
 					if k ~= "presets" and k ~= "global" and k ~= char and type(v) == "table" then
 						return false
 					end
@@ -292,12 +292,12 @@ mod.options = {
 			order = 20,
 			func = function()
 				local char = UnitName("player").."-"..GetRealmName()
-				SexyMap2DB[char] = nil
+				SexyMapClassicDB[char] = nil
 				ReloadUI()
 			end,
 			disabled = function()
 				local char = (UnitName("player").."-"..GetRealmName())
-				if type(SexyMap2DB[char]) == "string" then
+				if type(SexyMapClassicDB[char]) == "string" then
 					return true
 				end
 			end,
@@ -307,213 +307,23 @@ mod.options = {
 
 function mod:ADDON_LOADED(addon)
 	if addon == "SexyMap" then
-		if type(SexyMap2DB) ~= "table" then
-			SexyMap2DB = {}
-		end
-		if type(SexyMap82) ~= "table" then -- XXX 8.2
-			SexyMap82 = {}
-			SexyMap82.backup = SexyMap2DB
-			SexyMap82.convert = {}
-		end
-
-		if C_RaidLocks then -- XXX 8.2
-			local upgradeTBL = {
-				["SPELLS\\AURARUNE256.BLP"] = 165630,
-				["SPELLS\\AuraRune_A.blp"] = 165638,
-				["SPELLS\\T_VFX_HERO_CIRCLE.BLP"] = 167062,
-				["ENVIRONMENTS\\STARS\\AUCHINDOUN_VORTEXCLOUD01.BLP"] = 130444,
-				["ENVIRONMENTS\\STARS\\DEATHWINGFIGHTSKY_CLOUDSMASK03.BLP"] = 527512,
-				["ENVIRONMENTS\\STARS\\ICECROWN_CLOUDSA02_MASK02.BLP"] = 130540,
-				["ENVIRONMENTS\\STARS\\DEATHWINGFIGHTSKY_PARTICLECLOUD.BLP"] = 536776,
-				["ENVIRONMENTS\\STARS\\ICECROWN_CLOUDSA02_MASK01.BLP"] = 130539,
-				["ENVIRONMENTS\\STARS\\WINTERGRASP_CLOUDMASK01.BLP"] = 235378,
-				["INTERFACE\\GLUES\\MODELS\\UI_WORGEN\\UI_WORGENCLOUDS01.BLP"] = 313249,
-				["Spells\\lightning_new.blp"] = 240948,
-				["environments\\stars\\deepholmsky_nebula01.blp"] = 378269,
-				["environments\\stars\\galaxy_02.blp"] = 130505,
-				["environments\\stars\\hellfireplanet_blue01.blp"] = 130521,
-				["environments\\stars\\hellfireplanet_red01.blp"] = 130523,
-				["environments\\stars\\bladesedgeplanet04.blp"] = 130472,
-				["environments\\stars\\deathsky_vortexcloud01"] = 235312,
-				["environments\\stars\\hellfireplanet03.blp"] = 130518,
-				["SPELLS\\AuraRune256b.blp"] = 165631,
-				["Interface\\GLUES\\MODELS\\UI_Tauren\\gradientCircle.blp"] = 132039,
-				["PARTICLES\\GENERICGLOW5.BLP"] = 165423,
-				["TILESET\\EXPANSION01\\EVERSONG\\SwathSmallStones.blp"] = 187303,
-				["Interface\\Minimap\\Ping\\ping5.blp"] = 136439,
-				["SPELLS\\T_VFX_BORDER"] = 167013,
-				["Interface\\BUTTONS\\WHITE8X8"] = 130871,
-				["World\\GENERIC\\ACTIVEDOODADS\\WORLDTREEPORTALS\\TWISTEDNETHER8.BLP"] = 197067,
-				["World\\GENERIC\\ACTIVEDOODADS\\INSTANCEPORTAL\\GENERICGLOW2.BLP"] = 197006,
-				["Interface\\AchievementFrame\\UI-Achievement-Parchment.blp"] = 130662,
-				["Interface\\BUTTONS\\WHITE8X8.BLP"] = 130871,
-				["Interface\\AchievementFrame\\UI-Achievement-Parchment-Horizontal.blp"] = 130661,
-				["SPELLS\\AuraRune_B.blp"] = 165639,
-				["SPELLS\\RogueRune2.blp"] = 241004,
-				["SPELLS\\White-Circle.blp"] = 167203,
-				["XTEXTURES\\splash\\splash.blp"] = 220021,
-				["Textures\\moonglare.blp"] = 186182,
-				["Textures\\Moon02Glare.blp"] = 186181,
-				["SPELLS\\AURA_01.blp"] = 165623,
-				["SPELLS\\Nature_Rune_128.blp"] = 166606,
-				["SPELLS\\SHOCKWAVE_INVERTGREY.BLP"] = 166870,
-				["SPELLS\\TREANTLEAVES.BLP"] = 167138,
-				["World\\GENERIC\\PASSIVEDOODADS\\ShamanStone\\SHAMANSTONEEARTH.blp"] = 200026,
-				["World\\GENERIC\\PASSIVEDOODADS\\ShamanStone\\ShamanStoneAir.blp"] = 200025,
-				["World\\GENERIC\\PASSIVEDOODADS\\ShamanStone\\ShamanStoneWater.blp"] = 200029,
-				["World\\GENERIC\\PASSIVEDOODADS\\ShamanStone\\ShamanStoneFlame.blp"] = 200027,
-				["SPELLS\\Shockwave4.blp"] = 166863,
-				["World\\ENVIRONMENT\\DOODAD\\GENERALDOODADS\\ELEMENTALRIFTS\\Shockwave_blue.blp"] = 191091,
-				["SPELLS\\GENERICGLOW64.BLP"] = 166232,
-			}
-			for character, tbl in next, SexyMap2DB do
-				if tbl.borders and tbl.borders.borders then
-					for i = 1, #tbl.borders.borders do
-						local tex = tbl.borders.borders[i].texture
-						if type(tex) == "string" then
-							local id = SexyMap82.convert[tex]
-							if id and id > 0 then
-								tbl.borders.borders[i].texture = id
-							elseif upgradeTBL[tex] then
-								tbl.borders.borders[i].texture = upgradeTBL[tex]
-							end
-						end
-					end
-				end
-				if tbl.core and type(tbl.core.shape) == "string" and upgradeTBL[tbl.core.shape] then
-					tbl.core.shape = upgradeTBL[tbl.core.shape]
-				end
-				if tbl.borders and tbl.borders.backdrop and tbl.borders.backdrop.settings then
-					local tex = tbl.borders.backdrop.settings.bgFile
-					if type(tex) == "string" then
-						if tex == "World\\EXPANSION02\\DOODADS\\Ulduar\\UL_SpinningRoomRings_Ring07.blp" then
-							tbl.borders.backdrop.settings.bgFile = "Interface\\Addons\\SexyMap\\media\\rusticbg"
-						elseif tex == "World\\ENVIRONMENT\\DOODAD\\STRANGLETHORN\\TROLLRUINS\\TEX\\GARY\\GP_SNKNTMP_ATARBORDER.blp" then
-							tbl.borders.backdrop.settings.bgFile = "Interface\\Addons\\SexyMap\\media\\ruinsbg"
-						end
-					end
-					--local tex = tbl.borders.backdrop.settings.edgeFile
-					--if type(tex) == "string" then
-					--	local id = GetFileIDFromPath(tex)
-					--	if id and not SexyMap82.convert[tex] then
-					--		SexyMap82.convert[tex] = id
-					--	end
-					--end
-				end
-			end
-			if SexyMap2DB.presets then
-				for name, tbl in next, SexyMap2DB.presets do
-					if tbl.borders then
-						for i = 1, #tbl.borders do
-							local tex = tbl.borders[i].texture
-							if type(tex) == "string" then
-								local id = SexyMap82.convert[tex]
-								if id and id > 0 then
-									tbl.borders[i].texture = id
-								elseif upgradeTBL[tex] then
-									tbl.borders[i].texture = upgradeTBL[tex]
-								end
-							end
-						end
-					end
-					if type(tbl.shape) == "string" and upgradeTBL[tbl.shape] then
-						tbl.shape = upgradeTBL[tbl.shape]
-					end
-					if tbl.backdrop and tbl.backdrop.settings then
-						local tex = tbl.backdrop.settings.bgFile
-						if type(tex) == "string" then
-							if tex == "World\\EXPANSION02\\DOODADS\\Ulduar\\UL_SpinningRoomRings_Ring07.blp" then
-								tbl.backdrop.settings.bgFile = "Interface\\Addons\\SexyMap\\media\\rusticbg"
-							elseif tex == "World\\ENVIRONMENT\\DOODAD\\STRANGLETHORN\\TROLLRUINS\\TEX\\GARY\\GP_SNKNTMP_ATARBORDER.blp" then
-								tbl.backdrop.settings.bgFile = "Interface\\Addons\\SexyMap\\media\\ruinsbg"
-							end
-						end
-						--local tex = tbl.backdrop.settings.edgeFile
-						--if type(tex) == "string" then
-						--	local id = GetFileIDFromPath(tex)
-						--	if id and not SexyMap82.convert[tex] then
-						--		SexyMap82.convert[tex] = id
-						--	end
-						--end
-					end
-				end
-			end
-		else
-			for character, tbl in next, SexyMap2DB do
-				if tbl.borders and tbl.borders.borders then
-					for i = 1, #tbl.borders.borders do
-						local tex = tbl.borders.borders[i].texture
-						if type(tex) == "string" then
-							local id = GetFileIDFromPath(tex)
-							if id and not SexyMap82.convert[tex] then
-								SexyMap82.convert[tex] = id
-							end
-						end
-					end
-				end
-				if tbl.borders and tbl.borders.backdrop and tbl.borders.backdrop.settings then
-					local tex = tbl.borders.backdrop.settings.bgFile
-					if type(tex) == "string" then
-						local id = GetFileIDFromPath(tex)
-						if id and not SexyMap82.convert[tex] then
-							SexyMap82.convert[tex] = id
-						end
-					end
-					local tex = tbl.borders.backdrop.settings.edgeFile
-					if type(tex) == "string" then
-						local id = GetFileIDFromPath(tex)
-						if id and not SexyMap82.convert[tex] then
-							SexyMap82.convert[tex] = id
-						end
-					end
-				end
-			end
-			if SexyMap2DB.presets then
-				for name, tbl in next, SexyMap2DB.presets do
-					if tbl.borders then
-						for i = 1, #tbl.borders do
-							local tex = tbl.borders[i].texture
-							if type(tex) == "string" then
-								local id = GetFileIDFromPath(tex)
-								if id and not SexyMap82.convert[tex] then
-									SexyMap82.convert[tex] = id
-								end
-							end
-						end
-					end
-					if tbl.backdrop and tbl.backdrop.settings then
-						local tex = tbl.backdrop.settings.bgFile
-						if type(tex) == "string" then
-							local id = GetFileIDFromPath(tex)
-							if id and not SexyMap82.convert[tex] then
-								SexyMap82.convert[tex] = id
-							end
-						end
-						local tex = tbl.backdrop.settings.edgeFile
-						if type(tex) == "string" then
-							local id = GetFileIDFromPath(tex)
-							if id and not SexyMap82.convert[tex] then
-								SexyMap82.convert[tex] = id
-							end
-						end
-					end
-				end
-			end
+		if type(SexyMapClassicDB) ~= "table" then
+			SexyMapClassicDB = {}
 		end
 
 		local char = UnitName("player").."-"..GetRealmName()
-		if not SexyMap2DB[char] then
-			SexyMap2DB[char] = {}
+		if not SexyMapClassicDB[char] then
+			SexyMapClassicDB[char] = {}
 		end
 
 		local dbToDispatch
-		if type(SexyMap2DB[char]) == "string" then
-			if not SexyMap2DB.global then
-				SexyMap2DB.global = {}
+		if type(SexyMapClassicDB[char]) == "string" then
+			if not SexyMapClassicDB.global then
+				SexyMapClassicDB.global = {}
 			end
-			dbToDispatch = SexyMap2DB.global
+			dbToDispatch = SexyMapClassicDB.global
 		else
-			dbToDispatch = SexyMap2DB[char]
+			dbToDispatch = SexyMapClassicDB[char]
 		end
 
 		if not dbToDispatch.core then

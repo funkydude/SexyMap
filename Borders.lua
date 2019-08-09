@@ -846,10 +846,10 @@ function mod:OnInitialize(profile)
 	end
 	self.db = profile.borders
 
-	if type(SexyMap2DB.presets) ~= "table" then
-		SexyMap2DB.presets = {}
+	if type(SexyMapClassicDB.presets) ~= "table" then
+		SexyMapClassicDB.presets = {}
 	end
-	self.presets = SexyMap2DB.presets
+	self.presets = SexyMapClassicDB.presets
 end
 
 function mod:OnEnable()
