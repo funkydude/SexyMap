@@ -1,4 +1,9 @@
 
+if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+	print("|cFF33FF99SexyMap|r: You're trying to run the Classic version of SexyMap on a live server.")
+	return
+end
+
 local name, sm = ...
 sm.core = {}
 
@@ -583,16 +588,6 @@ MinimapBackdrop:SetPoint("CENTER", Minimap, "CENTER", -8, -23)
 function mod:SetupMap()
 	local Minimap = Minimap
 
-	-- Hide the Minimap during a pet battle
-	mod.frame:RegisterEvent("PET_BATTLE_OPENING_START")
-	mod.PET_BATTLE_OPENING_START = function()
-		Minimap:Hide()
-	end
-	mod.frame:RegisterEvent("PET_BATTLE_CLOSE")
-	mod.PET_BATTLE_CLOSE = function()
-		Minimap:Show()
-	end
-
 	-- Hide the Minimap during combat. Remove the comments (--) to enable.
 	--mod.frame:RegisterEvent("PLAYER_REGEN_DISABLED")
 	--mod.PLAYER_REGEN_DISABLED = function()
@@ -638,12 +633,6 @@ function mod:SetupMap()
 	end)
 
 	MinimapCluster:EnableMouse(false) -- Don't leave an invisible dead zone
-
-	-- Removes the circular "waffle-like" texture that shows when using a non-circular minimap in the blue quest objective area.
-	Minimap:SetArchBlobRingScalar(0)
-	Minimap:SetArchBlobRingAlpha(0)
-	Minimap:SetQuestBlobRingScalar(0)
-	Minimap:SetQuestBlobRingAlpha(0)
 
 	if not mod.db.northTag then
 		MinimapNorthTag:Hide()

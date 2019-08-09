@@ -1,4 +1,8 @@
 
+if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+	return
+end
+
 local _, sm = ...
 sm.buttons = {}
 
@@ -11,7 +15,6 @@ local moving, ButtonFadeOut
 local animFrames = {}
 local blizzButtons = {
 	GameTimeFrame = L["Calendar"],
-	MiniMapTracking = L["Tracking Button"],
 	MinimapZoneTextButton = L["Zone Text"],
 	MinimapZoomIn = L["Zoom In Button"],
 	MinimapZoomOut = L["Zoom Out Button"],
@@ -19,12 +22,7 @@ local blizzButtons = {
 	TimeManagerClockButton = L["Clock"],
 }
 local dynamicButtons = {
-	GuildInstanceDifficulty = L["Guild Dungeon Difficulty Indicator (When Available)"],
-	MiniMapChallengeMode = L["Challenge Mode Button (When Available)"],
-	MiniMapInstanceDifficulty = L["Dungeon Difficulty Indicator (When Available)"],
 	MiniMapMailFrame = L["New Mail Indicator (When Available)"],
-	QueueStatusMinimapButton = L["Queue Status (PvP/LFG) Button (When Available)"],
-	GarrisonLandingPageMinimapButton = L["Garrison Button (When Available)"],
 }
 
 local options = {
@@ -183,8 +181,6 @@ function mod:OnInitialize(profile)
 				MinimapZoneTextButton = "always",
 				TimeManagerClockButton = "always",
 				MiniMapMailFrame = "always",
-				QueueStatusMinimapButton = "always",
-				GarrisonLandingPageMinimapButton = "always",
 			},
 			allowDragging = true,
 			lockDragging = false,
@@ -224,12 +220,6 @@ function mod:OnEnable()
 	highlight:ClearAllPoints()
 	highlight:SetPoint("TOPLEFT", MiniMapWorldMapButton, "TOPLEFT", 2, -2)
 
-	GarrisonLandingPageMinimapButton:SetSize(36, 36) -- Shrink the missions button
-	-- We also need to hook this as Blizz likes to fiddle with its size
-	hooksecurefunc(GarrisonLandingPageMinimapButton, "SetSize", function()
-		sm.core.frame.SetSize(GarrisonLandingPageMinimapButton, 36, 36)
-	end)
-
 	sm.core:RegisterModuleOptions("Buttons", options, L["Buttons"])
 
 	C_Timer.After(1, mod.StartFrameGrab)
@@ -242,33 +232,11 @@ end
 local OnFinished, KillAnimation
 do
 	local fadeStop = false -- Use a variable to prevent fadeout/in when moving the mouse around minimap/icons
-	local restoreGarrisonButtonAnimation = false
-	local restoreLFGButtonAnimation = false
 
 	OnFinished = function(anim)
-		-- Work around issues with buttons that have a pulse/fade ring animation.
-		if restoreGarrisonButtonAnimation and anim:GetParent():GetName() == "GarrisonLandingPageMinimapButton" then
-			anim:GetParent().MinimapLoopPulseAnim:Play()
-			restoreGarrisonButtonAnimation = false
-		end
-		if restoreLFGButtonAnimation and anim:GetParent():GetName() == "QueueStatusMinimapButton" then
-			anim:GetParent().EyeHighlightAnim:Play()
-			restoreLFGButtonAnimation = false
-		end
 	end
 
 	KillAnimation = function(n, f)
-		-- Work around issues with buttons that have a pulse/fade ring animation.
-		if n == "GarrisonLandingPageMinimapButton" and (f.MinimapLoopPulseAnim:IsPlaying() or restoreGarrisonButtonAnimation) then
-			restoreGarrisonButtonAnimation = true
-			f.MinimapLoopPulseAnim:Stop()
-			return f.MinimapLoopPulseAnim
-		end
-		if n == "QueueStatusMinimapButton" and (f.EyeHighlightAnim:IsPlaying() or restoreLFGButtonAnimation) then
-			restoreLFGButtonAnimation = true
-			f.EyeHighlightAnim:Stop()
-			return f.EyeHighlightAnim
-		end
 	end
 
 	local OnEnter = function()
@@ -324,15 +292,7 @@ do
 			f.sexyMapFadeOut:SetToFinalAlpha(true)
 
 			-- Work around issues with buttons that have a pulse/fade ring animation.
-			if n == "GarrisonLandingPageMinimapButton" or n == "QueueStatusMinimapButton" then
-				f.sexyMapFadeOut:SetScript("OnFinished", OnFinished)
-			end
 			-- These frames are parented to MinimapCluster, if the map scale is changed they won't drag properly, so we parent to Minimap
-			if n == "MiniMapInstanceDifficulty" or n == "GuildInstanceDifficulty" or n == "MiniMapChallengeMode" then
-				f:ClearAllPoints()
-				f:SetParent(Minimap)
-				f:SetPoint("CENTER", Minimap, "CENTER", -60, 55)
-			end
 			-- Parented to MinimapCluster
 			if n == "MinimapZoneTextButton" then
 				f:SetParent(Minimap)
@@ -349,12 +309,7 @@ do
 			if n ~= "MinimapZoneTextButton" and n ~= "TimeManagerClockButton" then
 				self:AddButtonOptions(n)
 
-				-- Configure dragging
-				if n == "MiniMapTracking" then
-					self:MakeMovable(MiniMapTrackingButton, f)
-				else
-					self:MakeMovable(f)
-				end
+				self:MakeMovable(f)
 			end
 		end
 		f:HookScript("OnEnter", OnEnter)
@@ -512,9 +467,8 @@ end
 
 do
 	local tbl = {
-		Minimap, MiniMapTrackingButton, MinimapZoneTextButton, MiniMapTracking, TimeManagerClockButton, GameTimeFrame,
-		MinimapZoomIn, MinimapZoomOut, MiniMapWorldMapButton, GuildInstanceDifficulty, MiniMapChallengeMode, MiniMapInstanceDifficulty,
-		MiniMapMailFrame, QueueStatusMinimapButton, GarrisonLandingPageMinimapButton
+		Minimap, MinimapZoneTextButton, TimeManagerClockButton, GameTimeFrame,
+		MinimapZoomIn, MinimapZoomOut, MiniMapWorldMapButton, MiniMapMailFrame
 	}
 
 	function mod:AddButton(_, button)
