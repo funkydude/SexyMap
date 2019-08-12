@@ -453,6 +453,7 @@ function mod:SetupMap()
 		MinimapCompassTexture.Show = MinimapCompassTexture.Hide
 	end
 
+	MinimapToggleButton:Hide() -- Minimap "X" to close button
 	MinimapBorderTop:Hide()
 	Minimap:RegisterForDrag("LeftButton")
 	Minimap:SetClampedToScreen(mod.db.clamp)
