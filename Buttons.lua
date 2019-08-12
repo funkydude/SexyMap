@@ -14,7 +14,7 @@ local moving, ButtonFadeOut
 
 local animFrames = {}
 local blizzButtons = {
-	GameTimeFrame = L["Calendar"],
+	GameTimeFrame = L["Day/Night Indicator"],
 	MinimapZoneTextButton = L["Zone Text"],
 	MinimapZoomIn = L["Zoom In Button"],
 	MinimapZoomOut = L["Zoom Out Button"],
@@ -181,6 +181,7 @@ function mod:OnInitialize(profile)
 				MinimapZoneTextButton = "always",
 				TimeManagerClockButton = "always",
 				MiniMapMailFrame = "always",
+				GameTimeFrame = "never",
 			},
 			allowDragging = true,
 			lockDragging = false,

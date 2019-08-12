@@ -78,7 +78,7 @@ L["Default Presets"] = "Default Presets"
 L["User-Submitted Presets"] = "User-Submitted Presets"
 
 -- ./Buttons.lua
-L["Calendar"] = "Calendar"
+L["Day/Night Indicator"] = "Day/Night Indicator"
 L["Tracking Button"] = "Tracking Button"
 L["Zone Text"] = "Zone Text"
 L["Zoom In Button"] = "Zoom In Button"
