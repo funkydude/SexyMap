@@ -22,6 +22,7 @@ local blizzButtons = {
 	TimeManagerClockButton = L["Clock"],
 }
 local dynamicButtons = {
+	MiniMapTrackingFrame = L["Tracking Button (When Available)"],
 	MiniMapMailFrame = L["New Mail Indicator (When Available)"],
 }
 
@@ -182,6 +183,7 @@ function mod:OnInitialize(profile)
 				TimeManagerClockButton = "always",
 				MiniMapMailFrame = "always",
 				GameTimeFrame = "never",
+				MiniMapTrackingFrame = "always",
 			},
 			allowDragging = true,
 			lockDragging = false,
@@ -220,6 +222,22 @@ function mod:OnEnable()
 	MiniMapWorldMapButton:SetHighlightTexture(136477) -- 136477 = Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight
 	highlight:ClearAllPoints()
 	highlight:SetPoint("TOPLEFT", MiniMapWorldMapButton, "TOPLEFT", 2, -2)
+
+	local icon, overlay = MiniMapTrackingFrame:GetRegions()
+	MiniMapTrackingFrame:SetSize(31,31)
+	MiniMapTrackingFrame:SetFrameStrata("MEDIUM")
+	MiniMapTrackingFrame:SetFrameLevel(8)
+	icon:ClearAllPoints()
+	icon:SetPoint("TOPLEFT", 8, -6)
+	icon:SetSize(17,17)
+	icon:SetDrawLayer("ARTWORK")
+	overlay:ClearAllPoints() -- Border
+	overlay:SetSize(53,53)
+	overlay:SetPoint("TOPLEFT")
+	local background = MiniMapTrackingFrame:CreateTexture(nil, "BACKGROUND")
+	background:SetSize(20, 20)
+	background:SetTexture(136467) --"Interface\\Minimap\\UI-Minimap-Background"
+	background:SetPoint("TOPLEFT", 7, -5)
 
 	sm.core:RegisterModuleOptions("Buttons", options, L["Buttons"])
 
@@ -468,7 +486,7 @@ end
 
 do
 	local tbl = {
-		Minimap, MinimapZoneTextButton, TimeManagerClockButton, GameTimeFrame,
+		Minimap, MinimapZoneTextButton, MiniMapTrackingFrame, TimeManagerClockButton, GameTimeFrame,
 		MinimapZoomIn, MinimapZoomOut, MiniMapWorldMapButton, MiniMapMailFrame
 	}
 
