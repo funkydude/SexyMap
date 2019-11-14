@@ -21,7 +21,7 @@ addon.borderPresets = {
 				["texture"] = C_RaidLocks and 165638 or "SPELLS\\AuraRune_A.blp",
 			},
 			{
-				["a"] = 0.3,
+				["a"] = 0,
 				["name"] = "Fade",
 				["scale"] = 1.6,
 				["r"] = 0,
