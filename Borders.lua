@@ -883,7 +883,7 @@ function mod:OnEnable()
 		end
 	end
 
-	customBackdrop = CreateFrame("Frame", "SexyMapCustomBackdrop", Minimap)
+	customBackdrop = CreateFrame("Frame", "SexyMapCustomBackdrop", Minimap, BackdropTemplateMixin and "BackdropTemplate")
 	customBackdrop:SetFrameStrata("BACKGROUND")
 	customBackdrop:SetPoint("CENTER")
 	customBackdrop:SetWidth(Minimap:GetWidth())

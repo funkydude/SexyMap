@@ -173,7 +173,7 @@ function mod:OnEnable()
 	TimeManagerClockTicker:ClearAllPoints()
 	TimeManagerClockTicker:SetAllPoints()
 	TimeManagerClockButton:GetRegions():Hide() -- Hide the border
-	TimeManagerClockButton:SetBackdrop(sm.backdrop)
+	--TimeManagerClockButton:SetBackdrop(sm.backdrop)
 	TimeManagerClockButton:SetClampedToScreen(true)
 
 	-- For some reason PLAYER_LOGIN is too early for a rare subset of users (even when only using SexyMap)
@@ -187,8 +187,8 @@ end
 function mod:UpdateLayout()
 	TimeManagerClockButton:ClearAllPoints()
 	TimeManagerClockButton:SetPoint("TOP", Minimap, "BOTTOM", mod.db.xOffset, mod.db.yOffset)
-	TimeManagerClockButton:SetBackdropColor(mod.db.bgColor.r, mod.db.bgColor.g, mod.db.bgColor.b, mod.db.bgColor.a)
-	TimeManagerClockButton:SetBackdropBorderColor(mod.db.borderColor.r, mod.db.borderColor.g, mod.db.borderColor.b, mod.db.borderColor.a)
+	--TimeManagerClockButton:SetBackdropColor(mod.db.bgColor.r, mod.db.bgColor.g, mod.db.bgColor.b, mod.db.bgColor.a)
+	--TimeManagerClockButton:SetBackdropBorderColor(mod.db.borderColor.r, mod.db.borderColor.g, mod.db.borderColor.b, mod.db.borderColor.a)
 	local a, b, c = GameFontHighlightSmall:GetFont()
 	TimeManagerClockTicker:SetFont(mod.db.font and media:Fetch("font", mod.db.font) or a, mod.db.fontsize or b, c)
 	if mod.db.fontColor.r then

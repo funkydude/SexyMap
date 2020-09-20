@@ -11,6 +11,7 @@ sm.backdrop = {
 	insets = {left = 4, top = 4, right = 4, bottom = 4},
 	edgeSize = 16,
 	tile = true,
+	tileSize = 16
 }
 
 mod.frame = CreateFrame("Frame")

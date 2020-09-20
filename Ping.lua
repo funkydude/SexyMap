@@ -61,7 +61,7 @@ end
 function mod:OnEnable()
 	sm.core:RegisterModuleOptions("Ping", options, L["Ping"])
 
-	pingFrame = CreateFrame("Frame", "SexyMapPingFrame", Minimap)
+	pingFrame = CreateFrame("Frame", "SexyMapPingFrame", Minimap, BackdropTemplateMixin and "BackdropTemplate")
 	pingFrame:SetBackdrop(sm.backdrop)
 	pingFrame:SetBackdropColor(0,0,0,0.8)
 	pingFrame:SetBackdropBorderColor(0,0,0,0.6)

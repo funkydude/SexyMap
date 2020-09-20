@@ -208,7 +208,7 @@ end
 
 function mod:CreateFrame()
 	if not coordFrame then
-		coordFrame = CreateFrame("Frame", "SexyMapCoordFrame", Minimap)
+		coordFrame = CreateFrame("Frame", "SexyMapCoordFrame", Minimap, BackdropTemplateMixin and "BackdropTemplate")
 		coordFrame:SetBackdrop(sm.backdrop)
 		coordsText = coordFrame:CreateFontString(nil, nil, "GameFontNormalSmall")
 		coordsText:SetPoint("CENTER", coordFrame, "CENTER")
