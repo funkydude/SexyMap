@@ -173,6 +173,7 @@ function mod:OnEnable()
 	TimeManagerClockTicker:ClearAllPoints()
 	TimeManagerClockTicker:SetAllPoints()
 	TimeManagerClockButton:GetRegions():Hide() -- Hide the border
+	Mixin(TimeManagerClockButton, BackdropTemplateMixin)
 	TimeManagerClockButton:SetBackdrop(sm.backdrop)
 	TimeManagerClockButton:SetClampedToScreen(true)
 

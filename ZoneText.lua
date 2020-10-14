@@ -177,6 +177,7 @@ function mod:OnEnable()
 	MinimapZoneText:ClearAllPoints()
 	MinimapZoneText:SetAllPoints(MinimapZoneTextButton)
 	MinimapZoneTextButton:SetHeight(26)
+	Mixin(MinimapZoneTextButton, BackdropTemplateMixin)
 	MinimapZoneTextButton:SetBackdrop(sm.backdrop)
 	MinimapZoneTextButton:SetFrameStrata("MEDIUM")
 
