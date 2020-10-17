@@ -227,7 +227,7 @@ function mod:OnEnable()
 	GarrisonLandingPageMinimapButton:SetSize(36, 36) -- Shrink the missions button
 	-- Stop Blizz changing the icon size || GarrisonLandingPageMinimapButton_UpdateIcon() >> SetLandingPageIconFromAtlases() >> self:SetSize()
 	hooksecurefunc(GarrisonLandingPageMinimapButton, "SetSize", function()
-		sm.core.frame.SetSize(GarrisonLandingPageMinimapButton, 36, 36)
+		sm.core.button.SetSize(GarrisonLandingPageMinimapButton, 36, 36)
 	end)
 	-- Stop Blizz moving the icon || GarrisonLandingPageMinimapButton_UpdateIcon() >> ApplyGarrisonTypeAnchor() >> anchor:SetPoint()
 	hooksecurefunc("GarrisonLandingPageMinimapButton_UpdateIcon", function()

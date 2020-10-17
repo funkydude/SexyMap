@@ -167,15 +167,18 @@ function mod:OnInitialize(profile)
 	end
 end
 
+-- Some objects are no longer being called directly using ":" to work around issues with other addons
+-- messing with these Blizzard-created widgets (conflicts)
 function mod:OnEnable()
 	sm.core:RegisterModuleOptions("Clock", options, L["Clock"])
 
-	TimeManagerClockTicker:ClearAllPoints()
-	TimeManagerClockTicker:SetAllPoints()
-	TimeManagerClockButton:GetRegions():Hide() -- Hide the border
+	sm.core.font.ClearAllPoints(TimeManagerClockTicker)
+	sm.core.font.SetAllPoints(TimeManagerClockTicker)
+	local border = sm.core.button.GetRegions(TimeManagerClockButton)
+	border:Hide() -- Hide the clock border
 	Mixin(TimeManagerClockButton, BackdropTemplateMixin)
 	TimeManagerClockButton:SetBackdrop(sm.backdrop)
-	TimeManagerClockButton:SetClampedToScreen(true)
+	sm.core.button.SetClampedToScreen(TimeManagerClockButton, true)
 
 	-- For some reason PLAYER_LOGIN is too early for a rare subset of users (even when only using SexyMap)
 	-- which results in a clock width too small. Use this delayed repeater to try and fix the clock width for them.
@@ -186,17 +189,17 @@ function mod:OnEnable()
 end
 
 function mod:UpdateLayout()
-	TimeManagerClockButton:ClearAllPoints()
-	TimeManagerClockButton:SetPoint("TOP", Minimap, "BOTTOM", mod.db.xOffset, mod.db.yOffset)
+	sm.core.button.ClearAllPoints(TimeManagerClockButton)
+	sm.core.button.SetPoint(TimeManagerClockButton, "TOP", Minimap, "BOTTOM", mod.db.xOffset, mod.db.yOffset)
 	TimeManagerClockButton:SetBackdropColor(mod.db.bgColor.r, mod.db.bgColor.g, mod.db.bgColor.b, mod.db.bgColor.a)
 	TimeManagerClockButton:SetBackdropBorderColor(mod.db.borderColor.r, mod.db.borderColor.g, mod.db.borderColor.b, mod.db.borderColor.a)
 	local a, b, c = GameFontHighlightSmall:GetFont()
-	TimeManagerClockTicker:SetFont(mod.db.font and media:Fetch("font", mod.db.font) or a, mod.db.fontsize or b, c)
+	sm.core.font.SetFont(TimeManagerClockTicker, mod.db.font and media:Fetch("font", mod.db.font) or a, mod.db.fontsize or b, c)
 	if mod.db.fontColor.r then
-		TimeManagerClockTicker:SetTextColor(mod.db.fontColor.r, mod.db.fontColor.g, mod.db.fontColor.b, mod.db.fontColor.a)
+		sm.core.font.SetTextColor(TimeManagerClockTicker, mod.db.fontColor.r, mod.db.fontColor.g, mod.db.fontColor.b, mod.db.fontColor.a)
 	end
-	TimeManagerClockTicker:SetText("44:44")
-	TimeManagerClockButton:SetWidth(TimeManagerClockTicker:GetStringWidth() + 16)
-	TimeManagerClockButton:SetHeight(TimeManagerClockTicker:GetStringHeight() + 10)
+	sm.core.font.SetText(TimeManagerClockTicker, "44:44")
+	sm.core.button.SetWidth(TimeManagerClockButton, sm.core.font.GetStringWidth(TimeManagerClockTicker) + 16)
+	sm.core.button.SetHeight(TimeManagerClockButton, sm.core.font.GetStringHeight(TimeManagerClockTicker) + 10)
 end
 

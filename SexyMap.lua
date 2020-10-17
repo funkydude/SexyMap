@@ -14,7 +14,8 @@ sm.backdrop = {
 }
 
 mod.frame = CreateFrame("Frame")
-mod.frame:Show()
+mod.button = CreateFrame("Button")
+mod.font = mod.button:CreateFontString()
 mod.deepCopyHash = function(t)
 	local nt = {}
 	for k, v in pairs(t) do

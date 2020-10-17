@@ -171,15 +171,17 @@ function mod:OnInitialize(profile)
 	end
 end
 
+-- Some objects are no longer being called directly using ":" to work around issues with other addons
+-- messing with these Blizzard-created widgets (conflicts)
 function mod:OnEnable()
 	sm.core:RegisterModuleOptions("ZoneText", options, L["Zone Text"])
 
-	MinimapZoneText:ClearAllPoints()
-	MinimapZoneText:SetAllPoints(MinimapZoneTextButton)
-	MinimapZoneTextButton:SetHeight(26)
+	sm.core.font.ClearAllPoints(MinimapZoneText)
+	sm.core.font.SetAllPoints(MinimapZoneText, MinimapZoneTextButton)
+	sm.core.button.SetHeight(MinimapZoneTextButton, 26)
 	Mixin(MinimapZoneTextButton, BackdropTemplateMixin)
 	MinimapZoneTextButton:SetBackdrop(sm.backdrop)
-	MinimapZoneTextButton:SetFrameStrata("MEDIUM")
+	sm.core.button.SetFrameStrata(MinimapZoneTextButton, "MEDIUM")
 
 	self:UpdateLayout()
 	-- Hook Minimap.xml function "Minimap_Update", we let Blizz update the text and customize it afterwards.
@@ -187,22 +189,22 @@ function mod:OnEnable()
 end
 
 function mod:UpdateLayout()
-	MinimapZoneTextButton:ClearAllPoints()
-	MinimapZoneTextButton:SetPoint("BOTTOM", Minimap, "TOP", mod.db.xOffset, mod.db.yOffset)
+	sm.core.button.ClearAllPoints(MinimapZoneTextButton)
+	sm.core.button.SetPoint(MinimapZoneTextButton, "BOTTOM", Minimap, "TOP", mod.db.xOffset, mod.db.yOffset)
 	MinimapZoneTextButton:SetBackdropColor(mod.db.bgColor.r, mod.db.bgColor.g, mod.db.bgColor.b, mod.db.bgColor.a)
 	MinimapZoneTextButton:SetBackdropBorderColor(mod.db.borderColor.r, mod.db.borderColor.g, mod.db.borderColor.b, mod.db.borderColor.a)
 	local a, b, c = GameFontNormal:GetFont()
-	MinimapZoneText:SetFont(mod.db.font and media:Fetch("font", mod.db.font) or a, mod.db.fontsize or b, c)
+	sm.core.font.SetFont(MinimapZoneText, mod.db.font and media:Fetch("font", mod.db.font) or a, mod.db.fontsize or b, c)
 
 	self:ZoneChanged()
 end
 
 function mod:ZoneChanged()
-	local width = max(MinimapZoneText:GetStringWidth() * 1.3, mod.db.width or 0)
-	MinimapZoneTextButton:SetHeight(MinimapZoneText:GetStringHeight() + 10)
-	MinimapZoneTextButton:SetWidth(width)
+	local width = max(sm.core.font.GetStringWidth(MinimapZoneText) * 1.3, mod.db.width or 0)
+	sm.core.button.SetHeight(MinimapZoneTextButton, sm.core.font.GetStringHeight(MinimapZoneText) + 10)
+	sm.core.button.SetWidth(MinimapZoneTextButton, width)
 	if mod.db.fontColor.r then
-		MinimapZoneText:SetTextColor(mod.db.fontColor.r, mod.db.fontColor.g, mod.db.fontColor.b, mod.db.fontColor.a)
+		sm.core.font.SetTextColor(MinimapZoneText, mod.db.fontColor.r, mod.db.fontColor.g, mod.db.fontColor.b, mod.db.fontColor.a)
 	end
 end
 
