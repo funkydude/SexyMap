@@ -12,5 +12,4 @@ externals:
     Libs/LibDBIcon-1.0: https://repos.wowace.com/wow/libdbicon-1-0/trunk/LibDBIcon-1.0
 
 ignore:
-  - .travis.yml
   - README.md
