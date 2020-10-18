@@ -4,6 +4,7 @@ sm.zonetext = {}
 
 local mod = sm.zonetext
 local L = sm.L
+local zoneTextButton, zoneTextFont = nil, nil
 
 local media = LibStub("LibSharedMedia-3.0")
 
@@ -46,7 +47,7 @@ local options = {
 			max = 400,
 			step = 1,
 			bigStep = 4,
-			get = function() return MinimapZoneTextButton:GetWidth() end,
+			get = function() return zoneTextButton:GetWidth() end,
 			set = function(info, v) mod.db.width = v mod:UpdateLayout() end
 		},
 		font = {
@@ -75,7 +76,7 @@ local options = {
 			max = 30,
 			step = 1,
 			bigStep = 1,
-			get = function() return mod.db.fontsize or select(2, MinimapZoneText:GetFont()) end,
+			get = function() return mod.db.fontsize or (select(2, GameFontNormal:GetFont())) end,
 			set = function(info, v)
 				mod.db.fontsize = v
 				mod:UpdateLayout()
@@ -90,7 +91,7 @@ local options = {
 				if mod.db.fontColor.r then
 					return mod.db.fontColor.r, mod.db.fontColor.g, mod.db.fontColor.b, mod.db.fontColor.a
 				else
-					return MinimapZoneText:GetTextColor()
+					return zoneTextFont:GetTextColor()
 				end
 			end,
 			set = function(info, r, g, b, a)
@@ -140,11 +141,11 @@ local options = {
 				["hover"] = L["On Hover"],
 			},
 			get = function(info, v)
-				return (sm.buttons.db.visibilitySettings.MinimapZoneTextButton or "hover") == v
+				return (sm.buttons.db.visibilitySettings.SexyMapZoneTextButton or "hover") == v
 			end,
 			set = function(info, v)
-				sm.buttons.db.visibilitySettings.MinimapZoneTextButton = v
-				sm.buttons:ChangeFrameVisibility(MinimapZoneTextButton, v)
+				sm.buttons.db.visibilitySettings.SexyMapZoneTextButton = v
+				sm.buttons:ChangeFrameVisibility(SexyMapZoneTextButton, v) -- Buttons module
 			end,
 			disabled = function()
 				return not sm.buttons.db.controlVisibility
@@ -171,40 +172,165 @@ function mod:OnInitialize(profile)
 	end
 end
 
--- Some objects are no longer being called directly using ":" to work around issues with other addons
--- messing with these Blizzard-created widgets (conflicts)
 function mod:OnEnable()
 	sm.core:RegisterModuleOptions("ZoneText", options, L["Zone Text"])
 
-	sm.core.font.ClearAllPoints(MinimapZoneText)
-	sm.core.font.SetAllPoints(MinimapZoneText, MinimapZoneTextButton)
-	sm.core.button.SetHeight(MinimapZoneTextButton, 26)
-	Mixin(MinimapZoneTextButton, BackdropTemplateMixin)
-	MinimapZoneTextButton:SetBackdrop(sm.backdrop)
-	sm.core.button.SetFrameStrata(MinimapZoneTextButton, "MEDIUM")
+	do
+		-- Kill Blizz Frame
+		sm.core.button.SetParent(MinimapZoneTextButton, sm.core.button)
+		sm.core.font.SetParent(MinimapZoneText, sm.core.button)
+		MinimapCluster:UnregisterEvent("ZONE_CHANGED") -- Minimap.xml line 719-722 script "<OnLoad>" as of wow 9.0.1
+		MinimapCluster:UnregisterEvent("ZONE_CHANGED_INDOORS")
+		MinimapCluster:UnregisterEvent("ZONE_CHANGED_NEW_AREA")
+		hooksecurefunc(MinimapZoneTextButton, "SetParent", function(self)
+			sm.core.button.SetParent(self, sm.core.button)
+		end)
+		hooksecurefunc(MinimapZoneText, "SetParent", function(self)
+			sm.core.font.SetParent(self, sm.core.button)
+		end)
+	end
+
+	zoneTextButton = CreateFrame("Frame", "SexyMapZoneTextButton", Minimap, "BackdropTemplate") -- Create our own zone text
+	zoneTextButton:SetPoint("BOTTOM", Minimap, "TOP", mod.db.xOffset, mod.db.yOffset)
+	zoneTextButton:SetFrameStrata("MEDIUM")
+	zoneTextFont = zoneTextButton:CreateFontString()
+	zoneTextFont:SetAllPoints(zoneTextButton)
+	zoneTextButton:SetBackdrop(sm.backdrop)
+
+	sm.buttons:NewFrame(zoneTextButton) -- Buttons module
+
+	--do
+	--	local zoneTextFlags = nil
+	--	if self.db.profile.zoneTextConfig.monochrome and self.db.profile.zoneTextConfig.outline ~= "NONE" then
+	--		zoneTextFlags = "MONOCHROME," .. self.db.profile.zoneTextConfig.outline
+	--	elseif self.db.profile.zoneTextConfig.monochrome then
+	--		zoneTextFlags = "MONOCHROME"
+	--	elseif self.db.profile.zoneTextConfig.outline ~= "NONE" then
+	--		zoneTextFlags = self.db.profile.zoneTextConfig.outline
+	--	end
+	--	zoneTextFont:SetFont(media:Fetch("font", self.db.profile.zoneTextConfig.font), self.db.profile.zoneTextConfig.fontSize, zoneTextFlags)
+	--end
+
+	zoneTextButton:RegisterEvent("ZONE_CHANGED") -- Minimap.xml line 719-722 script "<OnLoad>" as of wow 9.0.1
+	zoneTextButton:RegisterEvent("ZONE_CHANGED_INDOORS")
+	zoneTextButton:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+	zoneTextButton:SetScript("OnEvent", mod.ZoneChanged)
+
+	do
+		local tt = CreateFrame("GameTooltip", "SexyMapTooltip", zoneTextButton, "GameTooltipTemplate")
+		local GetZonePVPInfo, GetZoneText, GetSubZoneText = GetZonePVPInfo, GetZoneText, GetSubZoneText
+		zoneTextButton:SetScript("OnEnter", function(self) -- Minimap.lua line 68 function "Minimap_SetTooltip" as of wow 9.0.1
+			tt:SetOwner(self, "ANCHOR_LEFT")
+			local pvpType, _, factionName = GetZonePVPInfo()
+			local zoneName = GetZoneText()
+			local subzoneName = GetSubZoneText()
+			if subzoneName == zoneName then
+				subzoneName = ""
+			end
+			tt:AddLine(zoneName, 1.0, 1.0, 1.0)
+			if pvpType == "sanctuary" then
+				--tt:AddLine(subzoneName, unpack(frame.db.profile.zoneTextConfig.colorSanctuary))
+				--tt:AddLine(SANCTUARY_TERRITORY, unpack(frame.db.profile.zoneTextConfig.colorSanctuary))
+				tt:AddLine(subzoneName, 0.41, 0.8, 0.94)
+				tt:AddLine(SANCTUARY_TERRITORY, 0.41, 0.8, 0.94)
+			elseif pvpType == "arena" then
+				--tt:AddLine(subzoneName, unpack(frame.db.profile.zoneTextConfig.colorArena))
+				--tt:AddLine(FREE_FOR_ALL_TERRITORY, unpack(frame.db.profile.zoneTextConfig.colorArena))
+				tt:AddLine(subzoneName, 1.0, 0.1, 0.1)
+				tt:AddLine(FREE_FOR_ALL_TERRITORY, 1.0, 0.1, 0.1)
+			elseif pvpType == "friendly" then
+				if factionName and factionName ~= "" then
+					--tt:AddLine(subzoneName, unpack(frame.db.profile.zoneTextConfig.colorFriendly))
+					--tt:AddLine(format(FACTION_CONTROLLED_TERRITORY, factionName), unpack(frame.db.profile.zoneTextConfig.colorFriendly))
+					tt:AddLine(subzoneName, 0.1, 1.0, 0.1)
+					tt:AddLine(format(FACTION_CONTROLLED_TERRITORY, factionName), 0.1, 1.0, 0.1)
+				end
+			elseif pvpType == "hostile" then
+				if factionName and factionName ~= "" then
+					--tt:AddLine(subzoneName, unpack(frame.db.profile.zoneTextConfig.colorHostile))
+					--tt:AddLine(format(FACTION_CONTROLLED_TERRITORY, factionName), unpack(frame.db.profile.zoneTextConfig.colorHostile))
+					tt:AddLine(subzoneName, 1.0, 0.1, 0.1)
+					tt:AddLine(format(FACTION_CONTROLLED_TERRITORY, factionName), 1.0, 0.1, 0.1)
+				end
+			elseif pvpType == "contested" then
+				--tt:AddLine(subzoneName, unpack(frame.db.profile.zoneTextConfig.colorContested))
+				--tt:AddLine(CONTESTED_TERRITORY, unpack(frame.db.profile.zoneTextConfig.colorContested))
+				tt:AddLine(subzoneName, 1.0, 0.7, 0.0)
+				tt:AddLine(CONTESTED_TERRITORY, 1.0, 0.7, 0.0)
+			elseif pvpType == "combat" then
+				--tt:AddLine(subzoneName, unpack(frame.db.profile.zoneTextConfig.colorArena))
+				--tt:AddLine(COMBAT_ZONE, unpack(frame.db.profile.zoneTextConfig.colorArena))
+				tt:AddLine(subzoneName, 1.0, 0.1, 0.1)
+				tt:AddLine(COMBAT_ZONE, 1.0, 0.1, 0.1)
+			else
+				--tt:AddLine(subzoneName, unpack(frame.db.profile.zoneTextConfig.colorNormal))
+				tt:AddLine(subzoneName, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
+			end
+			tt:Show()
+		end)
+		zoneTextButton:SetScript("OnLeave", function() tt:Hide() end)
+	end
 
 	self:UpdateLayout()
-	-- Hook Minimap.xml function "Minimap_Update", we let Blizz update the text and customize it afterwards.
-	MinimapCluster:HookScript("OnEvent", self.ZoneChanged)
 end
 
 function mod:UpdateLayout()
-	sm.core.button.ClearAllPoints(MinimapZoneTextButton)
-	sm.core.button.SetPoint(MinimapZoneTextButton, "BOTTOM", Minimap, "TOP", mod.db.xOffset, mod.db.yOffset)
-	MinimapZoneTextButton:SetBackdropColor(mod.db.bgColor.r, mod.db.bgColor.g, mod.db.bgColor.b, mod.db.bgColor.a)
-	MinimapZoneTextButton:SetBackdropBorderColor(mod.db.borderColor.r, mod.db.borderColor.g, mod.db.borderColor.b, mod.db.borderColor.a)
+	zoneTextButton:ClearAllPoints()
+	zoneTextButton:SetPoint("BOTTOM", Minimap, "TOP", mod.db.xOffset, mod.db.yOffset)
+	zoneTextButton:SetBackdropColor(mod.db.bgColor.r, mod.db.bgColor.g, mod.db.bgColor.b, mod.db.bgColor.a)
+	zoneTextButton:SetBackdropBorderColor(mod.db.borderColor.r, mod.db.borderColor.g, mod.db.borderColor.b, mod.db.borderColor.a)
 	local a, b, c = GameFontNormal:GetFont()
-	sm.core.font.SetFont(MinimapZoneText, mod.db.font and media:Fetch("font", mod.db.font) or a, mod.db.fontsize or b, c)
+	zoneTextFont:SetFont(mod.db.font and media:Fetch("font", mod.db.font) or a, mod.db.fontsize or b, c)
 
 	self:ZoneChanged()
 end
 
-function mod:ZoneChanged()
-	local width = max(sm.core.font.GetStringWidth(MinimapZoneText) * 1.3, mod.db.width or 0)
-	sm.core.button.SetHeight(MinimapZoneTextButton, sm.core.font.GetStringHeight(MinimapZoneText) + 10)
-	sm.core.button.SetWidth(MinimapZoneTextButton, width)
-	if mod.db.fontColor.r then
-		sm.core.font.SetTextColor(MinimapZoneText, mod.db.fontColor.r, mod.db.fontColor.g, mod.db.fontColor.b, mod.db.fontColor.a)
+do
+	local GetMinimapZoneText, GetZonePVPInfo = GetMinimapZoneText, GetZonePVPInfo
+	function mod:ZoneChanged()
+		local text = GetMinimapZoneText()
+		zoneTextFont:SetText(text)
+
+		local width = max(zoneTextFont:GetStringWidth() * 1.2, mod.db.width or 0)
+		zoneTextButton:SetWidth(width)
+		zoneTextButton:SetHeight(0) -- XXX Need to investigate why this is needed. Somehow related to the parent/child setup?
+		zoneTextButton:SetHeight(zoneTextFont:GetStringHeight() + 10)
+
+		if mod.db.fontColor.r then
+			zoneTextFont:SetTextColor(mod.db.fontColor.r, mod.db.fontColor.g, mod.db.fontColor.b, mod.db.fontColor.a)
+		else
+			-- Minimap.lua line 47 function "Minimap_Update" as of wow 9.0.1
+			local pvpType = GetZonePVPInfo()
+			if pvpType == "sanctuary" then
+				--local c = frame.db.profile.zoneTextConfig.colorSanctuary
+				--zoneTextFont:SetTextColor(c[1], c[2], c[3], c[4])
+				zoneTextFont:SetTextColor(0.41, 0.8, 0.94)
+			elseif pvpType == "arena" then
+				--local c = frame.db.profile.zoneTextConfig.colorArena
+				--zoneTextFont:SetTextColor(c[1], c[2], c[3], c[4])
+				zoneTextFont:SetTextColor(1.0, 0.1, 0.1)
+			elseif pvpType == "friendly" then
+				--local c = frame.db.profile.zoneTextConfig.colorFriendly
+				--zoneTextFont:SetTextColor(c[1], c[2], c[3], c[4])
+				zoneTextFont:SetTextColor(0.1, 1.0, 0.1)
+			elseif pvpType == "hostile" then
+				--local c = frame.db.profile.zoneTextConfig.colorHostile
+				--zoneTextFont:SetTextColor(c[1], c[2], c[3], c[4])
+				zoneTextFont:SetTextColor(1.0, 0.1, 0.1)
+			elseif pvpType == "contested" then
+				--local c = frame.db.profile.zoneTextConfig.colorContested
+				--zoneTextFont:SetTextColor(c[1], c[2], c[3], c[4])
+				zoneTextFont:SetTextColor(1.0, 0.7, 0.0)
+			else
+				--local c = frame.db.profile.zoneTextConfig.colorNormal
+				--zoneTextFont:SetTextColor(c[1], c[2], c[3], c[4])
+				zoneTextFont:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
+			end
+		end
+
+		if zoneTextButton:IsMouseOver() then
+			zoneTextButton:GetScript("OnLeave")()
+			zoneTextButton:GetScript("OnEnter")(zoneTextButton)
+		end
 	end
 end
-
