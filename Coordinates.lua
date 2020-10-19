@@ -14,7 +14,7 @@ local options = {
 	childGroups = "tab",
 	disabled = function() return not mod.db.enabled end,
 	args = {
-		enable = {
+		enabled = {
 			type = "toggle",
 			name = L["Enable Coordinates"],
 			order = 1,
@@ -168,6 +168,23 @@ local options = {
 				mod.db.updateRate = v
 			end
 		},
+		coordPrecision = {
+			type = "multiselect",
+			name = "Precision",
+			order = 12,
+			values = {
+				["%d,%d"] = "70,70",
+				["%.1f, %.1f"] = "70.1, 70.1",
+				["%.2f, %.2f"] = "70.11, 70.11",
+			},
+			get = function(info, v)
+				return mod.db.coordPrecision == v
+			end,
+			set = function(info, v)
+				mod.db.coordPrecision = v
+				mod:Update()
+			end,
+		}
 	}
 }
 
@@ -177,7 +194,8 @@ function mod:OnInitialize(profile)
 			borderColor = {},
 			backgroundColor = {},
 			fontColor = {},
-			enabled = false,
+			enabled = true,
+			coordPrecision = "%d,%d",
 			updateRate = 1,
 			xOffset = 0,
 			yOffset = 10,
@@ -185,10 +203,6 @@ function mod:OnInitialize(profile)
 		}
 	end
 	self.db = profile.coordinates
-	-- XXX temp 7.3.5
-	if not profile.coordinates.updateRate then
-		profile.coordinates.updateRate = 1
-	end
 	-- XXX temp 8.0.1
 	if not profile.coordinates.xOffset then
 		profile.coordinates.xOffset = 0
@@ -199,6 +213,11 @@ function mod:OnInitialize(profile)
 	end
 	if not profile.coordinates.font then
 		profile.coordinates.font = media:GetDefault("font")
+	end
+	-- XXX temp 9.0.1
+	if not profile.coordinates.coordPrecision then
+		profile.coordinates.enabled = true
+		profile.coordinates.coordPrecision = "%d,%d"
 	end
 end
 
@@ -217,22 +236,26 @@ function mod:CreateFrame()
 		coordsText = coordFrame:CreateFontString(nil, nil, "GameFontNormalSmall")
 		coordsText:SetPoint("CENTER", coordFrame, "CENTER")
 		coordsText:SetJustifyH("CENTER")
-		coordsText:SetText("0.0, 0.0")
+		coordsText:SetText("0,0")
 		coordFrame:SetClampedToScreen(true)
 
 		local GetPlayerMapPosition = C_Map.GetPlayerMapPosition
 		local GetBestMapForUnit = C_Map.GetBestMapForUnit
 		local CTimerAfter = C_Timer.After
 		local function updateCoords()
-			CTimerAfter(mod.db.updateRate, updateCoords)
 			local uiMapID = GetBestMapForUnit"player"
 			if uiMapID then
 				local tbl = GetPlayerMapPosition(uiMapID, "player")
 				if tbl then
-					coordsText:SetFormattedText("%.1f, %.1f", tbl.x*100, tbl.y*100)
+					CTimerAfter(mod.db.updateRate, updateCoords)
+					coordsText:SetFormattedText(mod.db.coordPrecision, tbl.x*100, tbl.y*100)
 				else
-					coordsText:SetText("0.0, 0.0")
+					CTimerAfter(5, updateCoords)
+					coordsText:SetText("0,0")
 				end
+			else
+				CTimerAfter(5, updateCoords)
+				coordsText:SetText("0,0")
 			end
 		end
 		updateCoords()
@@ -263,7 +286,13 @@ function mod:Update()
 	local _, b, c = coordsText:GetFont()
 	coordsText:SetFont(media:Fetch("font", mod.db.font), mod.db.fontSize or b, c)
 
-	coordsText:SetText("99.9, 99.9")
+	if mod.db.coordPrecision == "%.2f, %.2f" then
+		coordsText:SetText("99.99, 99.99")
+	elseif mod.db.coordPrecision == "%.1f, %.1f" then
+		coordsText:SetText("99.9, 99.9")
+	else
+		coordsText:SetText("99, 99")
+	end
 	coordFrame:SetWidth(coordsText:GetStringWidth() * 1.2)
 	coordFrame:SetHeight(coordsText:GetStringHeight() + 10)
 end
