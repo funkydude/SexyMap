@@ -380,6 +380,9 @@ do
 				OnFinished(frame.MinimapLoopPulseAnim or frame.EyeHighlightAnim)
 			else
 				frame:SetAlpha(1)
+				if frame == TimeManagerClockButton then
+					sm.core.button.SetParent(TimeManagerClockButton, Minimap) -- Workaround conflicts with other addons trying to hide it
+				end
 			end
 		elseif vis == "never" then
 			if not frameParents[frame] then

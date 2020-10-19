@@ -182,17 +182,19 @@ function mod:OnEnable()
 		MinimapCluster:UnregisterEvent("ZONE_CHANGED") -- Minimap.xml line 719-722 script "<OnLoad>" as of wow 9.0.1
 		MinimapCluster:UnregisterEvent("ZONE_CHANGED_INDOORS")
 		MinimapCluster:UnregisterEvent("ZONE_CHANGED_NEW_AREA")
-		hooksecurefunc(MinimapZoneTextButton, "SetParent", function(self)
-			sm.core.button.SetParent(self, sm.core.button)
+		local MinimapZoneTextButton, MinimapZoneText = MinimapZoneTextButton, MinimapZoneText -- Safety
+		hooksecurefunc(MinimapZoneTextButton, "SetParent", function()
+			sm.core.button.SetParent(MinimapZoneTextButton, sm.core.button)
 		end)
-		hooksecurefunc(MinimapZoneText, "SetParent", function(self)
-			sm.core.font.SetParent(self, sm.core.button)
+		hooksecurefunc(MinimapZoneText, "SetParent", function()
+			sm.core.font.SetParent(MinimapZoneText, sm.core.button)
 		end)
 	end
 
 	zoneTextButton = CreateFrame("Frame", "SexyMapZoneTextButton", Minimap, "BackdropTemplate") -- Create our own zone text
 	zoneTextButton:SetPoint("BOTTOM", Minimap, "TOP", mod.db.xOffset, mod.db.yOffset)
 	zoneTextButton:SetFrameStrata("MEDIUM")
+	zoneTextButton:SetClampedToScreen(true)
 	zoneTextFont = zoneTextButton:CreateFontString()
 	zoneTextFont:SetAllPoints(zoneTextButton)
 	zoneTextButton:SetBackdrop(sm.backdrop)
@@ -217,7 +219,7 @@ function mod:OnEnable()
 	zoneTextButton:SetScript("OnEvent", mod.ZoneChanged)
 
 	do
-		local tt = CreateFrame("GameTooltip", "SexyMapTooltip", zoneTextButton, "GameTooltipTemplate")
+		local tt = CreateFrame("GameTooltip", "SexyMapZoneTextTooltip", zoneTextButton, "GameTooltipTemplate")
 		local GetZonePVPInfo, GetZoneText, GetSubZoneText = GetZonePVPInfo, GetZoneText, GetSubZoneText
 		zoneTextButton:SetScript("OnEnter", function(self) -- Minimap.lua line 68 function "Minimap_SetTooltip" as of wow 9.0.1
 			tt:SetOwner(self, "ANCHOR_LEFT")

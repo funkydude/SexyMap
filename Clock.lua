@@ -168,7 +168,7 @@ function mod:OnInitialize(profile)
 end
 
 -- Some objects are no longer being called directly using ":" to work around issues with other addons
--- messing with these Blizzard-created widgets (conflicts)
+-- messing with these Blizzard-created widgets (addon conflicts)
 function mod:OnEnable()
 	sm.core:RegisterModuleOptions("Clock", options, L["Clock"])
 
@@ -179,6 +179,17 @@ function mod:OnEnable()
 	Mixin(TimeManagerClockButton, BackdropTemplateMixin)
 	TimeManagerClockButton:SetBackdrop(sm.backdrop)
 	sm.core.button.SetClampedToScreen(TimeManagerClockButton, true)
+	sm.core.button.Show(TimeManagerClockButton)
+	do
+		local TimeManagerClockButton = TimeManagerClockButton -- Safety
+		hooksecurefunc(TimeManagerClockButton, "Hide", function()
+			sm.core.button.Show(TimeManagerClockButton)
+		end)
+		hooksecurefunc(TimeManagerClockButton, "SetPoint", function()
+			sm.core.button.ClearAllPoints(TimeManagerClockButton)
+			sm.core.button.SetPoint(TimeManagerClockButton, "TOP", Minimap, "BOTTOM", mod.db.xOffset, mod.db.yOffset)
+		end)
+	end
 
 	-- For some reason PLAYER_LOGIN is too early for a rare subset of users (even when only using SexyMap)
 	-- which results in a clock width too small. Use this delayed repeater to try and fix the clock width for them.
