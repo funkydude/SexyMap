@@ -200,7 +200,8 @@ function mod:OnEnable()
 	zoneTextButton:SetFrameStrata("MEDIUM")
 	zoneTextButton:SetClampedToScreen(true)
 	zoneTextFont = zoneTextButton:CreateFontString()
-	zoneTextFont:SetAllPoints(zoneTextButton)
+	zoneTextFont:SetPoint("CENTER", zoneTextButton, "CENTER")
+	zoneTextFont:SetJustifyH("CENTER")
 	zoneTextButton:SetBackdrop(sm.backdrop)
 
 	sm.buttons:NewFrame(zoneTextButton) -- Buttons module
@@ -299,7 +300,6 @@ do
 
 		local width = max(zoneTextFont:GetStringWidth() * 1.2, mod.db.width or 0)
 		zoneTextButton:SetWidth(width)
-		zoneTextButton:SetHeight(0) -- XXX Need to investigate why this is needed. Somehow related to the parent/child setup?
 		zoneTextButton:SetHeight(zoneTextFont:GetStringHeight() + 10)
 
 		if mod.db.fontColor.r then
