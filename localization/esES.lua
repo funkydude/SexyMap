@@ -175,3 +175,4 @@ L["Zoom Out Button"] = "Botón de Alejar Zoom"
 
 L.updateRate = "Frecuencia de actualización (segundos)"
 L.updateRateDesc = "Cuanto más bajo sea el valor, más rápido se actualizarán las coordenadas, pero más memoria y CPU se consumirán debido a que se le pedirá al juego datos de coordenadas nuevos."
+--L.Precision = "Precision"

@@ -170,18 +170,26 @@ local options = {
 		},
 		coordPrecision = {
 			type = "multiselect",
-			name = "Precision",
+			name = L.Precision,
 			order = 12,
-			values = {
-				["%d,%d"] = "70,70",
-				["%.1f, %.1f"] = "70.1, 70.1",
-				["%.2f, %.2f"] = "70.11, 70.11",
-			},
+			values = {"70,70", "70.1, 70.1", "70.11, 70.11"},
 			get = function(info, v)
-				return mod.db.coordPrecision == v
+				if v == 1 and mod.db.coordPrecision == "%d,%d" then
+					return true
+				elseif v == 2 and mod.db.coordPrecision == "%.1f, %.1f" then
+					return true
+				elseif v == 3 and mod.db.coordPrecision == "%.2f, %.2f" then
+					return true
+				end
 			end,
 			set = function(info, v)
-				mod.db.coordPrecision = v
+				if v == 1 then
+					mod.db.coordPrecision = "%d,%d"
+				elseif v == 2 then
+					mod.db.coordPrecision = "%.1f, %.1f"
+				elseif v == 3 then
+					mod.db.coordPrecision = "%.2f, %.2f"
+				end
 				mod:Update()
 			end,
 		}
