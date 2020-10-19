@@ -140,7 +140,7 @@ local options = {
 			end,
 			set = function(info, v)
 				sm.buttons.db.visibilitySettings.TimeManagerClockButton = v
-				sm.buttons:ChangeFrameVisibility(TimeManagerClockButton, v)
+				TimeManagerClockButton:SetParent(Minimap) -- Activate the hooksecurefunc we defined in Buttons.lua -- sm.buttons:ChangeFrameVisibility(TimeManagerClockButton, v)
 			end,
 			disabled = function()
 				return not sm.buttons.db.controlVisibility

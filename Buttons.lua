@@ -317,6 +317,8 @@ do
 		end
 	end
 
+	local hideFrame = CreateFrame("Frame") -- Dummy frame we use for hiding buttons to prevent other addons re-showing them
+	hideFrame:Hide()
 	function mod:NewFrame(f)
 		local n = f:GetName()
 		-- Only add Blizz buttons & LibDBIcon buttons
@@ -345,7 +347,21 @@ do
 			animFrames[#animFrames+1] = f
 
 			-- Configure fading
-			if mod.db.controlVisibility then
+			if n == "TimeManagerClockButton" then -- This is disgusting but have to work around other addons messing with it
+				hooksecurefunc(f, "SetParent", function(self)
+					local vis = mod.db.visibilitySettings[n] or "hover"
+					if vis == "always" then
+						sm.core.button.SetParent(self, Minimap)
+						self:SetAlpha(1)
+					elseif vis == "never" then
+						sm.core.button.SetParent(self, hideFrame)
+					else
+						sm.core.button.SetParent(self, Minimap)
+						self:SetAlpha(0)
+					end
+				end)
+				f:SetParent(Minimap) -- Run the hook
+			elseif mod.db.controlVisibility then
 				self:ChangeFrameVisibility(f, mod.db.visibilitySettings[n] or "hover")
 			end
 
@@ -365,8 +381,6 @@ do
 		f:HookScript("OnLeave", OnLeave)
 	end
 
-	local hideFrame = CreateFrame("Frame") -- Dummy frame we use for hiding buttons to prevent other addons re-showing them
-	hideFrame:Hide()
 	local frameParents = {} -- Store the original button parents for restoration
 	function mod:ChangeFrameVisibility(frame, vis)
 		if vis == "always" then
@@ -380,9 +394,6 @@ do
 				OnFinished(frame.MinimapLoopPulseAnim or frame.EyeHighlightAnim)
 			else
 				frame:SetAlpha(1)
-				if frame == TimeManagerClockButton then
-					sm.core.button.SetParent(TimeManagerClockButton, Minimap) -- Workaround conflicts with other addons trying to hide it
-				end
 			end
 		elseif vis == "never" then
 			if not frameParents[frame] then
