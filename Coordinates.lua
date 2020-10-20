@@ -246,6 +246,7 @@ function mod:CreateFrame()
 		coordsText:SetJustifyH("CENTER")
 		coordsText:SetText("0,0")
 		coordFrame:SetClampedToScreen(true)
+		coordFrame:SetClampRectInsets(4,-4,-4,4) -- Allow kissing the edge of the screen when hiding the backdrop border (size 4)
 
 		local GetPlayerMapPosition = C_Map.GetPlayerMapPosition
 		local GetBestMapForUnit = C_Map.GetBestMapForUnit

@@ -8,7 +8,7 @@ local L = sm.L
 sm.backdrop = {
 	bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
 	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-	insets = {left = 4, top = 4, right = 4, bottom = 4},
+	insets = {left = 4, top = 4, right = 4, bottom = 4}, -- Change the Clock/Coords/ZoneText clamp if this is changed
 	edgeSize = 16,
 	tile = true,
 }

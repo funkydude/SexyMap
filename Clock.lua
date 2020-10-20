@@ -183,6 +183,7 @@ function mod:OnEnable()
 	Mixin(TimeManagerClockButton, BackdropTemplateMixin)
 	TimeManagerClockButton:SetBackdrop(sm.backdrop)
 	sm.core.button.SetClampedToScreen(TimeManagerClockButton, true)
+	sm.core.button.SetClampRectInsets(TimeManagerClockButton, 4,-4,-4,4) -- Allow kissing the edge of the screen when hiding the backdrop border (size 4)
 	sm.core.button.Show(TimeManagerClockButton)
 	do
 		local TimeManagerClockButton = TimeManagerClockButton -- Safety
