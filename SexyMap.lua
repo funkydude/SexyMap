@@ -1,4 +1,10 @@
 
+if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+	print("|cFF33FF99SexyMap|r: You're trying to run the Retail version of SexyMap on a Classic server. Delete SexyMap and install the correct version.")
+	error("You're trying to run the Retail version of SexyMap on a Classic server. Delete SexyMap and install the correct version.")
+	return
+end
+
 local name, sm = ...
 sm.core = {}
 

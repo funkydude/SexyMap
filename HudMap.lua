@@ -1,4 +1,8 @@
 
+if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+	return
+end
+
 local _, sm = ...
 sm.hudmap = {}
 if sm then return end -- XXX disable for now
