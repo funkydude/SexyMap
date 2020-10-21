@@ -416,6 +416,11 @@ function mod:PLAYER_LOGIN()
 	mod.PLAYER_LOGIN = nil
 end
 
+Minimap:SetParent(UIParent)
+-- Undo the damage caused by automagic fuckery when a frame changes parent
+-- In other words, restore the minimap defaults to what they were, when it was parented to MinimapCluster
+Minimap:SetFrameStrata("LOW")
+Minimap:SetFrameLevel(1)
 -- Make sure the various minimap buttons follow the minimap
 -- We do this before login to prevent button placement issues
 MinimapBackdrop:ClearAllPoints()
@@ -499,7 +504,6 @@ function mod:SetupMap()
 	MinimapBorderTop:Hide()
 	Minimap:RegisterForDrag("LeftButton")
 	Minimap:SetClampedToScreen(mod.db.clamp)
-	Minimap:SetFrameStrata("LOW")
 	Minimap:SetScale(mod.db.scale or 1)
 	Minimap:SetMovable(not mod.db.lock)
 
@@ -512,9 +516,7 @@ function mod:SetupMap()
 
 	if mod.db.point then
 		Minimap:ClearAllPoints()
-		Minimap:SetParent(UIParent)
 		Minimap:SetPoint(mod.db.point, UIParent, mod.db.relpoint, mod.db.x, mod.db.y)
-		Minimap:SetFrameStrata("LOW")
 	end
 	self.SetupMap = nil
 end
