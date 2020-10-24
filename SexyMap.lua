@@ -430,7 +430,6 @@ Minimap:SetFrameLevel(1)
 -- Make sure the various minimap buttons follow the minimap
 -- We do this before login to prevent button placement issues
 MinimapBackdrop:ClearAllPoints()
-MinimapBackdrop:SetParent(Minimap)
 MinimapBackdrop:SetPoint("CENTER", Minimap, "CENTER", -8, -23)
 
 function mod:SetupMap()
