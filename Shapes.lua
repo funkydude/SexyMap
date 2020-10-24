@@ -342,9 +342,21 @@ function mod:ApplyShape(shape)
 	if shape or db.shape then
 		db.shape = shape or db.shape
 		Minimap:SetMaskTexture(db.shape)
+		if HybridMinimap then
+			HybridMinimap.MapCanvas:SetUseMaskTexture(false)
+			HybridMinimap.CircleMask:SetTexture(db.shape)
+			HybridMinimap.MapCanvas:SetUseMaskTexture(true)
+		end
 	end
 	sm.buttons:UpdateDraggables()
 end
+
+function sm.core:PLAYER_ENTERING_WORLD() -- XXX Investigate if it's safe to unregister this after the first application
+	if C_Minimap.ShouldUseHybridMinimap() then
+		mod:ApplyShape()
+	end
+end
+sm.core.frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 
 -- Global function for other addons
 GetMinimapShape = function()
