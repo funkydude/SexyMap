@@ -351,12 +351,17 @@ function mod:ApplyShape(shape)
 	sm.buttons:UpdateDraggables()
 end
 
-function sm.core:PLAYER_ENTERING_WORLD() -- XXX Investigate if it's safe to unregister this after the first application
-	if C_Minimap.ShouldUseHybridMinimap() then
-		mod:ApplyShape()
-	end
+if not HybridMinimap then
+	local frame = CreateFrame("Frame")
+	frame:SetScript("OnEvent", function(self, event, addon)
+		if addon == "Blizzard_HybridMinimap" then
+			self:UnregisterEvent(event)
+			mod:ApplyShape()
+			self:SetScript("OnEvent", nil)
+		end
+	end)
+	frame:RegisterEvent("ADDON_LOADED")
 end
-sm.core.frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 
 -- Global function for other addons
 GetMinimapShape = function()

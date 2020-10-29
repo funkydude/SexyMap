@@ -425,12 +425,18 @@ end
 Minimap:SetParent(UIParent)
 -- Undo the damage caused by automagic fuckery when a frame changes parent
 -- In other words, restore the minimap defaults to what they were, when it was parented to MinimapCluster
-Minimap:SetFrameStrata("LOW")
+Minimap:SetFrameStrata("LOW") -- Blizz Defaults patch 9.0.1 Minimap.xml
 Minimap:SetFrameLevel(1)
 -- Make sure the various minimap buttons follow the minimap
 -- We do this before login to prevent button placement issues
 MinimapBackdrop:ClearAllPoints()
 MinimapBackdrop:SetPoint("CENTER", Minimap, "CENTER", -8, -23)
+-- This should never run as we should always load before it... unless someone force loads it early
+-- If they did, the strata/level would also mess up from changing Minimap parent, so we restore it
+if HybridMinimap then
+	HybridMinimap:SetFrameStrata("BACKGROUND") -- Blizz Defaults patch 9.0.1 Blizzard_HybridMinimap.xml
+	HybridMinimap:SetFrameLevel(100)
+end
 
 function mod:SetupMap()
 	local Minimap = Minimap
