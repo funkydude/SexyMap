@@ -199,7 +199,7 @@ function mod:OnEnable()
 		end)
 	end
 
-	zoneTextButton = CreateFrame("Button", "SexyMapZoneTextButton", Minimap, "BackdropTemplate") -- Create our own zone text
+	zoneTextButton = CreateFrame("Frame", "SexyMapZoneTextButton", Minimap, "BackdropTemplate") -- Create our own zone text
 	zoneTextButton:SetPoint("BOTTOM", Minimap, "TOP", mod.db.xOffset, mod.db.yOffset)
 	zoneTextButton:SetClampedToScreen(true)
 	zoneTextButton:SetClampRectInsets(4,-4,-4,4) -- Allow kissing the edge of the screen when hiding the backdrop border (size 4)
