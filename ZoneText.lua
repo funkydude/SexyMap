@@ -302,7 +302,7 @@ do
 		local text = GetMinimapZoneText()
 		zoneTextFont:SetText(text)
 
-		local width = max(zoneTextFont:GetStringWidth() * 1.2, mod.db.width or 0)
+		local width = max(zoneTextFont:GetStringWidth() + 16, mod.db.width or 0)
 		zoneTextButton:SetWidth(width)
 		zoneTextButton:SetHeight(zoneTextFont:GetStringHeight() + 10)
 
