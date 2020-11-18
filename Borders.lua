@@ -952,10 +952,12 @@ end
 
 do
 	local inc = 0
-	local backgroundFrame = CreateFrame("Frame") -- HybridMinimap compat
+	local backgroundFrame = CreateFrame("Frame") -- HybridMinimap support
 	backgroundFrame:SetParent(Minimap)
 	backgroundFrame:SetFrameStrata("BACKGROUND")
 	backgroundFrame:SetFrameLevel(1)
+	backgroundFrame:SetFixedFrameStrata(true)
+	backgroundFrame:SetFixedFrameLevel(true)
 	backgroundFrame:Show()
 	function mod:CreateBorderFromParams(t)
 		inc = inc + 1
