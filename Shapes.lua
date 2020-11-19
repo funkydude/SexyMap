@@ -313,6 +313,15 @@ local shapeOptions = {
 
 function mod:OnInitialize(profile)
 	db = profile.core
+
+	-- Global function for other addons
+	GetMinimapShape = function()
+		--if HudMapCluster and HudMapCluster:IsShown() then -- HudMap module compat
+		--	return "ROUND"
+		--else
+			return shapes[db.shape] and shapes[db.shape].shape or "ROUND"
+		--end
+	end
 end
 
 function mod:OnEnable()
@@ -362,13 +371,3 @@ if not HybridMinimap then
 	end)
 	frame:RegisterEvent("ADDON_LOADED")
 end
-
--- Global function for other addons
-GetMinimapShape = function()
-	if HudMapCluster and HudMapCluster:IsShown() then -- HudMap module compat
-		return "ROUND"
-	else
-		return shapes[db.shape] and shapes[db.shape].shape or "ROUND"
-	end
-end
-
