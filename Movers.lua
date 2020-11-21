@@ -248,18 +248,6 @@ function mod:EnableVehicleMover()
 end
 
 do
-	local started = nil
-	function mod:Start()
-		if started then return end
-		started = true
-
-		hooksecurefunc("UpdateContainerFrameAnchors", self.CreateMoversAndSetMovables)
-
-		self:CreateMoversAndSetMovables()
-	end
-end
-
-do
 	local function start(self)
 		local f = self:GetParent()
 		f:StartMoving()
@@ -315,26 +303,5 @@ do
 				end
 			end
 		end
-		mod:SetMovers()
 	end
 end
-
-function mod:SetMovers()
-	local v = mod.db.enabled and (not mod.db.lock)
-	if v then
-		for _, f in ipairs(movers) do
-			f.showParent = not not f:GetParent():IsVisible() -- convert nil -> false
-			f:GetParent():Show()
-			f:Show()
-		end
-	else
-		for _, f in ipairs(movers) do
-			if f.showParent == false then
-				f:GetParent():Hide()
-			end
-			f.showParent = nil
-			f:Hide()
-		end
-	end
-end
-
