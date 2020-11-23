@@ -242,7 +242,9 @@ function mod:OnEnable()
 end
 
 function mod:OnLoadingScreenOver()
-	self:Update()
+	if mod.db.enabled then
+		self:Update()
+	end
 end
 
 function mod:CreateFrame()
