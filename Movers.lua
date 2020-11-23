@@ -15,7 +15,7 @@ local options = {
 	args = {
 		desc = {
 			order = 1,
-			name = "Enable the ability to move specific UI elements.",
+			name = L.moversDescription,
 			type = "description",
 			width = "full",
 		},
@@ -26,7 +26,7 @@ local options = {
 			width = "full",
 			confirm = function(info, v)
 				if not v then
-					return "Disabling this will reload your UI. Are you sure?"
+					return L.disableWarning
 				end
 			end,
 			get = function()
@@ -73,12 +73,12 @@ local options = {
 		},
 		moveObjectives = {
 			order = 5,
-			name = "Enable Quest Tracker",
+			name = L.enableObject:format(L["Objectives Tracker"]),
 			type = "toggle",
 			width = "full",
 			confirm = function(info, v)
 				if not v then
-					return "Disabling this will reload your UI. Are you sure?"
+					return L.disableWarning
 				end
 			end,
 			get = function()
@@ -97,7 +97,7 @@ local options = {
 		},
 		lockObjectives = {
 			order = 6,
-			name = "Lock Quest Tracker",
+			name = L.lockObject:format(L["Objectives Tracker"]),
 			type = "toggle",
 			width = "full",
 			get = function()

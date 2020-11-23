@@ -49,7 +49,6 @@ L["Delete a Profile"] = "Deletar um perfil"
 L["Diamond"] = "Diamante"
 L["Disable (opaque)"] = "Desabilitar (opacidade)"
 L["Disable Rotation"] = "Desabilitar Rotação"
-L["Disabling the movers will make them reset next time you relog, are you sure?"] = "Desabilitar os movedores irá fazer com que eles resetem na próxima vez que você relogar, você tem certeza disso?" -- Needs review
 L["Drag Radius"] = "Área de arrasto" -- Needs review
 L["Dungeon Difficulty Indicator (When Available)"] = "Indicador de Dificuldade de Masmorra (Quando disponível)"
 L["Dynamic Buttons"] = "Botões dinâmicos"
@@ -59,7 +58,6 @@ L["Enable a HUD minimap. This is very useful for gathering resources, but for te
 L["Enable Coordinates"] = "Habilitar Coordenadas"
 L["Enable Hudmap"] = "Habilitar Hudmap"
 L["Enable Minimap Fader"] = "Habilitar Ocultação do Minimapa" -- Needs review
-L["Enable Movers"] = "Habilitar Movedores" -- Needs review
 L["Enter a name to create a new border. The name can be anything you like to help you identify that border."] = "Coloque um nome para criar uma nova borda. O nome pode ser qualquer coisa que você ache que vai lhe ajudar a identificar a borda."
 L["Enter the full path to a texture to use. It's recommended that you use something like |cffff6600TexBrowser|r to find textures to use."] = "Entre o caminho inteiro da textura que deseja usar. É recomendado que você use alguma Addon como |cffff6600TexBrowser|r para achar a textura que deseja usar."
 -- L["Entry Options"] = "Entry Options"
@@ -89,12 +87,10 @@ L["Let SexyMap control button visibility"] = "Deixar o SexyMap controlar a visib
 L["Let SexyMap handle button dragging"] = "Deixar o SexyMap controlar o movimento dos botões"
 L["Lock Button Dragging"] = "Bloquear o movimento de botões"
 L["Lock Minimap"] = "Bloquear o minimapa"
-L["Lock Movers"] = "Bloquear os Movedores" -- Needs review
 L["Map Button"] = "Botão do mapa"
 L["Minimap shape"] = "Formato do minimapa"
 L["Mod Blend (modulative)"] = "Mistura do Mod (modular)" -- Needs review
 L["Movers"] = "Movedores" -- Needs review
-L["Movers Warning"] = "AVISO: Esta função não é oficialmente suportada, portanto espere por problemas ao usar esta função como impurezas, perda da funcionalidade do rastreador de missões, ou das janelas de chefe saltando pela tela. Os janelas da Blizzard como o rastreador de missão e saúde do chefe não foram criadas para serem movidas, eu sugiro que você use addons que substituam essas janelas, como por exemplo, Unit Frames para os chefes." -- Needs review
 L["Name"] = "Nome"
 L["Never"] = "Nunca"
 L["New Mail Indicator (When Available)"] = "Indicador de nova carta (Quando disponível)"
@@ -173,6 +169,13 @@ L["Zone Text"] = "Texto da Zona" -- Needs review
 L["Zoom In Button"] = "Botão aumentar o Zoom"
 L["Zoom Out Button"] = "Botão diminuir o Zoom"
 
+-- Coordinates.lua
 --L.updateRate = "Update Rate (seconds)"
 --L.updateRateDesc = "The lower the value, the faster the coordinates will update, but the more memory and CPU will be consumed due to asking the game for fresh coordinate data."
 --L.Precision = "Precision"
+
+-- Movers.lua
+--L.moversDescription = "Enable the ability to move specific UI elements."
+--L.disableWarning = "Disabling this will temporarily show the loading screen. Are you sure?"
+--L.enableObject = "Enable %s"
+--L.lockObject = "Lock %s"

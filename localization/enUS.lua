@@ -136,16 +136,16 @@ L["Toggle HudMap On/Off"] = "Toggle HudMap On/Off"
 L["The HudMap supports several addons. If you have any of the addons below installed, they will be shown on the HudMap."] = "The HudMap supports several addons. If you have any of the addons below installed, they will be shown on the HudMap."
 
 -- ./Movers.lua
-L["Movers Warning"] = "WARNING: This feature is not officially supported, expect problems when using this feature such as taints, loss of quest tracker functionality, or boss frames jumping around. Blizzard frames like the quest tracker and boss health aren't designed to be moved, I suggest you use addons that replace these frames e.g. Unit Frames for boss health."
-L["Enable Movers"] = "Enable Movers"
-L["Lock Movers"] = "Lock Movers"
 L["Armored Man"] = "Armored Man"
 L["Objectives Tracker"] = "Objectives Tracker"
 L["Boss Frames"] = "Boss Frames"
 L["Vehicle Seat"] = "Vehicle Seat"
 L["Capture Bars"] = "Capture Bars"
 L["Movers"] = "Movers"
-L["Disabling the movers will make them reset next time you relog, are you sure?"] = "Disabling the movers will make them reset next time you relog, are you sure?"
+L.moversDescription = "Enable the ability to move specific UI elements."
+L.disableWarning = "Disabling this will temporarily show the loading screen. Are you sure?"
+L.enableObject = "Enable %s"
+L.lockObject = "Lock %s"
 
 -- ./Ping.lua
 L["Show who pinged"] = "Show who pinged"

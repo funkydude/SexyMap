@@ -49,7 +49,6 @@ L["Delete a Profile"] = "프로필 삭제" -- Needs review
 L["Diamond"] = "다이아몬드" -- Needs review
 L["Disable (opaque)"] = "사용안함(불투명)" -- Needs review
 L["Disable Rotation"] = "바꾸기 금지"
--- L["Disabling the movers will make them reset next time you relog, are you sure?"] = "Disabling the movers will make them reset next time you relog, are you sure?"
 L["Drag Radius"] = "미니맵 접근 간격" -- Needs review
 L["Dungeon Difficulty Indicator (When Available)"] = "던전 난이도 표시기(가능하다면)" -- Needs review
 L["Dynamic Buttons"] = "추가 활성화 버튼" -- Needs review
@@ -59,7 +58,6 @@ L["Enable a HUD minimap. This is very useful for gathering resources, but for te
 L["Enable Coordinates"] = "좌표 사용" -- Needs review
 L["Enable Hudmap"] = "Hudmap 사용" -- Needs review
 L["Enable Minimap Fader"] = "미니맵 투명도 사용" -- Needs review
-L["Enable Movers"] = "이동 프레임 사용" -- Needs review
 L["Enter a name to create a new border. The name can be anything you like to help you identify that border."] = "새로운 테두리 생성을 위한 이름을 입력하세요. 가능하면 구분이 가능할 이름을 사용하세요." -- Needs review
 L["Enter the full path to a texture to use. It's recommended that you use something like |cffff6600TexBrowser|r to find textures to use."] = "무늬가 저장되어 있는 전체 경로를 입력하세요. |cffff6600TexBrowser|r와 같은 애드온을 통해서 무늬 선택하는 것을 추천합니다." -- Needs review
 L["Entry Options"] = "목록 설정" -- Needs review
@@ -89,12 +87,10 @@ L["Let SexyMap control button visibility"] = "SexyMap 애드온의 버튼 표시
 L["Let SexyMap handle button dragging"] = "SexyMap 애드온의 버튼 움직임 강제 사용" -- Needs review
 L["Lock Button Dragging"] = "미니맵 주변 버튼 고정" -- Needs review
 L["Lock Minimap"] = "미니맵 고정" -- Needs review
-L["Lock Movers"] = "이동 프레임 고정" -- Needs review
 L["Map Button"] = "지도 버튼" -- Needs review
 L["Minimap shape"] = "미니맵 모양" -- Needs review
 L["Mod Blend (modulative)"] = "모드 조합(조절)" -- Needs review
 L["Movers"] = "주변 프레임" -- Needs review
-L["Movers Warning"] = "주의 : 이 설정을 공식적으로 지원하는 것이 아닙니다. 임무 추적기의 사라짐, 보스 프레임의 이동 등의 문제점을 야기시킬 수 있습니다. 블리자드에서는 임무추적기와 보스프레임의 이동을 공식적으로는 지원하지 않습니다. 가능하다면 유닛프레임 애드온의 보스 생명력 표시기능을 추천합니다." -- Needs review
 L["Name"] = "이름" -- Needs review
 L["Never"] = "표시 안함" -- Needs review
 L["New Mail Indicator (When Available)"] = "메일 표시기 (가능하다면)" -- Needs review
@@ -173,6 +169,13 @@ L["Zone Text"] = "지역 글자" -- Needs review
 L["Zoom In Button"] = "축소 버튼" -- Needs review
 L["Zoom Out Button"] = "확대 버튼" -- Needs review
 
+-- Coordinates.lua
 --L.updateRate = "Update Rate (seconds)"
 --L.updateRateDesc = "The lower the value, the faster the coordinates will update, but the more memory and CPU will be consumed due to asking the game for fresh coordinate data."
 --L.Precision = "Precision"
+
+-- Movers.lua
+--L.moversDescription = "Enable the ability to move specific UI elements."
+--L.disableWarning = "Disabling this will temporarily show the loading screen. Are you sure?"
+--L.enableObject = "Enable %s"
+--L.lockObject = "Lock %s"

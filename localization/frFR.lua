@@ -49,7 +49,6 @@ L["Delete a Profile"] = "Effacer un Profil"
 L["Diamond"] = "Diamant"
 L["Disable (opaque)"] = "Désactiver (opaque)" -- Needs review
 L["Disable Rotation"] = "Desactiver la Rotation"
-L["Disabling the movers will make them reset next time you relog, are you sure?"] = "Désactiver le déplacment des cadres réinitialiseras les réglages au prochain redémarrage du jeu, Etes-vous vraiment sur ?"
 L["Drag Radius"] = "Rayon des boutons autour de la minimap"
 L["Dungeon Difficulty Indicator (When Available)"] = "Indicateur de la difficulté du donjon (Quand disponible)"
 L["Dynamic Buttons"] = "Bouttons Dynamiques"
@@ -59,7 +58,6 @@ L["Enable a HUD minimap. This is very useful for gathering resources, but for te
 L["Enable Coordinates"] = "Activer les coordonnées" -- Needs review
 L["Enable Hudmap"] = "Activer Carte en Relief (hudmap)"
 L["Enable Minimap Fader"] = "Activer Transparence de la Minimap"
-L["Enable Movers"] = "Activer Déplacement"
 L["Enter a name to create a new border. The name can be anything you like to help you identify that border."] = "Entrer un Nom pour Creer une nouvelle Bordure. Ce nom peux vous servir a identifier cette bordure." -- Needs review
 L["Enter the full path to a texture to use. It's recommended that you use something like |cffff6600TexBrowser|r to find textures to use."] = "Entrer le Chemin complet de la Texture pour l'utiliser. il est recommander d'utiliser de préférence ceci |cffff6600TexBrowser|r pour trouver la texture que vous voulez."
 L["Entry Options"] = "Parametres"
@@ -89,12 +87,10 @@ L["Let SexyMap control button visibility"] = "Laisser Sexymap gérer la visibili
 L["Let SexyMap handle button dragging"] = "Laisser Sexymap gérer le placement des boutons"
 L["Lock Button Dragging"] = "Verrouiller le déplacement des boutons"
 L["Lock Minimap"] = "Verouiller la Minimap"
-L["Lock Movers"] = "Verrouiller les Déplacement"
 L["Map Button"] = "Bouton de la Carte"
 L["Minimap shape"] = "Forme de la Mini-carte"
 L["Mod Blend (modulative)"] = "Mod Blend (modulation)"
 L["Movers"] = "Déplacement des Cadres"
-L["Movers Warning"] = "ATTENTION: Cette fonction n'est pas officielement supportée, Certains problêmes apparaissent quand cette fonction est active. Comme la perte du systeme de suivi des quetes, La Barre des Boss qui sautille. Les Cadres Blizzard comme le suivi des quetes et de la sante des Boss ne sont pas conçus pour être deplacer, je vous suggerez donc d'utiliser des addons qui remplacent ces cadres comme par exemple PitBull, shadowed unit frames, perle, ou autres..." -- Needs review
 L["Name"] = "Nom"
 L["Never"] = "Jamais"
 L["New Mail Indicator (When Available)"] = "Indiquateur des messages (Quand Disponible)"
@@ -173,6 +169,13 @@ L["Zone Text"] = "Zone de Texte"
 L["Zoom In Button"] = "Boutton Zoom Interieur"
 L["Zoom Out Button"] = "Boutton Zoom Exterieur"
 
+-- Coordinates.lua
 --L.updateRate = "Update Rate (seconds)"
 --L.updateRateDesc = "The lower the value, the faster the coordinates will update, but the more memory and CPU will be consumed due to asking the game for fresh coordinate data."
 --L.Precision = "Precision"
+
+-- Movers.lua
+--L.moversDescription = "Enable the ability to move specific UI elements."
+--L.disableWarning = "Disabling this will temporarily show the loading screen. Are you sure?"
+--L.enableObject = "Enable %s"
+--L.lockObject = "Lock %s"

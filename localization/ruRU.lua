@@ -49,7 +49,6 @@ L["Delete a Profile"] = "Удалить профиль" -- Needs review
 L["Diamond"] = "Бриллиант" -- Needs review
 L["Disable (opaque)"] = "Отключить (непрозрачность)" -- Needs review
 L["Disable Rotation"] = "Отключить поворот" -- Needs review
-L["Disabling the movers will make them reset next time you relog, are you sure?"] = "Вы уверены, что хотите отключить передвижение фреймов? Их положение сбросится при следующем входе в игру." -- Needs review
 L["Drag Radius"] = "Радиус перетягивания" -- Needs review
 L["Dungeon Difficulty Indicator (When Available)"] = "Индикатор сложности подземелий (если доступен)" -- Needs review
 L["Dynamic Buttons"] = "Динамические кнопки" -- Needs review
@@ -59,7 +58,6 @@ L["Enable a HUD minimap. This is very useful for gathering resources, but for te
 L["Enable Coordinates"] = "Включить координаты" -- Needs review
 L["Enable Hudmap"] = "Включить HUD-карту" -- Needs review
 L["Enable Minimap Fader"] = "Включить затухание миникарты" -- Needs review
-L["Enable Movers"] = "Включить ползунки" -- Needs review
 L["Enter a name to create a new border. The name can be anything you like to help you identify that border."] = "Введите имя для новой границы. В качестве имени можно ввести что угодно, что поможет вам распознать эту границу." -- Needs review
 L["Enter the full path to a texture to use. It's recommended that you use something like |cffff6600TexBrowser|r to find textures to use."] = "Введите полный путь к текстуре, которую хотите использовать. Для поиска текстур желательно используйте отдельную программу, например |cffff6600TexBrowser|r." -- Needs review
 L["Entry Options"] = "Настройки элемента" -- Needs review
@@ -89,12 +87,10 @@ L["Let SexyMap control button visibility"] = "Разрешить SexyMap рег�
 L["Let SexyMap handle button dragging"] = "Разрешить SexyMap перетаскивать кнопки" -- Needs review
 L["Lock Button Dragging"] = "Запретить перетаскивание кнопок" -- Needs review
 L["Lock Minimap"] = "Закрепить миникарту" -- Needs review
-L["Lock Movers"] = "Закрепить передвижение фреймов." -- Needs review
 L["Map Button"] = "кнопку карты" -- Needs review
 L["Minimap shape"] = "Форма миникарты" -- Needs review
 L["Mod Blend (modulative)"] = "Изменить размытие (регулируемо)" -- Needs review
 L["Movers"] = "Передвижение фреймов." -- Needs review
-L["Movers Warning"] = "ВНИМАНИЕ: Эта функция официально не поддерживается. При ее использовании могут возникнуть такие проблемы, как лишние текстуры, нефункционирование отслеживания заданий или появляющиеся не в тех местах фреймы босса. Фреймы Blizzard, такие как отслеживание заданий и здоровье босса не предназначены для передвижения. Желательно, используйте аддоны для замены этих фреймов, например, Unit Frames для здоровья босса." -- Needs review
 L["Name"] = "Имя" -- Needs review
 L["Never"] = "Никогда"
 L["New Mail Indicator (When Available)"] = "индикатор непрочитанной почты (когда она есть)" -- Needs review
@@ -173,6 +169,13 @@ L["Zone Text"] = "Текст игровой зоны" -- Needs review
 L["Zoom In Button"] = "кнопку приближения" -- Needs review
 L["Zoom Out Button"] = "кнопку отдаления" -- Needs review
 
+-- Coordinates.lua
 --L.updateRate = "Update Rate (seconds)"
 --L.updateRateDesc = "The lower the value, the faster the coordinates will update, but the more memory and CPU will be consumed due to asking the game for fresh coordinate data."
 --L.Precision = "Precision"
+
+-- Movers.lua
+--L.moversDescription = "Enable the ability to move specific UI elements."
+--L.disableWarning = "Disabling this will temporarily show the loading screen. Are you sure?"
+--L.enableObject = "Enable %s"
+--L.lockObject = "Lock %s"
