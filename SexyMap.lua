@@ -433,6 +433,10 @@ end
 mod.frame.SetFixedFrameStrata(Minimap, true)
 mod.frame.SetFixedFrameLevel(Minimap, true)
 mod.frame.SetParent(Minimap, UIParent)
+-- Prevent some addons doing dumb things that breaks SexyMap. #175
+hooksecurefunc(Minimap, "SetParent", function()
+	mod.frame.SetParent(Minimap, UIParent)
+end)
 
 -- Make sure the various minimap buttons follow the minimap
 -- We do this before login to prevent button placement issues
