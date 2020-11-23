@@ -19,9 +19,9 @@ local options = {
 			type = "description",
 			width = "full",
 		},
-		moveVehicleAndDurability = {
+		moveDurability = {
 			order = 2,
-			name = "Enable Vehicle Seat and Durability (Armored Man)",
+			name = L.enableObject:format(L["Armored Man"]),
 			type = "toggle",
 			width = "full",
 			confirm = function(info, v)
@@ -30,40 +30,36 @@ local options = {
 				end
 			end,
 			get = function()
-				return mod.db.moveVehicleAndDurability
+				return mod.db.moveDurability
 			end,
 			set = function(info, v)
-				mod.db.moveVehicleAndDurability = v
+				mod.db.moveDurability = v
 				if v then
 					mod:EnableDurabilityMover()
-					mod:EnableVehicleMover()
 				else
-					mod.db.lockVehicleAndDurability = false
-					mod.db.positions.durability = nil
-					mod.db.positions.vehicle = nil
+					mod.db.lockDurability = false
+					mod.db.moverPositions.durability = nil
 					ReloadUI()
 				end
 			end,
 		},
-		lockVehicleAndDurability = {
+		lockDurability = {
 			order = 3,
-			name = "Lock Vehicle Seat and Durability (Armored Man)",
+			name = L.lockObject:format(L["Armored Man"]),
 			type = "toggle",
 			width = "full",
 			get = function()
-				return mod.db.lockVehicleAndDurability
+				return mod.db.lockDurability
 			end,
 			set = function(info, v)
-				mod.db.lockVehicleAndDurability = v
+				mod.db.lockDurability = v
 				if v then
 					SexyMapDurabilityMover:Hide()
-					SexyMapVehicleMover:Hide()
 				else
 					SexyMapDurabilityMover:Show()
-					SexyMapVehicleMover:Show()
 				end
 			end,
-			disabled = function() return not mod.db.moveVehicleAndDurability end,
+			disabled = function() return not mod.db.moveDurability end,
 		},
 		spacer = {
 			order = 4,
@@ -71,8 +67,56 @@ local options = {
 			type = "description",
 			width = "full",
 		},
-		moveObjectives = {
+		moveVehicle = {
 			order = 5,
+			name = L.enableObject:format(L["Vehicle Seat"]),
+			type = "toggle",
+			width = "full",
+			confirm = function(info, v)
+				if not v then
+					return L.disableWarning
+				end
+			end,
+			get = function()
+				return mod.db.moveVehicle
+			end,
+			set = function(info, v)
+				mod.db.moveVehicle = v
+				if v then
+					mod:EnableVehicleMover()
+				else
+					mod.db.lockVehicle = false
+					mod.db.moverPositions.vehicle = nil
+					ReloadUI()
+				end
+			end,
+		},
+		lockVehicle = {
+			order = 6,
+			name = L.lockObject:format(L["Vehicle Seat"]),
+			type = "toggle",
+			width = "full",
+			get = function()
+				return mod.db.lockVehicle
+			end,
+			set = function(info, v)
+				mod.db.lockVehicle = v
+				if v then
+					SexyMapVehicleMover:Hide()
+				else
+					SexyMapVehicleMover:Show()
+				end
+			end,
+			disabled = function() return not mod.db.moveVehicle end,
+		},
+		spacer2 = {
+			order = 7,
+			name = " ",
+			type = "description",
+			width = "full",
+		},
+		moveObjectives = {
+			order = 8,
 			name = L.enableObject:format(L["Objectives Tracker"]),
 			type = "toggle",
 			width = "full",
@@ -90,13 +134,13 @@ local options = {
 					mod:EnableObjectivesMover()
 				else
 					mod.db.lockObjectives = false
-					mod.db.positions.objectives = nil
+					mod.db.moverPositions.objectives = nil
 					ReloadUI()
 				end
 			end,
 		},
 		lockObjectives = {
-			order = 6,
+			order = 9,
 			name = L.lockObject:format(L["Objectives Tracker"]),
 			type = "toggle",
 			width = "full",
@@ -117,13 +161,15 @@ local options = {
 }
 
 function mod:OnInitialize(profile)
-	if type(profile.movers) ~= "table" or profile.movers.framePositions then
+	if type(profile.movers) ~= "table" or not profile.movers.moverPositions then
 		profile.movers = {
 			moveObjectives = false,
 			lockObjectives = false,
-			moveVehicleAndDurability = false,
-			lockVehicleAndDurability = false,
-			positions = {},
+			moveDurability = false,
+			lockDurability = false,
+			moveVehicle = false,
+			lockVehicle = false,
+			moverPositions = {},
 		}
 	end
 	self.db = profile.movers
@@ -131,8 +177,10 @@ end
 
 function mod:OnEnable()
 	sm.core:RegisterModuleOptions("Movers", options, L["Movers"])
-	if self.db.moveVehicleAndDurability then
+	if self.db.moveDurability then
 		self:EnableDurabilityMover()
+	end
+	if self.db.moveVehicle then
 		self:EnableVehicleMover()
 	end
 	if self.db.moveObjectives then
@@ -145,14 +193,14 @@ function mod:EnableDurabilityMover()
 	local DurabilityFrame = DurabilityFrame
 
 	local frame = CreateFrame("Frame", "SexyMapDurabilityMover")
-	if self.db.positions.durability then
-		local tbl = self.db.positions.durability
+	if self.db.moverPositions.durability then
+		local tbl = self.db.moverPositions.durability
 		frame:SetPoint(tbl[1], UIParent, tbl[2], tbl[3], tbl[4])
 	else
 		frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 	end
 	frame:SetSize(65, 80) -- defaults: 60, 75
-	if self.db.lockVehicleAndDurability then
+	if self.db.lockDurability then
 		frame:Hide()
 	else
 		frame:Show()
@@ -179,7 +227,7 @@ function mod:EnableDurabilityMover()
 	frame:SetScript("OnDragStop", function(self)
 		self:StopMovingOrSizing()
 		local a, _, b, c, d = self:GetPoint()
-		mod.db.positions.durability = {a, b, c, d}
+		mod.db.moverPositions.durability = {a, b, c, d}
 	end)
 
 	local bg = frame:CreateTexture()
@@ -199,14 +247,14 @@ function mod:EnableVehicleMover()
 	local VehicleSeatIndicator = VehicleSeatIndicator
 
 	local frame = CreateFrame("Frame", "SexyMapVehicleMover")
-	if self.db.positions.vehicle then
-		local tbl = self.db.positions.vehicle
+	if self.db.moverPositions.vehicle then
+		local tbl = self.db.moverPositions.vehicle
 		frame:SetPoint(tbl[1], UIParent, tbl[2], tbl[3], tbl[4])
 	else
 		frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 	end
 	frame:SetSize(100, 100) -- defaults: 128, 128
-	if self.db.lockVehicleAndDurability then
+	if self.db.lockVehicle then
 		frame:Hide()
 	else
 		frame:Show()
@@ -228,7 +276,7 @@ function mod:EnableVehicleMover()
 	frame:SetScript("OnDragStop", function(self)
 		self:StopMovingOrSizing()
 		local a, _, b, c, d = self:GetPoint()
-		mod.db.positions.vehicle = {a, b, c, d}
+		mod.db.moverPositions.vehicle = {a, b, c, d}
 	end)
 
 	local bg = frame:CreateTexture()
@@ -248,8 +296,8 @@ function mod:EnableObjectivesMover()
 	local ObjectiveTrackerFrame = ObjectiveTrackerFrame
 
 	local frame = CreateFrame("Frame", "SexyMapObjectivesMover")
-	if self.db.positions.objectives then
-		local tbl = self.db.positions.objectives
+	if self.db.moverPositions.objectives then
+		local tbl = self.db.moverPositions.objectives
 		frame:SetPoint(tbl[1], UIParent, tbl[2], tbl[3], tbl[4])
 	else
 		frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
@@ -283,7 +331,7 @@ function mod:EnableObjectivesMover()
 	frame:SetScript("OnDragStop", function(self)
 		self:StopMovingOrSizing()
 		local a, _, b, c, d = self:GetPoint()
-		mod.db.positions.objectives = {a, b, c, d}
+		mod.db.moverPositions.objectives = {a, b, c, d}
 	end)
 
 	local bg = frame:CreateTexture()
