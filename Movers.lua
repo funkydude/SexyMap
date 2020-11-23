@@ -87,14 +87,13 @@ local options = {
 			set = function(info, v)
 				mod.db.moveObjectives = v
 				if v then
-					--
+					mod:EnableObjectivesMover()
 				else
 					mod.db.lockObjectives = false
 					mod.db.positions.objectives = nil
 					ReloadUI()
 				end
 			end,
-			disabled = function() return true end,
 		},
 		lockObjectives = {
 			order = 6,
@@ -107,22 +106,15 @@ local options = {
 			set = function(info, v)
 				mod.db.lockObjectives = v
 				if v then
-					--
+					SexyMapObjectivesMover:Hide()
 				else
-					--
+					SexyMapObjectivesMover:Show()
 				end
 			end,
 			disabled = function() return not mod.db.moveObjectives end,
 		},
 	},
 }
-
-local movables = {
-	--["ObjectiveTrackerFrame"] = L["Objectives Tracker"],
-	--["VehicleSeatIndicator"] = L["Vehicle Seat"],
-	--["Boss1TargetFrame"] = L["Boss Frames"],
-}
-local movers = {}
 
 function mod:OnInitialize(profile)
 	if type(profile.movers) ~= "table" or profile.movers.framePositions then
@@ -142,6 +134,9 @@ function mod:OnEnable()
 	if self.db.moveVehicleAndDurability then
 		self:EnableDurabilityMover()
 		self:EnableVehicleMover()
+	end
+	if self.db.moveObjectives then
+		self:EnableObjectivesMover()
 	end
 end
 
@@ -247,61 +242,57 @@ function mod:EnableVehicleMover()
 	header:Show()
 end
 
-do
-	local function start(self)
-		local f = self:GetParent()
-		f:StartMoving()
+function mod:EnableObjectivesMover()
+	if SexyMapObjectivesMover then return end
+
+	local ObjectiveTrackerFrame = ObjectiveTrackerFrame
+
+	local frame = CreateFrame("Frame", "SexyMapObjectivesMover")
+	if self.db.positions.objectives then
+		local tbl = self.db.positions.objectives
+		frame:SetPoint(tbl[1], UIParent, tbl[2], tbl[3], tbl[4])
+	else
+		frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 	end
-
-	local function stop(self)
-		local f = self:GetParent()
-		f:StopMovingOrSizing()
-
-		local x, y = f:GetLeft(), f:GetTop()
-		local n = f:GetName()
-
-		mod.db.framePositions[n] = mod.db.framePositions[n] or {}
-		mod.db.framePositions[n].x = x
-		mod.db.framePositions[n].y = y
+	frame:SetSize(235, 600) -- defaults: 235, 140
+	if self.db.lockObjectives then
+		frame:Hide()
+	else
+		frame:Show()
 	end
+	frame:EnableMouse(true)
+	frame:RegisterForDrag("LeftButton")
+	frame:SetMovable(true)
 
-	function mod:CreateMoversAndSetMovables()
-		for frame, text in pairs(movables) do
-			local pf = _G[frame]
-			if pf then
-				local name = "SexyMapMover" .. frame
-				local f = _G[name]
-				if not f then
-					f = CreateFrame("Frame", name, pf, "BackdropTemplate")
-					tinsert(movers, f)
-					local l = f:CreateFontString(nil, nil, "GameFontNormalSmall")
-					f:EnableMouse(true)
-					pf:SetMovable(true)
-					f:SetScript("OnMouseDown", start)
-					f:SetScript("OnMouseUp", stop)
-					f:SetScript("OnLeave", stop)
-					l:SetText(("%s mover"):format(text))
-					l:SetPoint("BOTTOM", f, "TOP")
-					f:SetBackdrop(sm.backdrop)
-					f:SetBackdropColor(0, 0.6, 0, 1)
-				end
-
-				f:ClearAllPoints()
-				f:SetAllPoints()
-
-				if not mod.db.lock then
-					f:Hide()
-				end
-
-				if mod.db.framePositions[frame] then
-					local x, y = mod.db.framePositions[frame].x, mod.db.framePositions[frame].y
-					pf:ClearAllPoints()
-					pf:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", x, y)
-					if frame == "ObjectiveTrackerFrame" then
-						pf:SetPoint("BOTTOM", UIParent, "BOTTOM")
-					end
-				end
-			end
-		end
+	local function SetPoint(self)
+		sm.core.frame.ClearAllPoints(self)
+		sm.core.frame.SetPoint(self, "TOPRIGHT", frame, "TOPRIGHT")
+		sm.core.frame.SetPoint(self, "BOTTOMRIGHT", frame, "BOTTOMRIGHT")
 	end
+	hooksecurefunc(ObjectiveTrackerFrame, "SetPoint", SetPoint)
+	SetPoint(ObjectiveTrackerFrame)
+
+	-- Allows the sorting that occurs in UIParent.lua to skip the ObjectiveTrackerFrame
+	ObjectiveTrackerFrame:SetMovable(true)
+	ObjectiveTrackerFrame:SetUserPlaced(true)
+	ObjectiveTrackerFrame:SetMovable(false)
+
+	frame:SetScript("OnDragStart", function(self)
+		self:StartMoving()
+	end)
+	frame:SetScript("OnDragStop", function(self)
+		self:StopMovingOrSizing()
+		local a, _, b, c, d = self:GetPoint()
+		mod.db.positions.objectives = {a, b, c, d}
+	end)
+
+	local bg = frame:CreateTexture()
+	bg:SetAllPoints(frame)
+	bg:SetColorTexture(0, 1, 0, 0.3)
+	bg:Show()
+
+	local header = frame:CreateFontString(nil, "OVERLAY", "TextStatusBarText")
+	header:SetPoint("BOTTOM", frame, "TOP")
+	header:SetText(L["Objectives Tracker"])
+	header:Show()
 end
