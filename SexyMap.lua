@@ -382,6 +382,7 @@ function mod:ADDON_LOADED(addon)
 
 		mod.frame:UnregisterEvent("ADDON_LOADED")
 		mod.frame:RegisterEvent("PLAYER_LOGIN")
+		mod.frame:RegisterEvent("LOADING_SCREEN_DISABLED")
 		mod.ADDON_LOADED = nil
 	end
 end
@@ -416,10 +417,24 @@ function mod:PLAYER_LOGIN()
 		sm[mod.loadModules[i]]:OnEnable()
 		sm[mod.loadModules[i]].OnEnable = nil
 	end
-	mod.loadModules = nil
 
 	mod.frame:UnregisterEvent("PLAYER_LOGIN")
 	mod.PLAYER_LOGIN = nil
+end
+
+-- Hopefully temporary workaround for string size functions returning 0 for foreign fonts at PLAYER_LOGIN on a cold boot
+function mod:LOADING_SCREEN_DISABLED()
+	for i=1, #mod.loadModules do
+		local module = sm[mod.loadModules[i]]
+		if module and module.OnLoadingScreenOver then
+			sm[mod.loadModules[i]]:OnLoadingScreenOver()
+			sm[mod.loadModules[i]].OnLoadingScreenOver = nil
+		end
+	end
+	mod.loadModules = nil
+
+	mod.frame:UnregisterEvent("LOADING_SCREEN_DISABLED")
+	mod.LOADING_SCREEN_DISABLED = nil
 end
 
 if mod.frame.GetFrameStrata(Minimap) ~= "LOW" then

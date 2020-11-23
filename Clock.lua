@@ -200,12 +200,11 @@ function mod:OnEnable()
 		end)
 	end
 
-	-- For some reason PLAYER_LOGIN is too early for a rare subset of users (even when only using SexyMap)
-	-- which results in a clock width too small. Use this delayed repeater to try and fix the clock width for them.
-	local CTimerAfter = C_Timer.After
-	for i = 1, 5 do
-		CTimerAfter(i, mod.UpdateLayout)
-	end
+	self:UpdateLayout()
+end
+
+function mod:OnLoadingScreenOver()
+	self:UpdateLayout()
 end
 
 function mod:UpdateLayout()
@@ -219,7 +218,7 @@ function mod:UpdateLayout()
 		sm.core.font.SetTextColor(TimeManagerClockTicker, mod.db.fontColor.r, mod.db.fontColor.g, mod.db.fontColor.b, mod.db.fontColor.a)
 	end
 	sm.core.font.SetText(TimeManagerClockTicker, "44:44")
-	sm.core.button.SetWidth(TimeManagerClockButton, sm.core.font.GetStringWidth(TimeManagerClockTicker) + 16)
+	sm.core.button.SetWidth(TimeManagerClockButton, sm.core.font.GetUnboundedStringWidth(TimeManagerClockTicker) + 12)
 	sm.core.button.SetHeight(TimeManagerClockButton, sm.core.font.GetStringHeight(TimeManagerClockTicker) + 10)
 end
 

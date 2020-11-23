@@ -241,6 +241,10 @@ function mod:OnEnable()
 	end
 end
 
+function mod:OnLoadingScreenOver()
+	self:Update()
+end
+
 function mod:CreateFrame()
 	if not coordFrame then
 		coordFrame = CreateFrame("Frame", "SexyMapCoordFrame", Minimap, "BackdropTemplate")
@@ -306,7 +310,7 @@ function mod:Update()
 	else
 		coordsText:SetText("99, 99")
 	end
-	coordFrame:SetWidth(coordsText:GetStringWidth() * 1.2)
+	coordFrame:SetWidth(coordsText:GetUnboundedStringWidth() + 12)
 	coordFrame:SetHeight(coordsText:GetStringHeight() + 10)
 end
 

@@ -285,6 +285,10 @@ function mod:OnEnable()
 	sm.buttons:NewFrame(zoneTextButton) -- Buttons module
 end
 
+function mod:OnLoadingScreenOver()
+	self:ZoneChanged()
+end
+
 function mod:UpdateLayout()
 	zoneTextButton:ClearAllPoints()
 	zoneTextButton:SetPoint("BOTTOM", Minimap, "TOP", mod.db.xOffset, mod.db.yOffset)
@@ -302,7 +306,7 @@ do
 		local text = GetMinimapZoneText()
 		zoneTextFont:SetText(text)
 
-		local width = max(zoneTextFont:GetStringWidth() + 16, mod.db.width or 0)
+		local width = max(zoneTextFont:GetUnboundedStringWidth() + 16, mod.db.width or 0)
 		zoneTextButton:SetWidth(width)
 		zoneTextButton:SetHeight(zoneTextFont:GetStringHeight() + 10)
 
