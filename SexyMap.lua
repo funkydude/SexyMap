@@ -35,6 +35,9 @@ mod.deepCopyHash = function(t)
 	end
 	return nt
 end
+mod.frame:SetScript("OnEvent", function(_, event, ...)
+	mod[event](sm, ...)
+end)
 
 mod.options = {
 	type = "group",
@@ -311,6 +314,8 @@ mod.options = {
 
 function mod:ADDON_LOADED(addon)
 	if addon == "SexyMap" then
+		mod.frame:UnregisterEvent("ADDON_LOADED")
+
 		if type(SexyMap2DB) ~= "table" then
 			SexyMap2DB = {}
 		end
@@ -380,14 +385,14 @@ function mod:ADDON_LOADED(addon)
 			end
 		end
 
-		mod.frame:UnregisterEvent("ADDON_LOADED")
-		mod.frame:RegisterEvent("PLAYER_LOGIN")
-		mod.frame:RegisterEvent("LOADING_SCREEN_DISABLED")
 		mod.ADDON_LOADED = nil
 	end
 end
+mod.frame:RegisterEvent("ADDON_LOADED")
 
 function mod:PLAYER_LOGIN()
+	mod.frame:UnregisterEvent("PLAYER_LOGIN")
+
 	-- Setup config
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(name, mod.options, true)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(name)
@@ -418,12 +423,14 @@ function mod:PLAYER_LOGIN()
 		sm[mod.loadModules[i]].OnEnable = nil
 	end
 
-	mod.frame:UnregisterEvent("PLAYER_LOGIN")
 	mod.PLAYER_LOGIN = nil
 end
+mod.frame:RegisterEvent("PLAYER_LOGIN")
 
 -- Hopefully temporary workaround for string size functions returning 0 for foreign fonts at PLAYER_LOGIN on a cold boot
 function mod:LOADING_SCREEN_DISABLED()
+	mod.frame:UnregisterEvent("LOADING_SCREEN_DISABLED")
+
 	for i=1, #mod.loadModules do
 		local module = sm[mod.loadModules[i]]
 		if module and module.OnLoadingScreenOver then
@@ -433,9 +440,9 @@ function mod:LOADING_SCREEN_DISABLED()
 	end
 	mod.loadModules = nil
 
-	mod.frame:UnregisterEvent("LOADING_SCREEN_DISABLED")
 	mod.LOADING_SCREEN_DISABLED = nil
 end
+mod.frame:RegisterEvent("LOADING_SCREEN_DISABLED")
 
 if mod.frame.GetFrameStrata(Minimap) ~= "LOW" then
 	mod.frame.SetFrameStrata(Minimap, "LOW") -- Blizz Defaults patch 9.0.1 Minimap.xml
@@ -551,11 +558,6 @@ function mod:SetupMap()
 	end
 	self.SetupMap = nil
 end
-
-mod.frame:RegisterEvent("ADDON_LOADED")
-mod.frame:SetScript("OnEvent", function(_, event, ...)
-	mod[event](sm, ...)
-end)
 
 function mod:RegisterModuleOptions(modName, optionTbl, displayName)
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(name..modName, optionTbl, true)
