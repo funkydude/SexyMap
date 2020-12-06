@@ -242,7 +242,7 @@ function mod:OnEnable()
 end
 
 function mod:OnLoadingScreenOver()
-	if coordFrame then -- Just in case OnEnable happens after this & also to check if the module is enabled
+	if mod.db.enabled then
 		self:Update()
 	end
 end

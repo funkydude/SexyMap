@@ -204,9 +204,7 @@ function mod:OnEnable()
 end
 
 function mod:OnLoadingScreenOver()
-	if TimeManagerClockButton.SetBackdrop then -- Just in case OnEnable happens after this
-		self:UpdateLayout()
-	end
+	self:UpdateLayout()
 end
 
 function mod:UpdateLayout()

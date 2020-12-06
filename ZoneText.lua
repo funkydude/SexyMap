@@ -286,9 +286,7 @@ function mod:OnEnable()
 end
 
 function mod:OnLoadingScreenOver()
-	if zoneTextButton then -- Just in case OnEnable happens after this
-		self:ZoneChanged()
-	end
+	self:ZoneChanged()
 end
 
 function mod:UpdateLayout()
