@@ -157,6 +157,54 @@ local options = {
 			end,
 			disabled = function() return not mod.db.moveObjectives end,
 		},
+		spacer3 = {
+			order = 10,
+			name = " ",
+			type = "description",
+			width = "full",
+		},
+		moveCaptureBar = {
+			order = 11,
+			name = L.enableObject:format(L.pvpCaptureBar),
+			type = "toggle",
+			width = "full",
+			confirm = function(info, v)
+				if not v then
+					return L.disableWarning
+				end
+			end,
+			get = function()
+				return mod.db.moveCaptureBar
+			end,
+			set = function(info, v)
+				mod.db.moveCaptureBar = v
+				if v then
+					mod:EnableCaptureBarMover()
+				else
+					mod.db.lockCaptureBar = false
+					mod.db.moverPositions.capturebar = nil
+					ReloadUI()
+				end
+			end,
+		},
+		lockCaptureBar = {
+			order = 12,
+			name = L.lockObject:format(L.pvpCaptureBar),
+			type = "toggle",
+			width = "full",
+			get = function()
+				return mod.db.lockCaptureBar
+			end,
+			set = function(info, v)
+				mod.db.lockCaptureBar = v
+				if v then
+					SexyMapCaptureBarMover:Hide()
+				else
+					SexyMapCaptureBarMover:Show()
+				end
+			end,
+			disabled = function() return not mod.db.moveCaptureBar end,
+		},
 	},
 }
 
@@ -169,6 +217,8 @@ function mod:OnInitialize(profile)
 			lockDurability = false,
 			moveVehicle = false,
 			lockVehicle = false,
+			moveCaptureBar = false,
+			lockCaptureBar = false,
 			moverPositions = {},
 		}
 	end
@@ -185,6 +235,9 @@ function mod:OnEnable()
 	end
 	if self.db.moveObjectives then
 		self:EnableObjectivesMover()
+	end
+	if self.db.moveCaptureBar then
+		self:EnableCaptureBarMover()
 	end
 end
 
@@ -342,5 +395,51 @@ function mod:EnableObjectivesMover()
 	local header = frame:CreateFontString(nil, "OVERLAY", "TextStatusBarText")
 	header:SetPoint("BOTTOM", frame, "TOP")
 	header:SetText(L["Objectives Tracker"])
+	header:Show()
+end
+
+function mod:EnableCaptureBarMover()
+	if SexyMapCaptureBarMover then return end
+	local UIWidgetBelowMinimapContainerFrame = UIWidgetBelowMinimapContainerFrame
+
+	local frame = CreateFrame("Frame", "SexyMapCaptureBarMover")
+	if self.db.moverPositions.capturebar then
+		local tbl = self.db.moverPositions.capturebar
+		frame:SetPoint(tbl[1], UIParent, tbl[2], tbl[3], tbl[4])
+	else
+		frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+	end
+	frame:SetSize(150, 30) -- No defaults, dynamically resizes
+	if self.db.lockCaptureBar then
+		frame:Hide()
+	else
+		frame:Show()
+	end
+	frame:EnableMouse(true)
+	frame:RegisterForDrag("LeftButton")
+	frame:SetMovable(true)
+
+	local function SetPoint(self)
+		sm.core.frame.ClearAllPoints(self)
+		sm.core.frame.SetPoint(self, "TOPRIGHT", frame, "TOPRIGHT")
+	end
+	hooksecurefunc(UIWidgetBelowMinimapContainerFrame, "SetPoint", SetPoint)
+	SetPoint(UIWidgetBelowMinimapContainerFrame)
+
+	frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
+	frame:SetScript("OnDragStop", function(self)
+		self:StopMovingOrSizing()
+		local a, _, b, c, d = self:GetPoint()
+		mod.db.moverPositions.capturebar = {a, b, c, d}
+	end)
+
+	local bg = frame:CreateTexture()
+	bg:SetAllPoints(frame)
+	bg:SetColorTexture(0, 1, 0, 0.3)
+	bg:Show()
+
+	local header = frame:CreateFontString(nil, "OVERLAY", "TextStatusBarText")
+	header:SetPoint("BOTTOM", frame, "TOP")
+	header:SetText(L.pvpCaptureBar)
 	header:Show()
 end

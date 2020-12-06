@@ -146,6 +146,7 @@ L.moversDescription = "Enable the ability to move specific UI elements."
 L.disableWarning = "Disabling this will temporarily show the loading screen. Are you sure?"
 L.enableObject = "Enable %s"
 L.lockObject = "Lock %s"
+L.pvpCaptureBar = "PvP Capture Bar"
 
 -- ./Ping.lua
 L["Show who pinged"] = "Show who pinged"
