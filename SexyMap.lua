@@ -431,14 +431,16 @@ mod.frame:RegisterEvent("PLAYER_LOGIN")
 function mod:LOADING_SCREEN_DISABLED()
 	mod.frame:UnregisterEvent("LOADING_SCREEN_DISABLED")
 
-	for i=1, #mod.loadModules do
-		local module = sm[mod.loadModules[i]]
-		if module and module.OnLoadingScreenOver then
-			sm[mod.loadModules[i]]:OnLoadingScreenOver()
-			sm[mod.loadModules[i]].OnLoadingScreenOver = nil
+	if not mod.PLAYER_LOGIN then -- Only if PLAYER_LOGIN has fired before LOADING_SCREEN_DISABLED
+		for i=1, #mod.loadModules do
+			local module = sm[mod.loadModules[i]]
+			if module and module.OnLoadingScreenOver then
+				sm[mod.loadModules[i]]:OnLoadingScreenOver()
+				sm[mod.loadModules[i]].OnLoadingScreenOver = nil
+			end
 		end
+		mod.loadModules = nil
 	end
-	mod.loadModules = nil
 
 	mod.LOADING_SCREEN_DISABLED = nil
 end
