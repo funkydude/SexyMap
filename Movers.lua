@@ -205,6 +205,54 @@ local options = {
 			end,
 			disabled = function() return not mod.db.moveCaptureBar end,
 		},
+		spacer4 = {
+			order = 13,
+			name = " ",
+			type = "description",
+			width = "full",
+		},
+		moveBuffs = {
+			order = 14,
+			name = L.enableObject:format(L.buffs),
+			type = "toggle",
+			width = "full",
+			confirm = function(info, v)
+				if not v then
+					return L.disableWarning
+				end
+			end,
+			get = function()
+				return mod.db.moveBuffs
+			end,
+			set = function(info, v)
+				mod.db.moveBuffs = v
+				if v then
+					mod:EnableBuffsMover()
+				else
+					mod.db.lockBuffs = false
+					mod.db.moverPositions.buffs = nil
+					ReloadUI()
+				end
+			end,
+		},
+		lockBuffs = {
+			order = 15,
+			name = L.lockObject:format(L.buffs),
+			type = "toggle",
+			width = "full",
+			get = function()
+				return mod.db.lockBuffs
+			end,
+			set = function(info, v)
+				mod.db.lockBuffs = v
+				if v then
+					SexyMapBuffsFrameMover:Hide()
+				else
+					SexyMapBuffsFrameMover:Show()
+				end
+			end,
+			disabled = function() return not mod.db.moveBuffs end,
+		},
 	},
 }
 
@@ -219,6 +267,8 @@ function mod:OnInitialize(profile)
 			lockVehicle = false,
 			moveCaptureBar = false,
 			lockCaptureBar = false,
+			moveBuffs = false,
+			lockBuffs = false,
 			moverPositions = {},
 		}
 	end
@@ -238,6 +288,9 @@ function mod:OnEnable()
 	end
 	if self.db.moveCaptureBar then
 		self:EnableCaptureBarMover()
+	end
+	if self.db.moveBuffs then
+		self:EnableBuffsMover()
 	end
 end
 
@@ -441,5 +494,51 @@ function mod:EnableCaptureBarMover()
 	local header = frame:CreateFontString(nil, "OVERLAY", "TextStatusBarText")
 	header:SetPoint("BOTTOM", frame, "TOP")
 	header:SetText(L.pvpCaptureBar)
+	header:Show()
+end
+
+function mod:EnableBuffsMover()
+	if SexyMapBuffsFrameMover then return end
+	local BuffFrame = BuffFrame
+
+	local frame = CreateFrame("Frame", "SexyMapBuffsFrameMover")
+	if self.db.moverPositions.buffs then
+		local tbl = self.db.moverPositions.buffs
+		frame:SetPoint(tbl[1], UIParent, tbl[2], tbl[3], tbl[4])
+	else
+		frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+	end
+	frame:SetSize(190, 225) -- defaults: 50, 50
+	if self.db.lockBuffs then
+		frame:Hide()
+	else
+		frame:Show()
+	end
+	frame:EnableMouse(true)
+	frame:RegisterForDrag("LeftButton")
+	frame:SetMovable(true)
+
+	local function SetPoint(self)
+		sm.core.frame.ClearAllPoints(self)
+		sm.core.frame.SetPoint(self, "TOPRIGHT", frame, "TOPRIGHT")
+	end
+	hooksecurefunc(BuffFrame, "SetPoint", SetPoint)
+	SetPoint(BuffFrame)
+
+	frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
+	frame:SetScript("OnDragStop", function(self)
+		self:StopMovingOrSizing()
+		local a, _, b, c, d = self:GetPoint()
+		mod.db.moverPositions.buffs = {a, b, c, d}
+	end)
+
+	local bg = frame:CreateTexture()
+	bg:SetAllPoints(frame)
+	bg:SetColorTexture(0, 1, 0, 0.3)
+	bg:Show()
+
+	local header = frame:CreateFontString(nil, "OVERLAY", "TextStatusBarText")
+	header:SetPoint("BOTTOM", frame, "TOP")
+	header:SetText(L.buffs)
 	header:Show()
 end
