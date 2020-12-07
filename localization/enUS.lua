@@ -146,6 +146,7 @@ L.disableWarning = "Disabling this will temporarily show the loading screen. Are
 L.enableObject = "Enable %s"
 L.lockObject = "Lock %s"
 L.pvpCaptureBar = "PvP Capture Bar"
+L.buffs = "Buffs/Debuffs"
 
 -- ./Ping.lua
 L["Show who pinged"] = "Show who pinged"

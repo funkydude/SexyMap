@@ -179,3 +179,4 @@ L["Zoom Out Button"] = "кнопку отдаления" -- Needs review
 --L.enableObject = "Enable %s"
 --L.lockObject = "Lock %s"
 L.pvpCaptureBar = "ПвП Бар захвата"
+--L.buffs = "Buffs/Debuffs"

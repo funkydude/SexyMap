@@ -179,3 +179,4 @@ L.updateRateDesc = "Cuanto más bajo sea el valor, más rápido se actualizarán
 --L.enableObject = "Enable %s"
 --L.lockObject = "Lock %s"
 L.pvpCaptureBar = "PvP Capturar Barr"
+--L.buffs = "Buffs/Debuffs"

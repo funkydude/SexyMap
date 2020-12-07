@@ -179,3 +179,4 @@ L["Zoom Out Button"] = "확대 버튼" -- Needs review
 --L.enableObject = "Enable %s"
 --L.lockObject = "Lock %s"
 L.pvpCaptureBar = "전장 지배 바"
+--L.buffs = "Buffs/Debuffs"
