@@ -8,6 +8,8 @@ sm.movers = {}
 
 local mod = sm.movers
 local L = sm.L
+local ClearAllPoints = sm.core.frame.ClearAllPoints
+local SetPoint = sm.core.frame.SetPoint
 
 local options = {
 	type = "group",
@@ -320,14 +322,14 @@ function mod:EnableDurabilityMover()
 		frame:SetWidth(width + 5)
 	end)
 
-	local function SetPoint(self)
-		sm.core.frame.ClearAllPoints(self)
+	local function SetNewPoint(self)
+		ClearAllPoints(self)
 		-- TOPRIGHT is our only choice or we'd create SetPoint errors in UIParent.lua
 		-- Where SetPoint is called by Blizz without performing a ClearAllPoints first
-		sm.core.frame.SetPoint(self, "TOPRIGHT", frame, "TOPRIGHT")
+		SetPoint(self, "TOPRIGHT", frame, "TOPRIGHT")
 	end
-	hooksecurefunc(DurabilityFrame, "SetPoint", SetPoint)
-	SetPoint(DurabilityFrame)
+	hooksecurefunc(DurabilityFrame, "SetPoint", SetNewPoint)
+	SetNewPoint(DurabilityFrame)
 
 	frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
 	frame:SetScript("OnDragStop", function(self)
@@ -369,14 +371,14 @@ function mod:EnableVehicleMover()
 	frame:RegisterForDrag("LeftButton")
 	frame:SetMovable(true)
 
-	local function SetPoint(self)
-		sm.core.frame.ClearAllPoints(self)
+	local function SetNewPoint(self)
+		ClearAllPoints(self)
 		-- TOPRIGHT is our only choice or we'd create SetPoint errors in UIParent.lua
 		-- Where SetPoint is called by Blizz without performing a ClearAllPoints first
-		sm.core.frame.SetPoint(self, "TOPRIGHT", frame, "TOPRIGHT")
+		SetPoint(self, "TOPRIGHT", frame, "TOPRIGHT")
 	end
-	hooksecurefunc(VehicleSeatIndicator, "SetPoint", SetPoint)
-	SetPoint(VehicleSeatIndicator)
+	hooksecurefunc(VehicleSeatIndicator, "SetPoint", SetNewPoint)
+	SetNewPoint(VehicleSeatIndicator)
 
 	frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
 	frame:SetScript("OnDragStop", function(self)
@@ -418,13 +420,13 @@ function mod:EnableObjectivesMover()
 	frame:RegisterForDrag("LeftButton")
 	frame:SetMovable(true)
 
-	local function SetPoint(self)
-		sm.core.frame.ClearAllPoints(self)
-		sm.core.frame.SetPoint(self, "TOPRIGHT", frame, "TOPRIGHT")
-		sm.core.frame.SetPoint(self, "BOTTOMRIGHT", frame, "BOTTOMRIGHT")
+	local function SetNewPoint(self)
+		ClearAllPoints(self)
+		SetPoint(self, "TOPRIGHT", frame, "TOPRIGHT")
+		SetPoint(self, "BOTTOMRIGHT", frame, "BOTTOMRIGHT")
 	end
-	hooksecurefunc(ObjectiveTrackerFrame, "SetPoint", SetPoint)
-	SetPoint(ObjectiveTrackerFrame)
+	hooksecurefunc(ObjectiveTrackerFrame, "SetPoint", SetNewPoint)
+	SetNewPoint(ObjectiveTrackerFrame)
 
 	-- Allows the sorting that occurs in UIParent.lua to skip the ObjectiveTrackerFrame
 	ObjectiveTrackerFrame:SetMovable(true)
@@ -472,12 +474,12 @@ function mod:EnableCaptureBarMover()
 	frame:RegisterForDrag("LeftButton")
 	frame:SetMovable(true)
 
-	local function SetPoint(self)
-		sm.core.frame.ClearAllPoints(self)
-		sm.core.frame.SetPoint(self, "TOPRIGHT", frame, "TOPRIGHT")
+	local function SetNewPoint(self)
+		ClearAllPoints(self)
+		SetPoint(self, "TOPRIGHT", frame, "TOPRIGHT")
 	end
-	hooksecurefunc(UIWidgetBelowMinimapContainerFrame, "SetPoint", SetPoint)
-	SetPoint(UIWidgetBelowMinimapContainerFrame)
+	hooksecurefunc(UIWidgetBelowMinimapContainerFrame, "SetPoint", SetNewPoint)
+	SetNewPoint(UIWidgetBelowMinimapContainerFrame)
 
 	frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
 	frame:SetScript("OnDragStop", function(self)
@@ -518,12 +520,12 @@ function mod:EnableBuffsMover()
 	frame:RegisterForDrag("LeftButton")
 	frame:SetMovable(true)
 
-	local function SetPoint(self)
-		sm.core.frame.ClearAllPoints(self)
-		sm.core.frame.SetPoint(self, "TOPRIGHT", frame, "TOPRIGHT")
+	local function SetNewPoint(self)
+		ClearAllPoints(self)
+		SetPoint(self, "TOPRIGHT", frame, "TOPRIGHT")
 	end
-	hooksecurefunc(BuffFrame, "SetPoint", SetPoint)
-	SetPoint(BuffFrame)
+	hooksecurefunc(BuffFrame, "SetPoint", SetNewPoint)
+	SetNewPoint(BuffFrame)
 
 	frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
 	frame:SetScript("OnDragStop", function(self)
