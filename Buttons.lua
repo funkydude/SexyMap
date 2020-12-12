@@ -313,10 +313,13 @@ do
 		for i = 1, #animFrames do
 			local f = animFrames[i]
 			local n = f:GetName()
-			if not mod.db.visibilitySettings[n] or mod.db.visibilitySettings[n] == "hover" then
-				f.sexyMapFadeOut:Play()
 
-				KillAnimation(n, f)
+			if not mod.db.visibilitySettings[n] or mod.db.visibilitySettings[n] == "hover" then
+				if n ~= "GameTimeFrame" or (n == "GameTimeFrame" and C_Calendar.GetNumPendingInvites() < 1) then
+					f.sexyMapFadeOut:Play()
+
+					KillAnimation(n, f)
+				end
 			end
 		end
 	end
@@ -543,6 +546,17 @@ do
 		self:NewFrame(button)
 	end
 
+	local function CheckCalendar()
+		local vis = mod.db.visibilitySettings.GameTimeFrame
+		if not vis or vis == "hover" then
+			if C_Calendar.GetNumPendingInvites() < 1 then
+				mod:ChangeFrameVisibility(GameTimeFrame, "hover")
+			else
+				mod:ChangeFrameVisibility(GameTimeFrame, "always")
+			end
+		end
+	end
+
 	function mod:StartFrameGrab()
 		for i = 1, #tbl do
 			mod:NewFrame(tbl[i])
@@ -553,6 +567,13 @@ do
 			mod:NewFrame(ldbi:GetMinimapButton(ldbiTbl[i]))
 		end
 		ldbi.RegisterCallback(mod, "LibDBIcon_IconCreated", "AddButton")
+
+		-- If calendar is set to "hover" and we have pending invites, force show it
+		local frame = CreateFrame("Frame")
+		frame:SetScript("OnEvent", CheckCalendar)
+		frame:RegisterEvent("CALENDAR_UPDATE_PENDING_INVITES")
+		frame:RegisterEvent("CALENDAR_ACTION_PENDING")
+		CheckCalendar()
 
 		mod.StartFrameGrab = nil
 	end
