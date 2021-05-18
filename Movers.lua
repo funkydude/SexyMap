@@ -92,6 +92,7 @@ local options = {
 					ReloadUI()
 				end
 			end,
+			disabled = true,
 		},
 		lockVehicle = {
 			order = 6,
@@ -140,6 +141,7 @@ local options = {
 					ReloadUI()
 				end
 			end,
+			disabled = true,
 		},
 		lockObjectives = {
 			order = 9,

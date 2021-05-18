@@ -1,9 +1,9 @@
-name: Package addon
+name: Package BCC addon
 
 on:
   push:
     branches:
-      - master
+      - bcc
     tags:
       - '*'
     paths-ignore:

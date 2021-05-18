@@ -1,4 +1,4 @@
-name: Check PR
+name: Check BCC PR
 
 on: [pull_request]
 
