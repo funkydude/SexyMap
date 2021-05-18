@@ -207,21 +207,20 @@ end
 ------------------------------------------------------------------------
 ]]--
 
--- XXX patch 8.2 remove old texture paths
 local shapes = {
 	["Interface\\AddOns\\SexyMap\\shapes\\circle.tga"] = {
 		name = L["Circle"],
 		geometry = circle
 	},
-	[C_RaidLocks and 235309 or "ENVIRONMENTS\\STARS\\Deathsky_Mask"] = { -- "ENVIRONMENTS\\STARS\\Deathsky_Mask"
-		name = L["Faded Circle (Small)"],
-		geometry = circle
-	},
+	--[235309] = { -- "ENVIRONMENTS\\STARS\\Deathsky_Mask" -- XXX Doesn't exist on BCC
+	--	name = L["Faded Circle (Small)"],
+	--	geometry = circle
+	--},
 	["Interface\\AddOns\\SexyMap\\shapes\\largecircle"] = {
 		name = L["Faded Circle (Large)"],
 		geometry = circle
 	},
-	[C_RaidLocks and 167013 or "SPELLS\\T_VFX_BORDER"] = { -- "SPELLS\\T_VFX_BORDER"
+	[167013] = { -- "SPELLS\\T_VFX_BORDER"
 		name = L["Faded Square"],
 		geometry = "square",
 		shape = "SQUARE"
@@ -230,7 +229,7 @@ local shapes = {
 		name = L["Diamond"],
 		geometry = "diamond"
 	},
-	[C_RaidLocks and 130871 or "Interface\\BUTTONS\\WHITE8X8"] = { -- "Interface\\BUTTONS\\WHITE8X8"
+	[130871] = { -- "Interface\\BUTTONS\\WHITE8X8"
 		name = L["Square"],
 		geometry = "square",
 		shape = "SQUARE"
@@ -347,17 +346,24 @@ function mod:GetShape()
 	return db.shape
 end
 
-function mod:ApplyShape(shape)
-	if shape or db.shape then
-		db.shape = shape or db.shape
-		Minimap:SetMaskTexture(db.shape)
-		if HybridMinimap then
-			HybridMinimap.MapCanvas:SetUseMaskTexture(false)
-			HybridMinimap.CircleMask:SetTexture(db.shape)
-			HybridMinimap.MapCanvas:SetUseMaskTexture(true)
+do
+	local shapeLookup = {
+		[235309] = "Interface\\AddOns\\SexyMap\\shapes\\largecircle",
+		[167013] = "SPELLS\\T_VFX_BORDER",
+		[130871] = "Interface\\BUTTONS\\WHITE8X8",
+	}
+	function mod:ApplyShape(shape)
+		if shape or db.shape then
+			db.shape = shape or db.shape
+			Minimap:SetMaskTexture(shapeLookup[db.shape] or db.shape)
+			if HybridMinimap then
+				HybridMinimap.MapCanvas:SetUseMaskTexture(false)
+				HybridMinimap.CircleMask:SetTexture(db.shape)
+				HybridMinimap.MapCanvas:SetUseMaskTexture(true)
+			end
 		end
+		sm.buttons:UpdateDraggables()
 	end
-	sm.buttons:UpdateDraggables()
 end
 
 if not HybridMinimap then
