@@ -137,7 +137,6 @@ local options = {
 					ReloadUI()
 				end
 			end,
-			disabled = true,
 		},
 		lockObjectives = {
 			order = 9,
@@ -399,7 +398,7 @@ end
 function mod:EnableObjectivesMover()
 	if SexyMapObjectivesMover then return end
 
-	local ObjectiveTrackerFrame = ObjectiveTrackerFrame
+	local ObjectiveTrackerFrame = QuestWatchFrame
 
 	local frame = CreateFrame("Frame", "SexyMapObjectivesMover")
 	if self.db.moverPositions.objectives then
