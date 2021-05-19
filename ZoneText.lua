@@ -170,10 +170,6 @@ function mod:OnInitialize(profile)
 		}
 	end
 	self.db = profile.zonetext
-	-- XXX temp 8.0.1
-	if not profile.zonetext.font then
-		profile.zonetext.font = media:GetDefault("font")
-	end
 end
 
 function mod:OnEnable()

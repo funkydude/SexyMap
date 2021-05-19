@@ -165,10 +165,6 @@ function mod:OnInitialize(profile)
 		}
 	end
 	self.db = profile.clock
-	-- XXX temp 8.0.1
-	if not profile.clock.font then
-		profile.clock.font = media:GetDefault("font")
-	end
 end
 
 -- Some objects are no longer being called directly using ":" to work around issues with other addons
