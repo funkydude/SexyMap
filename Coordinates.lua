@@ -215,17 +215,6 @@ function mod:OnInitialize(profile)
 		}
 	end
 	self.db = profile.coordinates
-	-- XXX temp 8.0.1
-	if not profile.coordinates.xOffset then
-		profile.coordinates.xOffset = 0
-		profile.coordinates.yOffset = 10
-		profile.coordinates.x = nil
-		profile.coordinates.y = nil
-		profile.coordinates.locked = nil
-	end
-	if not profile.coordinates.font then
-		profile.coordinates.font = media:GetDefault("font")
-	end
 	-- XXX temp 9.0.1
 	if not profile.coordinates.coordPrecision then
 		profile.coordinates.enabled = true
