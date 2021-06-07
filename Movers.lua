@@ -252,6 +252,54 @@ local options = {
 			end,
 			disabled = function() return not mod.db.moveBuffs end,
 		},
+		spacer5 = {
+			order = 16,
+			name = " ",
+			type = "description",
+			width = "full",
+		},
+		moveZoneObjectives = {
+			order = 17,
+			name = L.enableObject:format("Zone PvP Objectives"),
+			type = "toggle",
+			width = "full",
+			confirm = function(info, v)
+				if not v then
+					return L.disableWarning
+				end
+			end,
+			get = function()
+				return mod.db.moveZoneObjectives
+			end,
+			set = function(info, v)
+				mod.db.moveZoneObjectives = v
+				if v then
+					mod:EnableZoneObjectivesMover()
+				else
+					mod.db.lockZoneObjectives = false
+					mod.db.moverPositions.zoneobjectives = nil
+					ReloadUI()
+				end
+			end,
+		},
+		lockZoneObjectives = {
+			order = 18,
+			name = L.lockObject:format("Zone PvP Objectives"),
+			type = "toggle",
+			width = "full",
+			get = function()
+				return mod.db.lockZoneObjectives
+			end,
+			set = function(info, v)
+				mod.db.lockZoneObjectives = v
+				if v then
+					SexyMapZoneObjectivesMover:Hide()
+				else
+					SexyMapZoneObjectivesMover:Show()
+				end
+			end,
+			disabled = function() return not mod.db.moveZoneObjectives end,
+		},
 	},
 }
 
@@ -268,6 +316,8 @@ function mod:OnInitialize(profile)
 			lockCaptureBar = false,
 			moveBuffs = false,
 			lockBuffs = false,
+			moveZoneObjectives = false,
+			lockZoneObjectives = false,
 			moverPositions = {},
 		}
 	end
@@ -539,5 +589,54 @@ function mod:EnableBuffsMover()
 	local header = frame:CreateFontString(nil, "OVERLAY", "TextStatusBarText")
 	header:SetPoint("BOTTOM", frame, "TOP")
 	header:SetText(L.buffs)
+	header:Show()
+end
+
+function mod:EnableZoneObjectivesMover()
+	if SexyMapZoneObjectivesMover then return end
+	local UIWidgetTopCenterContainerFrame = UIWidgetTopCenterContainerFrame
+
+	local frame = CreateFrame("Frame", "SexyMapZoneObjectivesMover")
+	if self.db.moverPositions.zoneobjectives then
+		local tbl = self.db.moverPositions.zoneobjectives
+		frame:SetPoint(tbl[1], UIParent, tbl[2], tbl[3], tbl[4])
+	else
+		frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+	end
+	frame:SetSize(100, 50) -- 10,10 default perBlizzard_UIWidgetTopCenterFrame.xml, dynamically resizes
+	if self.db.lockZoneObjectives then
+		frame:Hide()
+	else
+		frame:Show()
+	end
+	frame:EnableMouse(true)
+	frame:RegisterForDrag("LeftButton")
+	frame:SetMovable(true)
+
+	local function SetNewPoint(self)
+		ClearAllPoints(self)
+		SetPoint(self, "CENTER", frame, "CENTER")
+	end
+	hooksecurefunc(UIWidgetTopCenterContainerFrame, "SetPoint", SetNewPoint)
+	SetNewPoint(UIWidgetTopCenterContainerFrame)
+
+	frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
+	frame:SetScript("OnDragStop", function(self)
+		self:StopMovingOrSizing()
+		local a, _, b, c, d = self:GetPoint()
+		mod.db.moverPositions.zoneobjectives = {a, b, c, d}
+	end)
+	
+	--UIWidgetTopCenterContainerFrame:SetScale(mod.db.scaleZoneObjectives or 1)
+	--frame:SetScale(mod.db.scaleZoneObjectives or 1)
+	
+	local bg = frame:CreateTexture()
+	bg:SetAllPoints(frame)
+	bg:SetColorTexture(0, 1, 0, 0.3)
+	bg:Show()
+
+	local header = frame:CreateFontString(nil, "OVERLAY", "TextStatusBarText")
+	header:SetPoint("BOTTOM", frame, "TOP")
+	header:SetText("Zone PvP Objectives")
 	header:Show()
 end
