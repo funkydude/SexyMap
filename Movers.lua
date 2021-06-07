@@ -341,6 +341,9 @@ function mod:OnEnable()
 	if self.db.moveBuffs then
 		self:EnableBuffsMover()
 	end
+	if self.db.moveZoneObjectives then
+		self:EnableZoneObjectivesMover()
+	end
 end
 
 function mod:EnableDurabilityMover()
