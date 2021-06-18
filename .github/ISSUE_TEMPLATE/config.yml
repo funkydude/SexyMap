@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Help the author?
-    url:  https://github.com/sponsors/funkydude
-    about: Like this addon and want to help the author? Please sponsor them.
+  - name: One time donation?
+    url:  https://github.com/sponsors/funkydude?frequency=one-time
+    about: Like this addon and want to help the author? Please send a one time donation.
+  - name: Monthly donation?
+    url:  https://github.com/sponsors/funkydude?frequency=recurring
+    about: Like this addon and want to help the author? Please sponsor them with a monthly donation.

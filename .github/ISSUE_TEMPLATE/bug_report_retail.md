@@ -1,6 +1,6 @@
 ---
 name: Issue for Retail/Live
-about: Create a report about current WoW
+about: Create a report about current WoW.
 title: ''
 labels: retail
 assignees: ''

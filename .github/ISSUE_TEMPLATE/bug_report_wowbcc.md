@@ -1,6 +1,6 @@
 ---
 name: Issue for Burning Crusade Classic
-about: Create a report about Burning Crusade Classic WoW
+about: Create a report about Burning Crusade Classic WoW.
 title: ''
 labels: bcc
 assignees: ''

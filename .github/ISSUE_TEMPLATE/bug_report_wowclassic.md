@@ -1,6 +1,6 @@
 ---
 name: Issue for Classic
-about: Create a report about Classic WoW
+about: Create a report about Classic WoW.
 title: ''
 labels: classic
 assignees: ''
