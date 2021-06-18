@@ -147,6 +147,7 @@ L.enableObject = "Enable %s"
 L.lockObject = "Lock %s"
 L.pvpCaptureBar = "PvP Capture Bar"
 L.buffs = "Buffs/Debuffs"
+L.topCenterObjectivesWidget = "Top-Screen Objective/PvP Tracker"
 
 -- ./Ping.lua
 L["Show who pinged"] = "Show who pinged"

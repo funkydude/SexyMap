@@ -251,6 +251,54 @@ local options = {
 			end,
 			disabled = function() return not mod.db.moveBuffs end,
 		},
+		spacer5 = {
+			order = 16,
+			name = " ",
+			type = "description",
+			width = "full",
+		},
+		moveTopCenterObjectivesWidget = {
+			order = 17,
+			name = L.enableObject:format(L.topCenterObjectivesWidget),
+			type = "toggle",
+			width = "full",
+			confirm = function(info, v)
+				if not v then
+					return L.disableWarning
+				end
+			end,
+			get = function()
+				return mod.db.moveTopWidget
+			end,
+			set = function(info, v)
+				mod.db.moveTopWidget = v
+				if v then
+					mod:EnableTopWidgetMover()
+				else
+					mod.db.lockTopWidget = false
+					mod.db.moverPositions.topWidget = nil
+					ReloadUI()
+				end
+			end,
+		},
+		lockTopCenterObjectivesWidget = {
+			order = 18,
+			name = L.lockObject:format(L.topCenterObjectivesWidget),
+			type = "toggle",
+			width = "full",
+			get = function()
+				return mod.db.lockTopWidget
+			end,
+			set = function(info, v)
+				mod.db.lockTopWidget = v
+				if v then
+					SexyMapTopCenterWidgetMover:Hide()
+				else
+					SexyMapTopCenterWidgetMover:Show()
+				end
+			end,
+			disabled = function() return not mod.db.moveTopWidget end,
+		},
 	},
 }
 
@@ -267,6 +315,8 @@ function mod:OnInitialize(profile)
 			lockCaptureBar = false,
 			moveBuffs = false,
 			lockBuffs = false,
+			moveTopWidget = false,
+			lockTopWidget = false,
 			moverPositions = {},
 		}
 	end
@@ -289,6 +339,9 @@ function mod:OnEnable()
 	end
 	if self.db.moveBuffs then
 		self:EnableBuffsMover()
+	end
+	if self.db.moveTopWidget then
+		self:EnableTopWidgetMover()
 	end
 end
 
@@ -538,5 +591,51 @@ function mod:EnableBuffsMover()
 	local header = frame:CreateFontString(nil, "OVERLAY", "TextStatusBarText")
 	header:SetPoint("BOTTOM", frame, "TOP")
 	header:SetText(L.buffs)
+	header:Show()
+end
+
+function mod:EnableTopWidgetMover()
+	if SexyMapTopCenterWidgetMover then return end
+	local UIWidgetTopCenterContainerFrame = UIWidgetTopCenterContainerFrame
+
+	local frame = CreateFrame("Frame", "SexyMapTopCenterWidgetMover")
+	if self.db.moverPositions.topWidget then
+		local tbl = self.db.moverPositions.topWidget
+		frame:SetPoint(tbl[1], UIParent, tbl[2], tbl[3], tbl[4])
+	else
+		frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+	end
+	frame:SetSize(220, 40) -- No defaults, dynamically resizes
+	if self.db.lockTopWidget then
+		frame:Hide()
+	else
+		frame:Show()
+	end
+	frame:EnableMouse(true)
+	frame:RegisterForDrag("LeftButton")
+	frame:SetMovable(true)
+
+	local function SetNewPoint(self)
+		ClearAllPoints(self)
+		SetPoint(self, "TOP", frame, "TOP")
+	end
+	hooksecurefunc(UIWidgetTopCenterContainerFrame, "SetPoint", SetNewPoint)
+	SetNewPoint(UIWidgetTopCenterContainerFrame)
+
+	frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
+	frame:SetScript("OnDragStop", function(self)
+		self:StopMovingOrSizing()
+		local a, _, b, c, d = self:GetPoint()
+		mod.db.moverPositions.topWidget = {a, b, c, d}
+	end)
+
+	local bg = frame:CreateTexture()
+	bg:SetAllPoints(frame)
+	bg:SetColorTexture(0, 1, 0, 0.3)
+	bg:Show()
+
+	local header = frame:CreateFontString(nil, "OVERLAY", "TextStatusBarText")
+	header:SetPoint("BOTTOM", frame, "TOP")
+	header:SetText(L.topCenterObjectivesWidget)
 	header:Show()
 end
