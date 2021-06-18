@@ -180,3 +180,4 @@ L.updateRateDesc = "Cuanto más bajo sea el valor, más rápido se actualizarán
 --L.lockObject = "Lock %s"
 L.pvpCaptureBar = "PvP Capturar Barr"
 --L.buffs = "Buffs/Debuffs"
+--L.topCenterObjectivesWidget = "Top-Screen Objective/PvP Tracker"

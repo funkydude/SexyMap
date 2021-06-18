@@ -180,3 +180,4 @@ L["Zoom Out Button"] = "кнопку отдаления" -- Needs review
 --L.lockObject = "Lock %s"
 L.pvpCaptureBar = "ПвП Бар захвата"
 --L.buffs = "Buffs/Debuffs"
+--L.topCenterObjectivesWidget = "Top-Screen Objective/PvP Tracker"
