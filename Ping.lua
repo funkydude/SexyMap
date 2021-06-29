@@ -82,25 +82,31 @@ function mod:OnEnable()
 	anim:SetDuration(3)
 	anim:SetStartDelay(3)
 
-	pingFrame:SetScript("OnEvent", function(_, _, unit)
-		local _, class = UnitClass(unit)
-		local color
-		if class then
-			color = CUSTOM_CLASS_COLORS and CUSTOM_CLASS_COLORS[class] or RAID_CLASS_COLORS[class] or GRAY_FONT_COLOR
-		else
-			color = GRAY_FONT_COLOR
-		end
-		if mod.db.showAt == "chat" then
-			DEFAULT_CHAT_FRAME:AddMessage(("%s: |cFF%02x%02x%02x%s|r"):format(L["Ping"], color.r * 255, color.g * 255, color.b * 255, UnitName(unit)))
-		else
-			pingFrame.name:SetFormattedText("|cFF%02x%02x%02x%s|r", color.r * 255, color.g * 255, color.b * 255, UnitName(unit))
-			pingFrame:SetWidth(pingFrame.name:GetUnboundedStringWidth() + 12)
-			pingFrame:SetHeight(pingFrame.name:GetStringHeight() + 10)
-			animGroup:Stop()
-			pingFrame:Show()
-			animGroup:Play()
-		end
-	end)
+	do
+		local prevUnit, prevX, prevY = "player", 0, 0
+		pingFrame:SetScript("OnEvent", function(_, _, unit, x, y)
+			if UnitIsUnit(unit, prevUnit) and x == prevX and y == prevY then return end
+			prevUnit, prevX, prevY = unit, x, y -- Throttle, it will fire for units like "target" also
+
+			local _, class = UnitClass(unit)
+			local color
+			if class then
+				color = CUSTOM_CLASS_COLORS and CUSTOM_CLASS_COLORS[class] or RAID_CLASS_COLORS[class] or GRAY_FONT_COLOR
+			else
+				color = GRAY_FONT_COLOR
+			end
+			if mod.db.showAt == "chat" then
+				DEFAULT_CHAT_FRAME:AddMessage(("%s: |cFF%02x%02x%02x%s|r"):format(L["Ping"], color.r * 255, color.g * 255, color.b * 255, UnitName(unit)))
+			else
+				pingFrame.name:SetFormattedText("|cFF%02x%02x%02x%s|r", color.r * 255, color.g * 255, color.b * 255, UnitName(unit))
+				pingFrame:SetWidth(pingFrame.name:GetUnboundedStringWidth() + 12)
+				pingFrame:SetHeight(pingFrame.name:GetStringHeight() + 10)
+				animGroup:Stop()
+				pingFrame:Show()
+				animGroup:Play()
+			end
+		end)
+	end
 
 	if mod.db.showPing then
 		pingFrame:RegisterEvent("MINIMAP_PING")
