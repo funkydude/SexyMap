@@ -47,6 +47,6 @@ Borders.lua
 Clock.lua
 Coordinates.lua
 HudMap.lua
-Movers.lua
+Movers_Classic.lua
 Ping.lua
 ZoneText.lua

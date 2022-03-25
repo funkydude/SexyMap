@@ -65,54 +65,54 @@ local options = {
 			type = "description",
 			width = "full",
 		},
-		moveVehicle = {
-			order = 5,
-			name = L.enableObject:format(L["Vehicle Seat"]),
-			type = "toggle",
-			width = "full",
-			confirm = function(info, v)
-				if not v then
-					return L.disableWarning
-				end
-			end,
-			get = function()
-				return mod.db.moveVehicle
-			end,
-			set = function(info, v)
-				mod.db.moveVehicle = v
-				if v then
-					mod:EnableVehicleMover()
-				else
-					mod.db.lockVehicle = false
-					mod.db.moverPositions.vehicle = nil
-					ReloadUI()
-				end
-			end,
-		},
-		lockVehicle = {
-			order = 6,
-			name = L.lockObject:format(L["Vehicle Seat"]),
-			type = "toggle",
-			width = "full",
-			get = function()
-				return mod.db.lockVehicle
-			end,
-			set = function(info, v)
-				mod.db.lockVehicle = v
-				if v then
-					SexyMapVehicleMover:Hide()
-				else
-					SexyMapVehicleMover:Show()
-				end
-			end,
-			disabled = function() return not mod.db.moveVehicle end,
-		},
-		spacer2 = {
-			order = 7,
-			name = " ",
-			type = "description",
-			width = "full",
-		},
+		--moveVehicle = {
+		--	order = 5,
+		--	name = L.enableObject:format(L["Vehicle Seat"]),
+		--	type = "toggle",
+		--	width = "full",
+		--	confirm = function(info, v)
+		--		if not v then
+		--			return L.disableWarning
+		--		end
+		--	end,
+		--	get = function()
+		--		return mod.db.moveVehicle
+		--	end,
+		--	set = function(info, v)
+		--		mod.db.moveVehicle = v
+		--		if v then
+		--			mod:EnableVehicleMover()
+		--		else
+		--			mod.db.lockVehicle = false
+		--			mod.db.moverPositions.vehicle = nil
+		--			ReloadUI()
+		--		end
+		--	end,
+		--},
+		--lockVehicle = {
+		--	order = 6,
+		--	name = L.lockObject:format(L["Vehicle Seat"]),
+		--	type = "toggle",
+		--	width = "full",
+		--	get = function()
+		--		return mod.db.lockVehicle
+		--	end,
+		--	set = function(info, v)
+		--		mod.db.lockVehicle = v
+		--		if v then
+		--			SexyMapVehicleMover:Hide()
+		--		else
+		--			SexyMapVehicleMover:Show()
+		--		end
+		--	end,
+		--	disabled = function() return not mod.db.moveVehicle end,
+		--},
+		--spacer2 = {
+		--	order = 7,
+		--	name = " ",
+		--	type = "description",
+		--	width = "full",
+		--},
 		moveObjectives = {
 			order = 8,
 			name = L.enableObject:format(L["Objectives Tracker"]),
@@ -328,9 +328,9 @@ function mod:OnEnable()
 	if self.db.moveDurability then
 		self:EnableDurabilityMover()
 	end
-	if self.db.moveVehicle then
-		self:EnableVehicleMover()
-	end
+	--if self.db.moveVehicle then
+	--	self:EnableVehicleMover()
+	--end
 	if self.db.moveObjectives then
 		self:EnableObjectivesMover()
 	end
@@ -398,59 +398,59 @@ function mod:EnableDurabilityMover()
 	header:Show()
 end
 
-function mod:EnableVehicleMover()
-	if SexyMapVehicleMover then return end
-
-	local VehicleSeatIndicator = VehicleSeatIndicator
-
-	local frame = CreateFrame("Frame", "SexyMapVehicleMover")
-	if self.db.moverPositions.vehicle then
-		local tbl = self.db.moverPositions.vehicle
-		frame:SetPoint(tbl[1], UIParent, tbl[2], tbl[3], tbl[4])
-	else
-		frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-	end
-	frame:SetSize(100, 100) -- defaults: 128, 128
-	if self.db.lockVehicle then
-		frame:Hide()
-	else
-		frame:Show()
-	end
-	frame:EnableMouse(true)
-	frame:RegisterForDrag("LeftButton")
-	frame:SetMovable(true)
-
-	local function SetNewPoint(self)
-		ClearAllPoints(self)
-		-- TOPRIGHT is our only choice or we'd create SetPoint errors in UIParent.lua
-		-- Where SetPoint is called by Blizz without performing a ClearAllPoints first
-		SetPoint(self, "TOPRIGHT", frame, "TOPRIGHT")
-	end
-	hooksecurefunc(VehicleSeatIndicator, "SetPoint", SetNewPoint)
-	SetNewPoint(VehicleSeatIndicator)
-
-	frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
-	frame:SetScript("OnDragStop", function(self)
-		self:StopMovingOrSizing()
-		local a, _, b, c, d = self:GetPoint()
-		mod.db.moverPositions.vehicle = {a, b, c, d}
-	end)
-
-	local bg = frame:CreateTexture()
-	bg:SetAllPoints(frame)
-	bg:SetColorTexture(0, 1, 0, 0.3)
-	bg:Show()
-
-	local header = frame:CreateFontString(nil, "OVERLAY", "TextStatusBarText")
-	header:SetPoint("BOTTOM", frame, "TOP")
-	header:SetText(L["Vehicle Seat"])
-	header:Show()
-end
+--function mod:EnableVehicleMover()
+--	if SexyMapVehicleMover then return end
+--
+--	local VehicleSeatIndicator = VehicleSeatIndicator
+--
+--	local frame = CreateFrame("Frame", "SexyMapVehicleMover")
+--	if self.db.moverPositions.vehicle then
+--		local tbl = self.db.moverPositions.vehicle
+--		frame:SetPoint(tbl[1], UIParent, tbl[2], tbl[3], tbl[4])
+--	else
+--		frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+--	end
+--	frame:SetSize(100, 100) -- defaults: 128, 128
+--	if self.db.lockVehicle then
+--		frame:Hide()
+--	else
+--		frame:Show()
+--	end
+--	frame:EnableMouse(true)
+--	frame:RegisterForDrag("LeftButton")
+--	frame:SetMovable(true)
+--
+--	local function SetNewPoint(self)
+--		ClearAllPoints(self)
+--		-- TOPRIGHT is our only choice or we'd create SetPoint errors in UIParent.lua
+--		-- Where SetPoint is called by Blizz without performing a ClearAllPoints first
+--		SetPoint(self, "TOPRIGHT", frame, "TOPRIGHT")
+--	end
+--	hooksecurefunc(VehicleSeatIndicator, "SetPoint", SetNewPoint)
+--	SetNewPoint(VehicleSeatIndicator)
+--
+--	frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
+--	frame:SetScript("OnDragStop", function(self)
+--		self:StopMovingOrSizing()
+--		local a, _, b, c, d = self:GetPoint()
+--		mod.db.moverPositions.vehicle = {a, b, c, d}
+--	end)
+--
+--	local bg = frame:CreateTexture()
+--	bg:SetAllPoints(frame)
+--	bg:SetColorTexture(0, 1, 0, 0.3)
+--	bg:Show()
+--
+--	local header = frame:CreateFontString(nil, "OVERLAY", "TextStatusBarText")
+--	header:SetPoint("BOTTOM", frame, "TOP")
+--	header:SetText(L["Vehicle Seat"])
+--	header:Show()
+--end
 
 function mod:EnableObjectivesMover()
 	if SexyMapObjectivesMover then return end
 
-	local ObjectiveTrackerFrame = ObjectiveTrackerFrame
+	local ObjectiveTrackerFrame = QuestWatchFrame -- Classic version of objective tracker
 
 	local frame = CreateFrame("Frame", "SexyMapObjectivesMover")
 	if self.db.moverPositions.objectives then
