@@ -208,7 +208,7 @@ local shapes = {
 		name = L["Circle"],
 		geometry = circle
 	},
-	[235309] = { -- "ENVIRONMENTS\\STARS\\Deathsky_Mask"
+	["ENVIRONMENTS\\STARS\\Deathsky_Mask"] = {
 		name = L["Faded Circle (Small)"],
 		geometry = circle
 	},
@@ -216,7 +216,7 @@ local shapes = {
 		name = L["Faded Circle (Large)"],
 		geometry = circle
 	},
-	[167013] = { -- "SPELLS\\T_VFX_BORDER"
+	["SPELLS\\T_VFX_BORDER"] = {
 		name = L["Faded Square"],
 		geometry = "square",
 		shape = "SQUARE"
@@ -225,7 +225,7 @@ local shapes = {
 		name = L["Diamond"],
 		geometry = "diamond"
 	},
-	[130871] = { -- "Interface\\BUTTONS\\WHITE8X8"
+	["Interface\\BUTTONS\\WHITE8X8"] = {
 		name = L["Square"],
 		geometry = "square",
 		shape = "SQUARE"
