@@ -30,6 +30,11 @@ local blendModes = {
 local classicTextures = {
 	[167062] = "interface\\addons\\sexymap\\media\\t_vfx_hero_circle.blp",
 	[240948] = "interface\\addons\\sexymap\\media\\classic\\lightning_new.blp",
+	[167138] = "interface\\addons\\sexymap\\media\\classic\\treantleaves.blp",
+	[165623] = "interface\\addons\\sexymap\\media\\classic\\aura_01.blp",
+	[187303] = "interface\\addons\\sexymap\\media\\classic\\swathsmallstones.blp",
+	[241004] = "interface\\addons\\sexymap\\media\\classic\\roguerune2.blp",
+	[249644] = "interface\\addons\\sexymap\\media\\classic\\ul_spinningroomrings_ring07.blp",
 }
 
 local presets, userPresets = {}, {}
@@ -1093,7 +1098,9 @@ function mod:UpdateBackdrop()
 		customBackdrop:Show()
 		customBackdrop:SetScale(mod.db.backdrop.scale or 1)
 		customBackdrop:SetAlpha(mod.db.backdrop.alpha or 1)
-		customBackdrop:SetBackdrop(mod.db.backdrop.settings)
+		local bd = sm.core.deepCopyHash(mod.db.backdrop.settings)
+		bd.bgFile = classicTextures[bd.bgFile] or bd.bgFile
+		customBackdrop:SetBackdrop(bd)
 		local t = mod.db.backdrop.textureColor
 		customBackdrop:SetBackdropColor(t.r or 0, t.g or 0, t.b or 0, t.a or 1)
 		t = mod.db.backdrop.borderColor
