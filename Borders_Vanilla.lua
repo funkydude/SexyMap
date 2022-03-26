@@ -27,6 +27,11 @@ local blendModes = {
 	ADD = L["Add Blend (additive)"],
 }
 
+local classicTextures = {
+	[167062] = "interface\\addons\\sexymap\\media\\t_vfx_hero_circle.blp",
+	[240948] = "interface\\addons\\sexymap\\media\\classic\\lightning_new.blp",
+}
+
 local presets, userPresets = {}, {}
 
 local function RotateTexture(self, inc, set)
@@ -539,7 +544,7 @@ local borderOptions = {
 			-- If true, assume it's a FileID and save it as a number.
 			if num then v = num end
 			tex.settings.texture = v
-			tex:SetTexture(v)
+			tex:SetTexture(classicTextures[v] or v)
 		end
 	},
 	header3 = {
@@ -964,7 +969,7 @@ do
 		else
 			tex:SetParent(Minimap)
 		end
-		tex:SetTexture(t.texture)
+		tex:SetTexture(classicTextures[t.texture] or t.texture)
 		tex:SetBlendMode(t.blendMode or "ADD")
 		tex:SetVertexColor(t.r or 1, t.g or 1, t.b or 1, t.a or 1)
 		tex:SetPoint("CENTER", Minimap, "CENTER", t.hNudge or 0, t.vNudge or 0)
