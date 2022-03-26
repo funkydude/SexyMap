@@ -2,6 +2,8 @@
 if GetLocale() ~= "itIT" then return end
 local _, sm = ...
 local L = sm.L
+--L.dayNightButton = "Day/Night Indicator"
+--L.classicLFGButton = "Classic LFG Button (When Available)"
 L["1. Background"] = "1. Sfondo"
 L["2. Border"] = "2. Margine"
 L["3. Artwork"] = "3. Immagine"

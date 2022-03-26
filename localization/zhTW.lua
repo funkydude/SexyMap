@@ -2,6 +2,8 @@
 if GetLocale() ~= "zhTW" then return end
 local _, sm = ...
 local L = sm.L
+--L.dayNightButton = "Day/Night Indicator"
+--L.classicLFGButton = "Classic LFG Button (When Available)"
 L["1. Background"] = "1、背景"
 L["2. Border"] = "2、邊框"
 L["3. Artwork"] = "3、藝術裝飾"

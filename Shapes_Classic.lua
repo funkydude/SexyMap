@@ -208,10 +208,10 @@ local shapes = {
 		name = L["Circle"],
 		geometry = circle
 	},
-	["ENVIRONMENTS\\STARS\\Deathsky_Mask"] = {
-		name = L["Faded Circle (Small)"],
-		geometry = circle
-	},
+	--["ENVIRONMENTS\\STARS\\Deathsky_Mask"] = {
+	--	name = L["Faded Circle (Small)"],
+	--	geometry = circle
+	--},
 	["Interface\\AddOns\\SexyMap\\shapes\\largecircle"] = {
 		name = L["Faded Circle (Large)"],
 		geometry = circle

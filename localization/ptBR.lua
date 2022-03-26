@@ -2,6 +2,8 @@
 if GetLocale() ~= "ptBR" then return end
 local _, sm = ...
 local L = sm.L
+--L.dayNightButton = "Day/Night Indicator"
+--L.classicLFGButton = "Classic LFG Button (When Available)"
 L["1. Background"] = "Fundo"
 L["2. Border"] = "Borda"
 L["3. Artwork"] = "Arte Visual" -- Needs review

@@ -10,7 +10,7 @@ local moving, ButtonFadeOut
 
 local animFrames = {}
 local blizzButtons = {
-	GameTimeFrame = L["Calendar"],
+	GameTimeFrame = L.dayNightButton,
 	MiniMapTracking = L["Tracking Button"],
 	SexyMapZoneTextButton = L["Zone Text"],
 	MinimapZoomIn = L["Zoom In Button"],
@@ -25,6 +25,7 @@ local dynamicButtons = {
 	MiniMapMailFrame = L["New Mail Indicator (When Available)"],
 	MiniMapBattlefieldFrame = L["Queue Status (PvP/LFG) Button (When Available)"],
 	--GarrisonLandingPageMinimapButton = L["Garrison Button (When Available)"],
+	MiniMapLFGFrame = L.classicLFGButton,
 }
 
 local options = {
@@ -185,6 +186,7 @@ function mod:OnInitialize(profile)
 				TimeManagerClockButton = "always",
 				MiniMapMailFrame = "always",
 				MiniMapBattlefieldFrame = "always",
+				MiniMapLFGFrame = "always",
 				GarrisonLandingPageMinimapButton = "always",
 			},
 			allowDragging = true,
@@ -194,6 +196,22 @@ function mod:OnInitialize(profile)
 	end
 
 	self.db = profile.buttons
+	-- XXX temp 9.0.1
+	if not profile.buttons.visibilitySettings.SexyMapZoneTextButton then
+		profile.buttons.visibilitySettings.SexyMapZoneTextButton = "always"
+		profile.buttons.visibilitySettings.MinimapZoneTextButton = nil
+	end
+
+	-- Classic additions to the DB
+	if not self.db.visibilitySettings.MiniMapBattlefieldFrame then
+		self.db.visibilitySettings.MiniMapBattlefieldFrame = "always"
+	end
+	if not self.db.visibilitySettings.MiniMapLFGFrame then
+		self.db.visibilitySettings.MiniMapLFGFrame = "always"
+	end
+	if not self.db.visibilitySettings.GameTimeFrame then
+		self.db.visibilitySettings.GameTimeFrame = "never"
+	end
 end
 
 function mod:OnEnable()
@@ -532,7 +550,7 @@ do
 	local tbl = {
 		Minimap, MiniMapTracking, TimeManagerClockButton, GameTimeFrame,
 		MinimapZoomIn, MinimapZoomOut, MiniMapWorldMapButton,
-		MiniMapMailFrame, MiniMapBattlefieldFrame
+		MiniMapMailFrame, MiniMapBattlefieldFrame, MiniMapLFGFrame
 	}
 
 	function mod:AddButton(_, button)
