@@ -348,7 +348,6 @@ function mod:ADDON_LOADED(addon)
 			if tbl.borders and type(tbl.borders.borders) == "table" then
 				for i = 1, #tbl.borders.borders do
 					if tbl.borders.borders[i].texture == 167062 or tbl.borders.borders[i].texture == "SPELLS\\T_VFX_HERO_CIRCLE.BLP" then
-						print("FOUND", tbl.borders.borders[i].texture)
 						tbl.borders.borders[i].texture = "INTERFACE\\ADDONS\\SEXYMAP\\MEDIA\\T_VFX_HERO_CIRCLE.BLP"
 					end
 				end
