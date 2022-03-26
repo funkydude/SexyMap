@@ -343,12 +343,12 @@ function mod:ADDON_LOADED(addon)
 		end
 		-- XXX end
 
-		-- Classic default style convertion
+		-- XXX temp 1.14.2
 		for character, tbl in next, SexyMap2DB do
 			if tbl.borders and type(tbl.borders.borders) == "table" then
 				for i = 1, #tbl.borders.borders do
-					if tbl.borders.borders[i].texture == 167062 or tbl.borders.borders[i].texture == "SPELLS\\T_VFX_HERO_CIRCLE.BLP" then
-						tbl.borders.borders[i].texture = "INTERFACE\\ADDONS\\SEXYMAP\\MEDIA\\T_VFX_HERO_CIRCLE.BLP"
+					if tbl.borders.borders[i].texture == "INTERFACE\\ADDONS\\SEXYMAP\\MEDIA\\T_VFX_HERO_CIRCLE.BLP" or tbl.borders.borders[i].texture == "SPELLS\\T_VFX_HERO_CIRCLE.BLP" then
+						tbl.borders.borders[i].texture = 167062
 					end
 				end
 			end

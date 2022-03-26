@@ -28,7 +28,7 @@ local blendModes = {
 }
 
 local classicTextures = {
-	[167062] = "interface\\addons\\sexymap\\media\\t_vfx_hero_circle.blp",
+	[167062] = "interface\\addons\\sexymap\\media\\classic\\t_vfx_hero_circle.blp",
 	[240948] = "interface\\addons\\sexymap\\media\\classic\\lightning_new.blp",
 	[167138] = "interface\\addons\\sexymap\\media\\classic\\treantleaves.blp",
 	[165623] = "interface\\addons\\sexymap\\media\\classic\\aura_01.blp",
