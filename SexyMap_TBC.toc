@@ -37,7 +37,7 @@ localization\zhTW.lua
 localization\zhCN.lua
 localization\ptBR.lua
 
-SexyMap_Classic.lua
+SexyMap_TBC.lua
 
 Shapes_Classic.lua
 

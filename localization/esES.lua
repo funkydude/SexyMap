@@ -4,6 +4,7 @@ local _, sm = ...
 local L = sm.L
 --L.dayNightButton = "Day/Night Indicator"
 --L.classicLFGButton = "Classic LFG Button (When Available)"
+--L.classicPVPButton = "Classic PvP Button (When Available)"
 L["1. Background"] = "Fondo"
 L["2. Border"] = "Borde"
 L["3. Artwork"] = "Arte"

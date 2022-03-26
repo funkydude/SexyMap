@@ -79,7 +79,6 @@ L["User-Submitted Presets"] = "User-Submitted Presets"
 
 -- ./Buttons.lua
 L.dayNightButton = "Day/Night Indicator"
-L.classicLFGButton = "Classic LFG Button (When Available)"
 L["Calendar"] = "Calendar"
 L["Tracking Button"] = "Tracking Button"
 L["Zone Text"] = "Zone Text"
@@ -94,6 +93,8 @@ L["Dungeon Difficulty Indicator (When Available)"] = "Dungeon Difficulty Indicat
 L["New Mail Indicator (When Available)"] = "New Mail Indicator (When Available)"
 L["Queue Status (PvP/LFG) Button (When Available)"] = "Queue Status (PvP/LFG) Button (When Available)"
 L["Garrison Button (When Available)"] = "Garrison Button (When Available)"
+L.classicLFGButton = "Classic LFG Button (When Available)"
+L.classicPVPButton = "Classic PvP Button (When Available)"
 
 L["Addon Buttons"] = "Addon Buttons"
 L["Dynamic Buttons"] = "Dynamic Buttons"

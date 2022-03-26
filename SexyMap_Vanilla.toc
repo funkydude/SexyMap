@@ -37,12 +37,12 @@ localization\zhTW.lua
 localization\zhCN.lua
 localization\ptBR.lua
 
-SexyMap_Classic.lua
+SexyMap_Vanilla.lua
 
 Shapes_Classic.lua
 
 Buttons_Vanilla.lua
-BorderPresets.lua
+BorderPresets_Vanilla.lua
 Borders.lua
 Clock.lua
 Coordinates.lua

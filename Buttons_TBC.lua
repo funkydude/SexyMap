@@ -23,7 +23,7 @@ local dynamicButtons = {
 	--MiniMapChallengeMode = L["Challenge Mode Button (When Available)"],
 	--MiniMapInstanceDifficulty = L["Dungeon Difficulty Indicator (When Available)"],
 	MiniMapMailFrame = L["New Mail Indicator (When Available)"],
-	MiniMapBattlefieldFrame = L["Queue Status (PvP/LFG) Button (When Available)"],
+	MiniMapBattlefieldFrame = L.classicPVPButton,
 	--GarrisonLandingPageMinimapButton = L["Garrison Button (When Available)"],
 	MiniMapLFGFrame = L.classicLFGButton,
 }
@@ -220,28 +220,28 @@ function mod:OnEnable()
 	-- MiniMapWorldMapButton:GetRegions():SetTexCoord(0,0,0,0.5,1,0,1,0.5) -- Normal
 	-- MiniMapWorldMapButton:GetRegions():SetTexCoord(0,0.5,0,1,1,0.5,1,1) -- Pushed
 
-	local overlay = MiniMapWorldMapButton:CreateTexture(nil, "OVERLAY")
-	overlay:SetSize(53,53)
-	overlay:SetTexture(136430) -- 136430 = Interface\\Minimap\\MiniMap-TrackingBorder
-	overlay:SetPoint("TOPLEFT")
-	local background = MiniMapWorldMapButton:CreateTexture(nil, "BACKGROUND")
-	background:SetSize(25,25)
-	background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
-	background:SetPoint("TOPLEFT", MiniMapWorldMapButton, "TOPLEFT", 4, -2)
+	--local overlay = MiniMapWorldMapButton:CreateTexture(nil, "OVERLAY")
+	--overlay:SetSize(53,53)
+	--overlay:SetTexture(136430) -- 136430 = Interface\\Minimap\\MiniMap-TrackingBorder
+	--overlay:SetPoint("TOPLEFT")
+	--local background = MiniMapWorldMapButton:CreateTexture(nil, "BACKGROUND")
+	--background:SetSize(25,25)
+	--background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
+	--background:SetPoint("TOPLEFT", MiniMapWorldMapButton, "TOPLEFT", 4, -2)
 
-	local icon, pushedIcon, highlight = MiniMapWorldMapButton:GetRegions()
-	icon:SetTexCoord(0.32,0,0.32,0.5,1,0,1,0.5)
-	icon:ClearAllPoints()
-	icon:SetPoint("BOTTOMRIGHT", MiniMapWorldMapButton, "BOTTOMRIGHT", -4, 2)
-	icon:SetSize(20,30)
-	pushedIcon:SetTexCoord(0.32,0.5,0.32,1,1,0.5,1,1)
-	pushedIcon:ClearAllPoints()
-	pushedIcon:SetPoint("BOTTOMRIGHT", MiniMapWorldMapButton, "BOTTOMRIGHT", -4, 2)
-	pushedIcon:SetSize(20,30)
+	--local icon, pushedIcon, highlight = MiniMapWorldMapButton:GetRegions()
+	--icon:SetTexCoord(0.32,0,0.32,0.5,1,0,1,0.5)
+	--icon:ClearAllPoints()
+	--icon:SetPoint("BOTTOMRIGHT", MiniMapWorldMapButton, "BOTTOMRIGHT", -4, 2)
+	--icon:SetSize(20,30)
+	--pushedIcon:SetTexCoord(0.32,0.5,0.32,1,1,0.5,1,1)
+	--pushedIcon:ClearAllPoints()
+	--pushedIcon:SetPoint("BOTTOMRIGHT", MiniMapWorldMapButton, "BOTTOMRIGHT", -4, 2)
+	--pushedIcon:SetSize(20,30)
 
-	MiniMapWorldMapButton:SetHighlightTexture(136477) -- 136477 = Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight
-	highlight:ClearAllPoints()
-	highlight:SetPoint("TOPLEFT", MiniMapWorldMapButton, "TOPLEFT", 2, -2)
+	--MiniMapWorldMapButton:SetHighlightTexture(136477) -- 136477 = Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight
+	--highlight:ClearAllPoints()
+	--highlight:SetPoint("TOPLEFT", MiniMapWorldMapButton, "TOPLEFT", 2, -2)
 
 	--GarrisonLandingPageMinimapButton:SetSize(36, 36) -- Shrink the missions button
 	---- Stop Blizz changing the icon size || GarrisonLandingPageMinimapButton_UpdateIcon() >> SetLandingPageIconFromAtlases() >> self:SetSize()
