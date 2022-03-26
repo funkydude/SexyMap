@@ -257,6 +257,13 @@ function mod:OnEnable()
 	--	mod:UpdateDraggables(GarrisonLandingPageMinimapButton)
 	--end)
 
+	-- On classic (vanilla) only, when reloading UI, there's a bug where the tracking icon doesn't re-show.
+	local icon = GetTrackingTexture()
+	if icon then
+		MiniMapTrackingIcon:SetTexture(icon)
+		MiniMapTrackingFrame:Show()
+	end
+
 	sm.core:RegisterModuleOptions("Buttons", options, L["Buttons"])
 
 	C_Timer.After(1, mod.StartFrameGrab)
