@@ -43,7 +43,7 @@ Shapes_Classic.lua
 
 Buttons_TBC.lua
 BorderPresets.lua
-Borders_TBC.lua
+Borders_Classic.lua
 Clock.lua
 Coordinates.lua
 HudMap.lua
