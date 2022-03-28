@@ -35,6 +35,19 @@ local classicTextures = {
 	[187303] = "interface\\addons\\sexymap\\media\\classic\\swathsmallstones.blp",
 	[241004] = "interface\\addons\\sexymap\\media\\classic\\roguerune2.blp",
 	[249644] = "interface\\addons\\sexymap\\media\\classic\\ul_spinningroomrings_ring07.blp",
+	[527512] = "interface\\addons\\sexymap\\media\\classic\\deathwingfightsky_cloudsmask03.blp",
+	[536776] = "interface\\addons\\sexymap\\media\\classic\\deathwingfightsky_particlecloud.blp",
+	[130539] = "interface\\addons\\sexymap\\media\\classic\\icecrown_cloudsa02_mask01.blp",
+	[235378] = "interface\\addons\\sexymap\\media\\classic\\wintergrasp_cloudmask01.blp",
+	[130540] = "interface\\addons\\sexymap\\media\\classic\\icecrown_cloudsa02_mask02.blp",
+	[130444] = "interface\\addons\\sexymap\\media\\classic\\auchindoun_vortexcloud01.blp",
+	[235312] = "interface\\addons\\sexymap\\media\\classic\\deathsky_vortexcloud01.blp",
+	[130505] = "interface\\addons\\sexymap\\media\\classic\\galaxy_02.blp",
+	[130518] = "interface\\addons\\sexymap\\media\\classic\\hellfireplanet03.blp",
+	[130472] = "interface\\addons\\sexymap\\media\\classic\\bladesedgeplanet04.blp",
+	[130523] = "interface\\addons\\sexymap\\media\\classic\\hellfireplanet_red01.blp",
+	[130521] = "interface\\addons\\sexymap\\media\\classic\\hellfireplanet_blue01.blp",
+	[378269] = "interface\\addons\\sexymap\\media\\classic\\deepholmsky_nebula01.blp",
 }
 
 local presets, userPresets = {}, {}
