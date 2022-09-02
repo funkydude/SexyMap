@@ -362,6 +362,10 @@ do
 				f:SetParent(Minimap)
 				f:SetPoint("CENTER", Minimap, "CENTER", -60, 55)
 			end
+			-- On Wrath Classic the Calendar is not parented to the Minimap
+			if n == "GameTimeFrame" then
+				f:SetParent(Minimap)
+			end
 
 			animFrames[#animFrames+1] = f
 
