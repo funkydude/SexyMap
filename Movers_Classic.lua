@@ -450,7 +450,7 @@ end
 function mod:EnableObjectivesMover()
 	if SexyMapObjectivesMover then return end
 
-	local ObjectiveTrackerFrame = QuestWatchFrame -- Classic version of objective tracker
+	local ObjectiveTrackerFrame = WatchFrame or QuestWatchFrame -- Classic version of objective tracker. WatchFrame = Wrath, QuestWatchFrame = TBC/Vanilla
 
 	local frame = CreateFrame("Frame", "SexyMapObjectivesMover")
 	if self.db.moverPositions.objectives then
