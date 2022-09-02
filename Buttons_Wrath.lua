@@ -10,7 +10,7 @@ local moving, ButtonFadeOut
 
 local animFrames = {}
 local blizzButtons = {
-	GameTimeFrame = L.dayNightButton,
+	GameTimeFrame = L["Calendar"],
 	MiniMapTracking = L["Tracking Button"],
 	SexyMapZoneTextButton = L["Zone Text"],
 	MinimapZoomIn = L["Zoom In Button"],
@@ -21,7 +21,7 @@ local blizzButtons = {
 local dynamicButtons = {
 	--GuildInstanceDifficulty = L["Guild Dungeon Difficulty Indicator (When Available)"],
 	--MiniMapChallengeMode = L["Challenge Mode Button (When Available)"],
-	--MiniMapInstanceDifficulty = L["Dungeon Difficulty Indicator (When Available)"],
+	MiniMapInstanceDifficulty = L["Dungeon Difficulty Indicator (When Available)"],
 	MiniMapMailFrame = L["New Mail Indicator (When Available)"],
 	MiniMapBattlefieldFrame = L.classicPVPButton,
 	--GarrisonLandingPageMinimapButton = L["Garrison Button (When Available)"],
@@ -178,13 +178,13 @@ function mod:OnInitialize(profile)
 			radius = 10,
 			dragPositions = {},
 			visibilitySettings = {
-				GameTimeFrame = "never",
 				MinimapZoomIn = "never",
 				MinimapZoomOut = "never",
 				MiniMapWorldMapButton = "never",
 				SexyMapZoneTextButton = "always",
 				TimeManagerClockButton = "always",
 				MiniMapMailFrame = "always",
+				--QueueStatusMinimapButton = "always",
 				MiniMapBattlefieldFrame = "always",
 				MiniMapLFGFrame = "always",
 				GarrisonLandingPageMinimapButton = "always",
@@ -209,8 +209,9 @@ function mod:OnInitialize(profile)
 	if not self.db.visibilitySettings.MiniMapLFGFrame then
 		self.db.visibilitySettings.MiniMapLFGFrame = "always"
 	end
-	if not self.db.visibilitySettings.GameTimeFrame then
-		self.db.visibilitySettings.GameTimeFrame = "never"
+	if not self.db.tempWrathUpgrade then -- XXX launch of wrath prepatch, GameTimeFrame moves from day/night indicator (useless - hidden) to calendar (useful - show on hover)
+		self.db.visibilitySettings.GameTimeFrame = nil
+		self.db.tempWrathUpgrade = true
 	end
 end
 
@@ -326,11 +327,11 @@ do
 			local n = f:GetName()
 
 			if not mod.db.visibilitySettings[n] or mod.db.visibilitySettings[n] == "hover" then
-				--if n ~= "GameTimeFrame" or (n == "GameTimeFrame" and C_Calendar.GetNumPendingInvites() < 1) then
+				if n ~= "GameTimeFrame" or (n == "GameTimeFrame" and C_Calendar.GetNumPendingInvites() < 1) then
 					f.sexyMapFadeOut:Play()
 
 					KillAnimation(n, f)
-				--end
+				end
 			end
 		end
 	end
@@ -356,11 +357,11 @@ do
 			--	f.sexyMapFadeOut:SetScript("OnFinished", OnFinished)
 			--end
 			---- These frames are parented to MinimapCluster, if the map scale is changed they won't drag properly, so we parent to Minimap
-			--if n == "MiniMapInstanceDifficulty" or n == "GuildInstanceDifficulty" or n == "MiniMapChallengeMode" then
-			--	f:ClearAllPoints()
-			--	f:SetParent(Minimap)
-			--	f:SetPoint("CENTER", Minimap, "CENTER", -60, 55)
-			--end
+			if n == "MiniMapInstanceDifficulty" then --or n == "GuildInstanceDifficulty" or n == "MiniMapChallengeMode" then
+				f:ClearAllPoints()
+				f:SetParent(Minimap)
+				f:SetPoint("CENTER", Minimap, "CENTER", -60, 55)
+			end
 
 			animFrames[#animFrames+1] = f
 
@@ -388,11 +389,11 @@ do
 				self:AddButtonOptions(n)
 
 				-- Configure dragging
-				--if n == "MiniMapTracking" then
-				--	self:MakeMovable(MiniMapTrackingButton, f)
-				--else
+				if n == "MiniMapTracking" then
+					self:MakeMovable(MiniMapTrackingButton, f)
+				else
 					self:MakeMovable(f)
-				--end
+				end
 			end
 		end
 		f:HookScript("OnEnter", OnEnter)
@@ -548,8 +549,11 @@ end
 
 do
 	local tbl = {
-		Minimap, MiniMapTracking, TimeManagerClockButton, GameTimeFrame,
-		MinimapZoomIn, MinimapZoomOut, MiniMapWorldMapButton,
+		--Minimap, MiniMapTrackingButton, MiniMapTracking, TimeManagerClockButton, GameTimeFrame,
+		--MinimapZoomIn, MinimapZoomOut, MiniMapWorldMapButton, GuildInstanceDifficulty, MiniMapChallengeMode, MiniMapInstanceDifficulty,
+		--MiniMapMailFrame, QueueStatusMinimapButton, GarrisonLandingPageMinimapButton
+		Minimap, MiniMapTrackingButton, MiniMapTracking, TimeManagerClockButton, GameTimeFrame,
+		MinimapZoomIn, MinimapZoomOut, MiniMapWorldMapButton, MiniMapInstanceDifficulty,
 		MiniMapMailFrame, MiniMapBattlefieldFrame, MiniMapLFGFrame
 	}
 
@@ -557,16 +561,16 @@ do
 		self:NewFrame(button)
 	end
 
-	--local function CheckCalendar()
-	--	local vis = mod.db.visibilitySettings.GameTimeFrame
-	--	if not vis or vis == "hover" then
-	--		if C_Calendar.GetNumPendingInvites() < 1 then
-	--			mod:ChangeFrameVisibility(GameTimeFrame, "hover")
-	--		else
-	--			mod:ChangeFrameVisibility(GameTimeFrame, "always")
-	--		end
-	--	end
-	--end
+	local function CheckCalendar()
+		local vis = mod.db.visibilitySettings.GameTimeFrame
+		if not vis or vis == "hover" then
+			if C_Calendar.GetNumPendingInvites() < 1 then
+				mod:ChangeFrameVisibility(GameTimeFrame, "hover")
+			else
+				mod:ChangeFrameVisibility(GameTimeFrame, "always")
+			end
+		end
+	end
 
 	function mod:StartFrameGrab()
 		for i = 1, #tbl do
@@ -580,11 +584,11 @@ do
 		ldbi.RegisterCallback(mod, "LibDBIcon_IconCreated", "AddButton")
 
 		-- If calendar is set to "hover" and we have pending invites, force show it
-		--local frame = CreateFrame("Frame")
-		--frame:SetScript("OnEvent", CheckCalendar)
-		--frame:RegisterEvent("CALENDAR_UPDATE_PENDING_INVITES")
-		--frame:RegisterEvent("CALENDAR_ACTION_PENDING")
-		--CheckCalendar()
+		local frame = CreateFrame("Frame")
+		frame:SetScript("OnEvent", CheckCalendar)
+		frame:RegisterEvent("CALENDAR_UPDATE_PENDING_INVITES")
+		frame:RegisterEvent("CALENDAR_ACTION_PENDING")
+		CheckCalendar()
 
 		mod.StartFrameGrab = nil
 	end
