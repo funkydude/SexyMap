@@ -566,6 +566,7 @@ do
 	end
 
 	local function CheckCalendar()
+		if not mod.db.controlVisibility then return end
 		local vis = mod.db.visibilitySettings.GameTimeFrame
 		if not vis or vis == "hover" then
 			if C_Calendar.GetNumPendingInvites() < 1 then
