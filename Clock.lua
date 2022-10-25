@@ -174,8 +174,10 @@ function mod:OnEnable()
 
 	sm.core.font.ClearAllPoints(TimeManagerClockTicker)
 	sm.core.font.SetAllPoints(TimeManagerClockTicker)
-	local border = sm.core.button.GetRegions(TimeManagerClockButton)
-	border:Hide() -- Hide the clock border
+	if MiniMapMailFrame then
+		local border = sm.core.button.GetRegions(TimeManagerClockButton)
+		border:Hide() -- Hide the clock border
+	end
 	Mixin(TimeManagerClockButton, BackdropTemplateMixin)
 	TimeManagerClockButton:SetBackdrop(sm.backdrop)
 	sm.core.button.SetClampedToScreen(TimeManagerClockButton, true)

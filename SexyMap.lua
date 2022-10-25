@@ -68,10 +68,14 @@ mod.options = {
 			name = ROTATE_MINIMAP,
 			desc = OPTION_TOOLTIP_ROTATE_MINIMAP,
 			get = function()
-				return InterfaceOptionsDisplayPanelRotateMinimap:GetValue() == "1" and true
+				return GetCVarBool("rotateMinimap")
 			end,
-			set = function()
-				InterfaceOptionsDisplayPanelRotateMinimap:Click()
+			set = function(_, value)
+				if value then
+					SetCVar("rotateMinimap", 1)
+				else
+					SetCVar("rotateMinimap", 0)
+				end
 			end,
 		},
 		rightClickToConfig = {
@@ -111,16 +115,17 @@ mod.options = {
 				return mod.db.northTag
 			end,
 			set = function(info, v)
+				if not MinimapNorthTag then return end
 				if v then
 					MinimapNorthTag.Show = MinimapNorthTag.oldShow
 					MinimapNorthTag.oldShow = nil
 					MinimapCompassTexture.Show = MinimapCompassTexture.oldShow
 					MinimapCompassTexture.oldShow = nil
-					if InterfaceOptionsDisplayPanelRotateMinimap:GetValue() == "1" then
-						MinimapCompassTexture:Show()
-					else
-						MinimapNorthTag:Show()
-					end
+					--if InterfaceOptionsDisplayPanelRotateMinimap:GetValue() == "1" then
+					--	MinimapCompassTexture:Show()
+					--else
+					--	MinimapNorthTag:Show()
+					--end
 				else
 					MinimapNorthTag:Hide()
 					MinimapNorthTag.oldShow = MinimapNorthTag.Show
@@ -131,6 +136,7 @@ mod.options = {
 				end
 				mod.db.northTag = v
 			end,
+			disabled = not MinimapNorthTag,
 		},
 		zoom = {
 			order = 7,
@@ -404,7 +410,7 @@ function mod:PLAYER_LOGIN()
 		if button == "RightButton" and mod.db.rightClickToConfig then
 			SlashCmdList.SexyMap()
 		else
-			Minimap_OnClick(frame, button)
+			Minimap:OnClick()
 		end
 	end)
 
@@ -492,7 +498,11 @@ function mod:SetupMap()
 		current = current + 1
 		if started == current then
 			for i = 1, Minimap:GetZoom() or 0 do
-				Minimap_ZoomOutClick() -- Call it directly so we don't run our own hook
+				if Minimap_ZoomOutClick then
+					Minimap_ZoomOutClick() -- Call it directly so we don't run our own hook
+				else
+					Minimap.ZoomOut:OnClick()
+				end
 			end
 			started, current = 0, 0
 		end
@@ -505,16 +515,21 @@ function mod:SetupMap()
 		end
 	end
 	zoomBtnFunc()
-	MinimapZoomIn:HookScript("OnClick", zoomBtnFunc)
-	MinimapZoomOut:HookScript("OnClick", zoomBtnFunc)
+	if MinimapZoomIn then
+		MinimapZoomIn:HookScript("OnClick", zoomBtnFunc)
+		MinimapZoomOut:HookScript("OnClick", zoomBtnFunc)
+	else
+		Minimap.ZoomIn:HookScript("OnClick", zoomBtnFunc)
+		Minimap.ZoomOut:HookScript("OnClick", zoomBtnFunc)
+	end
 
 	--[[ MouseWheel Zoom ]]--
 	Minimap:EnableMouseWheel(true)
 	Minimap:SetScript("OnMouseWheel", function(frame, d)
 		if d > 0 then
-			MinimapZoomIn:Click()
+			(MinimapZoomIn or Minimap.ZoomIn):Click()
 		elseif d < 0 then
-			MinimapZoomOut:Click()
+			(MinimapZoomOut or Minimap.ZoomOut):Click()
 		end
 	end)
 
@@ -526,7 +541,7 @@ function mod:SetupMap()
 	Minimap:SetQuestBlobRingScalar(0)
 	Minimap:SetQuestBlobRingAlpha(0)
 
-	if not mod.db.northTag then
+	if MinimapNorthTag and not mod.db.northTag then
 		MinimapNorthTag:Hide()
 		MinimapNorthTag.oldShow = MinimapNorthTag.Show
 		MinimapNorthTag.Show = MinimapNorthTag.Hide
@@ -535,7 +550,9 @@ function mod:SetupMap()
 		MinimapCompassTexture.Show = MinimapCompassTexture.Hide
 	end
 
-	MinimapBorderTop:Hide()
+	if MinimapBorderTop then
+		MinimapBorderTop:Hide()
+	end
 	Minimap:RegisterForDrag("LeftButton")
 	Minimap:SetClampedToScreen(mod.db.clamp)
 	Minimap:SetScale(mod.db.scale or 1)

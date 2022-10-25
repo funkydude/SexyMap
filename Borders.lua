@@ -8,7 +8,7 @@ local L = sm.L
 local textures = {}
 local texturePool = {}
 local rotateTextures = {}
-local defaultSize = 180
+local defaultSize = MiniMapMailFrame and 180 or 238
 local customBackdrop
 local media = LibStub("LibSharedMedia-3.0")
 
@@ -1077,9 +1077,17 @@ end
 
 function mod:UpdateBorder()
 	if mod.db.hideBlizzard then
-		MinimapBorder:Hide()
+		if MinimapBorder then
+			MinimapBorder:Hide()
+		else
+			MinimapBackdrop:Hide()
+		end
 	else
-		MinimapBorder:Show()
+		if MinimapBorder then
+			MinimapBorder:Show()
+		else
+			MinimapBackdrop:Show()
+		end
 	end
 end
 
