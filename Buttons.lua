@@ -27,14 +27,14 @@ local dynamicButtons = {
 	GarrisonLandingPageMinimapButton = L["Garrison Button (When Available)"],
 }
 
-local namesCompatForDF = {
+local namesCompatForDF = ExpansionLandingPageMinimapButton and {
 	[ExpansionLandingPageMinimapButton] = "GarrisonLandingPageMinimapButton",
 	[Minimap.ZoomIn] = "MinimapZoomIn",
 	[Minimap.ZoomOut] = "MinimapZoomOut",
 	[MinimapCluster.Tracking] = "MiniMapTracking",
 	[MinimapCluster.InstanceDifficulty] = "MiniMapInstanceDifficulty",
 	[MinimapCluster.MailFrame] = "MiniMapMailFrame",
-}
+} or {}
 
 local options = {
 	type = "group",
