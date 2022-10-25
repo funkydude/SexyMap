@@ -8,7 +8,7 @@ local L = sm.L
 local textures = {}
 local texturePool = {}
 local rotateTextures = {}
-local defaultSize = MiniMapMailFrame and 180 or 238
+local defaultSize = 180
 local customBackdrop
 local media = LibStub("LibSharedMedia-3.0")
 

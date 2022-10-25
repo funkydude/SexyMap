@@ -555,7 +555,8 @@ function mod:SetupMap()
 	end
 	Minimap:RegisterForDrag("LeftButton")
 	Minimap:SetClampedToScreen(mod.db.clamp)
-	Minimap:SetScale(mod.db.scale or 1)
+	Minimap:SetScale(mod.db.scale or (MinimapNorthTag and 1 or 1.1))
+	Minimap:SetSize(140, 140)
 	Minimap:SetMovable(not mod.db.lock)
 
 	Minimap:SetScript("OnDragStart", function(self) if self:IsMovable() then self:StartMoving() end end)
@@ -566,8 +567,12 @@ function mod:SetupMap()
 	end)
 
 	if mod.db.point then
-		Minimap:ClearAllPoints()
-		Minimap:SetPoint(mod.db.point, UIParent, mod.db.relpoint, mod.db.x, mod.db.y)
+		mod.frame.ClearAllPoints(Minimap)
+		mod.frame.SetPoint(Minimap, mod.db.point, UIParent, mod.db.relpoint, mod.db.x, mod.db.y)
+		hooksecurefunc(Minimap, "SetPoint", function() -- Edit mode for the minimap has a "header underneath" option which changes Minimap points
+			mod.frame.ClearAllPoints(Minimap)
+			mod.frame.SetPoint(Minimap, mod.db.point, UIParent, mod.db.relpoint, mod.db.x, mod.db.y)
+		end)
 	end
 	self.SetupMap = nil
 end
