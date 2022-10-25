@@ -100,7 +100,7 @@ mod.options = {
 			bigStep = 0.01,
 			width = 2,
 			get = function(info)
-				return mod.db.scale or 1
+				return mod.db.scale or (MinimapNorthTag and 1 or 1.1)
 			end,
 			set = function(info, v)
 				mod.db.scale = v

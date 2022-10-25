@@ -34,6 +34,8 @@ local namesCompatForDF = ExpansionLandingPageMinimapButton and {
 	[MinimapCluster.Tracking] = "MiniMapTracking",
 	[MinimapCluster.InstanceDifficulty] = "MiniMapInstanceDifficulty",
 	[MinimapCluster.MailFrame] = "MiniMapMailFrame",
+	[GameTimeFrame] = "GameTimeFrame", -- Just here to change parent to Minimap in :NewFrame
+	[MinimapCluster.Tracking.Button] = "none", -- Prevent error when being passed to :NewFrame
 } or {}
 
 local options = {
@@ -245,6 +247,33 @@ function mod:OnEnable()
 		MiniMapWorldMapButton:SetHighlightTexture(136477) -- 136477 = Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight
 		highlight:ClearAllPoints()
 		highlight:SetPoint("TOPLEFT", MiniMapWorldMapButton, "TOPLEFT", 2, -2)
+	else
+		local overlay = MinimapCluster.MailFrame:CreateTexture(nil, "OVERLAY")
+		overlay:SetSize(53,53)
+		overlay:SetTexture(136430) -- 136430 = Interface\\Minimap\\MiniMap-TrackingBorder
+		overlay:SetPoint("CENTER", MiniMapMailIcon, "CENTER", 10, -10)
+		local background = MinimapCluster.MailFrame:CreateTexture(nil, "BACKGROUND")
+		background:SetSize(25,25)
+		background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
+		background:SetPoint("CENTER", MiniMapMailIcon, "CENTER")
+
+		local overlay = MinimapCluster.Tracking:CreateTexture(nil, "OVERLAY")
+		overlay:SetSize(53,53)
+		overlay:SetTexture(136430) -- 136430 = Interface\\Minimap\\MiniMap-TrackingBorder
+		overlay:SetPoint("CENTER", MinimapCluster.Tracking.Button, "CENTER", 10, -10)
+		local background = MinimapCluster.Tracking:CreateTexture(nil, "BACKGROUND")
+		background:SetSize(25,25)
+		background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
+		background:SetPoint("CENTER", MinimapCluster.Tracking.Button, "CENTER")
+
+		local overlay = GameTimeFrame:CreateTexture(nil, "OVERLAY")
+		overlay:SetSize(53,53)
+		overlay:SetTexture(136430) -- 136430 = Interface\\Minimap\\MiniMap-TrackingBorder
+		overlay:SetPoint("CENTER", GameTimeFrame, "CENTER", 10, -10)
+		local background = GameTimeFrame:CreateTexture(nil, "BACKGROUND")
+		background:SetSize(25,25)
+		background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
+		background:SetPoint("CENTER", GameTimeFrame, "CENTER")
 	end
 
 	if GarrisonLandingPageMinimapButton then
@@ -376,6 +405,8 @@ do
 				f:ClearAllPoints()
 				f:SetParent(Minimap)
 				f:SetPoint("CENTER", Minimap, "CENTER", -60, 55)
+			elseif namesCompatForDF[f] then
+				f:SetParent(Minimap)
 			end
 
 			animFrames[#animFrames+1] = f
@@ -404,8 +435,12 @@ do
 				self:AddButtonOptions(n)
 
 				-- Configure dragging
-				if n == "MiniMapTracking" and MiniMapTrackingButton then
-					self:MakeMovable(MiniMapTrackingButton, f)
+				if n == "MiniMapTracking" then
+					if MiniMapTrackingButton then
+						self:MakeMovable(MiniMapTrackingButton, f)
+					else
+						self:MakeMovable(MinimapCluster.Tracking.Button, f)
+					end
 				else
 					self:MakeMovable(f)
 				end
@@ -571,7 +606,7 @@ do
 		MiniMapMailFrame, QueueStatusMinimapButton, GarrisonLandingPageMinimapButton
 	}
 	local tblDF = {
-		Minimap, MinimapCluster.Tracking, TimeManagerClockButton, GameTimeFrame,
+		Minimap, MinimapCluster.Tracking, MinimapCluster.Tracking.Button, TimeManagerClockButton, GameTimeFrame,
 		Minimap.ZoomIn, Minimap.ZoomOut, MinimapCluster.InstanceDifficulty,
 		MinimapCluster.MailFrame, ExpansionLandingPageMinimapButton
 	}
