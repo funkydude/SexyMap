@@ -113,54 +113,6 @@ local options = {
 			type = "description",
 			width = "full",
 		},
-		moveObjectives = {
-			order = 8,
-			name = L.enableObject:format(L["Objectives Tracker"]),
-			type = "toggle",
-			width = "full",
-			confirm = function(info, v)
-				if not v then
-					return L.disableWarning
-				end
-			end,
-			get = function()
-				return mod.db.moveObjectives
-			end,
-			set = function(info, v)
-				mod.db.moveObjectives = v
-				if v then
-					mod:EnableObjectivesMover()
-				else
-					mod.db.lockObjectives = false
-					mod.db.moverPositions.objectives = nil
-					ReloadUI()
-				end
-			end,
-		},
-		lockObjectives = {
-			order = 9,
-			name = L.lockObject:format(L["Objectives Tracker"]),
-			type = "toggle",
-			width = "full",
-			get = function()
-				return mod.db.lockObjectives
-			end,
-			set = function(info, v)
-				mod.db.lockObjectives = v
-				if v then
-					SexyMapObjectivesMover:Hide()
-				else
-					SexyMapObjectivesMover:Show()
-				end
-			end,
-			disabled = function() return not mod.db.moveObjectives end,
-		},
-		spacer3 = {
-			order = 10,
-			name = " ",
-			type = "description",
-			width = "full",
-		},
 		moveCaptureBar = {
 			order = 11,
 			name = L.enableObject:format(L.pvpCaptureBar),
@@ -205,54 +157,6 @@ local options = {
 		},
 		spacer4 = {
 			order = 13,
-			name = " ",
-			type = "description",
-			width = "full",
-		},
-		moveBuffs = {
-			order = 14,
-			name = L.enableObject:format(L.buffs),
-			type = "toggle",
-			width = "full",
-			confirm = function(info, v)
-				if not v then
-					return L.disableWarning
-				end
-			end,
-			get = function()
-				return mod.db.moveBuffs
-			end,
-			set = function(info, v)
-				mod.db.moveBuffs = v
-				if v then
-					mod:EnableBuffsMover()
-				else
-					mod.db.lockBuffs = false
-					mod.db.moverPositions.buffs = nil
-					ReloadUI()
-				end
-			end,
-		},
-		lockBuffs = {
-			order = 15,
-			name = L.lockObject:format(L.buffs),
-			type = "toggle",
-			width = "full",
-			get = function()
-				return mod.db.lockBuffs
-			end,
-			set = function(info, v)
-				mod.db.lockBuffs = v
-				if v then
-					SexyMapBuffsFrameMover:Hide()
-				else
-					SexyMapBuffsFrameMover:Show()
-				end
-			end,
-			disabled = function() return not mod.db.moveBuffs end,
-		},
-		spacer5 = {
-			order = 16,
 			name = " ",
 			type = "description",
 			width = "full",
@@ -305,16 +209,12 @@ local options = {
 function mod:OnInitialize(profile)
 	if type(profile.movers) ~= "table" or not profile.movers.moverPositions then
 		profile.movers = {
-			moveObjectives = false,
-			lockObjectives = false,
 			moveDurability = false,
 			lockDurability = false,
 			moveVehicle = false,
 			lockVehicle = false,
 			moveCaptureBar = false,
 			lockCaptureBar = false,
-			moveBuffs = false,
-			lockBuffs = false,
 			moveTopWidget = false,
 			lockTopWidget = false,
 			moverPositions = {},
@@ -331,14 +231,8 @@ function mod:OnEnable()
 	if self.db.moveVehicle then
 		self:EnableVehicleMover()
 	end
-	if self.db.moveObjectives then
-		self:EnableObjectivesMover()
-	end
 	if self.db.moveCaptureBar then
 		self:EnableCaptureBarMover()
-	end
-	if self.db.moveBuffs then
-		self:EnableBuffsMover()
 	end
 	if self.db.moveTopWidget then
 		self:EnableTopWidgetMover()
@@ -447,61 +341,6 @@ function mod:EnableVehicleMover()
 	header:Show()
 end
 
-function mod:EnableObjectivesMover()
-	if SexyMapObjectivesMover then return end
-
-	local ObjectiveTrackerFrame = ObjectiveTrackerFrame
-
-	local frame = CreateFrame("Frame", "SexyMapObjectivesMover")
-	if self.db.moverPositions.objectives then
-		local tbl = self.db.moverPositions.objectives
-		frame:SetPoint(tbl[1], UIParent, tbl[2], tbl[3], tbl[4])
-	else
-		frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-	end
-	frame:SetSize(235, 600) -- defaults: 235, 140
-	if self.db.lockObjectives then
-		frame:Hide()
-	else
-		frame:Show()
-	end
-	frame:EnableMouse(true)
-	frame:RegisterForDrag("LeftButton")
-	frame:SetMovable(true)
-
-	local function SetNewPoint(self)
-		ClearAllPoints(self)
-		SetPoint(self, "TOPRIGHT", frame, "TOPRIGHT")
-		SetPoint(self, "BOTTOMRIGHT", frame, "BOTTOMRIGHT")
-	end
-	hooksecurefunc(ObjectiveTrackerFrame, "SetPoint", SetNewPoint)
-	SetNewPoint(ObjectiveTrackerFrame)
-
-	-- Allows the sorting that occurs in UIParent.lua to skip the ObjectiveTrackerFrame
-	ObjectiveTrackerFrame:SetMovable(true)
-	ObjectiveTrackerFrame:SetUserPlaced(true)
-	ObjectiveTrackerFrame:SetMovable(false)
-
-	frame:SetScript("OnDragStart", function(self)
-		self:StartMoving()
-	end)
-	frame:SetScript("OnDragStop", function(self)
-		self:StopMovingOrSizing()
-		local a, _, b, c, d = self:GetPoint()
-		mod.db.moverPositions.objectives = {a, b, c, d}
-	end)
-
-	local bg = frame:CreateTexture()
-	bg:SetAllPoints(frame)
-	bg:SetColorTexture(0, 1, 0, 0.3)
-	bg:Show()
-
-	local header = frame:CreateFontString(nil, "OVERLAY", "TextStatusBarText")
-	header:SetPoint("BOTTOM", frame, "TOP")
-	header:SetText(L["Objectives Tracker"])
-	header:Show()
-end
-
 function mod:EnableCaptureBarMover()
 	if SexyMapCaptureBarMover then return end
 	local UIWidgetBelowMinimapContainerFrame = UIWidgetBelowMinimapContainerFrame
@@ -545,52 +384,6 @@ function mod:EnableCaptureBarMover()
 	local header = frame:CreateFontString(nil, "OVERLAY", "TextStatusBarText")
 	header:SetPoint("BOTTOM", frame, "TOP")
 	header:SetText(L.pvpCaptureBar)
-	header:Show()
-end
-
-function mod:EnableBuffsMover()
-	if SexyMapBuffsFrameMover then return end
-	local BuffFrame = BuffFrame
-
-	local frame = CreateFrame("Frame", "SexyMapBuffsFrameMover")
-	if self.db.moverPositions.buffs then
-		local tbl = self.db.moverPositions.buffs
-		frame:SetPoint(tbl[1], UIParent, tbl[2], tbl[3], tbl[4])
-	else
-		frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-	end
-	frame:SetSize(190, 225) -- defaults: 50, 50
-	if self.db.lockBuffs then
-		frame:Hide()
-	else
-		frame:Show()
-	end
-	frame:EnableMouse(true)
-	frame:RegisterForDrag("LeftButton")
-	frame:SetMovable(true)
-
-	local function SetNewPoint(self)
-		ClearAllPoints(self)
-		SetPoint(self, "TOPRIGHT", frame, "TOPRIGHT")
-	end
-	hooksecurefunc(BuffFrame, "SetPoint", SetNewPoint)
-	SetNewPoint(BuffFrame)
-
-	frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
-	frame:SetScript("OnDragStop", function(self)
-		self:StopMovingOrSizing()
-		local a, _, b, c, d = self:GetPoint()
-		mod.db.moverPositions.buffs = {a, b, c, d}
-	end)
-
-	local bg = frame:CreateTexture()
-	bg:SetAllPoints(frame)
-	bg:SetColorTexture(0, 1, 0, 0.3)
-	bg:Show()
-
-	local header = frame:CreateFontString(nil, "OVERLAY", "TextStatusBarText")
-	header:SetPoint("BOTTOM", frame, "TOP")
-	header:SetText(L.buffs)
 	header:Show()
 end
 
