@@ -68,13 +68,15 @@ mod.options = {
 			name = ROTATE_MINIMAP,
 			desc = OPTION_TOOLTIP_ROTATE_MINIMAP,
 			get = function()
-				return GetCVarBool("rotateMinimap")
+				return mod.db.rotate
 			end,
 			set = function(_, value)
 				if value then
-					SetCVar("rotateMinimap", 1)
+					mod.db.rotate = true
+					C_CVar.SetCVar("rotateMinimap", 1)
 				else
-					SetCVar("rotateMinimap", 0)
+					mod.db.rotate = nil
+					C_CVar.SetCVar("rotateMinimap", 0)
 				end
 			end,
 		},
@@ -558,6 +560,15 @@ function mod:SetupMap()
 	Minimap:SetScale(mod.db.scale or (MinimapNorthTag and 1 or 1.1))
 	Minimap:SetSize(140, 140)
 	Minimap:SetMovable(not mod.db.lock)
+
+	if mod.db.rotate then
+		C_CVar.SetCVar("rotateMinimap", 1)
+	end
+	hooksecurefunc(MinimapCluster, "SetRotateMinimap", function()
+		if mod.db.rotate then
+			C_CVar.SetCVar("rotateMinimap", 1)
+		end
+	end)
 
 	Minimap:SetScript("OnDragStart", function(self) if self:IsMovable() then self:StartMoving() end end)
 	Minimap:SetScript("OnDragStop", function(self)
