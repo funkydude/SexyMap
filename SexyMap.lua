@@ -469,6 +469,12 @@ end)
 MinimapBackdrop:ClearAllPoints()
 MinimapBackdrop:SetPoint("CENTER", Minimap, "CENTER", -8, -23)
 
+-- Remove this fugly attempt by Blizz
+mod.frame.SetParent(AddonCompartmentFrame, mod.frame)
+hooksecurefunc(AddonCompartmentFrame, "SetParent", function()
+	mod.frame.SetParent(AddonCompartmentFrame, mod.frame)
+end)
+
 function mod:SetupMap()
 	local Minimap = Minimap
 
