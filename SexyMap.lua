@@ -529,6 +529,10 @@ function mod:SetupMap()
 	else
 		Minimap.ZoomIn:HookScript("OnClick", zoomBtnFunc)
 		Minimap.ZoomOut:HookScript("OnClick", zoomBtnFunc)
+		Minimap:SetScript("OnEnter", nil) -- Kill Blizzard's auto hide of zoom buttons
+		Minimap:SetScript("OnLeave", nil) -- Kill Blizzard's auto hide of zoom buttons
+		Minimap.ZoomIn:Show() -- Force show it after killing it above (hidden by default)
+		Minimap.ZoomOut:Show() -- Force show it after killing it above (hidden by default)
 	end
 
 	--[[ MouseWheel Zoom ]]--
