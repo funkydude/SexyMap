@@ -1087,6 +1087,7 @@ function mod:UpdateBorder()
 			MinimapBorder:Show()
 		else
 			MinimapBackdrop:Show()
+			MinimapCompassTexture:SetSize(157, 168) -- We shrink the minimap so we gotta shrink the border also
 		end
 	end
 end
