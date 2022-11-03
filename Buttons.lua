@@ -248,6 +248,7 @@ function mod:OnEnable()
 		highlight:ClearAllPoints()
 		highlight:SetPoint("TOPLEFT", MiniMapWorldMapButton, "TOPLEFT", 2, -2)
 	else
+		-- Mail Button
 		local overlay = MinimapCluster.MailFrame:CreateTexture(nil, "OVERLAY")
 		overlay:SetSize(53,53)
 		overlay:SetTexture(136430) -- 136430 = Interface\\Minimap\\MiniMap-TrackingBorder
@@ -257,23 +258,45 @@ function mod:OnEnable()
 		background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
 		background:SetPoint("CENTER", MiniMapMailIcon, "CENTER")
 
-		local overlay = MinimapCluster.Tracking:CreateTexture(nil, "OVERLAY")
+		-- Tracking Button
+		overlay = MinimapCluster.Tracking:CreateTexture(nil, "OVERLAY")
 		overlay:SetSize(53,53)
 		overlay:SetTexture(136430) -- 136430 = Interface\\Minimap\\MiniMap-TrackingBorder
 		overlay:SetPoint("CENTER", MinimapCluster.Tracking.Button, "CENTER", 10, -10)
-		local background = MinimapCluster.Tracking:CreateTexture(nil, "BACKGROUND")
+		background = MinimapCluster.Tracking:CreateTexture(nil, "BACKGROUND")
 		background:SetSize(25,25)
 		background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
 		background:SetPoint("CENTER", MinimapCluster.Tracking.Button, "CENTER")
 
-		local overlay = GameTimeFrame:CreateTexture(nil, "OVERLAY")
+		-- Calendar Button
+		overlay = GameTimeFrame:CreateTexture(nil, "OVERLAY")
 		overlay:SetSize(53,53)
 		overlay:SetTexture(136430) -- 136430 = Interface\\Minimap\\MiniMap-TrackingBorder
 		overlay:SetPoint("CENTER", GameTimeFrame, "CENTER", 10, -10)
-		local background = GameTimeFrame:CreateTexture(nil, "BACKGROUND")
+		background = GameTimeFrame:CreateTexture(nil, "BACKGROUND")
 		background:SetSize(25,25)
 		background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
 		background:SetPoint("CENTER", GameTimeFrame, "CENTER")
+
+		-- Zoom in Button
+		overlay = Minimap.ZoomIn:CreateTexture(nil, "OVERLAY")
+		overlay:SetSize(53,53)
+		overlay:SetTexture(136430) -- 136430 = Interface\\Minimap\\MiniMap-TrackingBorder
+		overlay:SetPoint("CENTER", Minimap.ZoomIn, "CENTER", 10, -10)
+		background = Minimap.ZoomIn:CreateTexture(nil, "BACKGROUND")
+		background:SetSize(25,25)
+		background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
+		background:SetPoint("CENTER", Minimap.ZoomIn, "CENTER")
+
+		-- Zoom out Button
+		overlay = Minimap.ZoomOut:CreateTexture(nil, "OVERLAY")
+		overlay:SetSize(53,53)
+		overlay:SetTexture(136430) -- 136430 = Interface\\Minimap\\MiniMap-TrackingBorder
+		overlay:SetPoint("CENTER", Minimap.ZoomOut, "CENTER", 10, -10)
+		background = Minimap.ZoomOut:CreateTexture(nil, "BACKGROUND")
+		background:SetSize(25,25)
+		background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
+		background:SetPoint("CENTER", Minimap.ZoomOut, "CENTER")
 	end
 
 	if GarrisonLandingPageMinimapButton then
