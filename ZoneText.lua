@@ -154,7 +154,25 @@ local options = {
 			disabled = function()
 				return not sm.buttons.db.controlVisibility
 			end,
-		}
+		},
+		useSecureButton = {
+			order = 11,
+			name = L.zoneTextSecureButtonEnable,
+			desc = L.zoneTextSecureButtonEnableDesc,
+			type = "toggle",
+			width = "full",
+			confirm = function() return L.disableWarning end,
+			get = function()
+				return mod.db.useSecureButton
+			end,
+			set = function(info, v)
+				mod.db.useSecureButton = v
+				ReloadUI()
+			end,
+			disabled = function()
+				if MinimapZoneTextButton then return true end
+			end,
+		},
 	}
 }
 
@@ -167,6 +185,7 @@ function mod:OnInitialize(profile)
 			borderColor = {r = 0, g = 0, b = 0, a = 1},
 			fontColor = {},
 			font = media:GetDefault("font"),
+			useSecureButton = false,
 		}
 	end
 	self.db = profile.zonetext
@@ -193,10 +212,21 @@ function mod:OnEnable()
 	else
 		MinimapCluster.ZoneTextButton:SetParent(sm.core.button)
 		MinimapCluster.BorderTop:SetParent(sm.core.button)
-		zoneTextButton = CreateFrame("Button", "SexyMapZoneTextButton", Minimap, "BackdropTemplate,SecureActionButtonTemplate") -- Create our own zone text
-		zoneTextButton:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
-		zoneTextButton:SetAttribute("type1", "click")
-		zoneTextButton:SetAttribute("clickbutton1", MinimapCluster.ZoneTextButton)
+		if mod.db.useSecureButton then
+			zoneTextButton = CreateFrame("Button", "SexyMapZoneTextButton", Minimap, "BackdropTemplate,SecureActionButtonTemplate") -- Create our own zone text
+			zoneTextButton:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
+			zoneTextButton:SetAttribute("type1", "click")
+			zoneTextButton:SetAttribute("clickbutton1", MinimapCluster.ZoneTextButton)
+		else
+			zoneTextButton = CreateFrame("Button", "SexyMapZoneTextButton", Minimap, "BackdropTemplate") -- Create our own zone text
+			zoneTextButton:SetScript("OnClick", function()
+				if not InCombatLockdown() then
+					ToggleWorldMap()
+				else
+					print(L.zoneTextCombatClick)
+				end
+			end)
+		end
 	end
 
 	zoneTextButton:SetPoint("BOTTOM", Minimap, "TOP", mod.db.xOffset, mod.db.yOffset)

@@ -184,3 +184,6 @@ L["Zoom Out Button"] = "кнопку отдаления" -- Needs review
 L.pvpCaptureBar = "ПвП Бар захвата"
 --L.buffs = "Buffs/Debuffs"
 --L.topCenterObjectivesWidget = "Top-Screen Objective/PvP Tracker"
+--L.zoneTextCombatClick = "|cFF33FF99SexyMap|r: To toggle the World Map in combat, you must enable the feature in the Zone Text options."
+--L.zoneTextSecureButtonEnable = "Allow clicking in combat"
+--L.zoneTextSecureButtonEnableDesc = "Normally you can click the Zone Text to toggle your World Map, but not in combat without this feature enabled.\n\n|cffff0000WARNING!|r Don't enable this feature unless you understand what it does. Turning this on will prevent ALL of your addons from making certain changes to your minimap in combat, such as moving it or hiding it."
