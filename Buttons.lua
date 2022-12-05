@@ -603,6 +603,8 @@ do
 	function mod:UpdateDraggables(frame)
 		if not mod.db.allowDragging then return end
 
+		mod:ShowAllButtons()
+
 		if frame then
 			local x, y = frame:GetCenter()
 			local name = namesCompatForDF[frame] or frame:GetName()
@@ -624,6 +626,9 @@ do
 				end
 			end
 		end
+
+		mod:HideAllButtons()
+
 	end
 end
 
