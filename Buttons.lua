@@ -362,7 +362,7 @@ do
 		end
 	end
 
-	local OnEnter = function()
+	function mod:ShowAllButtons()
 		if not mod.db.controlVisibility or fadeStop or moving then return end
 
 		for i = 1, #animFrames do
@@ -380,6 +380,11 @@ do
 			end
 		end
 	end
+
+	local OnEnter = function()
+		mod:ShowAllButtons()
+	end
+
 	local OnLeave = function()
 		if not mod.db.controlVisibility or moving then return end
 		local focus = GetMouseFocus() -- Minimap or Minimap icons including nil checks to compensate for other addons
