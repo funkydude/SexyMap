@@ -381,11 +381,7 @@ do
 		end
 	end
 
-	local OnEnter = function()
-		mod:ShowAllButtons()
-	end
-
-	local OnLeave = function()
+	function mod:HideAllButtons()
 		if not mod.db.controlVisibility or moving then return end
 		local focus = GetMouseFocus() -- Minimap or Minimap icons including nil checks to compensate for other addons
 		if focus and not focus:IsForbidden() and ((focus:GetName() == "Minimap") or (focus:GetParent() and focus:GetParent():GetName() and focus:GetParent():GetName():find("Mini[Mm]ap"))) then
@@ -406,6 +402,14 @@ do
 				end
 			end
 		end
+	end
+
+	local OnEnter = function()
+		mod:ShowAllButtons()
+	end
+
+	local OnLeave = function()
+		mod:HideAllButtons()
 	end
 
 	local hideFrame = CreateFrame("Frame") -- Dummy frame we use for hiding buttons to prevent other addons re-showing them
