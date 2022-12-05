@@ -117,8 +117,27 @@ local options = {
 				mod:UpdateDraggables()
 			end
 		},
-		visSpacer = {
+		scale = {
 			order = 104,
+			type = "range",
+			name = L["Scale"],
+			min = 0.7,
+			max = 2.5,
+			step = 0.01,
+			bigStep = 0.01,
+			disabled = function()
+				return not mod.db.allowDragging
+			end,
+			get = function(info)
+				return mod.db.buttonScale or mod:GetMapScale()
+			end,
+			set = function(info, v)
+				mod.db.buttonScale = v
+				mod:UpdateDraggables()
+			end,
+		},
+		visSpacer = {
+			order = 105,
 			type = "header",
 			name = L["Visibility"],
 		},
@@ -127,7 +146,7 @@ local options = {
 			name = L["Let SexyMap control button visibility"],
 			desc = L["Turn this off if you want another mod to handle which buttons are visible on the minimap."],
 			width = "full",
-			order = 105,
+			order = 106,
 			get = function()
 				return mod.db.controlVisibility
 			end,
@@ -511,7 +530,7 @@ do
 end
 
 --------------------------------------------------------------------------------
--- Dragging
+-- Dragging and scaling
 --
 
 local dragFrame = CreateFrame("Frame")
@@ -532,6 +551,16 @@ do
 	local setPosition = function(frame, angle)
 		local radius = (Minimap:GetWidth() / 2) + mod.db.radius
 		local bx, by = sm.shapes:GetPosition(angle, radius)
+
+		-- adjust button size for custom button scale
+		do
+			local buttonScale = mod.db.buttonScale
+			local mapScale = mod:GetMapScale()
+
+			if buttonScale and buttonScale ~= mapScale then
+				frame:SetScale(buttonScale / mapScale)
+			end
+		end
 
 		frame:ClearAllPoints()
 		frame:SetPoint("CENTER", Minimap, "CENTER", bx, by)
@@ -674,6 +703,11 @@ do
 		CheckCalendar()
 
 		mod.StartFrameGrab = nil
+	end
+
+	function mod:GetMapScale()
+		-- see SexyMap.lua for where .scale is set
+		return sm.core.db.scale or (MinimapNorthTag and 1 or 1.1)
 	end
 end
 
