@@ -33,7 +33,7 @@ local namesCompatForDF = ExpansionLandingPageMinimapButton and {
 	[Minimap.ZoomOut] = "MinimapZoomOut",
 	[MinimapCluster.Tracking] = "MiniMapTracking",
 	[MinimapCluster.InstanceDifficulty] = "MiniMapInstanceDifficulty",
-	[MinimapCluster.MailFrame] = "MiniMapMailFrame",
+	[MinimapCluster.IndicatorFrame] = "MiniMapMailFrame",
 	[GameTimeFrame] = "GameTimeFrame", -- Just here to change parent to Minimap in :NewFrame
 	[MinimapCluster.Tracking.Button] = "none", -- Prevent error when being passed to :NewFrame
 } or {}
@@ -249,11 +249,11 @@ function mod:OnEnable()
 		highlight:SetPoint("TOPLEFT", MiniMapWorldMapButton, "TOPLEFT", 2, -2)
 	else
 		-- Mail Button
-		local overlay = MinimapCluster.MailFrame:CreateTexture(nil, "OVERLAY")
+		local overlay = MinimapCluster.IndicatorFrame:CreateTexture(nil, "OVERLAY")
 		overlay:SetSize(53,53)
 		overlay:SetTexture(136430) -- 136430 = Interface\\Minimap\\MiniMap-TrackingBorder
 		overlay:SetPoint("CENTER", MiniMapMailIcon, "CENTER", 10, -10)
-		local background = MinimapCluster.MailFrame:CreateTexture(nil, "BACKGROUND")
+		local background = MinimapCluster.IndicatorFrame:CreateTexture(nil, "BACKGROUND")
 		background:SetSize(25,25)
 		background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
 		background:SetPoint("CENTER", MiniMapMailIcon, "CENTER")
@@ -631,7 +631,7 @@ do
 	local tblDF = {
 		Minimap, MinimapCluster.Tracking, MinimapCluster.Tracking.Button, TimeManagerClockButton, GameTimeFrame,
 		Minimap.ZoomIn, Minimap.ZoomOut, MinimapCluster.InstanceDifficulty,
-		MinimapCluster.MailFrame, ExpansionLandingPageMinimapButton
+		MinimapCluster.IndicatorFrame, ExpansionLandingPageMinimapButton
 	}
 	function mod:AddButton(_, button)
 		self:NewFrame(button)
