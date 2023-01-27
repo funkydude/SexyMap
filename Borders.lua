@@ -1076,6 +1076,7 @@ function mod:ApplySettings()
 end
 
 function mod:UpdateBorder()
+	MinimapBackdrop:SetFrameLevel(2) -- Default is 3, set it 1 lower so it's not above buttons that are also at 3 (Mail, Expansion, Calendar)
 	if mod.db.hideBlizzard then
 		if MinimapBorder then
 			MinimapBorder:Hide()
