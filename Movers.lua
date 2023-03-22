@@ -17,54 +17,6 @@ local options = {
 			type = "description",
 			width = "full",
 		},
-		moveDurability = {
-			order = 2,
-			name = L.enableObject:format(L["Armored Man"]),
-			type = "toggle",
-			width = "full",
-			confirm = function(info, v)
-				if not v then
-					return L.disableWarning
-				end
-			end,
-			get = function()
-				return mod.db.moveDurability
-			end,
-			set = function(info, v)
-				mod.db.moveDurability = v
-				if v then
-					mod:EnableDurabilityMover()
-				else
-					mod.db.lockDurability = false
-					mod.db.moverPositions.durability = nil
-					ReloadUI()
-				end
-			end,
-		},
-		lockDurability = {
-			order = 3,
-			name = L.lockObject:format(L["Armored Man"]),
-			type = "toggle",
-			width = "full",
-			get = function()
-				return mod.db.lockDurability
-			end,
-			set = function(info, v)
-				mod.db.lockDurability = v
-				if v then
-					SexyMapDurabilityMover:Hide()
-				else
-					SexyMapDurabilityMover:Show()
-				end
-			end,
-			disabled = function() return not mod.db.moveDurability end,
-		},
-		spacer = {
-			order = 4,
-			name = " ",
-			type = "description",
-			width = "full",
-		},
 		moveVehicle = {
 			order = 5,
 			name = L.enableObject:format(L["Vehicle Seat"]),
@@ -209,8 +161,6 @@ local options = {
 function mod:OnInitialize(profile)
 	if type(profile.movers) ~= "table" or not profile.movers.moverPositions then
 		profile.movers = {
-			moveDurability = false,
-			lockDurability = false,
 			moveVehicle = false,
 			lockVehicle = false,
 			moveCaptureBar = false,
@@ -225,9 +175,6 @@ end
 
 function mod:OnEnable()
 	sm.core:RegisterModuleOptions("Movers", options, L["Movers"])
-	if self.db.moveDurability then
-		self:EnableDurabilityMover()
-	end
 	if self.db.moveVehicle then
 		self:EnableVehicleMover()
 	end
@@ -237,59 +184,6 @@ function mod:OnEnable()
 	if self.db.moveTopWidget then
 		self:EnableTopWidgetMover()
 	end
-end
-
-function mod:EnableDurabilityMover()
-	if SexyMapDurabilityMover then return end
-	local DurabilityFrame = DurabilityFrame
-
-	local frame = CreateFrame("Frame", "SexyMapDurabilityMover")
-	if self.db.moverPositions.durability then
-		local tbl = self.db.moverPositions.durability
-		frame:SetPoint(tbl[1], UIParent, tbl[2], tbl[3], tbl[4])
-	else
-		frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-	end
-	frame:SetSize(65, 80) -- defaults: 60, 75
-	if self.db.lockDurability then
-		frame:Hide()
-	else
-		frame:Show()
-	end
-	frame:EnableMouse(true)
-	frame:RegisterForDrag("LeftButton")
-	frame:SetMovable(true)
-
-	hooksecurefunc(DurabilityFrame, "SetWidth", function(self)
-		local width = self:GetWidth()
-		frame:SetWidth(width + 5)
-	end)
-
-	local function SetNewPoint(self)
-		ClearAllPoints(self)
-		-- TOPRIGHT is our only choice or we'd create SetPoint errors in UIParent.lua
-		-- Where SetPoint is called by Blizz without performing a ClearAllPoints first
-		SetPoint(self, "TOPRIGHT", frame, "TOPRIGHT")
-	end
-	hooksecurefunc(DurabilityFrame, "SetPoint", SetNewPoint)
-	SetNewPoint(DurabilityFrame)
-
-	frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
-	frame:SetScript("OnDragStop", function(self)
-		self:StopMovingOrSizing()
-		local a, _, b, c, d = self:GetPoint()
-		mod.db.moverPositions.durability = {a, b, c, d}
-	end)
-
-	local bg = frame:CreateTexture()
-	bg:SetAllPoints(frame)
-	bg:SetColorTexture(0, 1, 0, 0.3)
-	bg:Show()
-
-	local header = frame:CreateFontString(nil, "OVERLAY", "TextStatusBarText")
-	header:SetPoint("BOTTOM", frame, "TOP")
-	header:SetText(L["Armored Man"])
-	header:Show()
 end
 
 function mod:EnableVehicleMover()
