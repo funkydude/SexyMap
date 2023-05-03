@@ -104,7 +104,6 @@ local options = {
 			min = -30,
 			max = 100,
 			step = 1,
-			bigStep = 1,
 			order = 103,
 			disabled = function()
 				return not mod.db.allowDragging
@@ -117,8 +116,26 @@ local options = {
 				mod:UpdateDraggables()
 			end
 		},
-		visSpacer = {
+		scale = {
 			order = 104,
+			type = "range",
+			name = L["Scale"],
+			min = 0.5,
+			max = 1,
+			step = 0.01,
+			disabled = function()
+				return not mod.db.allowDragging
+			end,
+			get = function(info)
+				return mod.db.scale
+			end,
+			set = function(info, v)
+				mod.db.scale = v
+				mod:UpdateDraggables()
+			end,
+		},
+		visSpacer = {
+			order = 105,
 			type = "header",
 			name = L["Visibility"],
 		},
@@ -127,7 +144,7 @@ local options = {
 			name = L["Let SexyMap control button visibility"],
 			desc = L["Turn this off if you want another mod to handle which buttons are visible on the minimap."],
 			width = "full",
-			order = 105,
+			order = 106,
 			get = function()
 				return mod.db.controlVisibility
 			end,
@@ -193,6 +210,7 @@ function mod:OnInitialize(profile)
 	if type(profile.buttons) ~= "table" then
 		profile.buttons = {
 			radius = 10,
+			scale = 1,
 			dragPositions = {},
 			visibilitySettings = {
 				MinimapZoomIn = "never",
@@ -210,12 +228,17 @@ function mod:OnInitialize(profile)
 		}
 	end
 
-	self.db = profile.buttons
 	-- XXX temp 9.0.1
 	if not profile.buttons.visibilitySettings.SexyMapZoneTextButton then
 		profile.buttons.visibilitySettings.SexyMapZoneTextButton = "always"
 		profile.buttons.visibilitySettings.MinimapZoneTextButton = nil
 	end
+	-- XXX temp 10.1.0
+	if not profile.buttons.scale then
+		profile.buttons.scale = 1
+	end
+
+	self.db = profile.buttons
 end
 
 function mod:OnEnable()
@@ -544,6 +567,7 @@ do
 	local setPosition = function(frame, angle)
 		local radius = (Minimap:GetWidth() / 2) + mod.db.radius
 		local bx, by = sm.shapes:GetPosition(angle, radius)
+		frame:SetScale(mod.db.scale)
 
 		frame:ClearAllPoints()
 		frame:SetPoint("CENTER", Minimap, "CENTER", bx, by)
