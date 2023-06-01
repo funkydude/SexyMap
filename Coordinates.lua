@@ -152,6 +152,32 @@ local options = {
 				mod:Update()
 			end
 		},
+		monochrome = {
+			type = "toggle",
+			name = L.monochrome,
+			desc = L.monochromeDesc,
+			order = 10.1,
+			get = function() return mod.db.monochrome end,
+			set = function(_, v)
+				mod.db.monochrome = v
+				mod:Update()
+			end
+		},
+		outline = {
+			type = "select",
+			name = L.outline,
+			order = 10.2,
+			values = {
+				NONE = L.none,
+				OUTLINE = L.thin,
+				THICKOUTLINE = L.thick,
+			},
+			get = function() return mod.db.outline end,
+			set = function(_, v)
+				mod.db.outline = v
+				mod:Update()
+			end
+		},
 		updateRate = {
 			type = "range",
 			name = L.updateRate,
@@ -208,14 +234,25 @@ function mod:OnInitialize(profile)
 			xOffset = 0,
 			yOffset = 10,
 			font = media:GetDefault("font"),
+			monochrome = false,
+			outline = "NONE",
 		}
 	end
-	self.db = profile.coordinates
+
 	-- XXX temp 9.0.1
 	if not profile.coordinates.coordPrecision then
 		profile.coordinates.enabled = true
 		profile.coordinates.coordPrecision = "%d,%d"
 	end
+	-- XXX temp 10.1.0
+	if not profile.coordinates.monochrome then
+		profile.coordinates.monochrome = false
+	end
+	if not profile.coordinates.outline then
+		profile.coordinates.outline = "NONE"
+	end
+
+	self.db = profile.coordinates
 end
 
 function mod:OnEnable()
@@ -287,8 +324,16 @@ function mod:Update()
 		coordsText:SetTextColor(c.r or 1, c.g or 1, c.b or 1, c.a or 1)
 	end
 
-	local _, b, c = coordsText:GetFont()
-	coordsText:SetFont(media:Fetch("font", mod.db.font), mod.db.fontSize or b, c)
+	local _, b = coordsText:GetFont()
+	local flags = nil
+	if mod.db.monochrome and mod.db.outline ~= "NONE" then
+		flags = "MONOCHROME," .. mod.db.outline
+	elseif mod.db.monochrome then
+		flags = "MONOCHROME"
+	elseif mod.db.outline ~= "NONE" then
+		flags = mod.db.outline
+	end
+	coordsText:SetFont(media:Fetch("font", mod.db.font), mod.db.fontSize or b, flags)
 
 	if mod.db.coordPrecision == "%.2f, %.2f" then
 		coordsText:SetText("99.99, 99.99")

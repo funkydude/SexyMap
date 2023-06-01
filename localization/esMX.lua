@@ -1,5 +1,5 @@
 
-if GetLocale() ~= "esES" then return end
+if GetLocale() ~= "esMX" then return end
 local _, sm = ...
 local L = sm.L
 --L.dayNightButton = "Day/Night Indicator"
@@ -192,8 +192,8 @@ L.pvpCaptureBar = "PvP Capturar Barr"
 --L.zoneTextSecureButtonEnable = "Allow clicking in combat"
 --L.zoneTextSecureButtonEnableDesc = "Normally you can click the Zone Text to toggle your World Map, but not in combat without this feature enabled.\n\n|cffff0000WARNING!|r Don't enable this feature unless you understand what it does. Turning this on will prevent ALL of your addons from making certain changes to your minimap in combat, such as moving it or hiding it."
 L.none = "Ninguno"
-L.thin = "Fino"
+L.thin = "Delgado"
 L.thick = "Grueso"
 L.outline = "Contorno"
 L.monochrome = "Monocromo"
-L.monochromeDesc = "Activa la opción monocromo, eliminando el suavizado de los bordes de la fuente."
+L.monochromeDesc = "Cambia a modo monocromático, eliminando cualquier suavizado de los bordes de la fuente."

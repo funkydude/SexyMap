@@ -129,6 +129,32 @@ local options = {
 				mod:UpdateLayout()
 			end
 		},
+		monochrome = {
+			type = "toggle",
+			name = L.monochrome,
+			desc = L.monochromeDesc,
+			order = 9.1,
+			get = function() return mod.db.monochrome end,
+			set = function(_, v)
+				mod.db.monochrome = v
+				mod:UpdateLayout()
+			end
+		},
+		outline = {
+			type = "select",
+			name = L.outline,
+			order = 9.2,
+			values = {
+				NONE = L.none,
+				OUTLINE = L.thin,
+				THICKOUTLINE = L.thick,
+			},
+			get = function() return mod.db.outline end,
+			set = function(_, v)
+				mod.db.outline = v
+				mod:UpdateLayout()
+			end
+		},
 		fade = {
 			type = "multiselect",
 			name = function()
@@ -186,8 +212,19 @@ function mod:OnInitialize(profile)
 			fontColor = {},
 			font = media:GetDefault("font"),
 			useSecureButton = false,
+			monochrome = false,
+			outline = "NONE",
 		}
 	end
+
+	-- XXX temp 10.1.0
+	if not profile.zonetext.monochrome then
+		profile.zonetext.monochrome = false
+	end
+	if not profile.zonetext.outline then
+		profile.zonetext.outline = "NONE"
+	end
+
 	self.db = profile.zonetext
 end
 
@@ -324,8 +361,16 @@ function mod:UpdateLayout()
 	zoneTextButton:SetPoint("BOTTOM", Minimap, "TOP", mod.db.xOffset, mod.db.yOffset)
 	zoneTextButton:SetBackdropColor(mod.db.bgColor.r, mod.db.bgColor.g, mod.db.bgColor.b, mod.db.bgColor.a)
 	zoneTextButton:SetBackdropBorderColor(mod.db.borderColor.r, mod.db.borderColor.g, mod.db.borderColor.b, mod.db.borderColor.a)
-	local a, b, c = GameFontNormal:GetFont()
-	zoneTextFont:SetFont(mod.db.font and media:Fetch("font", mod.db.font) or a, mod.db.fontsize or b, c)
+	local a, b = GameFontNormal:GetFont()
+	local flags = nil
+	if mod.db.monochrome and mod.db.outline ~= "NONE" then
+		flags = "MONOCHROME," .. mod.db.outline
+	elseif mod.db.monochrome then
+		flags = "MONOCHROME"
+	elseif mod.db.outline ~= "NONE" then
+		flags = mod.db.outline
+	end
+	zoneTextFont:SetFont(mod.db.font and media:Fetch("font", mod.db.font) or a, mod.db.fontsize or b, flags)
 
 	self:ZoneChanged()
 end

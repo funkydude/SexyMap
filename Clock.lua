@@ -124,6 +124,32 @@ local options = {
 				mod:UpdateLayout()
 			end
 		},
+		monochrome = {
+			type = "toggle",
+			name = L.monochrome,
+			desc = L.monochromeDesc,
+			order = 9.1,
+			get = function() return mod.db.monochrome end,
+			set = function(_, v)
+				mod.db.monochrome = v
+				mod:UpdateLayout()
+			end
+		},
+		outline = {
+			type = "select",
+			name = L.outline,
+			order = 9.2,
+			values = {
+				NONE = L.none,
+				OUTLINE = L.thin,
+				THICKOUTLINE = L.thick,
+			},
+			get = function() return mod.db.outline end,
+			set = function(_, v)
+				mod.db.outline = v
+				mod:UpdateLayout()
+			end
+		},
 		fade = {
 			type = "multiselect",
 			name = function()
@@ -162,8 +188,19 @@ function mod:OnInitialize(profile)
 			borderColor = {r = 0, g = 0, b = 0, a = 1},
 			fontColor = {},
 			font = media:GetDefault("font"),
+			monochrome = false,
+			outline = "NONE",
 		}
 	end
+
+	-- XXX temp 10.1.0
+	if not profile.clock.monochrome then
+		profile.clock.monochrome = false
+	end
+	if not profile.clock.outline then
+		profile.clock.outline = "NONE"
+	end
+
 	self.db = profile.clock
 end
 
@@ -206,8 +243,16 @@ function mod:UpdateLayout()
 	sm.core.button.SetPoint(TimeManagerClockButton, "TOP", Minimap, "BOTTOM", mod.db.xOffset, mod.db.yOffset)
 	TimeManagerClockButton:SetBackdropColor(mod.db.bgColor.r, mod.db.bgColor.g, mod.db.bgColor.b, mod.db.bgColor.a)
 	TimeManagerClockButton:SetBackdropBorderColor(mod.db.borderColor.r, mod.db.borderColor.g, mod.db.borderColor.b, mod.db.borderColor.a)
-	local a, b, c = GameFontHighlightSmall:GetFont()
-	sm.core.font.SetFont(TimeManagerClockTicker, mod.db.font and media:Fetch("font", mod.db.font) or a, mod.db.fontsize or b, c)
+	local a, b = GameFontHighlightSmall:GetFont()
+	local flags = nil
+	if mod.db.monochrome and mod.db.outline ~= "NONE" then
+		flags = "MONOCHROME," .. mod.db.outline
+	elseif mod.db.monochrome then
+		flags = "MONOCHROME"
+	elseif mod.db.outline ~= "NONE" then
+		flags = mod.db.outline
+	end
+	sm.core.font.SetFont(TimeManagerClockTicker, mod.db.font and media:Fetch("font", mod.db.font) or a, mod.db.fontsize or b, flags)
 	if mod.db.fontColor.r then
 		sm.core.font.SetTextColor(TimeManagerClockTicker, mod.db.fontColor.r, mod.db.fontColor.g, mod.db.fontColor.b, mod.db.fontColor.a)
 	end
