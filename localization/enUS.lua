@@ -86,6 +86,8 @@ L["Zoom In Button"] = "Zoom In Button"
 L["Zoom Out Button"] = "Zoom Out Button"
 L["Map Button"] = "Map Button"
 L["Clock"] = "Clock"
+L.addonCompartment = "Addon Compartment"
+L.craftingOrder = "Crafting Order (When Available)"
 
 L["Guild Dungeon Difficulty Indicator (When Available)"] = "Guild Dungeon Difficulty Indicator (When Available)"
 L["Challenge Mode Button (When Available)"] = "Challenge Mode Button (When Available)"

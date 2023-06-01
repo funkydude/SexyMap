@@ -17,26 +17,28 @@ local blizzButtons = {
 	MinimapZoomOut = L["Zoom Out Button"],
 	MiniMapWorldMapButton = L["Map Button"],
 	TimeManagerClockButton = L["Clock"],
+	AddonCompartmentFrame = L.addonCompartment,
 }
 local dynamicButtons = {
 	GuildInstanceDifficulty = L["Guild Dungeon Difficulty Indicator (When Available)"],
 	MiniMapChallengeMode = L["Challenge Mode Button (When Available)"],
 	MiniMapInstanceDifficulty = L["Dungeon Difficulty Indicator (When Available)"],
 	MiniMapMailFrame = L["New Mail Indicator (When Available)"],
-	QueueStatusMinimapButton = L["Queue Status (PvP/LFG) Button (When Available)"],
+	CraftingOrder = L.craftingOrder,
 	GarrisonLandingPageMinimapButton = L["Garrison Button (When Available)"],
 }
 
-local namesCompatForDF = ExpansionLandingPageMinimapButton and {
+local buttonNicknames = {
 	[ExpansionLandingPageMinimapButton] = "GarrisonLandingPageMinimapButton",
 	[Minimap.ZoomIn] = "MinimapZoomIn",
 	[Minimap.ZoomOut] = "MinimapZoomOut",
 	[MinimapCluster.Tracking] = "MiniMapTracking",
 	[MinimapCluster.InstanceDifficulty] = "MiniMapInstanceDifficulty",
 	[MinimapCluster.IndicatorFrame.MailFrame] = "MiniMapMailFrame",
+	[MinimapCluster.IndicatorFrame.CraftingOrderFrame] = "CraftingOrder",
 	[GameTimeFrame] = "GameTimeFrame", -- Just here to change parent to Minimap in :NewFrame
 	[MinimapCluster.Tracking.Button] = "none", -- Prevent error when being passed to :NewFrame
-} or {}
+}
 
 local options = {
 	type = "group",
@@ -155,7 +157,7 @@ local options = {
 					if not v then
 						mod:ChangeFrameVisibility(f, "always")
 					else
-						local name = namesCompatForDF[f] or f:GetName()
+						local name = buttonNicknames[f] or f:GetName()
 						mod:ChangeFrameVisibility(f, mod.db.visibilitySettings[name] or "hover")
 					end
 				end
@@ -178,7 +180,7 @@ do
 	local function hideSet(info, value)
 		local name = info[#info]
 		mod.db.visibilitySettings[name] = value
-		for k,v in next, namesCompatForDF do
+		for k,v in next, buttonNicknames do
 			if v == name then
 				mod:ChangeFrameVisibility(k, value)
 				return
@@ -219,8 +221,9 @@ function mod:OnInitialize(profile)
 				SexyMapZoneTextButton = "always",
 				TimeManagerClockButton = "always",
 				MiniMapMailFrame = "always",
-				QueueStatusMinimapButton = "always",
+				CraftingOrder = "always",
 				GarrisonLandingPageMinimapButton = "always",
+				AddonCompartmentFrame = "never",
 			},
 			allowDragging = true,
 			lockDragging = false,
@@ -236,6 +239,15 @@ function mod:OnInitialize(profile)
 	-- XXX temp 10.1.0
 	if not profile.buttons.scale then
 		profile.buttons.scale = 1
+	end
+	if not profile.buttons.visibilitySettings.CraftingOrder then
+		profile.buttons.visibilitySettings.CraftingOrder = "always"
+	end
+	if not profile.buttons.visibilitySettings.AddonCompartmentFrame then
+		profile.buttons.visibilitySettings.AddonCompartmentFrame = "never"
+	end
+	if not profile.buttons.visibilitySettings.QueueStatusMinimapButton then
+		profile.buttons.visibilitySettings.QueueStatusMinimapButton = nil
 	end
 
 	self.db = profile.buttons
@@ -291,6 +303,16 @@ function mod:OnEnable()
 		background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
 		background:SetPoint("CENTER", MinimapCluster.Tracking.Button, "CENTER")
 
+		-- Crafting Order Button
+		overlay = MinimapCluster.IndicatorFrame.CraftingOrderFrame:CreateTexture(nil, "OVERLAY")
+		overlay:SetSize(53,53)
+		overlay:SetTexture(136430) -- 136430 = Interface\\Minimap\\MiniMap-TrackingBorder
+		overlay:SetPoint("CENTER", MiniMapCraftingOrderIcon, "CENTER", 10, -10)
+		background = MinimapCluster.IndicatorFrame.CraftingOrderFrame:CreateTexture(nil, "BACKGROUND")
+		background:SetSize(25,25)
+		background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
+		background:SetPoint("CENTER", MiniMapCraftingOrderIcon, "CENTER")
+
 		-- Calendar Button
 		overlay = GameTimeFrame:CreateTexture(nil, "OVERLAY")
 		overlay:SetSize(53,53)
@@ -300,6 +322,16 @@ function mod:OnEnable()
 		background:SetSize(25,25)
 		background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
 		background:SetPoint("CENTER", GameTimeFrame, "CENTER")
+
+		-- Addon compartment Button
+		overlay = AddonCompartmentFrame:CreateTexture(nil, "OVERLAY")
+		overlay:SetSize(53,53)
+		overlay:SetTexture(136430) -- 136430 = Interface\\Minimap\\MiniMap-TrackingBorder
+		overlay:SetPoint("CENTER", AddonCompartmentFrame, "CENTER", 10, -10)
+		background = AddonCompartmentFrame:CreateTexture(nil, "BACKGROUND")
+		background:SetSize(25,25)
+		background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
+		background:SetPoint("CENTER", AddonCompartmentFrame, "CENTER")
 
 		-- Zoom in Button
 		overlay = Minimap.ZoomIn:CreateTexture(nil, "OVERLAY")
@@ -322,28 +354,16 @@ function mod:OnEnable()
 		background:SetPoint("CENTER", Minimap.ZoomOut, "CENTER")
 	end
 
-	if GarrisonLandingPageMinimapButton then
-		GarrisonLandingPageMinimapButton:SetSize(36, 36) -- Shrink the missions button
-		-- Stop Blizz changing the icon size || GarrisonLandingPageMinimapButton_UpdateIcon() >> SetLandingPageIconFromAtlases() >> self:SetSize()
-		hooksecurefunc(GarrisonLandingPageMinimapButton, "SetSize", function()
-			sm.core.button.SetSize(GarrisonLandingPageMinimapButton, 36, 36)
-		end)
-		-- Stop Blizz moving the icon || GarrisonLandingPageMinimapButton_UpdateIcon() >> ApplyGarrisonTypeAnchor() >> anchor:SetPoint()
-		hooksecurefunc("GarrisonLandingPageMinimapButton_UpdateIcon", function()
-			mod:UpdateDraggables(GarrisonLandingPageMinimapButton)
-		end)
-	else
-		sm.core.button.SetParent(ExpansionLandingPageMinimapButton, Minimap)
-		sm.core.button.SetSize(ExpansionLandingPageMinimapButton, 36, 36) -- Shrink the missions button
-		-- Stop Blizz changing the icon size || Minimap.lua ExpansionLandingPageMinimapButtonMixin:UpdateIcon() >> SetLandingPageIconFromAtlases() >> self:SetSize()
-		hooksecurefunc(ExpansionLandingPageMinimapButton, "SetSize", function()
-			sm.core.button.SetSize(ExpansionLandingPageMinimapButton, 36, 36)
-		end)
-		-- Stop Blizz moving the icon || Minimap.lua ExpansionLandingPageMinimapButtonMixin:UpdateIcon()>> self:UpdateIconForGarrison() >> ApplyGarrisonTypeAnchor() >> anchor:SetPoint()
-		hooksecurefunc(ExpansionLandingPageMinimapButton, "UpdateIconForGarrison", function()
-			mod:UpdateDraggables(ExpansionLandingPageMinimapButton)
-		end)
-	end
+	sm.core.button.SetParent(ExpansionLandingPageMinimapButton, Minimap)
+	sm.core.button.SetSize(ExpansionLandingPageMinimapButton, 36, 36) -- Shrink the missions button
+	-- Stop Blizz changing the icon size || Minimap.lua ExpansionLandingPageMinimapButtonMixin:UpdateIcon() >> SetLandingPageIconFromAtlases() >> self:SetSize()
+	hooksecurefunc(ExpansionLandingPageMinimapButton, "SetSize", function()
+		sm.core.button.SetSize(ExpansionLandingPageMinimapButton, 36, 36)
+	end)
+	-- Stop Blizz moving the icon || Minimap.lua ExpansionLandingPageMinimapButtonMixin:UpdateIcon()>> self:UpdateIconForGarrison() >> ApplyGarrisonTypeAnchor() >> anchor:SetPoint()
+	hooksecurefunc(ExpansionLandingPageMinimapButton, "UpdateIconForGarrison", function()
+		mod:UpdateDraggables(ExpansionLandingPageMinimapButton)
+	end)
 	sm.core:RegisterModuleOptions("Buttons", options, L["Buttons"])
 
 	C_Timer.After(1, mod.StartFrameGrab)
@@ -357,31 +377,21 @@ local OnFinished, KillAnimation
 do
 	local fadeStop = false -- Use a variable to prevent fadeout/in when moving the mouse around minimap/icons
 	local restoreGarrisonButtonAnimation = false
-	local restoreLFGButtonAnimation = false
 
 	OnFinished = function(anim)
 		-- Work around issues with buttons that have a pulse/fade ring animation.
-		if restoreGarrisonButtonAnimation and anim:GetParent():GetName() == "GarrisonLandingPageMinimapButton" then
+		if restoreGarrisonButtonAnimation and anim:GetParent():GetName() == "ExpansionLandingPageMinimapButton" then
 			anim:GetParent().MinimapLoopPulseAnim:Play()
 			restoreGarrisonButtonAnimation = false
-		end
-		if restoreLFGButtonAnimation and anim:GetParent():GetName() == "QueueStatusMinimapButton" then
-			anim:GetParent().EyeHighlightAnim:Play()
-			restoreLFGButtonAnimation = false
 		end
 	end
 
 	KillAnimation = function(n, f)
 		-- Work around issues with buttons that have a pulse/fade ring animation.
-		if n == "GarrisonLandingPageMinimapButton" and (f.MinimapLoopPulseAnim:IsPlaying() or restoreGarrisonButtonAnimation) then
+		if n == "ExpansionLandingPageMinimapButton" and (f.MinimapLoopPulseAnim:IsPlaying() or restoreGarrisonButtonAnimation) then
 			restoreGarrisonButtonAnimation = true
 			f.MinimapLoopPulseAnim:Stop()
 			return f.MinimapLoopPulseAnim
-		end
-		if n == "QueueStatusMinimapButton" and (f.EyeHighlightAnim:IsPlaying() or restoreLFGButtonAnimation) then
-			restoreLFGButtonAnimation = true
-			f.EyeHighlightAnim:Stop()
-			return f.EyeHighlightAnim
 		end
 	end
 
@@ -390,7 +400,7 @@ do
 
 		for i = 1, #animFrames do
 			local f = animFrames[i]
-			local n = namesCompatForDF[f] or f:GetName()
+			local n = buttonNicknames[f] or f:GetName()
 			if not mod.db.visibilitySettings[n] or mod.db.visibilitySettings[n] == "hover" then
 				f.sexyMapFadeOut:Stop()
 
@@ -415,7 +425,7 @@ do
 
 		for i = 1, #animFrames do
 			local f = animFrames[i]
-			local n = namesCompatForDF[f] or f:GetName()
+			local n = buttonNicknames[f] or f:GetName()
 
 			if not mod.db.visibilitySettings[n] or mod.db.visibilitySettings[n] == "hover" then
 				if n ~= "GameTimeFrame" or (n == "GameTimeFrame" and C_Calendar.GetNumPendingInvites() < 1) then
@@ -441,7 +451,7 @@ do
 	hideFrame.Layout = function() end
 	Minimap.Layout = hideFrame.Layout
 	function mod:NewFrame(f)
-		local n = namesCompatForDF[f] or f:GetName()
+		local n = buttonNicknames[f] or f:GetName()
 		-- Only add Blizz buttons & LibDBIcon buttons
 		if blizzButtons[n] or dynamicButtons[n] or n:find("LibDBIcon") then
 			-- Create the animation
@@ -455,7 +465,7 @@ do
 			f.sexyMapFadeOut:SetToFinalAlpha(true)
 
 			-- Work around issues with buttons that have a pulse/fade ring animation.
-			if n == "GarrisonLandingPageMinimapButton" or n == "QueueStatusMinimapButton" then
+			if n == "ExpansionLandingPageMinimapButton" then
 				f.sexyMapFadeOut:SetScript("OnFinished", OnFinished)
 			end
 			-- These frames are parented to MinimapCluster, if the map scale is changed they won't drag properly, so we parent to Minimap
@@ -463,7 +473,7 @@ do
 				f:ClearAllPoints()
 				f:SetParent(Minimap)
 				f:SetPoint("CENTER", Minimap, "CENTER", -60, 55)
-			elseif namesCompatForDF[f] then
+			elseif buttonNicknames[f] or n == "AddonCompartmentFrame" then
 				f:SetParent(Minimap)
 			end
 
@@ -577,7 +587,7 @@ do
 		local x, y = GetCursorPosition()
 		x, y = x / Minimap:GetEffectiveScale(), y / Minimap:GetEffectiveScale()
 		local angle = getCurrentAngle(Minimap, x, y)
-		local name = namesCompatForDF[moving] or moving:GetName()
+		local name = buttonNicknames[moving] or moving:GetName()
 		mod.db.dragPositions[name] = angle
 		setPosition(moving, angle)
 	end
@@ -589,7 +599,7 @@ do
 		fadeStop = true
 		for i = 1, #animFrames do
 			local f = animFrames[i]
-			local n = namesCompatForDF[f] or f:GetName()
+			local n = buttonNicknames[f] or f:GetName()
 			if not mod.db.visibilitySettings[n] or mod.db.visibilitySettings[n] == "hover" then
 				f.sexyMapFadeOut:Stop()
 
@@ -634,7 +644,7 @@ do
 
 		if frame then
 			local x, y = frame:GetCenter()
-			local name = namesCompatForDF[frame] or frame:GetName()
+			local name = buttonNicknames[frame] or frame:GetName()
 			local angle = mod.db.dragPositions[name] or getCurrentAngle(frame:GetParent(), x, y)
 			if angle then
 				setPosition(frame, angle)
@@ -642,7 +652,7 @@ do
 		else
 			for i = 1, #animFrames do
 				local f = animFrames[i]
-				local n = namesCompatForDF[f] or f:GetName()
+				local n = buttonNicknames[f] or f:GetName()
 				-- Don't move the Clock or Zone Text when changing shape/preset
 				if n ~= "SexyMapZoneTextButton" and n ~= "TimeManagerClockButton" then
 					local x, y = f:GetCenter()
@@ -664,15 +674,10 @@ end
 --
 
 do
-	local tbl = {
-		Minimap, MiniMapTrackingButton, MiniMapTracking, TimeManagerClockButton, GameTimeFrame,
-		MinimapZoomIn, MinimapZoomOut, MiniMapWorldMapButton, GuildInstanceDifficulty, MiniMapChallengeMode, MiniMapInstanceDifficulty,
-		MiniMapMailFrame, QueueStatusMinimapButton, GarrisonLandingPageMinimapButton
-	}
-	local tblDF = {
+	local buttonTable = {
 		Minimap, MinimapCluster.Tracking, MinimapCluster.Tracking.Button, TimeManagerClockButton, GameTimeFrame,
-		Minimap.ZoomIn, Minimap.ZoomOut, MinimapCluster.InstanceDifficulty,
-		MinimapCluster.IndicatorFrame.MailFrame, ExpansionLandingPageMinimapButton
+		Minimap.ZoomIn, Minimap.ZoomOut, MinimapCluster.InstanceDifficulty, AddonCompartmentFrame,
+		MinimapCluster.IndicatorFrame.MailFrame, MinimapCluster.IndicatorFrame.CraftingOrderFrame, ExpansionLandingPageMinimapButton
 	}
 	function mod:AddButton(_, button)
 		self:NewFrame(button)
@@ -691,14 +696,8 @@ do
 	end
 
 	function mod:StartFrameGrab()
-		if MiniMapMailFrame then
-			for i = 1, #tbl do
-				mod:NewFrame(tbl[i])
-			end
-		else
-			for i = 1, #tblDF do
-				mod:NewFrame(tblDF[i])
-			end
+		for i = 1, #buttonTable do
+			mod:NewFrame(buttonTable[i])
 		end
 
 		local ldbiTbl = ldbi:GetButtonList()

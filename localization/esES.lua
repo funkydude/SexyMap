@@ -171,6 +171,10 @@ L["Zone Text"] = "Texto de zona"
 L["Zoom In Button"] = "Botón de Acercar Zoom"
 L["Zoom Out Button"] = "Botón de Alejar Zoom"
 
+-- Buttons.lua
+--L.addonCompartment = "Addon Compartment"
+--L.craftingOrder = "Crafting Order (When Available)"
+
 -- Coordinates.lua
 L.updateRate = "Frecuencia de actualización (segundos)"
 L.updateRateDesc = "Cuanto más bajo sea el valor, más rápido se actualizarán las coordenadas, pero más memoria y CPU se consumirán debido a que se le pedirá al juego datos de coordenadas nuevos."

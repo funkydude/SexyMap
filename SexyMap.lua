@@ -469,12 +469,6 @@ end)
 MinimapBackdrop:ClearAllPoints()
 MinimapBackdrop:SetPoint("CENTER", Minimap, "CENTER", -8, -23)
 
--- Remove this fugly attempt by Blizz
-mod.frame.SetParent(AddonCompartmentFrame, mod.frame)
-hooksecurefunc(AddonCompartmentFrame, "SetParent", function()
-	mod.frame.SetParent(AddonCompartmentFrame, mod.frame)
-end)
-
 -- To turn off Blizz auto hiding the zoom buttons, we pretend the mouse is always over it.
 -- The alternative is killing the Minimap OnEnter/OnLeave script which could screw over other addons.
 -- See MinimapMixin:OnLeave() on line 185 of FrameXML/Minimap.lua
