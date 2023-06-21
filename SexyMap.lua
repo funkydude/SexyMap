@@ -138,7 +138,7 @@ mod.options = {
 				end
 				mod.db.northTag = v
 			end,
-			disabled = not MinimapNorthTag,
+			hidden = not MinimapNorthTag,
 		},
 		zoom = {
 			order = 7,
