@@ -269,6 +269,10 @@ function mod:OnEnable()
 	zoneTextButton:SetPoint("BOTTOM", Minimap, "TOP", mod.db.xOffset, mod.db.yOffset)
 	zoneTextButton:SetClampedToScreen(true)
 	zoneTextButton:SetClampRectInsets(4,-4,-4,4) -- Allow kissing the edge of the screen when hiding the backdrop border (size 4)
+	zoneTextButton:SetFrameStrata("LOW")
+	zoneTextButton:SetFixedFrameStrata(true)
+	zoneTextButton:SetFrameLevel(20) -- Above Questie minimap blips
+	zoneTextButton:SetFixedFrameLevel(true)
 	zoneTextButton.oshow = function() end -- Silly workaround to prevent the MBB addon grabing this frame
 
 	zoneTextFont = zoneTextButton:CreateFontString()

@@ -273,6 +273,10 @@ function mod:CreateFrame()
 	if not coordFrame then
 		coordFrame = CreateFrame("Frame", "SexyMapCoordFrame", Minimap, "BackdropTemplate")
 		coordFrame:SetBackdrop(sm.backdrop)
+		coordFrame:SetFrameStrata("LOW")
+		coordFrame:SetFixedFrameStrata(true)
+		coordFrame:SetFrameLevel(20) -- Above Questie minimap blips
+		coordFrame:SetFixedFrameLevel(true)
 		coordsText = coordFrame:CreateFontString(nil, nil, "GameFontNormalSmall")
 		coordsText:SetPoint("CENTER", coordFrame, "CENTER")
 		coordsText:SetJustifyH("CENTER")

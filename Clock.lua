@@ -217,6 +217,10 @@ function mod:OnEnable()
 	end
 	Mixin(TimeManagerClockButton, BackdropTemplateMixin)
 	TimeManagerClockButton:SetBackdrop(sm.backdrop)
+	sm.core.button.SetFrameStrata(TimeManagerClockButton, "LOW")
+	sm.core.button.SetFixedFrameStrata(TimeManagerClockButton, true)
+	sm.core.button.SetFrameLevel(TimeManagerClockButton, 20) -- Above Questie minimap blips
+	sm.core.button.SetFixedFrameLevel(TimeManagerClockButton, true)
 	sm.core.button.SetClampedToScreen(TimeManagerClockButton, true)
 	sm.core.button.SetClampRectInsets(TimeManagerClockButton, 4,-4,-4,4) -- Allow kissing the edge of the screen when hiding the backdrop border (size 4)
 	sm.core.button.Show(TimeManagerClockButton)
