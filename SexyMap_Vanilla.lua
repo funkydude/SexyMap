@@ -16,6 +16,7 @@ sm.backdrop = {
 mod.frame = CreateFrame("Frame")
 mod.button = CreateFrame("Button")
 mod.font = mod.button:CreateFontString()
+mod.texture = mod.button:CreateTexture()
 mod.frame:Hide()
 mod.button:Hide()
 mod.deepCopyHash = function(t)
@@ -547,8 +548,20 @@ function mod:SetupMap()
 		MinimapCompassTexture.Show = MinimapCompassTexture.Hide
 	end
 
-	MinimapToggleButton:Hide() -- Minimap "X" to close button
-	MinimapBorderTop:Hide()
+	-- Minimap "X" to close button
+	local MinimapToggleButton = MinimapToggleButton
+	sm.core.button.SetParent(MinimapToggleButton, sm.core.button)
+	hooksecurefunc(MinimapToggleButton, "SetParent", function()
+		sm.core.button.SetParent(MinimapToggleButton, sm.core.button)
+	end)
+
+	-- Border texture around the zone text and the "X" to close button
+	local MinimapBorderTop = MinimapBorderTop
+	sm.core.texture.SetParent(MinimapBorderTop, sm.core.button)
+	hooksecurefunc(MinimapBorderTop, "SetParent", function()
+		sm.core.texture.SetParent(MinimapBorderTop, sm.core.button)
+	end)
+
 	Minimap:RegisterForDrag("LeftButton")
 	Minimap:SetClampedToScreen(mod.db.clamp)
 	Minimap:SetScale(mod.db.scale or 1)
