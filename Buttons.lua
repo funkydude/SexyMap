@@ -7,6 +7,8 @@ local L = sm.L
 local ldbi = LibStub("LibDBIcon-1.0")
 
 local moving, ButtonFadeOut
+-- XXX temp 10.2.6
+local TrackingFrame = MinimapCluster.TrackingFrame or MinimapCluster.Tracking
 
 local animFrames = {}
 local blizzButtons = {
@@ -32,12 +34,12 @@ local buttonNicknames = {
 	[ExpansionLandingPageMinimapButton] = "GarrisonLandingPageMinimapButton",
 	[Minimap.ZoomIn] = "MinimapZoomIn",
 	[Minimap.ZoomOut] = "MinimapZoomOut",
-	[MinimapCluster.Tracking] = "MiniMapTracking",
+	[TrackingFrame] = "MiniMapTracking",
 	[MinimapCluster.InstanceDifficulty] = "MiniMapInstanceDifficulty",
 	[MinimapCluster.IndicatorFrame.MailFrame] = "MiniMapMailFrame",
 	[MinimapCluster.IndicatorFrame.CraftingOrderFrame] = "CraftingOrder",
 	[GameTimeFrame] = "GameTimeFrame", -- Just here to change parent to Minimap in :NewFrame
-	[MinimapCluster.Tracking.Button] = "none", -- Prevent error when being passed to :NewFrame
+	[TrackingFrame.Button] = "none", -- Prevent error when being passed to :NewFrame
 }
 
 local options = {
@@ -294,14 +296,14 @@ function mod:OnEnable()
 		background:SetPoint("CENTER", MiniMapMailIcon, "CENTER")
 
 		-- Tracking Button
-		overlay = MinimapCluster.Tracking:CreateTexture(nil, "OVERLAY")
+		overlay = TrackingFrame:CreateTexture(nil, "OVERLAY")
 		overlay:SetSize(53,53)
 		overlay:SetTexture(136430) -- 136430 = Interface\\Minimap\\MiniMap-TrackingBorder
-		overlay:SetPoint("CENTER", MinimapCluster.Tracking.Button, "CENTER", 10, -10)
-		background = MinimapCluster.Tracking:CreateTexture(nil, "BACKGROUND")
+		overlay:SetPoint("CENTER", TrackingFrame.Button, "CENTER", 10, -10)
+		background = TrackingFrame:CreateTexture(nil, "BACKGROUND")
 		background:SetSize(25,25)
 		background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
-		background:SetPoint("CENTER", MinimapCluster.Tracking.Button, "CENTER")
+		background:SetPoint("CENTER", TrackingFrame.Button, "CENTER")
 
 		-- Crafting Order Button
 		overlay = MinimapCluster.IndicatorFrame.CraftingOrderFrame:CreateTexture(nil, "OVERLAY")
@@ -507,7 +509,7 @@ do
 					if MiniMapTrackingButton then
 						self:MakeMovable(MiniMapTrackingButton, f)
 					else
-						self:MakeMovable(MinimapCluster.Tracking.Button, f)
+						self:MakeMovable(TrackingFrame.Button, f)
 					end
 				else
 					self:MakeMovable(f)
@@ -675,7 +677,7 @@ end
 
 do
 	local buttonTable = {
-		Minimap, MinimapCluster.Tracking, MinimapCluster.Tracking.Button, TimeManagerClockButton, GameTimeFrame,
+		Minimap, TimeManagerClockButton, GameTimeFrame, TrackingFrame, TrackingFrame.Button,
 		Minimap.ZoomIn, Minimap.ZoomOut, MinimapCluster.InstanceDifficulty, AddonCompartmentFrame,
 		MinimapCluster.IndicatorFrame.MailFrame, MinimapCluster.IndicatorFrame.CraftingOrderFrame, ExpansionLandingPageMinimapButton
 	}
