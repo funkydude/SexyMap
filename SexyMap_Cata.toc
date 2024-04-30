@@ -1,4 +1,4 @@
-## Interface: 11502
+## Interface: 40400
 ## Version: @project-version@
 ## Title: SexyMap
 ## Notes: Spice up your minimap with some sexy options.
@@ -39,11 +39,11 @@ localization\zhTW.lua
 localization\zhCN.lua
 localization\ptBR.lua
 
-SexyMap_Vanilla.lua
+SexyMap_Wrath.lua
 
 Shapes_Classic.lua
 
-Buttons_Vanilla.lua
+Buttons_Wrath.lua
 BorderPresets.lua
 Borders_Classic.lua
 Clock.lua
