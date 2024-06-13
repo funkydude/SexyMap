@@ -19,7 +19,6 @@ local blizzButtons = {
 	TimeManagerClockButton = L["Clock"],
 }
 local dynamicButtons = {
-	--GuildInstanceDifficulty = L["Guild Dungeon Difficulty Indicator (When Available)"],
 	--MiniMapChallengeMode = L["Challenge Mode Button (When Available)"],
 	MiniMapInstanceDifficulty = L["Dungeon Difficulty Indicator (When Available)"],
 	MiniMapMailFrame = L["New Mail Indicator (When Available)"],
@@ -27,6 +26,9 @@ local dynamicButtons = {
 	--GarrisonLandingPageMinimapButton = L["Garrison Button (When Available)"],
 	MiniMapLFGFrame = L.classicLFGButton,
 }
+if GuildInstanceDifficulty then
+	dynamicButtons.GuildInstanceDifficulty = L["Guild Dungeon Difficulty Indicator (When Available)"]
+end
 
 local options = {
 	type = "group",
@@ -357,7 +359,7 @@ do
 			--	f.sexyMapFadeOut:SetScript("OnFinished", OnFinished)
 			--end
 			---- These frames are parented to MinimapCluster, if the map scale is changed they won't drag properly, so we parent to Minimap
-			if n == "MiniMapInstanceDifficulty" then --or n == "GuildInstanceDifficulty" or n == "MiniMapChallengeMode" then
+			if n == "MiniMapInstanceDifficulty" or n == "GuildInstanceDifficulty" or n == "MiniMapChallengeMode" then
 				f:ClearAllPoints()
 				f:SetParent(Minimap)
 				f:SetPoint("CENTER", Minimap, "CENTER", -60, 55)
@@ -556,12 +558,15 @@ end
 do
 	local tbl = {
 		--Minimap, MiniMapTrackingButton, MiniMapTracking, TimeManagerClockButton, GameTimeFrame,
-		--MinimapZoomIn, MinimapZoomOut, MiniMapWorldMapButton, GuildInstanceDifficulty, MiniMapChallengeMode, MiniMapInstanceDifficulty,
+		--MinimapZoomIn, MinimapZoomOut, MiniMapWorldMapButton, MiniMapChallengeMode, MiniMapInstanceDifficulty,
 		--MiniMapMailFrame, QueueStatusMinimapButton, GarrisonLandingPageMinimapButton
 		Minimap, MiniMapTrackingButton, MiniMapTracking, TimeManagerClockButton, GameTimeFrame,
 		MinimapZoomIn, MinimapZoomOut, MiniMapWorldMapButton, MiniMapInstanceDifficulty,
 		MiniMapMailFrame, MiniMapBattlefieldFrame, MiniMapLFGFrame
 	}
+	if GuildInstanceDifficulty then
+		tbl[#tbl+1] = GuildInstanceDifficulty
+	end
 
 	function mod:AddButton(_, button)
 		self:NewFrame(button)
