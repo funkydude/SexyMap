@@ -299,7 +299,7 @@ function mod:OnEnable()
 
 	do
 		local tt = CreateFrame("GameTooltip", "SexyMapZoneTextTooltip", zoneTextButton, "GameTooltipTemplate")
-		local GetZonePVPInfo, GetZoneText, GetSubZoneText = GetZonePVPInfo, GetZoneText, GetSubZoneText
+		local GetZonePVPInfo, GetZoneText, GetSubZoneText = C_PvP and C_PvP.GetZonePVPInfo or GetZonePVPInfo, GetZoneText, GetSubZoneText
 		zoneTextButton:SetScript("OnEnter", function(self) -- Minimap.lua line 68 function "Minimap_SetTooltip" as of wow 9.0.1
 			tt:SetOwner(self, "ANCHOR_LEFT")
 			local pvpType, _, factionName = GetZonePVPInfo()
@@ -380,7 +380,7 @@ function mod:UpdateLayout()
 end
 
 do
-	local GetMinimapZoneText, GetZonePVPInfo = GetMinimapZoneText, GetZonePVPInfo
+	local GetMinimapZoneText, GetZonePVPInfo = GetMinimapZoneText, C_PvP and C_PvP.GetZonePVPInfo or GetZonePVPInfo
 	function mod:ZoneChanged()
 		local text = GetMinimapZoneText()
 		zoneTextFont:SetText(text)

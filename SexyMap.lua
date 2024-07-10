@@ -397,13 +397,16 @@ function mod:PLAYER_LOGIN()
 
 	-- Setup config
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable(name, mod.options, true)
-	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(name)
+	local _, categoryID = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(name)
 
 	-- Configure slash handler
 	SlashCmdList.SexyMap = function()
-		-- Twice to work around a Blizz bug, opens to wrong panel on first try
-		InterfaceOptionsFrame_OpenToCategory(name)
-		InterfaceOptionsFrame_OpenToCategory(name)
+		if InterfaceOptionsFrame_OpenToCategory then -- XXX compat
+			InterfaceOptionsFrame_OpenToCategory(name) -- Twice to work around a Blizz bug, opens to wrong panel on first try
+			InterfaceOptionsFrame_OpenToCategory(name)
+		else
+			Settings.OpenToCategory(categoryID)
+		end
 	end
 	SLASH_SexyMap1 = "/minimap"
 	SLASH_SexyMap2 = "/sexymap"
