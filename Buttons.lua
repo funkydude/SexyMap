@@ -363,7 +363,7 @@ function mod:OnEnable()
 		sm.core.button.SetSize(ExpansionLandingPageMinimapButton, 36, 36)
 	end)
 	-- Stop Blizz moving the icon || Minimap.lua ExpansionLandingPageMinimapButtonMixin:UpdateIcon()>> self:UpdateIconForGarrison() >> ApplyGarrisonTypeAnchor() >> anchor:SetPoint()
-	hooksecurefunc(ExpansionLandingPageMinimapButton, "UpdateIconForGarrison", function()
+	hooksecurefunc(ExpansionLandingPageMinimapButton, "SetPoint", function()
 		mod:UpdateDraggables(ExpansionLandingPageMinimapButton)
 	end)
 	sm.core:RegisterModuleOptions("Buttons", options, L["Buttons"])
@@ -577,19 +577,19 @@ do
 	end
 
 	local setPosition = function(frame, angle)
-		local radius = (Minimap:GetWidth() / 2) + mod.db.radius
+		local radius = (dragFrame.GetWidth(Minimap) / 2) + mod.db.radius
 		local bx, by = sm.shapes:GetPosition(angle, radius)
-		frame:SetScale(mod.db.scale)
+		dragFrame.SetScale(frame, mod.db.scale)
 
-		frame:ClearAllPoints()
-		frame:SetPoint("CENTER", Minimap, "CENTER", bx, by)
+		dragFrame.ClearAllPoints(frame)
+		dragFrame.SetPoint(frame, "CENTER", Minimap, "CENTER", bx, by)
 	end
 
 	local updatePosition = function()
 		local x, y = GetCursorPosition()
-		x, y = x / Minimap:GetEffectiveScale(), y / Minimap:GetEffectiveScale()
+		x, y = x / dragFrame.GetEffectiveScale(Minimap), y / dragFrame.GetEffectiveScale(Minimap)
 		local angle = getCurrentAngle(Minimap, x, y)
-		local name = buttonNicknames[moving] or moving:GetName()
+		local name = buttonNicknames[moving] or dragFrame.GetName(moving)
 		mod.db.dragPositions[name] = angle
 		setPosition(moving, angle)
 	end
@@ -623,19 +623,19 @@ do
 	end
 
 	function mod:MakeMovable(frame, altFrame)
-		frame:EnableMouse(true)
-		frame:RegisterForDrag("LeftButton")
+		dragFrame.EnableMouse(frame, true)
+		dragFrame.RegisterForDrag(frame, "LeftButton")
 		if altFrame then
-			frame:SetScript("OnDragStart", function()
+			dragFrame.SetScript(frame, "OnDragStart", function()
 				if mod.db.lockDragging or not mod.db.allowDragging then return end
 
 				moving = altFrame
 				dragFrame:SetScript("OnUpdate", updatePosition)
 			end)
 		else
-			frame:SetScript("OnDragStart", OnDragStart)
+			dragFrame.SetScript(frame, "OnDragStart", OnDragStart)
 		end
-		frame:SetScript("OnDragStop", OnDragStop)
+		dragFrame.SetScript(frame, "OnDragStop", OnDragStop)
 		self:UpdateDraggables(altFrame or frame)
 	end
 
