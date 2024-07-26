@@ -363,7 +363,11 @@ function mod:OnEnable()
 		sm.core.button.SetSize(ExpansionLandingPageMinimapButton, 36, 36)
 	end)
 	-- Stop Blizz moving the icon || Minimap.lua ExpansionLandingPageMinimapButtonMixin:UpdateIcon()>> self:UpdateIconForGarrison() >> ApplyGarrisonTypeAnchor() >> anchor:SetPoint()
-	hooksecurefunc(ExpansionLandingPageMinimapButton, "SetPoint", function()
+	hooksecurefunc(ExpansionLandingPageMinimapButton, "UpdateIconForGarrison", function()
+		mod:UpdateDraggables(ExpansionLandingPageMinimapButton)
+	end)
+	-- Stop Blizz moving the icon || Minimap.lua ExpansionLandingPageMinimapButtonMixin:SetLandingPageIconOffset() >> anchor:SetPoint()
+	hooksecurefunc(ExpansionLandingPageMinimapButton, "SetLandingPageIconOffset", function()
 		mod:UpdateDraggables(ExpansionLandingPageMinimapButton)
 	end)
 	sm.core:RegisterModuleOptions("Buttons", options, L["Buttons"])
@@ -577,19 +581,19 @@ do
 	end
 
 	local setPosition = function(frame, angle)
-		local radius = (dragFrame.GetWidth(Minimap) / 2) + mod.db.radius
+		local radius = (Minimap:GetWidth() / 2) + mod.db.radius
 		local bx, by = sm.shapes:GetPosition(angle, radius)
-		dragFrame.SetScale(frame, mod.db.scale)
+		frame:SetScale(mod.db.scale)
 
-		dragFrame.ClearAllPoints(frame)
-		dragFrame.SetPoint(frame, "CENTER", Minimap, "CENTER", bx, by)
+		frame:ClearAllPoints()
+		frame:SetPoint("CENTER", Minimap, "CENTER", bx, by)
 	end
 
 	local updatePosition = function()
 		local x, y = GetCursorPosition()
-		x, y = x / dragFrame.GetEffectiveScale(Minimap), y / dragFrame.GetEffectiveScale(Minimap)
+		x, y = x / Minimap:GetEffectiveScale(), y / Minimap:GetEffectiveScale()
 		local angle = getCurrentAngle(Minimap, x, y)
-		local name = buttonNicknames[moving] or dragFrame.GetName(moving)
+		local name = buttonNicknames[moving] or moving:GetName()
 		mod.db.dragPositions[name] = angle
 		setPosition(moving, angle)
 	end
@@ -623,19 +627,19 @@ do
 	end
 
 	function mod:MakeMovable(frame, altFrame)
-		dragFrame.EnableMouse(frame, true)
-		dragFrame.RegisterForDrag(frame, "LeftButton")
+		frame:EnableMouse(true)
+		frame:RegisterForDrag("LeftButton")
 		if altFrame then
-			dragFrame.SetScript(frame, "OnDragStart", function()
+			frame:SetScript("OnDragStart", function()
 				if mod.db.lockDragging or not mod.db.allowDragging then return end
 
 				moving = altFrame
 				dragFrame:SetScript("OnUpdate", updatePosition)
 			end)
 		else
-			dragFrame.SetScript(frame, "OnDragStart", OnDragStart)
+			frame:SetScript("OnDragStart", OnDragStart)
 		end
-		dragFrame.SetScript(frame, "OnDragStop", OnDragStop)
+		frame:SetScript("OnDragStop", OnDragStop)
 		self:UpdateDraggables(altFrame or frame)
 	end
 
