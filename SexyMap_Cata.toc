@@ -1,4 +1,4 @@
-## Interface: 40400
+## Interface: 40400, 40401
 ## Version: @project-version@
 ## Title: SexyMap
 ## Notes: Spice up your minimap with some sexy options.
