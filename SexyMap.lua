@@ -123,11 +123,11 @@ mod.options = {
 					MinimapNorthTag.oldShow = nil
 					MinimapCompassTexture.Show = MinimapCompassTexture.oldShow
 					MinimapCompassTexture.oldShow = nil
-					--if InterfaceOptionsDisplayPanelRotateMinimap:GetValue() == "1" then
-					--	MinimapCompassTexture:Show()
-					--else
-					--	MinimapNorthTag:Show()
-					--end
+					if C_CVar.GetCVarBool("rotateMinimap") then
+						MinimapCompassTexture:Show()
+					else
+						MinimapNorthTag:Show()
+					end
 				else
 					MinimapNorthTag:Hide()
 					MinimapNorthTag.oldShow = MinimapNorthTag.Show
@@ -401,12 +401,7 @@ function mod:PLAYER_LOGIN()
 
 	-- Configure slash handler
 	SlashCmdList.SexyMap = function()
-		if InterfaceOptionsFrame_OpenToCategory then -- XXX compat
-			InterfaceOptionsFrame_OpenToCategory(name) -- Twice to work around a Blizz bug, opens to wrong panel on first try
-			InterfaceOptionsFrame_OpenToCategory(name)
-		else
-			Settings.OpenToCategory(categoryID)
-		end
+		Settings.OpenToCategory(categoryID)
 	end
 	SLASH_SexyMap1 = "/minimap"
 	SLASH_SexyMap2 = "/sexymap"

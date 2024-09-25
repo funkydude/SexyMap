@@ -11,7 +11,7 @@ local moving, ButtonFadeOut
 local animFrames = {}
 local blizzButtons = {
 	GameTimeFrame = L.dayNightButton,
-	MiniMapTrackingFrame = L["Tracking Button"],
+	MiniMapTracking = L["Tracking Button"],
 	SexyMapZoneTextButton = L["Zone Text"],
 	MinimapZoomIn = L["Zoom In Button"],
 	MinimapZoomOut = L["Zoom Out Button"],
@@ -188,7 +188,7 @@ function mod:OnInitialize(profile)
 				MiniMapBattlefieldFrame = "always",
 				MiniMapLFGFrame = "always",
 				GarrisonLandingPageMinimapButton = "always",
-				MiniMapTrackingFrame = "always",
+				MiniMapTracking = "always",
 			},
 			allowDragging = true,
 			lockDragging = false,
@@ -213,8 +213,8 @@ function mod:OnInitialize(profile)
 	if not self.db.visibilitySettings.GameTimeFrame then
 		self.db.visibilitySettings.GameTimeFrame = "never"
 	end
-	if not self.db.visibilitySettings.MiniMapTrackingFrame then
-		self.db.visibilitySettings.MiniMapTrackingFrame = "always"
+	if not self.db.visibilitySettings.MiniMapTracking then
+		self.db.visibilitySettings.MiniMapTracking = "always"
 	end
 end
 
@@ -261,7 +261,7 @@ function mod:OnEnable()
 	local icon = GetTrackingTexture()
 	if icon then
 		MiniMapTrackingIcon:SetTexture(icon)
-		MiniMapTrackingFrame:Show()
+		MiniMapTracking:Show()
 	end
 
 	sm.core:RegisterModuleOptions("Buttons", options, L["Buttons"])
@@ -559,7 +559,7 @@ end
 
 do
 	local tbl = {
-		Minimap, MiniMapTrackingFrame, TimeManagerClockButton, GameTimeFrame,
+		Minimap, MiniMapTracking, TimeManagerClockButton, GameTimeFrame,
 		MinimapZoomIn, MinimapZoomOut, MiniMapWorldMapButton,
 		MiniMapMailFrame, MiniMapBattlefieldFrame, MiniMapLFGFrame
 	}
