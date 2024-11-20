@@ -15,7 +15,7 @@ local blizzButtons = {
 	SexyMapZoneTextButton = L["Zone Text"],
 	MinimapZoomIn = L["Zoom In Button"],
 	MinimapZoomOut = L["Zoom Out Button"],
-	MiniMapWorldMapButton = L["Map Button"],
+	--MiniMapWorldMapButton = L["Map Button"],
 	TimeManagerClockButton = L["Clock"],
 }
 local dynamicButtons = {
@@ -25,7 +25,7 @@ local dynamicButtons = {
 	MiniMapMailFrame = L["New Mail Indicator (When Available)"],
 	MiniMapBattlefieldFrame = L.classicPVPButton,
 	--GarrisonLandingPageMinimapButton = L["Garrison Button (When Available)"],
-	MiniMapLFGFrame = L.classicLFGButton,
+	LFGMinimapFrame = L.classicLFGButton,
 }
 
 local options = {
@@ -186,7 +186,7 @@ function mod:OnInitialize(profile)
 				TimeManagerClockButton = "always",
 				MiniMapMailFrame = "always",
 				MiniMapBattlefieldFrame = "always",
-				MiniMapLFGFrame = "always",
+				LFGMinimapFrame = "always",
 				GarrisonLandingPageMinimapButton = "always",
 				MiniMapTracking = "always",
 			},
@@ -207,8 +207,8 @@ function mod:OnInitialize(profile)
 	if not self.db.visibilitySettings.MiniMapBattlefieldFrame then
 		self.db.visibilitySettings.MiniMapBattlefieldFrame = "always"
 	end
-	if not self.db.visibilitySettings.MiniMapLFGFrame then
-		self.db.visibilitySettings.MiniMapLFGFrame = "always"
+	if not self.db.visibilitySettings.LFGMinimapFrame then
+		self.db.visibilitySettings.LFGMinimapFrame = "always"
 	end
 	if not self.db.visibilitySettings.GameTimeFrame then
 		self.db.visibilitySettings.GameTimeFrame = "never"
@@ -560,9 +560,12 @@ end
 do
 	local tbl = {
 		Minimap, MiniMapTracking, TimeManagerClockButton, GameTimeFrame,
-		MinimapZoomIn, MinimapZoomOut, MiniMapWorldMapButton,
-		MiniMapMailFrame, MiniMapBattlefieldFrame, MiniMapLFGFrame
+		MinimapZoomIn, MinimapZoomOut, --MiniMapWorldMapButton,
+		MiniMapMailFrame, MiniMapBattlefieldFrame,
 	}
+	if LFGMinimapFrame then -- Classic era only
+		tbl[#tbl+1] = LFGMinimapFrame
+	end
 
 	function mod:AddButton(_, button)
 		self:NewFrame(button)
