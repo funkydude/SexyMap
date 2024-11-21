@@ -563,9 +563,6 @@ do
 		MinimapZoomIn, MinimapZoomOut, --MiniMapWorldMapButton,
 		MiniMapMailFrame, MiniMapBattlefieldFrame,
 	}
-	if LFGMinimapFrame then -- Classic era only
-		tbl[#tbl+1] = LFGMinimapFrame
-	end
 
 	function mod:AddButton(_, button)
 		self:NewFrame(button)
@@ -583,6 +580,10 @@ do
 	--end
 
 	function mod:StartFrameGrab()
+		if LFGMinimapFrame then -- Classic era only, loads after PLAYER_ENTERING_WORLD
+			tbl[#tbl+1] = LFGMinimapFrame
+		end
+
 		for i = 1, #tbl do
 			mod:NewFrame(tbl[i])
 		end
