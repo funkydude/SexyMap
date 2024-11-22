@@ -702,6 +702,10 @@ do
 	end
 
 	function mod:StartFrameGrab()
+		-- Set parent again to compensate for garbage addons (Edit Mode Expanded) thinking it's a good idea to have wide ranging changes on by default, instead of having everything opt-in like Edit Mode itself...
+		sm.core.button.SetParent(ExpansionLandingPageMinimapButton, Minimap)
+		sm.core.button.SetFrameStrata(ExpansionLandingPageMinimapButton, "LOW") -- Restore original strata
+
 		for i = 1, #buttonTable do
 			mod:NewFrame(buttonTable[i])
 		end
