@@ -357,6 +357,11 @@ function mod:OnEnable()
 	end
 
 	sm.core.button.SetParent(ExpansionLandingPageMinimapButton, Minimap)
+	-- Set parent again to compensate for garbage addons (Edit Mode Expanded) thinking it's a good idea to have wide ranging changes on by default, instead of having everything opt-in like Edit Mode itself...
+	hooksecurefunc(ExpansionLandingPageMinimapButton, "SetParent", function()
+		sm.core.button.SetParent(ExpansionLandingPageMinimapButton, Minimap)
+	end)
+
 	sm.core.button.SetSize(ExpansionLandingPageMinimapButton, 36, 36) -- Shrink the missions button
 	-- Stop Blizz changing the icon size || Minimap.lua ExpansionLandingPageMinimapButtonMixin:UpdateIcon() >> SetLandingPageIconFromAtlases() >> self:SetSize()
 	hooksecurefunc(ExpansionLandingPageMinimapButton, "SetSize", function()
@@ -702,10 +707,6 @@ do
 	end
 
 	function mod:StartFrameGrab()
-		-- Set parent again to compensate for garbage addons (Edit Mode Expanded) thinking it's a good idea to have wide ranging changes on by default, instead of having everything opt-in like Edit Mode itself...
-		sm.core.button.SetParent(ExpansionLandingPageMinimapButton, Minimap)
-		sm.core.button.SetFrameStrata(ExpansionLandingPageMinimapButton, "LOW") -- Restore original strata
-
 		for i = 1, #buttonTable do
 			mod:NewFrame(buttonTable[i])
 		end
