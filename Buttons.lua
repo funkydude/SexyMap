@@ -360,6 +360,7 @@ function mod:OnEnable()
 	-- Set parent again to compensate for garbage addons (Edit Mode Expanded) thinking it's a good idea to have wide ranging changes on by default, instead of having everything opt-in like Edit Mode itself...
 	hooksecurefunc(ExpansionLandingPageMinimapButton, "SetParent", function()
 		sm.core.button.SetParent(ExpansionLandingPageMinimapButton, Minimap)
+		mod:UpdateDraggables(ExpansionLandingPageMinimapButton)
 	end)
 
 	sm.core.button.SetSize(ExpansionLandingPageMinimapButton, 36, 36) -- Shrink the missions button
