@@ -5,10 +5,10 @@ sm.borders = {}
 local mod = sm.borders
 local L = sm.L
 
-local EnableAddOn = C_AddOns.EnableAddOn or EnableAddOn
-local GetAddOnInfo = C_AddOns.GetAddOnInfo or GetAddOnInfo
-local LoadAddOn = C_AddOns.LoadAddOn or LoadAddOn
-local IsAddOnLoaded = C_AddOns.IsAddOnLoaded or IsAddOnLoaded
+local EnableAddOn = C_AddOns.EnableAddOn
+local GetAddOnInfo = C_AddOns.GetAddOnInfo
+local LoadAddOn = C_AddOns.LoadAddOn
+local IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 
 local textures = {}
 local texturePool = {}
