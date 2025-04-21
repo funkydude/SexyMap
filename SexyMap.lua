@@ -106,7 +106,7 @@ mod.options = {
 			end,
 			set = function(info, v)
 				mod.db.scale = v
-				Minimap:SetScale(v)
+				mod.frame.SetScale(Minimap, v)
 			end,
 		},
 		northTag = {
@@ -564,7 +564,6 @@ function mod:SetupMap()
 	end
 	Minimap:RegisterForDrag("LeftButton")
 	Minimap:SetClampedToScreen(mod.db.clamp)
-	Minimap:SetScale(mod.db.scale or (MinimapNorthTag and 1 or 1.1))
 	Minimap:SetSize(140, 140)
 	Minimap:SetMovable(not mod.db.lock)
 
@@ -584,6 +583,13 @@ function mod:SetupMap()
 		mod.db.point, mod.db.relpoint, mod.db.x, mod.db.y = p, rp, x, y
 	end)
 
+	-- Set Scale
+	mod.frame.SetScale(Minimap, mod.db.scale or (MinimapNorthTag and 1 or 1.1))
+	hooksecurefunc(Minimap, "SetScale", function() -- Other non-minimap addons like to mess with this, if SexyMap is installed then clearly that's what the user wants to use
+		mod.frame.SetPoint(Minimap, mod.db.scale or (MinimapNorthTag and 1 or 1.1))
+	end)
+
+	-- Set UI points
 	if mod.db.point then
 		mod.frame.ClearAllPoints(Minimap)
 		mod.frame.SetPoint(Minimap, mod.db.point, UIParent, mod.db.relpoint, mod.db.x, mod.db.y)
@@ -617,8 +623,8 @@ end
 function public:Restore()
 	mod.frame.ClearAllPoints(Minimap)
 	mod.frame.SetPoint(Minimap, mod.db.point, UIParent, mod.db.relpoint, mod.db.x, mod.db.y)
+	mod.frame.SetScale(Minimap, mod.db.scale or (MinimapNorthTag and 1 or 1.1))
 	Minimap:SetClampedToScreen(mod.db.clamp)
-	Minimap:SetScale(mod.db.scale or (MinimapNorthTag and 1 or 1.1))
 	Minimap:SetSize(140, 140)
 	Minimap:SetMovable(not mod.db.lock)
 end
