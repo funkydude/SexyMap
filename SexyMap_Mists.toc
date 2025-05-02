@@ -1,0 +1,54 @@
+## Interface: 50500
+## Version: @project-version@
+## Title: SexyMap
+## Notes: Spice up your minimap with some sexy options.
+## Notes-deDE: Spice up your minimap with some sexy options.
+## Notes-ruRU: Придайте вашей миникарте потрясающий вид.
+## Notes-esES: Condimenta tu minimapa con unas cuantas opciones sexys.
+## Notes-esMX: Condimenta tu minimapa con unas cuantas opciones sexys.
+## Notes-frFR: Spice up your minimap with some sexy options.
+## Notes-itIT: Vivacizza la Minimappa con alcune opzioni sexy.
+## Notes-koKR: 미니맵에 다양한 기능을 부가합니다.
+## Notes-zhTW: 讓你有更香豔的一些性感小地圖設定。
+## Notes-zhCN: 为你的小地图增趣添彩，并包含一些性感选项。
+## Notes-ptBR: Dê uma apimentada no seu minimapa com algumas opções sexy.
+## Author: Funkydude
+## X-Credits: Antiarc (Former Author)
+## SavedVariables: SexyMap2DB
+
+## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask us about anything else.
+## X-Curse-Project-ID: 15936
+## X-WoWI-ID: 21538
+## X-Wago-ID: e56no0K9
+
+## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, LibChatAnims, Blizzard_TimeManager
+## X-Embeds: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, LibChatAnims, CallbackHandler-1.0, LibStub
+
+
+embeds.xml
+
+localization\enUS.lua
+localization\deDE.lua
+localization\ruRU.lua
+localization\esES.lua
+localization\esMX.lua
+localization\frFR.lua
+localization\itIT.lua
+localization\koKR.lua
+localization\zhTW.lua
+localization\zhCN.lua
+localization\ptBR.lua
+
+SexyMap_Wrath.lua
+
+Shapes_Classic.lua
+
+Buttons_Wrath.lua
+BorderPresets.lua
+Borders_Classic.lua
+Clock.lua
+Coordinates.lua
+HudMap.lua
+Movers_Classic.lua
+Ping.lua
+ZoneText.lua
