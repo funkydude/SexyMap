@@ -1,8 +1,5 @@
 # SexyMap
 
-## Download
-https://www.curseforge.com/wow/addons/sexymap
-
 ## Introduction
 Make your minimap ubersexah! SexyMap is a minimap mod, supporting:
 
@@ -13,3 +10,7 @@ Make your minimap ubersexah! SexyMap is a minimap mod, supporting:
 * Ping notification
 * Mousewheel minimap zoom, and auto zoom-out.
 * A HUD overlay for resource gathering, target tracking, and more.
+
+## Download
+* <https://www.curseforge.com/wow/addons/sexymap>
+* <https://addons.wago.io/addons/sexymap>
