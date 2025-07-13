@@ -1,4 +1,4 @@
-## Interface: 30404
+## Interface: 30405
 ## Version: @project-version@
 ## Title: SexyMap
 ## Notes: Spice up your minimap with some sexy options.
@@ -12,7 +12,7 @@
 ## Notes-zhTW: 讓你有更香豔的一些性感小地圖設定。
 ## Notes-zhCN: 为你的小地图增趣添彩，并包含一些性感选项。
 ## Notes-ptBR: Dê uma apimentada no seu minimapa com algumas opções sexy.
-## Author: Funkydude
+## Author: Funkeh
 ## X-Credits: Antiarc (Former Author)
 ## SavedVariables: SexyMap2DB
 
