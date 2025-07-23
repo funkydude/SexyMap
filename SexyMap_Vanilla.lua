@@ -366,7 +366,11 @@ function mod:ADDON_LOADED(addon)
 
 		local char = UnitName("player").."-"..GetRealmName()
 		if not SexyMap2DB[char] then
+			if SexyMap2DB.global then
+				SexyMap2DB[char] = "global" -- Default to global profile if it exists
+			else
 			SexyMap2DB[char] = {}
+			end
 		end
 
 		local dbToDispatch
