@@ -521,7 +521,7 @@ function mod:SetupMap()
 	end)
 
 	-- Border texture around the zone text and the "X" to close button
-	local MinimapBorderTop = MinimapBorderTop or MinimapCluster.BorderTop -- Vanilla, TBC
+	local MinimapBorderTop = sm.API.isVanilla and MinimapBorderTop or MinimapCluster.BorderTop -- Vanilla, TBC
 	sm.core.texture.SetParent(MinimapBorderTop, sm.core.button)
 	hooksecurefunc(MinimapBorderTop, "SetParent", function()
 		sm.core.texture.SetParent(MinimapBorderTop, sm.core.button)
