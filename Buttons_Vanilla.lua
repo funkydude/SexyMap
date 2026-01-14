@@ -399,11 +399,11 @@ do
 				self:AddButtonOptions(n)
 
 				-- Configure dragging
-				--if n == "MiniMapTracking" then
-				--	self:MakeMovable(MiniMapTrackingButton, f)
-				--else
+				if not sm.API.isVanilla and n == "MiniMapTracking" then
+					self:MakeMovable(MiniMapTrackingButton, f)
+				else
 					self:MakeMovable(f)
-				--end
+				end
 			end
 		end
 		f:HookScript("OnEnter", OnEnter)

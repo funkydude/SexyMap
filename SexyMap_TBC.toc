@@ -24,6 +24,7 @@
 ## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, LibChatAnims, Blizzard_TimeManager
 ## X-Embeds: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, LibChatAnims, CallbackHandler-1.0, LibStub
 
+Init_TBC.lua
 
 embeds.xml
 
@@ -39,11 +40,11 @@ localization\zhTW.lua
 localization\zhCN.lua
 localization\ptBR.lua
 
-SexyMap_TBC.lua
+SexyMap_Vanilla.lua
 
 Shapes_Classic.lua
 
-Buttons_TBC.lua
+Buttons_Vanilla.lua
 BorderPresets.lua
 Borders_Classic.lua
 Clock.lua

@@ -323,47 +323,6 @@ function mod:ADDON_LOADED(addon)
 			SexyMap2DB = {}
 		end
 
-		-- XXX 9.0.1
-		for character, tbl in next, SexyMap2DB do
-			if tbl.borders and tbl.borders.backdrop and tbl.borders.backdrop.settings then
-				local tex = tbl.borders.backdrop.settings.bgFile
-				if type(tex) == "string" then
-					if tex == "Interface\\Addons\\SexyMap\\media\\rusticbg" then
-						tbl.borders.backdrop.settings.bgFile = 249644
-					elseif tex == "Interface\\Addons\\SexyMap\\media\\ruinsbg" then
-						tbl.borders.backdrop.settings.bgFile = 191258
-					end
-				end
-			end
-		end
-		if SexyMap2DB.presets then
-			for name, tbl in next, SexyMap2DB.presets do
-				if tbl.backdrop and tbl.backdrop.settings then
-					local tex = tbl.backdrop.settings.bgFile
-					if type(tex) == "string" then
-						if tex == "Interface\\Addons\\SexyMap\\media\\rusticbg" then
-							tbl.backdrop.settings.bgFile = 249644
-						elseif tex == "Interface\\Addons\\SexyMap\\media\\ruinsbg" then
-							tbl.backdrop.settings.bgFile = 191258
-						end
-					end
-				end
-			end
-		end
-		-- XXX end
-
-		-- XXX temp 1.14.2
-		for character, tbl in next, SexyMap2DB do
-			if tbl.borders and type(tbl.borders.borders) == "table" then
-				for i = 1, #tbl.borders.borders do
-					if tbl.borders.borders[i].texture == "INTERFACE\\ADDONS\\SEXYMAP\\MEDIA\\T_VFX_HERO_CIRCLE.BLP" or tbl.borders.borders[i].texture == "SPELLS\\T_VFX_HERO_CIRCLE.BLP" then
-						tbl.borders.borders[i].texture = 167062
-					end
-				end
-			end
-		end
-		-- End
-
 		local char = UnitName("player").."-"..GetRealmName()
 		if not SexyMap2DB[char] then
 			SexyMap2DB[char] = {}
@@ -562,7 +521,7 @@ function mod:SetupMap()
 	end)
 
 	-- Border texture around the zone text and the "X" to close button
-	local MinimapBorderTop = MinimapBorderTop
+	local MinimapBorderTop = MinimapBorderTop or MinimapCluster.BorderTop -- Vanilla, TBC
 	sm.core.texture.SetParent(MinimapBorderTop, sm.core.button)
 	hooksecurefunc(MinimapBorderTop, "SetParent", function()
 		sm.core.texture.SetParent(MinimapBorderTop, sm.core.button)
