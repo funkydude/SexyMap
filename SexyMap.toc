@@ -50,5 +50,4 @@ Clock.lua
 Coordinates.lua
 HudMap.lua
 Movers.lua
-Ping.lua
 ZoneText.lua
