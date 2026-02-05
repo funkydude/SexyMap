@@ -363,6 +363,14 @@ function mod:ADDON_LOADED(addon)
 end
 mod.frame:RegisterEvent("ADDON_LOADED")
 
+-- 12.0.1 minimap clicks workaround
+local hijackClicksFrame = CreateFrame("Frame")
+hijackClicksFrame:SetParent(Minimap)
+hijackClicksFrame:SetPoint("CENTER", Minimap, "CENTER")
+hijackClicksFrame:Show()
+hijackClicksFrame:EnableMouse(true)
+hijackClicksFrame:SetPassThroughButtons("LeftButton")
+hijackClicksFrame:SetPropagateMouseMotion(true)
 function mod:PLAYER_LOGIN()
 	mod.frame:UnregisterEvent("PLAYER_LOGIN")
 
@@ -377,11 +385,10 @@ function mod:PLAYER_LOGIN()
 	SLASH_SexyMap1 = "/minimap"
 	SLASH_SexyMap2 = "/sexymap"
 
-	Minimap:SetScript("OnMouseUp", function(frame, button)
+	hijackClicksFrame:SetSize(Minimap:GetWidth(), Minimap:GetWidth())
+	hijackClicksFrame:SetScript("OnMouseUp", function(_, button)
 		if button == "RightButton" and mod.db.rightClickToConfig then
 			SlashCmdList.SexyMap()
-		else
-			Minimap:OnClick()
 		end
 	end)
 
