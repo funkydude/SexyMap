@@ -562,3 +562,33 @@ function mod:RegisterModuleOptions(modName, optionTbl, displayName)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(name..modName, displayName, name)
 end
 
+--------------------------------------------------------------------------------
+-- Public API
+--
+
+-- This is purely to allow other addons to move and easily restore the SexyMap position (e.g. HUD minimap addons need to move and enlarge the minimap)
+local public = {}
+
+-- SexyMap:SetPoint(...)
+function public:SetPoint(point, anchor, relPoint, x, y)
+	mod.frame.ClearAllPoints(Minimap)
+	mod.frame.SetPoint(Minimap, point, anchor, relPoint, x, y)
+end
+
+-- SexyMap:EnterHUD() -- Call this when you want to enter HUD mode
+function public:EnterHUD()
+	hijackClicksFrame:Hide()
+end
+
+-- SexyMap:ExitHUD() -- Call this when you want to exit HUD mode
+function public:ExitHUD()
+	mod.frame.ClearAllPoints(Minimap)
+	mod.frame.SetPoint(Minimap, mod.db.point, UIParent, mod.db.relpoint, mod.db.x, mod.db.y)
+	mod.frame.SetScale(Minimap, mod.db.scale or (MinimapNorthTag and 1 or 1.1))
+	Minimap:SetClampedToScreen(mod.db.clamp)
+	Minimap:SetSize(140, 140)
+	Minimap:SetMovable(not mod.db.lock)
+	hijackClicksFrame:Show()
+end
+
+SexyMap = setmetatable({}, { __index = public, __newindex = function() end, __metatable = false })
