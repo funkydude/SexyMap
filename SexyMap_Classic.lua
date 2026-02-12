@@ -141,8 +141,36 @@ mod.options = {
 			end,
 			hidden = not MinimapNorthTag,
 		},
-		zoom = {
+		size = {
 			order = 7,
+			type = "range",
+			name = L["Size (diameter)"],
+			min = 20,
+			max = 300,
+			step = 1,
+			bigStep = 10,
+			width = 2,
+			get = function(info)
+				return mod.db.size
+			end,
+			set = function(info, v)
+				mod.db.size = v
+				mod.sizeScale = v / 140
+				Minimap:SetSize(v, v)
+				MinimapBackdrop:SetSize(v, v)
+
+				-- workaround to update the aktual size of the Minimap
+				-- without the need to move the character
+				-- TODO: find better solution
+				Minimap:SetScale(mod.db.scale+1);
+				Minimap:SetScale(mod.db.scale);
+
+				sm.buttons:UpdateDraggables()
+				sm.borders:ApplySettings()
+			end,
+		},
+		zoom = {
+			order = 8,
 			type = "range",
 			name = L["Auto Zoom-Out Delay"],
 			desc = L["If you zoom into the map, this feature will automatically zoom out after the selected period of time (seconds). Using a value of 0 will disable Auto Zoom-Out."],
@@ -159,18 +187,18 @@ mod.options = {
 			end,
 		},
 		spacer1 = {
-			order = 8,
+			order = 9,
 			type = "description",
 			width = "full",
 			name = "\n\n",
 		},
 		presetHeader = {
-			order = 9,
+			order = 10,
 			type = "header",
 			name = L["Preset"],
 		},
 		spacer2 = {
-			order = 10,
+			order = 11,
 			type = "description",
 			width = "full",
 			name = L["Quickly change the look of your minimap by using a minimap preset."].."\n",
@@ -349,6 +377,9 @@ function mod:ADDON_LOADED(addon)
 			}
 		end
 		mod.db = dbToDispatch.core
+
+		mod.db.size = mod.db.size or 140
+		mod.sizeScale = mod.db.size / 140
 
 		mod.loadModules = {}
 		for k,v in pairs(sm) do
@@ -531,6 +562,8 @@ function mod:SetupMap()
 
 	Minimap:RegisterForDrag("LeftButton")
 	Minimap:SetClampedToScreen(mod.db.clamp)
+	Minimap:SetSize(mod.db.size, mod.db.size)
+	MinimapBackdrop:SetSize(mod.db.size, mod.db.size)
 	Minimap:SetScale(mod.db.scale or 1)
 	Minimap:SetMovable(not mod.db.lock)
 

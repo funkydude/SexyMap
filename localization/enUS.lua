@@ -169,6 +169,7 @@ L["Right clicking the map will open the SexyMap options"] = "Right clicking the 
 L["Auto Zoom-Out Delay"] = "Auto Zoom-Out Delay"
 L["If you zoom into the map, this feature will automatically zoom out after the selected period of time (seconds). Using a value of 0 will disable Auto Zoom-Out."] = "If you zoom into the map, this feature will automatically zoom out after the selected period of time (seconds). Using a value of 0 will disable Auto Zoom-Out."
 L["Show North Tag"] = "Show North Tag"
+L["Size (diameter)"] = "Size (diameter)"
 L["Profiles"] = "Profiles"
 L["Copy a Profile"] = "Copy a Profile"
 L["Copying this profile will reload your UI, are you sure?"] = "Copying this profile will reload your UI, are you sure?"
