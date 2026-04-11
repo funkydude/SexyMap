@@ -436,8 +436,10 @@ end)
 
 -- Make sure the various minimap buttons follow the minimap
 -- We do this before login to prevent button placement issues
-MinimapBackdrop:ClearAllPoints()
-MinimapBackdrop:SetPoint("CENTER", Minimap, "CENTER", -8, -23)
+if not sm.API or not sm.API.isWrath then -- Only on MoP, Wrath places the MinimapBackdrop differently
+	MinimapBackdrop:ClearAllPoints()
+	MinimapBackdrop:SetPoint("CENTER", Minimap, "CENTER", -8, -23)
+end
 
 function mod:SetupMap()
 	local Minimap = Minimap
