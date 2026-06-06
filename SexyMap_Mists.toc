@@ -50,5 +50,5 @@ Clock.lua
 Coordinates.lua
 HudMap.lua
 Movers_Classic.lua
-Ping.lua
+#Ping.lua
 ZoneText.lua
