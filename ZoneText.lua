@@ -271,7 +271,7 @@ function mod:OnEnable()
 	zoneTextButton:SetClampRectInsets(4,-4,-4,4) -- Allow kissing the edge of the screen when hiding the backdrop border (size 4)
 	zoneTextButton:SetFrameStrata("LOW")
 	zoneTextButton:SetFixedFrameStrata(true)
-	zoneTextButton:SetFrameLevel(20) -- Above Questie minimap blips
+	zoneTextButton:SetFrameLevel(4000) -- Above Questie minimap blips
 	zoneTextButton:SetFixedFrameLevel(true)
 	zoneTextButton.oshow = function() end -- Silly workaround to prevent the MBB addon grabing this frame
 

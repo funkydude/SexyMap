@@ -275,7 +275,7 @@ function mod:CreateFrame()
 		coordFrame:SetBackdrop(sm.backdrop)
 		coordFrame:SetFrameStrata("LOW")
 		coordFrame:SetFixedFrameStrata(true)
-		coordFrame:SetFrameLevel(20) -- Above Questie minimap blips
+		coordFrame:SetFrameLevel(4000) -- Above Questie minimap blips
 		coordFrame:SetFixedFrameLevel(true)
 		coordsText = coordFrame:CreateFontString(nil, nil, "GameFontNormalSmall")
 		coordsText:SetPoint("CENTER", coordFrame, "CENTER")
