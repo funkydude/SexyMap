@@ -24,7 +24,7 @@ local dynamicButtons = {
 	MiniMapMailFrame = L["New Mail Indicator (When Available)"],
 	MiniMapBattlefieldFrame = L.classicPVPButton,
 	--GarrisonLandingPageMinimapButton = L["Garrison Button (When Available)"],
-	MiniMapLFGFrame = L.classicLFGButton,
+	LFGMinimapFrame = L.classicLFGButton,
 }
 if GuildInstanceDifficulty then
 	dynamicButtons.GuildInstanceDifficulty = L["Guild Dungeon Difficulty Indicator (When Available)"]
@@ -188,7 +188,7 @@ function mod:OnInitialize(profile)
 				MiniMapMailFrame = "always",
 				--QueueStatusMinimapButton = "always",
 				MiniMapBattlefieldFrame = "always",
-				MiniMapLFGFrame = "always",
+				LFGMinimapFrame = "always",
 				GarrisonLandingPageMinimapButton = "always",
 			},
 			allowDragging = true,
@@ -208,8 +208,8 @@ function mod:OnInitialize(profile)
 	if not self.db.visibilitySettings.MiniMapBattlefieldFrame then
 		self.db.visibilitySettings.MiniMapBattlefieldFrame = "always"
 	end
-	if not self.db.visibilitySettings.MiniMapLFGFrame then
-		self.db.visibilitySettings.MiniMapLFGFrame = "always"
+	if not self.db.visibilitySettings.LFGMinimapFrame then
+		self.db.visibilitySettings.LFGMinimapFrame = "always"
 	end
 	if not self.db.tempWrathUpgrade then -- XXX launch of wrath prepatch, GameTimeFrame moves from day/night indicator (useless - hidden) to calendar (useful - show on hover)
 		self.db.visibilitySettings.GameTimeFrame = nil
@@ -369,6 +369,16 @@ do
 				f:ClearAllPoints()
 				f:SetParent(Minimap)
 				f:SetPoint("CENTER", Minimap, "TOPRIGHT", 4, -37)
+			end
+			-- Need to move the classic LFG minimap button
+			if n == "LFGMinimapFrame" then
+				f:ClearAllPoints()
+				f:SetParent(Minimap)
+				f:SetPoint("CENTER", Minimap, "CENTER", -60, -55)
+				f:SetFrameStrata("MEDIUM")
+				f:SetFixedFrameStrata(true)
+				f:SetFrameLevel(8)
+				f:SetFixedFrameLevel(true)
 			end
 
 			animFrames[#animFrames+1] = f
@@ -562,7 +572,7 @@ do
 		--MiniMapMailFrame, QueueStatusMinimapButton, GarrisonLandingPageMinimapButton
 		Minimap, MiniMapTrackingButton, MiniMapTracking, TimeManagerClockButton, GameTimeFrame,
 		MinimapZoomIn, MinimapZoomOut, MiniMapWorldMapButton, MiniMapInstanceDifficulty,
-		MiniMapMailFrame, MiniMapBattlefieldFrame, MiniMapLFGFrame
+		MiniMapMailFrame, MiniMapBattlefieldFrame
 	}
 	if GuildInstanceDifficulty then
 		tbl[#tbl+1] = GuildInstanceDifficulty
@@ -585,6 +595,10 @@ do
 	end
 
 	function mod:StartFrameGrab()
+		if LFGMinimapFrame then -- Loads after PLAYER_ENTERING_WORLD
+			tbl[#tbl+1] = LFGMinimapFrame
+		end
+
 		for i = 1, #tbl do
 			mod:NewFrame(tbl[i])
 		end
