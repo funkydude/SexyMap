@@ -1,4 +1,4 @@
-## Interface: 50502, 50503
+## Interface: 50504, 50503
 ## Version: @project-version@
 ## Title: SexyMap
 ## Notes: Spice up your minimap with some sexy options.
