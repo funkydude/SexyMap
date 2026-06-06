@@ -23,9 +23,13 @@ local options = {
 			set = function(info, v)
 				mod.db.showPing = v
 				if v then
-					pingFrame:RegisterEvent("MINIMAP_PING")
+					if C_EventUtils.IsEventValid("MINIMAP_PING") then
+						pingFrame:RegisterEvent("MINIMAP_PING")
+					end
 				else
-					pingFrame:UnregisterEvent("MINIMAP_PING")
+					if C_EventUtils.IsEventValid("MINIMAP_PING") then
+						pingFrame:UnregisterEvent("MINIMAP_PING")
+					end
 				end
 			end,
 			disabled = false,
@@ -108,8 +112,16 @@ function mod:OnEnable()
 		end)
 	end
 
-	if mod.db.showPing then
-		pingFrame:RegisterEvent("MINIMAP_PING")
+	if not C_EventUtils.IsEventValid("MINIMAP_PING") then
+		UIParent:RegisterEventCallback("MINIMAP_PING", function(_, ...)
+			if mod.db.showPing then
+				pingFrame:GetScript("OnEvent")(nil, nil, ...)
+			end
+		end)
+	else
+		if mod.db.showPing then
+			pingFrame:RegisterEvent("MINIMAP_PING")
+		end
 	end
 end
 
