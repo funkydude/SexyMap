@@ -266,8 +266,8 @@ end
 --
 
 local OnFinished, KillAnimation
+local fadeStop = false -- Use a variable to prevent fadeout/in when moving the mouse around minimap/icons
 do
-	local fadeStop = false -- Use a variable to prevent fadeout/in when moving the mouse around minimap/icons
 	local restoreGarrisonButtonAnimation = false
 	local restoreLFGButtonAnimation = false
 

@@ -447,7 +447,7 @@ local options = {
 					confirm = true,
 					order = 3,
 					disabled = function()
-						for k, v in pairs(userPresets) do
+						if next(userPresets) then
 							return false
 						end
 						return true

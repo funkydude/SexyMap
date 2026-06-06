@@ -282,7 +282,7 @@ local shapes = {
 		name = L["Rounded - Left"],
 		geometry = "left"
 	},
-	
+
 	["Interface\\AddOns\\SexyMap\\shapes\\right.tga"] = {
 		name = L["Rounded - Right"],
 		geometry = "right"
