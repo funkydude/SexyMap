@@ -517,10 +517,12 @@ function mod:SetupMap()
 
 	-- Minimap "X" to close button
 	local MinimapToggleButton = MinimapToggleButton
-	sm.core.button.SetParent(MinimapToggleButton, sm.core.button)
-	hooksecurefunc(MinimapToggleButton, "SetParent", function()
+	if MinimapToggleButton then
 		sm.core.button.SetParent(MinimapToggleButton, sm.core.button)
-	end)
+		hooksecurefunc(MinimapToggleButton, "SetParent", function()
+			sm.core.button.SetParent(MinimapToggleButton, sm.core.button)
+		end)
+	end
 
 	-- Border texture around the zone text and the "X" to close button
 	local MinimapBorderTop = sm.API.isVanilla and MinimapBorderTop or MinimapCluster.BorderTop -- Vanilla, TBC

@@ -515,6 +515,15 @@ function mod:SetupMap()
 		MinimapCompassTexture.Show = MinimapCompassTexture.Hide
 	end
 
+	-- Minimap "X" to close button
+	local MinimapToggleButton = MinimapToggleButton
+	if MinimapToggleButton then
+		sm.core.button.SetParent(MinimapToggleButton, sm.core.button)
+		hooksecurefunc(MinimapToggleButton, "SetParent", function()
+			sm.core.button.SetParent(MinimapToggleButton, sm.core.button)
+		end)
+	end
+
 	-- Border texture around the zone text
 	local MinimapBorderTop = MinimapCluster and MinimapCluster.BorderTop or MinimapBorderTop
 	if MinimapBorderTop then
