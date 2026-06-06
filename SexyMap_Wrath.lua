@@ -434,13 +434,6 @@ hooksecurefunc(Minimap, "SetParent", function()
 	mod.frame.SetParent(Minimap, UIParent)
 end)
 
--- Make sure the various minimap buttons follow the minimap
--- We do this before login to prevent button placement issues
-if not sm.API or not sm.API.isWrath then -- Only on MoP, Wrath places the MinimapBackdrop differently
-	MinimapBackdrop:ClearAllPoints()
-	MinimapBackdrop:SetPoint("CENTER", Minimap, "CENTER", -8, -23)
-end
-
 function mod:SetupMap()
 	local Minimap = Minimap
 
