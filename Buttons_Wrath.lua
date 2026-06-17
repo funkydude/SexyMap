@@ -166,7 +166,7 @@ do
 		end
 		p[name] = {
 			type = "multiselect",
-			name = L["Show %s:"]:format(blizzButtons[name] or dynamicButtons[name] or name:gsub("LibDBIcon10_", "")),
+			name = blizzButtons[name] or dynamicButtons[name] or name:gsub("LibDBIcon10_", "") or "???",
 			values = hideValues,
 			get = hideGet,
 			set = hideSet,
