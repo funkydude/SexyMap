@@ -5,6 +5,7 @@ local L = sm.L
 --L.dayNightButton = "Day/Night Indicator"
 --L.classicLFGButton = "Classic LFG Button (When Available)"
 --L.classicPVPButton = "Classic PvP Button (When Available)"
+L.omniumFolioButton = "Omniumfoliant (Wenn verfügbar)"
 L["1. Background"] = "1. Hintergrund"
 L["2. Border"] = "2. Rahmen"
 L["3. Artwork"] = "3. Vorlagen"

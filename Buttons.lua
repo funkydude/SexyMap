@@ -27,11 +27,10 @@ local dynamicButtons = {
 	MiniMapInstanceDifficulty = L["Dungeon Difficulty Indicator (When Available)"],
 	MiniMapMailFrame = L["New Mail Indicator (When Available)"],
 	CraftingOrder = L.craftingOrder,
-	GarrisonLandingPageMinimapButton = L["Garrison Button (When Available)"],
+	ExpansionLandingPageMinimapButton = L.omniumFolioButton,
 }
 
 local buttonNicknames = {
-	[ExpansionLandingPageMinimapButton] = "GarrisonLandingPageMinimapButton",
 	[Minimap.ZoomIn] = "MinimapZoomIn",
 	[Minimap.ZoomOut] = "MinimapZoomOut",
 	[TrackingFrame] = "MiniMapTracking",
@@ -202,7 +201,7 @@ do
 		end
 		p[name] = {
 			type = "multiselect",
-			name = L["Show %s:"]:format(blizzButtons[name] or dynamicButtons[name] or name:gsub("LibDBIcon10_", "")),
+			name = blizzButtons[name] or dynamicButtons[name] or name:gsub("LibDBIcon10_", "") or "???",
 			values = hideValues,
 			get = hideGet,
 			set = hideSet,
@@ -224,7 +223,7 @@ function mod:OnInitialize(profile)
 				TimeManagerClockButton = "always",
 				MiniMapMailFrame = "always",
 				CraftingOrder = "always",
-				GarrisonLandingPageMinimapButton = "always",
+				ExpansionLandingPageMinimapButton = "hover",
 				AddonCompartmentFrame = "never",
 			},
 			allowDragging = true,
@@ -233,23 +232,9 @@ function mod:OnInitialize(profile)
 		}
 	end
 
-	-- XXX temp 9.0.1
-	if not profile.buttons.visibilitySettings.SexyMapZoneTextButton then
-		profile.buttons.visibilitySettings.SexyMapZoneTextButton = "always"
-		profile.buttons.visibilitySettings.MinimapZoneTextButton = nil
-	end
-	-- XXX temp 10.1.0
-	if not profile.buttons.scale then
-		profile.buttons.scale = 1
-	end
-	if not profile.buttons.visibilitySettings.CraftingOrder then
-		profile.buttons.visibilitySettings.CraftingOrder = "always"
-	end
-	if not profile.buttons.visibilitySettings.AddonCompartmentFrame then
-		profile.buttons.visibilitySettings.AddonCompartmentFrame = "never"
-	end
-	if not profile.buttons.visibilitySettings.QueueStatusMinimapButton then
-		profile.buttons.visibilitySettings.QueueStatusMinimapButton = nil
+	-- XXX temp 12.0.7
+	if not profile.buttons.visibilitySettings.ExpansionLandingPageMinimapButton then
+		profile.buttons.visibilitySettings.ExpansionLandingPageMinimapButton = "hover"
 	end
 
 	self.db = profile.buttons

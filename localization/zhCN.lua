@@ -5,6 +5,7 @@ local L = sm.L
 L.dayNightButton = "昼/夜指示器"
 L.classicLFGButton = "经典 寻求组队 按钮（可用时）"
 L.classicPVPButton = "经典 PvP 按钮（可用时）"
+L.omniumFolioButton = "万奥宝典（可用时）"
 L["1. Background"] = "1、背景"
 L["2. Border"] = "2、边框"
 L["3. Artwork"] = "3、装饰"

@@ -95,6 +95,7 @@ L["Dungeon Difficulty Indicator (When Available)"] = "Dungeon Difficulty Indicat
 L["New Mail Indicator (When Available)"] = "New Mail Indicator (When Available)"
 L["Queue Status (PvP/LFG) Button (When Available)"] = "Queue Status (PvP/LFG) Button (When Available)"
 L["Garrison Button (When Available)"] = "Garrison Button (When Available)"
+L.omniumFolioButton = "Omnium Folio (When Available)"
 L.classicLFGButton = "Classic LFG Button (When Available)"
 L.classicPVPButton = "Classic PvP Button (When Available)"
 
