@@ -519,7 +519,7 @@ do
 	function mod:ChangeFrameVisibility(frame, vis)
 		if vis == "always" then
 			if frameParents[frame] then
-				frame:SetParent(frameParents[frame])
+				sm.core.button.SetParent(frame, frameParents[frame])
 				frameParents[frame] = nil
 			end
 			if frame.MinimapLoopPulseAnim or frame.EyeHighlightAnim then
@@ -533,10 +533,10 @@ do
 			if not frameParents[frame] then
 				frameParents[frame] = frame:GetParent()
 			end
-			frame:SetParent(hideFrame)
+			sm.core.button.SetParent(frame, hideFrame)
 		else
 			if frameParents[frame] then
-				frame:SetParent(frameParents[frame])
+				sm.core.button.SetParent(frame, frameParents[frame])
 				frameParents[frame] = nil
 			end
 			if frame.MinimapLoopPulseAnim or frame.EyeHighlightAnim then
