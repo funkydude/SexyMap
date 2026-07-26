@@ -749,7 +749,7 @@ local borderOptions = {
 		set = function(info, v)
 			local tex = getTextureAndDB(info)
 			tex.settings.width = v ~= 180 and v or nil
-			tex:SetWidth(v * (tex.settings.scale or 1))
+			tex:SetWidth(v * (tex.settings.scale or 1) * sm.core.sizeScale)
 		end
 	},
 	height = {
@@ -768,7 +768,7 @@ local borderOptions = {
 		set = function(info, v)
 			local tex = getTextureAndDB(info)
 			tex.settings.height = v ~= 180 and v or nil
-			tex:SetHeight(v * (tex.settings.scale or 1))
+			tex:SetHeight(v * (tex.settings.scale or 1) * sm.core.sizeScale)
 		end
 	},
 	layer = {
@@ -996,8 +996,8 @@ do
 		tex:SetBlendMode(t.blendMode or "ADD")
 		tex:SetVertexColor(t.r or 1, t.g or 1, t.b or 1, t.a or 1)
 		tex:SetPoint("CENTER", Minimap, "CENTER", t.hNudge or 0, t.vNudge or 0)
-		tex:SetWidth((t.width or defaultSize) * (t.scale or 1))
-		tex:SetHeight((t.height or defaultSize) * (t.scale or 1))
+		tex:SetWidth((t.width or defaultSize) * (t.scale or 1) * sm.core.sizeScale)
+		tex:SetHeight((t.height or defaultSize) * (t.scale or 1) * sm.core.sizeScale)
 		tex:SetDrawLayer(t.drawLayer or "ARTWORK")
 
 		tex.rotSpeed = t.rotSpeed or 0
@@ -1113,6 +1113,8 @@ end
 
 function mod:UpdateBackdrop()
 	if mod.db.backdrop.show then
+		customBackdrop:SetWidth(Minimap:GetWidth())
+		customBackdrop:SetHeight(Minimap:GetHeight())
 		customBackdrop:Show()
 		customBackdrop:SetScale(mod.db.backdrop.scale or 1)
 		customBackdrop:SetAlpha(mod.db.backdrop.alpha or 1)
