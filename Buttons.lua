@@ -560,6 +560,7 @@ local dragFrame = CreateFrame("Frame")
 
 do
 	local getCurrentAngle = function(parent, bx, by)
+		if not parent then return 0 end
 		local mx, my = parent:GetCenter()
 		if not mx or not my or not bx or not by then return 0 end
 		local h, w = (by - my), (bx - mx)
@@ -642,7 +643,7 @@ do
 		if frame then
 			local x, y = frame:GetCenter()
 			local name = buttonNicknames[frame] or frame:GetName()
-			local angle = mod.db.dragPositions[name] or getCurrentAngle(frame:GetParent(), x, y)
+			local angle = mod.db.dragPositions[name] or getCurrentAngle(frame:GetParent() or Minimap, x, y)
 			if angle then
 				setPosition(frame, angle)
 			end
