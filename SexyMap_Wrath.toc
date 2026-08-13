@@ -44,7 +44,7 @@ SexyMap_Wrath.lua
 
 Shapes_Classic.lua
 
-Buttons_Wrath.lua
+Buttons_Classic.lua
 BorderPresets.lua
 Borders_Classic.lua
 Clock.lua

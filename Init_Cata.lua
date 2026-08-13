@@ -1,0 +1,3 @@
+local _, addonTable = ...
+addonTable.API = {}
+addonTable.API.isCata = true

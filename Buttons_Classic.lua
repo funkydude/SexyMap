@@ -10,18 +10,18 @@ local moving, ButtonFadeOut
 
 local animFrames = {}
 local blizzButtons = {
-	GameTimeFrame = L.dayNightButton,
+	GameTimeFrame = sm.API.isVanilla and L.dayNightButton or sm.API.isTBC and L.dayNightButton or L["Calendar"],
 	MiniMapTracking = L["Tracking Button"],
 	SexyMapZoneTextButton = L["Zone Text"],
 	MinimapZoomIn = L["Zoom In Button"],
 	MinimapZoomOut = L["Zoom Out Button"],
-	--MiniMapWorldMapButton = L["Map Button"],
+	MiniMapWorldMapButton = MiniMapWorldMapButton and L["Map Button"] or nil,
 	TimeManagerClockButton = L["Clock"],
 }
 local dynamicButtons = {
-	--GuildInstanceDifficulty = L["Guild Dungeon Difficulty Indicator (When Available)"],
-	--MiniMapChallengeMode = L["Challenge Mode Button (When Available)"],
-	--MiniMapInstanceDifficulty = L["Dungeon Difficulty Indicator (When Available)"],
+	MiniMapChallengeMode = MiniMapChallengeMode and L["Challenge Mode Button (When Available)"] or nil,
+	GuildInstanceDifficulty = GuildInstanceDifficulty and L["Guild Dungeon Difficulty Indicator (When Available)"] or nil,
+	MiniMapInstanceDifficulty = MiniMapInstanceDifficulty and L["Dungeon Difficulty Indicator (When Available)"] or nil,
 	MiniMapMailFrame = L["New Mail Indicator (When Available)"],
 	MiniMapBattlefieldFrame = L.classicPVPButton,
 	--GarrisonLandingPageMinimapButton = L["Garrison Button (When Available)"],
@@ -178,7 +178,7 @@ function mod:OnInitialize(profile)
 			radius = 10,
 			dragPositions = {},
 			visibilitySettings = {
-				GameTimeFrame = "never",
+				GameTimeFrame = sm.API.isVanilla and "never" or sm.API.isTBC and "never" or "hover",
 				MinimapZoomIn = "never",
 				MinimapZoomOut = "never",
 				MiniMapWorldMapButton = "never",
@@ -188,7 +188,6 @@ function mod:OnInitialize(profile)
 				MiniMapBattlefieldFrame = "always",
 				LFGMinimapFrame = "always",
 				GarrisonLandingPageMinimapButton = "always",
-				MiniMapTracking = "always",
 			},
 			allowDragging = true,
 			lockDragging = false,
@@ -197,56 +196,18 @@ function mod:OnInitialize(profile)
 	end
 
 	self.db = profile.buttons
-	-- XXX temp 9.0.1
-	if not profile.buttons.visibilitySettings.SexyMapZoneTextButton then
-		profile.buttons.visibilitySettings.SexyMapZoneTextButton = "always"
-		profile.buttons.visibilitySettings.MinimapZoneTextButton = nil
-	end
 
-	-- Classic additions to the DB
-	if not self.db.visibilitySettings.MiniMapBattlefieldFrame then
-		self.db.visibilitySettings.MiniMapBattlefieldFrame = "always"
-	end
-	if not self.db.visibilitySettings.LFGMinimapFrame then
-		self.db.visibilitySettings.LFGMinimapFrame = "always"
-	end
-	if not self.db.visibilitySettings.GameTimeFrame then
-		self.db.visibilitySettings.GameTimeFrame = "never"
-	end
-	if not self.db.visibilitySettings.MiniMapTracking then
-		self.db.visibilitySettings.MiniMapTracking = "always"
+	if self.db.tempWrathUpgrade then
+		self.db.tempWrathUpgrade = nil
+		if sm.API.isVanilla or sm.API.isTBC then
+			self.db.visibilitySettings.GameTimeFrame = "never"
+		else
+			self.db.visibilitySettings.GameTimeFrame = "hover"
+		end
 	end
 end
 
 function mod:OnEnable()
-	-- Customize the world map: Defaults!
-	-- Interface\\minimap\\UI-Minimap-WorldMapSquare
-	-- MiniMapWorldMapButton:GetRegions():SetTexCoord(0,0,0,0.5,1,0,1,0.5) -- Normal
-	-- MiniMapWorldMapButton:GetRegions():SetTexCoord(0,0.5,0,1,1,0.5,1,1) -- Pushed
-
-	--local overlay = MiniMapWorldMapButton:CreateTexture(nil, "OVERLAY")
-	--overlay:SetSize(53,53)
-	--overlay:SetTexture(136430) -- 136430 = Interface\\Minimap\\MiniMap-TrackingBorder
-	--overlay:SetPoint("TOPLEFT")
-	--local background = MiniMapWorldMapButton:CreateTexture(nil, "BACKGROUND")
-	--background:SetSize(25,25)
-	--background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
-	--background:SetPoint("TOPLEFT", MiniMapWorldMapButton, "TOPLEFT", 4, -2)
-
-	--local icon, pushedIcon, highlight = MiniMapWorldMapButton:GetRegions()
-	--icon:SetTexCoord(0.32,0,0.32,0.5,1,0,1,0.5)
-	--icon:ClearAllPoints()
-	--icon:SetPoint("BOTTOMRIGHT", MiniMapWorldMapButton, "BOTTOMRIGHT", -4, 2)
-	--icon:SetSize(20,30)
-	--pushedIcon:SetTexCoord(0.32,0.5,0.32,1,1,0.5,1,1)
-	--pushedIcon:ClearAllPoints()
-	--pushedIcon:SetPoint("BOTTOMRIGHT", MiniMapWorldMapButton, "BOTTOMRIGHT", -4, 2)
-	--pushedIcon:SetSize(20,30)
-
-	--MiniMapWorldMapButton:SetHighlightTexture(136477) -- 136477 = Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight
-	--highlight:ClearAllPoints()
-	--highlight:SetPoint("TOPLEFT", MiniMapWorldMapButton, "TOPLEFT", 2, -2)
-
 	--GarrisonLandingPageMinimapButton:SetSize(36, 36) -- Shrink the missions button
 	---- Stop Blizz changing the icon size || GarrisonLandingPageMinimapButton_UpdateIcon() >> SetLandingPageIconFromAtlases() >> self:SetSize()
 	--hooksecurefunc(GarrisonLandingPageMinimapButton, "SetSize", function()
@@ -257,16 +218,29 @@ function mod:OnEnable()
 	--	mod:UpdateDraggables(GarrisonLandingPageMinimapButton)
 	--end)
 
-	-- On classic (vanilla) only, when reloading UI, there's a bug where the tracking icon doesn't re-show.
-	local icon = GetTrackingTexture()
-	if icon then
-		MiniMapTrackingIcon:SetTexture(icon)
-		MiniMapTracking:Show()
-	end
-
 	sm.core:RegisterModuleOptions("Buttons", options, L["Buttons"])
 
-	C_Timer.After(1, mod.StartFrameGrab)
+	C_Timer.After(1, self.StartFrameGrab)
+
+	if MiniMapTrackingButton then
+		-- MiniMapTrackingButton is a child of MiniMapTracking and sits on top of it eating all mouse events
+		-- We need to let mouse events pass through into MiniMapTracking, so dragging actually works
+		sm.core.button.SetPropagateMouseClicks(MiniMapTrackingButton, true)
+		sm.core.button.SetPropagateMouseMotion(MiniMapTrackingButton, true)
+	end
+
+	if MiniMapWorldMapButton and self.db.controlVisibility then
+		sm.core.button.Show(MiniMapWorldMapButton) -- Default hidden by Blizz on specific WoW flavors. Force show it initially then let the user control if they want it visible.
+	end
+
+	-- On classic (vanilla) only, when reloading UI, there's a bug where the tracking icon doesn't re-show.
+	if sm.API.isVanilla then
+		local icon = GetTrackingTexture()
+		if icon then
+			MiniMapTrackingIcon:SetTexture(icon)
+			MiniMapTracking:Show()
+		end
+	end
 end
 
 --------------------------------------------------------------------------------
@@ -337,11 +311,11 @@ do
 			local n = f:GetName()
 
 			if not mod.db.visibilitySettings[n] or mod.db.visibilitySettings[n] == "hover" then
-				--if n ~= "GameTimeFrame" or (n == "GameTimeFrame" and C_Calendar.GetNumPendingInvites() < 1) then
+				if n ~= "GameTimeFrame" or (n == "GameTimeFrame" and C_Calendar.GetNumPendingInvites() < 1) then
 					f.sexyMapFadeOut:Play()
 
 					KillAnimation(n, f)
-				--end
+				end
 			end
 		end
 	end
@@ -361,29 +335,30 @@ do
 			smAlphaAnimOut:SetToAlpha(0)
 			smAlphaAnimOut:SetStartDelay(1)
 			f.sexyMapFadeOut:SetToFinalAlpha(true)
+			animFrames[#animFrames+1] = f
 
-			-- Work around issues with buttons that have a pulse/fade ring animation.
-			--if n == "GarrisonLandingPageMinimapButton" or n == "QueueStatusMinimapButton" then
-			--	f.sexyMapFadeOut:SetScript("OnFinished", OnFinished)
-			--end
-			---- These frames are parented to MinimapCluster, if the map scale is changed they won't drag properly, so we parent to Minimap
-			--if n == "MiniMapInstanceDifficulty" or n == "GuildInstanceDifficulty" or n == "MiniMapChallengeMode" then
-			--	f:ClearAllPoints()
-			--	f:SetParent(Minimap)
-			--	f:SetPoint("CENTER", Minimap, "CENTER", -60, 55)
-			--end
-			-- Need to move the classic LFG minimap button
-			if n == "LFGMinimapFrame" then
-				f:ClearAllPoints()
-				f:SetParent(Minimap)
-				f:SetPoint("CENTER", Minimap, "CENTER", -60, -55)
-				f:SetFrameStrata("MEDIUM")
-				f:SetFixedFrameStrata(true)
-				f:SetFrameLevel(8)
-				f:SetFixedFrameLevel(true)
+			-- Make sure everything is parented to the Minimap and set to the correct strata and frame level
+			if blizzButtons[n] or dynamicButtons[n] then
+				sm.core.button.SetParent(f, Minimap)
+				sm.core.button.SetFrameStrata(f, "MEDIUM")
+				sm.core.button.SetFixedFrameStrata(f, true)
+				sm.core.button.SetFrameLevel(f, 8)
+				sm.core.button.SetFixedFrameLevel(f, true)
 			end
 
-			animFrames[#animFrames+1] = f
+			-- Correctly position frames that aren't parents to the Minimap by default
+			if n == "MiniMapInstanceDifficulty" or n == "GuildInstanceDifficulty" or n == "MiniMapChallengeMode" then
+				f:ClearAllPoints()
+				f:SetPoint("CENTER", Minimap, "CENTER", -60, 55)
+			end
+			if n == "GameTimeFrame" then
+				f:ClearAllPoints()
+				f:SetPoint("CENTER", Minimap, "TOPRIGHT", 4, -37)
+			end
+			if n == "LFGMinimapFrame" then
+				f:ClearAllPoints()
+				f:SetPoint("CENTER", Minimap, "CENTER", -60, -55)
+			end
 
 			-- Configure fading
 			if n == "TimeManagerClockButton" then -- This is disgusting but have to work around other addons messing with it
@@ -409,11 +384,11 @@ do
 				self:AddButtonOptions(n)
 
 				-- Configure dragging
-				if not sm.API.isVanilla and n == "MiniMapTracking" then
-					self:MakeMovable(MiniMapTrackingButton, f)
-				else
+				--if not sm.API.isVanilla and n == "MiniMapTracking" then
+				--	self:MakeMovable(MiniMapTrackingButton, f)
+				--else
 					self:MakeMovable(f)
-				end
+				--end
 			end
 		end
 		f:HookScript("OnEnter", OnEnter)
@@ -570,7 +545,7 @@ end
 do
 	local tbl = {
 		Minimap, MiniMapTracking, TimeManagerClockButton, GameTimeFrame,
-		MinimapZoomIn, MinimapZoomOut, --MiniMapWorldMapButton,
+		MinimapZoomIn, MinimapZoomOut,
 		MiniMapMailFrame, MiniMapBattlefieldFrame,
 	}
 
@@ -578,20 +553,33 @@ do
 		self:NewFrame(button)
 	end
 
-	--local function CheckCalendar()
-	--	local vis = mod.db.visibilitySettings.GameTimeFrame
-	--	if not vis or vis == "hover" then
-	--		if C_Calendar.GetNumPendingInvites() < 1 then
-	--			mod:ChangeFrameVisibility(GameTimeFrame, "hover")
-	--		else
-	--			mod:ChangeFrameVisibility(GameTimeFrame, "always")
-	--		end
-	--	end
-	--end
+	local function CheckCalendar()
+		if not mod.db.controlVisibility then return end
+		local vis = mod.db.visibilitySettings.GameTimeFrame
+		if not vis or vis == "hover" then
+			if C_Calendar.GetNumPendingInvites() < 1 then
+				mod:ChangeFrameVisibility(GameTimeFrame, "hover")
+			else
+				mod:ChangeFrameVisibility(GameTimeFrame, "always")
+			end
+		end
+	end
 
 	function mod:StartFrameGrab()
 		if LFGMinimapFrame then -- Loads after PLAYER_ENTERING_WORLD
 			tbl[#tbl+1] = LFGMinimapFrame
+		end
+		if MiniMapWorldMapButton then
+			tbl[#tbl+1] = MiniMapWorldMapButton
+		end
+		if MiniMapInstanceDifficulty then
+			tbl[#tbl+1] = MiniMapInstanceDifficulty
+		end
+		if GuildInstanceDifficulty then
+			tbl[#tbl+1] = GuildInstanceDifficulty
+		end
+		if MiniMapChallengeMode then
+			tbl[#tbl+1] = MiniMapChallengeMode
 		end
 
 		for i = 1, #tbl do
@@ -605,11 +593,13 @@ do
 		ldbi.RegisterCallback(mod, "LibDBIcon_IconCreated", "AddButton")
 
 		-- If calendar is set to "hover" and we have pending invites, force show it
-		--local frame = CreateFrame("Frame")
-		--frame:SetScript("OnEvent", CheckCalendar)
-		--frame:RegisterEvent("CALENDAR_UPDATE_PENDING_INVITES")
-		--frame:RegisterEvent("CALENDAR_ACTION_PENDING")
-		--CheckCalendar()
+		if not sm.API.isVanilla and not sm.API.isTBC then -- Wrath+
+			local frame = CreateFrame("Frame")
+			frame:SetScript("OnEvent", CheckCalendar)
+			frame:RegisterEvent("CALENDAR_UPDATE_PENDING_INVITES")
+			frame:RegisterEvent("CALENDAR_ACTION_PENDING")
+			CheckCalendar()
+		end
 
 		mod.StartFrameGrab = nil
 	end

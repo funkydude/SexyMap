@@ -24,6 +24,7 @@
 ## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, Blizzard_TimeManager
 ## X-Embeds: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, CallbackHandler-1.0, LibStub
 
+Init_Cata.lua
 
 embeds.xml
 
@@ -43,7 +44,7 @@ SexyMap_Wrath.lua
 
 Shapes_Classic.lua
 
-Buttons_Wrath.lua
+Buttons_Classic.lua
 BorderPresets.lua
 Borders_Classic.lua
 Clock.lua
