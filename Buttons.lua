@@ -363,7 +363,15 @@ function mod:OnEnable()
 	end)
 	sm.core:RegisterModuleOptions("Buttons", options, L["Buttons"])
 
-	C_Timer.After(1, mod.StartFrameGrab)
+	-- Frame grab is only meant to happen after LOADING_SCREEN_DISABLED
+	-- This part is just a fallback in case PLAYER_LOGIN (OnEnable) somehow happens after LOADING_SCREEN_DISABLED
+	if not sm.core.LOADING_SCREEN_DISABLED then -- If nil, LOADING_SCREEN_DISABLED already triggered
+		self:StartFrameGrab()
+	end
+end
+
+function mod:OnLoadingScreenOver()
+	self:StartFrameGrab() -- This will only run if PLAYER_LOGIN (OnEnable) happens before LOADING_SCREEN_DISABLED
 end
 
 --------------------------------------------------------------------------------

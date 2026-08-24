@@ -220,8 +220,6 @@ function mod:OnEnable()
 
 	sm.core:RegisterModuleOptions("Buttons", options, L["Buttons"])
 
-	C_Timer.After(1, self.StartFrameGrab)
-
 	if MiniMapTrackingButton then
 		-- MiniMapTrackingButton is a child of MiniMapTracking and sits on top of it eating all mouse events
 		-- We need to let mouse events pass through into MiniMapTracking, so dragging actually works
@@ -241,6 +239,16 @@ function mod:OnEnable()
 			MiniMapTracking:Show()
 		end
 	end
+
+	-- Frame grab is only meant to happen after LOADING_SCREEN_DISABLED
+	-- This part is just a fallback in case PLAYER_LOGIN (OnEnable) somehow happens after LOADING_SCREEN_DISABLED
+	if not sm.core.LOADING_SCREEN_DISABLED then -- If nil, LOADING_SCREEN_DISABLED already triggered
+		self:StartFrameGrab()
+	end
+end
+
+function mod:OnLoadingScreenOver()
+	self:StartFrameGrab() -- This will only run if PLAYER_LOGIN (OnEnable) happens before LOADING_SCREEN_DISABLED
 end
 
 --------------------------------------------------------------------------------
