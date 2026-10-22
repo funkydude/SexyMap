@@ -18,6 +18,7 @@ local blizzButtons = {
 	MiniMapWorldMapButton = L["Map Button"],
 	TimeManagerClockButton = L["Clock"],
 	AddonCompartmentFrame = L.addonCompartment,
+	DayNight = not sm.API.isRetail and L.dayNightButton or nil,
 }
 local dynamicButtons = {
 	GuildInstanceDifficulty = sm.API.isRetail and L["Guild Dungeon Difficulty Indicator (When Available)"] or nil,
@@ -40,6 +41,8 @@ local buttonNicknames = {
 if sm.API.isRetail then
 	buttonNicknames[MinimapCluster.InstanceDifficulty] = "MiniMapInstanceDifficulty"
 	buttonNicknames[MinimapCluster.IndicatorFrame.CraftingOrderFrame] = "CraftingOrder"
+else
+	buttonNicknames[MinimapCluster.DielFrame] = "DayNight"
 end
 
 local options = {
@@ -215,7 +218,15 @@ function mod:OnInitialize(profile)
 		profile.buttons = {
 			radius = 10,
 			scale = 1,
-			dragPositions = {},
+			dragPositions = {
+				DayNight = 45,
+				MiniMapTracking = -16,
+				GameTimeFrame = 22,
+				MiniMapMailFrame = 2,
+				AddonCompartmentFrame = 126,
+				MinimapZoomIn = -55,
+				MinimapZoomOut = -36,
+			},
 			visibilitySettings = {
 				MinimapZoomIn = "never",
 				MinimapZoomOut = "never",
@@ -226,16 +237,12 @@ function mod:OnInitialize(profile)
 				CraftingOrder = "always",
 				ExpansionLandingPageMinimapButton = "hover",
 				AddonCompartmentFrame = "never",
+				DayNight = "hover",
 			},
 			allowDragging = true,
 			lockDragging = false,
 			controlVisibility = true
 		}
-	end
-
-	-- XXX temp 12.0.7
-	if not profile.buttons.visibilitySettings.ExpansionLandingPageMinimapButton then
-		profile.buttons.visibilitySettings.ExpansionLandingPageMinimapButton = "hover"
 	end
 
 	self.db = profile.buttons
@@ -275,21 +282,30 @@ function mod:OnEnable()
 		local overlay = MinimapCluster.IndicatorFrame.MailFrame:CreateTexture(nil, "OVERLAY")
 		overlay:SetSize(53,53)
 		overlay:SetTexture(136430) -- 136430 = Interface\\Minimap\\MiniMap-TrackingBorder
-		overlay:SetPoint("CENTER", MiniMapMailIcon, "CENTER", 10, -10)
+		overlay:SetPoint("CENTER", MinimapCluster.IndicatorFrame.MailFrame, "CENTER", 10, -10)
 		local background = MinimapCluster.IndicatorFrame.MailFrame:CreateTexture(nil, "BACKGROUND")
 		background:SetSize(25,25)
 		background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
-		background:SetPoint("CENTER", MiniMapMailIcon, "CENTER")
+		background:SetPoint("CENTER", MinimapCluster.IndicatorFrame.MailFrame, "CENTER")
+		if not sm.API.isRetail then
+			MiniMapMailIcon:SetScale(0.7)
+		end
+		MiniMapMailIcon:ClearAllPoints()
+		MiniMapMailIcon:SetPoint("CENTER")
 
 		-- Tracking Button
-		overlay = MinimapCluster.Tracking:CreateTexture(nil, "OVERLAY")
+		overlay = MinimapCluster.Tracking.Button:CreateTexture(nil, "OVERLAY")
 		overlay:SetSize(53,53)
 		overlay:SetTexture(136430) -- 136430 = Interface\\Minimap\\MiniMap-TrackingBorder
 		overlay:SetPoint("CENTER", MinimapCluster.Tracking.Button, "CENTER", 10, -10)
-		background = MinimapCluster.Tracking:CreateTexture(nil, "BACKGROUND")
+		background = MinimapCluster.Tracking.Button:CreateTexture(nil, "BACKGROUND")
 		background:SetSize(25,25)
 		background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
 		background:SetPoint("CENTER", MinimapCluster.Tracking.Button, "CENTER")
+		-- Hide the border
+		if MinimapCluster.Tracking.Button.AddTexture then
+			sm.core.button.SetParent(MinimapCluster.Tracking.Button.AddTexture, sm.core.button)
+		end
 
 		-- Crafting Order Button
 		if sm.API.isRetail then
@@ -312,6 +328,10 @@ function mod:OnEnable()
 		background:SetSize(25,25)
 		background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
 		background:SetPoint("CENTER", GameTimeFrame, "CENTER")
+		-- Hide the border
+		if GameTimeFrame.AddTexture then
+			sm.core.button.SetParent(GameTimeFrame.AddTexture, sm.core.button)
+		end
 
 		-- Addon compartment Button
 		overlay = AddonCompartmentFrame:CreateTexture(nil, "OVERLAY")
@@ -322,6 +342,13 @@ function mod:OnEnable()
 		background:SetSize(25,25)
 		background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
 		background:SetPoint("CENTER", AddonCompartmentFrame, "CENTER")
+		-- Hide the border
+		if AddonCompartmentFrame.StateTexture then
+			sm.core.button.SetParent(AddonCompartmentFrame.StateTexture, sm.core.button)
+		end
+		if AddonCompartmentFrame.AddTexture then
+			sm.core.button.SetParent(AddonCompartmentFrame.AddTexture, sm.core.button)
+		end
 
 		-- Zoom in Button
 		overlay = Minimap.ZoomIn:CreateTexture(nil, "OVERLAY")
@@ -344,26 +371,35 @@ function mod:OnEnable()
 		background:SetPoint("CENTER", Minimap.ZoomOut, "CENTER")
 	end
 
-	sm.core.button.SetParent(ExpansionLandingPageMinimapButton, Minimap)
-	-- Set parent again to compensate for garbage addons (Edit Mode Expanded) thinking it's a good idea to have wide ranging changes on by default, instead of having everything opt-in like Edit Mode itself...
-	hooksecurefunc(ExpansionLandingPageMinimapButton, "SetParent", function()
+	if sm.API.isRetail then
 		sm.core.button.SetParent(ExpansionLandingPageMinimapButton, Minimap)
-		mod:UpdateDraggables(ExpansionLandingPageMinimapButton)
-	end)
+		-- Set parent again to compensate for garbage addons (Edit Mode Expanded) thinking it's a good idea to have wide ranging changes on by default, instead of having everything opt-in like Edit Mode itself...
+		hooksecurefunc(ExpansionLandingPageMinimapButton, "SetParent", function()
+			sm.core.button.SetParent(ExpansionLandingPageMinimapButton, Minimap)
+			mod:UpdateDraggables(ExpansionLandingPageMinimapButton)
+		end)
 
-	sm.core.button.SetSize(ExpansionLandingPageMinimapButton, 36, 36) -- Shrink the missions button
-	-- Stop Blizz changing the icon size || Minimap.lua ExpansionLandingPageMinimapButtonMixin:UpdateIcon() >> SetLandingPageIconFromAtlases() >> self:SetSize()
-	hooksecurefunc(ExpansionLandingPageMinimapButton, "SetSize", function()
-		sm.core.button.SetSize(ExpansionLandingPageMinimapButton, 36, 36)
-	end)
-	-- Stop Blizz moving the icon || Minimap.lua ExpansionLandingPageMinimapButtonMixin:UpdateIcon()>> self:UpdateIconForGarrison() >> ApplyGarrisonTypeAnchor() >> anchor:SetPoint()
-	hooksecurefunc(ExpansionLandingPageMinimapButton, "UpdateIconForGarrison", function()
-		mod:UpdateDraggables(ExpansionLandingPageMinimapButton)
-	end)
-	-- Stop Blizz moving the icon || Minimap.lua ExpansionLandingPageMinimapButtonMixin:SetLandingPageIconOffset() >> anchor:SetPoint()
-	hooksecurefunc(ExpansionLandingPageMinimapButton, "SetLandingPageIconOffset", function()
-		mod:UpdateDraggables(ExpansionLandingPageMinimapButton)
-	end)
+		sm.core.button.SetSize(ExpansionLandingPageMinimapButton, 36, 36) -- Shrink the missions button
+		-- Stop Blizz changing the icon size || Minimap.lua ExpansionLandingPageMinimapButtonMixin:UpdateIcon() >> SetLandingPageIconFromAtlases() >> self:SetSize()
+		hooksecurefunc(ExpansionLandingPageMinimapButton, "SetSize", function()
+			sm.core.button.SetSize(ExpansionLandingPageMinimapButton, 36, 36)
+		end)
+		-- Stop Blizz moving the icon || Minimap.lua ExpansionLandingPageMinimapButtonMixin:UpdateIcon()>> self:UpdateIconForGarrison() >> ApplyGarrisonTypeAnchor() >> anchor:SetPoint()
+		hooksecurefunc(ExpansionLandingPageMinimapButton, "UpdateIconForGarrison", function()
+			mod:UpdateDraggables(ExpansionLandingPageMinimapButton)
+		end)
+		-- Stop Blizz moving the icon || Minimap.lua ExpansionLandingPageMinimapButtonMixin:SetLandingPageIconOffset() >> anchor:SetPoint()
+		hooksecurefunc(ExpansionLandingPageMinimapButton, "SetLandingPageIconOffset", function()
+			mod:UpdateDraggables(ExpansionLandingPageMinimapButton)
+		end)
+	else
+		hooksecurefunc(MinimapCluster, "SetEditModeScale", function()
+			sm.core.button.SetScale(MinimapCluster.DielFrame, 1)
+			sm.core.button.ClearAllPoints(MinimapCluster.DielFrame)
+			mod:UpdateDraggables(MinimapCluster.DielFrame)
+		end)
+	end
+
 	sm.core:RegisterModuleOptions("Buttons", options, L["Buttons"])
 
 	-- Frame grab is only meant to happen after LOADING_SCREEN_DISABLED
@@ -684,9 +720,16 @@ end
 do
 	local buttonTable = {
 		Minimap, TimeManagerClockButton, GameTimeFrame, MinimapCluster.Tracking, MinimapCluster.Tracking.Button,
-		Minimap.ZoomIn, Minimap.ZoomOut, MinimapCluster.InstanceDifficulty, AddonCompartmentFrame,
-		MinimapCluster.IndicatorFrame.MailFrame, MinimapCluster.IndicatorFrame.CraftingOrderFrame, ExpansionLandingPageMinimapButton
+		Minimap.ZoomIn, Minimap.ZoomOut, AddonCompartmentFrame, MinimapCluster.IndicatorFrame.MailFrame,
 	}
+	if sm.API.isRetail then
+		buttonTable[#buttonTable+1] = MinimapCluster.InstanceDifficulty
+		buttonTable[#buttonTable+1] = MinimapCluster.IndicatorFrame.CraftingOrderFrame
+		buttonTable[#buttonTable+1] = ExpansionLandingPageMinimapButton
+	else
+		buttonTable[#buttonTable+1] = MinimapCluster.DielFrame
+	end
+
 	function mod:AddButton(_, button)
 		self:NewFrame(button)
 	end
