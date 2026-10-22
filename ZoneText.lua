@@ -248,7 +248,9 @@ function mod:OnEnable()
 		zoneTextButton = CreateFrame("Button", "SexyMapZoneTextButton", Minimap, "BackdropTemplate") -- Create our own zone text
 	else
 		MinimapCluster.ZoneTextButton:SetParent(sm.core.button)
-		MinimapCluster.BorderTop:SetParent(sm.core.button)
+		if MinimapCluster.BorderTop then -- XXX removed in 12.1.7
+			MinimapCluster.BorderTop:SetParent(sm.core.button)
+		end
 		if mod.db.useSecureButton then
 			zoneTextButton = CreateFrame("Button", "SexyMapZoneTextButton", Minimap, "BackdropTemplate,SecureActionButtonTemplate") -- Create our own zone text
 			zoneTextButton:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
