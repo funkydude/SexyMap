@@ -24,7 +24,7 @@
 ## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, Blizzard_TimeManager
 ## X-Embeds: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, CallbackHandler-1.0, LibStub
 
-Init_[Game].lua [AllowLoadGameType classic]
+Init_[Game].lua
 
 embeds.xml
 
