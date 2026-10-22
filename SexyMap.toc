@@ -1,4 +1,4 @@
-## Interface: 120100, 120105, 120107
+## Interface: 11508, 11509, 16001, 20505, 20506, 30405, 38002, 40402, 50503, 50504, 120100, 120105, 120107
 ## Version: @project-version@
 ## Title: SexyMap
 ## Notes: Spice up your minimap with some sexy options.
@@ -24,6 +24,7 @@
 ## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, Blizzard_TimeManager
 ## X-Embeds: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, CallbackHandler-1.0, LibStub
 
+Init_[Game].lua [AllowLoadGameType classic]
 
 embeds.xml
 
@@ -39,15 +40,21 @@ localization\zhTW.lua
 localization\zhCN.lua
 localization\ptBR.lua
 
-SexyMap.lua
+SexyMap.lua [AllowLoadGameType mainline]
+SexyMap_Classic.lua [AllowLoadGameType vanilla, tbc]
+SexyMap_Wrath.lua [AllowLoadGameType wrath, cata, mists]
 
-Shapes.lua
+Shapes.lua [AllowLoadGameType mainline]
+Shapes_Classic.lua [AllowLoadGameType classic]
 
-Buttons.lua
+Buttons.lua [AllowLoadGameType mainline]
+Buttons_Classic.lua [AllowLoadGameType classic]
 BorderPresets.lua
-Borders.lua
+Borders.lua [AllowLoadGameType mainline]
+Borders_Classic.lua [AllowLoadGameType classic]
 Clock.lua
 Coordinates.lua
 HudMap.lua
-Movers.lua
+Movers.lua [AllowLoadGameType mainline]
+Movers_Classic.lua [AllowLoadGameType classic]
 ZoneText.lua
