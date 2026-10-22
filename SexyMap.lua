@@ -53,7 +53,7 @@ do
 		charKey = UnitNameUnmodified("player")
 	end
 
-	profileName = charKey .. " - " .. realmKey
+	profileName = charKey .. "-" .. realmKey
 end
 
 mod.options = {
@@ -259,7 +259,7 @@ mod.options = {
 			values = function()
 				local tbl = {}
 				for k,v in pairs(SexyMap2DB) do
-					if k ~= "presets" and k ~= "global" and k ~= (UnitName("player").."-"..GetRealmName()) and type(v) == "table" then
+					if k ~= "presets" and k ~= "global" and k ~= profileName and type(v) == "table" then
 						tbl[k]=k
 					end
 				end
@@ -290,7 +290,7 @@ mod.options = {
 			values = function()
 				local tbl = {}
 				for k,v in pairs(SexyMap2DB) do
-					if k ~= "presets" and k ~= "global" and k ~= (UnitName("player").."-"..GetRealmName()) and type(v) == "table" then
+					if k ~= "presets" and k ~= "global" and k ~= profileName and type(v) == "table" then
 						tbl[k]=k
 					end
 				end
