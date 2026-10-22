@@ -33,6 +33,29 @@ mod.frame:SetScript("OnEvent", function(_, event, ...)
 	mod[event](sm, ...)
 end)
 
+local profileName
+do
+	local charKey, realmKey
+	if RegionalUniqueNamesEnabled and RegionalUniqueNamesEnabled() then
+		if C_GameRules.IsGameRuleActive(Enum.GameRule.HardcoreRuleset) then
+			realmKey = "Hardcore"
+		elseif C_GameRules.IsGameRuleActive(Enum.GameRule.RPRuleset) then
+			realmKey = "RP"
+		elseif C_GameRules.IsGameRuleActive(Enum.GameRule.PvPRuleset) then
+			realmKey = "PvP"
+		else
+			realmKey = "PvE"
+		end
+		local firstname, surname = UnitNameUnmodified("player")
+		charKey = firstname .. " " .. surname
+	else
+		realmKey = GetRealmName()
+		charKey = UnitNameUnmodified("player")
+	end
+
+	profileName = charKey .. " - " .. realmKey
+end
+
 mod.options = {
 	type = "group",
 	name = name,
@@ -212,19 +235,17 @@ mod.options = {
 				end
 			end,
 			get = function()
-				local char = (UnitName("player").."-"..GetRealmName())
-				return type(SexyMap2DB[char]) == "string"
+				return type(SexyMap2DB[profileName]) == "string"
 			end,
 			set = function(info, v)
-				local char = (UnitName("player").."-"..GetRealmName())
 				if v then
 					if not SexyMap2DB.global then
-						SexyMap2DB.global = mod.deepCopyHash(SexyMap2DB[char])
+						SexyMap2DB.global = mod.deepCopyHash(SexyMap2DB[profileName])
 					end
-					SexyMap2DB[char] = "global"
+					SexyMap2DB[profileName] = "global"
 					ReloadUI()
 				else
-					SexyMap2DB[char] = nil
+					SexyMap2DB[profileName] = nil
 					ReloadUI()
 				end
 			end,
@@ -245,17 +266,15 @@ mod.options = {
 				return tbl
 			end,
 			set = function(info, v)
-				local char = (UnitName("player").."-"..GetRealmName())
-				SexyMap2DB[char] = mod.deepCopyHash(SexyMap2DB[v])
+				SexyMap2DB[profileName] = mod.deepCopyHash(SexyMap2DB[v])
 				ReloadUI()
 			end,
 			disabled = function()
-				local char = (UnitName("player").."-"..GetRealmName())
-				if type(SexyMap2DB[char]) == "string" then
+				if type(SexyMap2DB[profileName]) == "string" then
 					return true
 				end
 				for k,v in pairs(SexyMap2DB) do
-					if k ~= "presets" and k ~= "global" and k ~= char and type(v) == "table" then
+					if k ~= "presets" and k ~= "global" and k ~= profileName and type(v) == "table" then
 						return false
 					end
 				end
@@ -281,12 +300,11 @@ mod.options = {
 				SexyMap2DB[v] = nil
 			end,
 			disabled = function()
-				local char = (UnitName("player").."-"..GetRealmName())
-				if type(SexyMap2DB[char]) == "string" then
+				if type(SexyMap2DB[profileName]) == "string" then
 					return true
 				end
 				for k,v in pairs(SexyMap2DB) do
-					if k ~= "presets" and k ~= "global" and k ~= char and type(v) == "table" then
+					if k ~= "presets" and k ~= "global" and k ~= profileName and type(v) == "table" then
 						return false
 					end
 				end
@@ -300,13 +318,11 @@ mod.options = {
 			confirmText = L["Resetting this profile will reload your UI, are you sure?"],
 			order = 20,
 			func = function()
-				local char = UnitName("player").."-"..GetRealmName()
-				SexyMap2DB[char] = nil
+				SexyMap2DB[profileName] = nil
 				ReloadUI()
 			end,
 			disabled = function()
-				local char = (UnitName("player").."-"..GetRealmName())
-				if type(SexyMap2DB[char]) == "string" then
+				if type(SexyMap2DB[profileName]) == "string" then
 					return true
 				end
 			end,
@@ -322,19 +338,18 @@ function mod:ADDON_LOADED(addon)
 			SexyMap2DB = {}
 		end
 
-		local char = UnitName("player").."-"..GetRealmName()
-		if not SexyMap2DB[char] then
-			SexyMap2DB[char] = {}
+		if not SexyMap2DB[profileName] then
+			SexyMap2DB[profileName] = {}
 		end
 
 		local dbToDispatch
-		if type(SexyMap2DB[char]) == "string" then
+		if type(SexyMap2DB[profileName]) == "string" then
 			if not SexyMap2DB.global then
 				SexyMap2DB.global = {}
 			end
 			dbToDispatch = SexyMap2DB.global
 		else
-			dbToDispatch = SexyMap2DB[char]
+			dbToDispatch = SexyMap2DB[profileName]
 		end
 
 		if not dbToDispatch.core then
