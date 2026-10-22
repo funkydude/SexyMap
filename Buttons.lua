@@ -7,8 +7,6 @@ local L = sm.L
 local ldbi = LibStub("LibDBIcon-1.0")
 
 local moving, ButtonFadeOut
--- XXX temp 10.2.6
-local TrackingFrame = MinimapCluster.TrackingFrame or MinimapCluster.Tracking
 
 local animFrames = {}
 local blizzButtons = {
@@ -22,24 +20,27 @@ local blizzButtons = {
 	AddonCompartmentFrame = L.addonCompartment,
 }
 local dynamicButtons = {
-	GuildInstanceDifficulty = L["Guild Dungeon Difficulty Indicator (When Available)"],
-	MiniMapChallengeMode = L["Challenge Mode Button (When Available)"],
-	MiniMapInstanceDifficulty = L["Dungeon Difficulty Indicator (When Available)"],
+	GuildInstanceDifficulty = sm.API.isRetail and L["Guild Dungeon Difficulty Indicator (When Available)"] or nil,
+	MiniMapChallengeMode = sm.API.isRetail and L["Challenge Mode Button (When Available)"] or nil,
+	MiniMapInstanceDifficulty = sm.API.isRetail and L["Dungeon Difficulty Indicator (When Available)"] or nil,
 	MiniMapMailFrame = L["New Mail Indicator (When Available)"],
-	CraftingOrder = L.craftingOrder,
-	ExpansionLandingPageMinimapButton = L.omniumFolioButton,
+	CraftingOrder = sm.API.isRetail and L.craftingOrder or nil,
+	ExpansionLandingPageMinimapButton = sm.API.isRetail and L.omniumFolioButton or nil,
 }
 
 local buttonNicknames = {
 	[Minimap.ZoomIn] = "MinimapZoomIn",
 	[Minimap.ZoomOut] = "MinimapZoomOut",
-	[TrackingFrame] = "MiniMapTracking",
-	[MinimapCluster.InstanceDifficulty] = "MiniMapInstanceDifficulty",
+	[MinimapCluster.Tracking] = "MiniMapTracking",
 	[MinimapCluster.IndicatorFrame.MailFrame] = "MiniMapMailFrame",
-	[MinimapCluster.IndicatorFrame.CraftingOrderFrame] = "CraftingOrder",
 	[GameTimeFrame] = "GameTimeFrame", -- Just here to change parent to Minimap in :NewFrame
-	[TrackingFrame.Button] = "none", -- Prevent error when being passed to :NewFrame
+	[MinimapCluster.Tracking.Button] = "none", -- Prevent error when being passed to :NewFrame
 }
+
+if sm.API.isRetail then
+	buttonNicknames[MinimapCluster.InstanceDifficulty] = "MiniMapInstanceDifficulty"
+	buttonNicknames[MinimapCluster.IndicatorFrame.CraftingOrderFrame] = "CraftingOrder"
+end
 
 local options = {
 	type = "group",
@@ -281,24 +282,26 @@ function mod:OnEnable()
 		background:SetPoint("CENTER", MiniMapMailIcon, "CENTER")
 
 		-- Tracking Button
-		overlay = TrackingFrame:CreateTexture(nil, "OVERLAY")
+		overlay = MinimapCluster.Tracking:CreateTexture(nil, "OVERLAY")
 		overlay:SetSize(53,53)
 		overlay:SetTexture(136430) -- 136430 = Interface\\Minimap\\MiniMap-TrackingBorder
-		overlay:SetPoint("CENTER", TrackingFrame.Button, "CENTER", 10, -10)
-		background = TrackingFrame:CreateTexture(nil, "BACKGROUND")
+		overlay:SetPoint("CENTER", MinimapCluster.Tracking.Button, "CENTER", 10, -10)
+		background = MinimapCluster.Tracking:CreateTexture(nil, "BACKGROUND")
 		background:SetSize(25,25)
 		background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
-		background:SetPoint("CENTER", TrackingFrame.Button, "CENTER")
+		background:SetPoint("CENTER", MinimapCluster.Tracking.Button, "CENTER")
 
 		-- Crafting Order Button
-		overlay = MinimapCluster.IndicatorFrame.CraftingOrderFrame:CreateTexture(nil, "OVERLAY")
-		overlay:SetSize(53,53)
-		overlay:SetTexture(136430) -- 136430 = Interface\\Minimap\\MiniMap-TrackingBorder
-		overlay:SetPoint("CENTER", MiniMapCraftingOrderIcon, "CENTER", 10, -10)
-		background = MinimapCluster.IndicatorFrame.CraftingOrderFrame:CreateTexture(nil, "BACKGROUND")
-		background:SetSize(25,25)
-		background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
-		background:SetPoint("CENTER", MiniMapCraftingOrderIcon, "CENTER")
+		if sm.API.isRetail then
+			overlay = MinimapCluster.IndicatorFrame.CraftingOrderFrame:CreateTexture(nil, "OVERLAY")
+			overlay:SetSize(53,53)
+			overlay:SetTexture(136430) -- 136430 = Interface\\Minimap\\MiniMap-TrackingBorder
+			overlay:SetPoint("CENTER", MiniMapCraftingOrderIcon, "CENTER", 10, -10)
+			background = MinimapCluster.IndicatorFrame.CraftingOrderFrame:CreateTexture(nil, "BACKGROUND")
+			background:SetSize(25,25)
+			background:SetTexture(136467) -- 136467 = Interface\\Minimap\\UI-Minimap-Background
+			background:SetPoint("CENTER", MiniMapCraftingOrderIcon, "CENTER")
+		end
 
 		-- Calendar Button
 		overlay = GameTimeFrame:CreateTexture(nil, "OVERLAY")
@@ -512,7 +515,7 @@ do
 					if MiniMapTrackingButton then
 						self:MakeMovable(MiniMapTrackingButton, f)
 					else
-						self:MakeMovable(TrackingFrame.Button, f)
+						self:MakeMovable(MinimapCluster.Tracking.Button, f)
 					end
 				else
 					self:MakeMovable(f)
@@ -680,7 +683,7 @@ end
 
 do
 	local buttonTable = {
-		Minimap, TimeManagerClockButton, GameTimeFrame, TrackingFrame, TrackingFrame.Button,
+		Minimap, TimeManagerClockButton, GameTimeFrame, MinimapCluster.Tracking, MinimapCluster.Tracking.Button,
 		Minimap.ZoomIn, Minimap.ZoomOut, MinimapCluster.InstanceDifficulty, AddonCompartmentFrame,
 		MinimapCluster.IndicatorFrame.MailFrame, MinimapCluster.IndicatorFrame.CraftingOrderFrame, ExpansionLandingPageMinimapButton
 	}
