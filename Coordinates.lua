@@ -258,6 +258,13 @@ end
 function mod:OnEnable()
 	sm.core:RegisterModuleOptions("Coordinates", options, L["Coordinates"])
 
+	-- Kill Blizz coords
+	if MinimapCluster and MinimapCluster.MinimapContainer and MinimapCluster.MinimapContainer.PlayerCoords then
+		MinimapCluster.MinimapContainer.PlayerCoords:SetScript("OnUpdate", nil)
+		MinimapCluster.MinimapContainer.PlayerCoords:SetParent(sm.core.button)
+		MinimapCluster.MinimapContainer.PlayerCoords.CoordText:ClearText()
+	end
+
 	if mod.db.enabled then
 		self:CreateFrame()
 	end
