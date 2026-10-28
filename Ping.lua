@@ -100,9 +100,9 @@ function mod:OnEnable()
 				color = GRAY_FONT_COLOR
 			end
 			if mod.db.showAt == "chat" then
-				DEFAULT_CHAT_FRAME:AddMessage(("%s: |cFF%02x%02x%02x%s|r"):format(L["Ping"], color.r * 255, color.g * 255, color.b * 255, UnitName(unit)))
+				DEFAULT_CHAT_FRAME:AddMessage(("%s: |cFF%02x%02x%02x%s|r"):format(L["Ping"], color.r * 255, color.g * 255, color.b * 255, UnitNameUnmodified(unit)))
 			else
-				pingFrame.name:SetFormattedText("|cFF%02x%02x%02x%s|r", color.r * 255, color.g * 255, color.b * 255, UnitName(unit))
+				pingFrame.name:SetFormattedText("|cFF%02x%02x%02x%s|r", color.r * 255, color.g * 255, color.b * 255, UnitNameUnmodified(unit))
 				pingFrame:SetWidth(pingFrame.name:GetUnboundedStringWidth() + 12)
 				pingFrame:SetHeight(pingFrame.name:GetStringHeight() + 10)
 				animGroup:Stop()

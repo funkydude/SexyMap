@@ -34,26 +34,13 @@ mod.frame:SetScript("OnEvent", function(_, event, ...)
 end)
 
 local profileName
-do
-	local charKey, realmKey
-	if RegionalUniqueNamesEnabled and RegionalUniqueNamesEnabled() then
-		if C_GameRules.IsGameRuleActive(Enum.GameRule.HardcoreRuleset) then
-			realmKey = "Hardcore"
-		elseif C_GameRules.IsGameRuleActive(Enum.GameRule.RPRuleset) then
-			realmKey = "RP"
-		elseif C_GameRules.IsGameRuleActive(Enum.GameRule.PvPRuleset) then
-			realmKey = "PvP"
-		else
-			realmKey = "PvE"
-		end
-		local firstname, surname = UnitNameUnmodified("player")
-		charKey = firstname .. " " .. surname
-	else
-		realmKey = GetRealmName()
-		charKey = UnitNameUnmodified("player")
-	end
-
-	profileName = charKey .. "-" .. realmKey
+if RegionalUniqueNamesEnabled and RegionalUniqueNamesEnabled() then
+	local characterName, characterSurname = UnitNameUnmodified("player")
+	profileName = characterName .. " " .. characterSurname
+else
+	local characterRealm = GetRealmName()
+	local characterName = UnitNameUnmodified("player")
+	profileName = characterName .. "-" .. characterRealm
 end
 
 mod.options = {
