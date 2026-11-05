@@ -1093,9 +1093,31 @@ function mod:UpdateBorder()
 			MinimapBorder:Show()
 		else
 			MinimapBackdrop:Show()
-			MinimapCompassTexture:SetSize(157, 168) -- We shrink the minimap so we gotta shrink the border also
+			if sm.API.isForever then -- We shrink the minimap so we gotta shrink the border also
+				sm.core.texture.SetSize(MinimapCompassTexture, 168, 168)
+				sm.core.texture.ClearAllPoints(MinimapCompassTexture)
+				sm.core.texture.SetPoint(MinimapCompassTexture, "CENTER", Minimap, "CENTER", 0, 0)
+				sm.core.texture.SetSize(MinimapCompassTextureUnderlay, 168, 168)
+				sm.core.texture.ClearAllPoints(MinimapCompassTextureUnderlay)
+				sm.core.texture.SetPoint(MinimapCompassTextureUnderlay, "CENTER", Minimap, "CENTER", 0, 0)
+			else
+				sm.core.texture.SetSize(MinimapCompassTexture, 157, 168)
+				sm.core.texture.ClearAllPoints(MinimapCompassTexture)
+				sm.core.texture.SetPoint(MinimapCompassTexture, "CENTER", Minimap, "CENTER", 0, 0)
+			end
 		end
 	end
+end
+if sm.API.isForever then
+	-- Forever changes sizes when toggling on/off rotating minimap
+	hooksecurefunc(MinimapCluster, "UpdateMinimapConfig", function()
+		sm.core.texture.SetSize(MinimapCompassTexture, 168, 168)
+		sm.core.texture.ClearAllPoints(MinimapCompassTexture)
+		sm.core.texture.SetPoint(MinimapCompassTexture, "CENTER", Minimap, "CENTER", 0, 0)
+		sm.core.texture.SetSize(MinimapCompassTextureUnderlay, 168, 168)
+		sm.core.texture.ClearAllPoints(MinimapCompassTextureUnderlay)
+		sm.core.texture.SetPoint(MinimapCompassTextureUnderlay, "CENTER", Minimap, "CENTER", 0, 0)
+	end)
 end
 
 function mod:UpdateBackdrop()

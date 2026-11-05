@@ -14,6 +14,7 @@ sm.backdrop = {
 }
 
 mod.frame = CreateFrame("Frame")
+mod.texture = mod.frame:CreateTexture()
 mod.button = CreateFrame("Button")
 mod.font = mod.button:CreateFontString()
 mod.frame:Hide()

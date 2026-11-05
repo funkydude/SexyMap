@@ -354,6 +354,12 @@ function mod:ApplyShape(shape)
 	end
 	sm.buttons:UpdateDraggables()
 end
+if sm.API.isForever then
+	-- Forever changes mask textures when toggling on/off rotating minimap
+	hooksecurefunc(MinimapCluster, "UpdateMinimapConfig", function()
+		mod:ApplyShape()
+	end)
+end
 
 if not HybridMinimap then
 	local frame = CreateFrame("Frame")
