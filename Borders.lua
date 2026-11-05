@@ -1111,12 +1111,7 @@ end
 if sm.API.isForever then
 	-- Forever changes sizes when toggling on/off rotating minimap
 	hooksecurefunc(MinimapCluster, "UpdateMinimapConfig", function()
-		sm.core.texture.SetSize(MinimapCompassTexture, 168, 168)
-		sm.core.texture.ClearAllPoints(MinimapCompassTexture)
-		sm.core.texture.SetPoint(MinimapCompassTexture, "CENTER", Minimap, "CENTER", 0, 0)
-		sm.core.texture.SetSize(MinimapCompassTextureUnderlay, 168, 168)
-		sm.core.texture.ClearAllPoints(MinimapCompassTextureUnderlay)
-		sm.core.texture.SetPoint(MinimapCompassTextureUnderlay, "CENTER", Minimap, "CENTER", 0, 0)
+		mod:UpdateBorder()
 	end)
 end
 
